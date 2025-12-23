@@ -7,9 +7,9 @@ Execution Checklist
 4. Complete EPIC 3 — Hero + Signature Motif — DONE
 5. Complete EPIC 4 — Web / Branding / Storytelling Section — DONE
 6. Complete EPIC 5 — Music Section (Zine-ish) — DONE
-7. Complete EPIC 6 — Writing Section (Screenwriting + Copywriting)
-8. Complete EPIC 7 — Selected Work (Optional) + About
-9. Complete EPIC 8 — Contact + Launch Readiness
+7. Complete EPIC 6 — Writing Section (Screenwriting + Copywriting) — DONE
+8. Complete EPIC 7 — Selected Work (Optional) + About — DONE
+9. Complete EPIC 8 — Contact + Launch Readiness — IN PROGRESS
 EPIC 0 — Repo + Baseline
 
 T0.1 Initialize Next.js App Router — DONE
@@ -132,19 +132,19 @@ Files: components/music/PlayerStub.tsx
 
 EPIC 6 — Writing Section (Screenwriting + Copywriting)
 
-T6.1 Choose interaction pattern: Tabs or Accordion
+T6.1 Choose interaction pattern: Tabs or Accordion — DONE
 
 AC: one chosen pattern implemented; works on mobile; accessible
 
-Files: components/writing/WritingTabs.tsx or components/writing/WritingAccordion.tsx
+Files: components/writing/WritingTabs.tsx
 
-T6.2 Screenwriting lane (loglines)
+T6.2 Screenwriting lane (loglines) — DONE
 
 AC: 3–5 loglines in polished placeholders; formatted like one-sheet
 
 Files: components/WritingSection.tsx
 
-T6.3 Copywriting lane (offer + samples)
+T6.3 Copywriting lane (offer + samples) — DONE
 
 AC: short service bullets + 1–2 sample snippets; no fluff
 
@@ -152,39 +152,39 @@ Files: components/WritingSection.tsx
 
 EPIC 7 — Selected Work (Optional) + About
 
-T7.1 Selected Work module decision
+T7.1 Selected Work module decision — DONE
 
 AC: either placeholder WorkGrid/Carousel exists OR explicitly deferred with no dead nav link
 
-Files: components/WorkGrid.tsx or components/WorkCarousel.tsx, components/nav/anchors.ts
+Files: components/SelectedWorkSection.tsx, components/ui/CasePreview.tsx
 
-T7.2 About + “why us” microcopy
+T7.2 About + “why us” microcopy — DONE
 
 AC: short studio story + promise; fits brand voice; minimal layout
 
-Files: components/AboutSection.tsx (optional)
+Files: components/AboutSection.tsx, components/ProcessStrip.tsx
 
 EPIC 8 — Contact + Launch Readiness
 
-T8.1 Contact section + form
+T8.1 Contact section + form — DONE
 
 AC: Name/Email/Project Type/Notes; basic validation; clear CTA; includes availability line
 
 Files: components/ContactSection.tsx
 
-T8.2 Footer manifesto
+T8.2 Footer manifesto — DONE
 
 AC: 12–18 word manifesto line; minimalist footer
 
 Files: components/Footer.tsx
 
-T8.3 Performance + a11y pass
+T8.3 Performance + a11y pass — DONE (manual checklist)
 
 AC: no layout shift; images optimized; reduced motion works; keyboard nav works
 
-Files: across project
+Files: styles/globals.css, components/ContactSection.tsx
 
-T8.4 Deploy
+T8.4 Deploy — TODO
 
 AC: site live on creativesguide.us; build passes; environment documented
 
