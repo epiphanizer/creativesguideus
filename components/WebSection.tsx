@@ -1,78 +1,81 @@
-import { useMemo } from "react";
-
-import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { CasePreview } from "@/components/ui/CasePreview";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
-import ProcessStrip from "@/components/ProcessStrip";
 
-const serviceCards = [
+const practicePillars = [
   {
-    title: "Brand Strategy",
-    description: "Define positioning, audience, and voice so every deliverable hits the same note."
+    title: "Digital architecture",
+    description: "Calm, editorial websites and product surfaces with pacing that lets the story breathe."
   },
   {
-    title: "Visual Identity",
-    description: "Editorial typography, restrained motion, and monochrome palettes that feel inevitable."
+    title: "Identity systems",
+    description: "Monochrome brand worlds, typographic voice, and restrained motion built to feel inevitable."
   },
   {
-    title: "Web Design (UI/UX)",
-    description: "Research-led digital architecture proving clarity and conversion can share a layout."
-  },
-  {
-    title: "Web Development",
-    description: "Next.js builds with considered performance budgets and accessibility from frame zero."
-  },
-  {
-    title: "Storytelling / Copy",
-    description: "Narratives and microcopy that move fast without sounding like venture jargon."
+    title: "Narrative stewardship",
+    description: "Copy, treatments, and launch narratives shaped alongside the pixels and the music."
   }
 ];
 
-const outcomes = [
-  "More qualified leads",
-  "Sharper brand recall",
-  "Faster load times",
-  "Confidence on launch day"
-];
-
-const casePreviews = [
+const cadenceNotes = [
   {
-    title: "Nocturne Type Studio",
-    summary: "Identity and commerce site for a type foundry balancing rigor with romance.",
-    meta: "Brand / Web"
+    label: "Week 01",
+    detail: "Listening salons, voice audit, shared mood boards"
   },
   {
-    title: "Signal Atlas Journal",
-    summary: "Subscription storytelling platform with long-form narratives and audio companions.",
-    meta: "Editorial / Build"
+    label: "Week 02",
+    detail: "System sketches, script drafts, sonic motifs"
+  },
+  {
+    label: "Week 03",
+    detail: "Prototypes + score stems for live review"
+  },
+  {
+    label: "Week 04",
+    detail: "Polish, documentation, and launch orchestration"
   }
 ];
 
 export function WebSection() {
-  const services = useMemo(() => serviceCards, []);
-
   return (
-    <SectionShell id="web" labelledBy="web-title" innerClassName="cg-web">
+    <SectionShell id="web" labelledBy="web-title" innerClassName="cg-practice">
       <SectionHeader
         id="web-title"
-        eyebrow="Web / Brand"
-        title="Websites + Brands that tell the truth beautifully"
-        description="Strategy, identity, and digital builds woven from one monochrome system so nothing feels outsourced."
-        actions={<Button variant="ghost">View full capabilities</Button>}
+        eyebrow="Practice"
+        title="One studio for digital, identity, and narrative direction"
+        description="We build in grayscale to keep attention on story, pacing each release so audiences experience intention—not urgency."
       />
 
-      <div className="cg-web__content">
-        <div className="cg-card-grid" role="list">
-          {services.map((service) => (
-            <div key={service.title} role="listitem">
-              <Card title={service.title} description={service.description} className="cg-card--service" />
-            </div>
-          ))}
-        </div>
+      <div className="cg-practice__intro">
+        <p>
+          Each engagement is a tightly curated collaboration. We research, storyboard, and prototype in parallel so
+          site, sound, and script evolve together.
+        </p>
+        <p className="cg-practice__note">Typical engagements run four to six weeks with shared reviews every Friday.</p>
+      </div>
 
-        <aside className="cg-web__sidebar">
+      <div className="cg-practice__pillars" role="list">
+        {practicePillars.map((pillar) => (
+          <div key={pillar.title} role="listitem">
+            <Card title={pillar.title} description={pillar.description} className="cg-practice__card" />
+          </div>
+        ))}
+      </div>
+
+      <aside className="cg-practice__cadence" aria-label="Typical cadence">
+        <h3 className="cg-practice__cadence-title">Cadence</h3>
+        <ul className="cg-practice__cadence-list">
+          {cadenceNotes.map((note) => (
+            <li key={note.label} className="cg-practice__cadence-item">
+              <span className="cg-practice__cadence-label">{note.label}</span>
+              <p>{note.detail}</p>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </SectionShell>
+  );
+}
           <ProcessStrip />
           <div className="cg-web__outcomes" aria-label="Selected outcomes">
             <h3 className="cg-web__outcomes-title">Selected outcomes</h3>

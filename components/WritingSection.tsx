@@ -1,38 +1,17 @@
+import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
-import { WritingTabs } from "@/components/writing/WritingTabs";
 
-const screenwritingLoglines = [
-  {
-    title: "Northbound",
-    format: "Feature drama / sci-fi",
-    logline:
-      "A polar cargo pilot is forced to smuggle a sentient algorithm across collapsing trade routes, only to discover it is coded from her own childhood memories."
-  },
-  {
-    title: "Fourth Wall",
-    format: "Half-hour dramedy pilot",
-    logline:
-      "A disgraced showrunner takes a teaching job and rewrites a struggling film school on the fly, as students break the fourth wall to fix their own lives."
-  },
-  {
-    title: "Salt Chorus",
-    format: "Short film / experimental",
-    logline:
-      "An oceanographer loses her hearing during a deep-sea survey and must conduct an underwater choir of sensors using only light and rhythm."
-  }
+const offerings = [
+  "Feature screenplay — 108 pages, current draft June 2025",
+  "Lookbook + tonal score palette for films and experiential",
+  "Short-form companion scripts for festival or digital rollout"
 ];
 
-const copywritingServices = [
-  "Launch messaging systems that scale from landing page to investor deck",
-  "Product storytelling for in-app flows, onboarding, and nurture sequences",
-  "Microcopy libraries with tone toggles for support and success teams"
-];
-
-const voiceMilestones = [
-  "Voice audit that catalogs how teams speak today",
-  "Persona and tone ladders to keep every draft on brief",
-  "Review rituals that ship copy with editorial clarity"
+const partnerships = [
+  "Producers with appetite for character-driven road narratives",
+  "Financiers aligned with art-house theatrical release",
+  "Festival strategists and international co-production allies"
 ];
 
 export function WritingSection() {
@@ -41,93 +20,45 @@ export function WritingSection() {
       <SectionHeader
         id="writing-title"
         eyebrow="Writing"
-        title="Narratives built for screen and story systems"
-        description="Screenplays, launch messaging, and voice guides that keep producers, founders, and audiences engaged."
+        title="Bong Tour — feature screenplay in active shopping"
+        description="A surreal road film about a washed-up tour manager escorting a banned band across the American Southwest."
       />
 
-      <div className="cg-writing">
-        <div className="cg-writing__lede">
-          <p>
-            Every script and sentence is treated like a production: research, table reads, and iteration until
-            the rhythm lands.
+      <div className="cg-bong">
+        <div className="cg-bong__story">
+          <p className="cg-bong__logline">
+            When a legendary Korean psych-rock band is secretly invited back to the US for one night, their former tour
+            manager must shepherd them through border towns, desert cults, and her own burnout to get them on stage.
           </p>
-          <p className="cg-writing__note">Available for rewrite passes, polish, and net-new builds.</p>
+          <p>
+            We are developing Bong Tour as a feature with the flexibility to extend into episodic anthologies. The script is
+            accompanied by tonal essays, music sketches, and a visual bible that carries the same monochrome discipline as
+            our design work.
+          </p>
+          <Button as="a" href="#contact" variant="secondary" className="cg-bong__cta">
+            Request the Bong Tour deck
+          </Button>
         </div>
 
-        <WritingTabs
-          items={[
-            {
-              id: "screenwriting",
-              label: "Screenwriting",
-              summary: "Feature / pilot / shorts",
-              content: (
-                <div className="cg-writing__panel cg-writing__panel--screenwriting">
-                  <p className="cg-writing__panel-lede">
-                    Loglines that have moved through festival labs, coverage passes, and table reads.
-                  </p>
-                  <ul className="cg-writing__loglines">
-                    {screenwritingLoglines.map((project) => (
-                      <li key={project.title} className="cg-writing__logline">
-                        <div className="cg-writing__logline-meta">{project.format}</div>
-                        <h3 className="cg-writing__logline-title">{project.title}</h3>
-                        <p className="cg-writing__logline-copy">{project.logline}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )
-            },
-            {
-              id: "copywriting",
-              label: "Copywriting",
-              summary: "Product + brand systems",
-              content: (
-                <div className="cg-writing__panel cg-writing__panel--copywriting">
-                  <div className="cg-writing__panel-grid">
-                    <div className="cg-writing__services">
-                      <h3>Engagement deliverables</h3>
-                      <ul>
-                        {copywritingServices.map((service) => (
-                          <li key={service}>{service}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <aside className="cg-writing__sample">
-                      <h3>Sample snippet</h3>
-                      <p>
-                        Launch boldly, but speak softly. A modular launch campaign for a climate fintech platform
-                        that used tonal modes to shift from investor-ready to customer-close.
-                      </p>
-                      <p className="cg-writing__sample-footnote">Final deliverable: 42-block copy system w/ QA scripts.</p>
-                    </aside>
-                  </div>
-                </div>
-              )
-            },
-            {
-              id: "brand-voice",
-              label: "Brand Voice",
-              summary: "Codify and scale",
-              content: (
-                <div className="cg-writing__panel cg-writing__panel--voice">
-                  <p className="cg-writing__panel-lede">
-                    We build voice playbooks that let growth, support, and product teams speak in harmony.
-                  </p>
-                  <ol className="cg-writing__voice-steps">
-                    {voiceMilestones.map((milestone) => (
-                      <li key={milestone}>{milestone}</li>
-                    ))}
-                  </ol>
-                  <div className="cg-writing__deliverable-card">
-                    <span className="cg-writing__deliverable-label">Deliverable</span>
-                    <strong>Voice bible + rollout workshop</strong>
-                    <p>Two-hour working session with annotated scripts and response kits for live teams.</p>
-                  </div>
-                </div>
-              )
-            }
-          ]}
-        />
+        <aside className="cg-bong__details" aria-label="Bong Tour offerings and partnerships">
+          <div className="cg-bong__panel">
+            <h3>Offerings</h3>
+            <ul>
+              {offerings.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="cg-bong__panel">
+            <h3>In conversation with</h3>
+            <ul>
+              {partnerships.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <p className="cg-bong__note">Dedicated landing page launches soon with expanded materials and score demos.</p>
+        </aside>
       </div>
     </SectionShell>
   );
