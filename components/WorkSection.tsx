@@ -33,9 +33,9 @@ const highlightProjects = [
   {
     title: "Lead Me Guide Me",
     eyebrow: "Scripture application",
-    description: "Shaped a responsive scripture companion with daily prompts, bespoke scoring cues, and guided reflection flows.",
+    description: "iOS scripture companion that pairs daily prompts with original rehearsal cues for gospel choirs.",
     tags: ["Product", "Music", "Story"],
-    href: "https://leadmeguideme.app",
+    href: "/work/lead-me-guide-me",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M9 7h14v18H9z" />
