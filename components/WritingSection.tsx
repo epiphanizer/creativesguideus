@@ -49,11 +49,6 @@ export function WritingSection() {
             </div>
           </div>
           <div className="cg-writing__secondary">
-            <ul className="cg-writing__points">
-              {writingHighlights.map((statement) => (
-                <li key={statement}>{statement}</li>
-              ))}
-            </ul>
             <div className="cg-writing__bong">
               <span className="cg-writing__bong-label">In development</span>
               <a className="cg-writing__bong-link" href="/bong-tour">
@@ -63,6 +58,11 @@ export function WritingSection() {
                 Invitation-only slate surface with finance deck, cue list, and tone essays.
               </p>
             </div>
+            <ul className="cg-writing__points">
+              {writingHighlights.map((statement) => (
+                <li key={statement}>{statement}</li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
