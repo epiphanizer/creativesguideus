@@ -3,9 +3,8 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 
 const gratitudeMeta = {
-  duration: "02:32",
-  instrumentation: "Felt piano, tape loops, room tone",
-  project: "Standalone release crafted for reflective launch opens"
+  instrumentation: "Felt piano, tape loops, room tone, drums",
+  project: "Standalone post-rock release"
 };
 
 const gratitudeEmbedSrc = "https://open.spotify.com/embed/track/62hskoBw5Vl1LLZeR1oiBi?utm_source=generator";
@@ -47,9 +46,6 @@ export function MusicSection() {
           <Button as="a" href="#contact">
             Request release catalog
           </Button>
-          <Button as="a" href="https://open.spotify.com/track/62hskoBw5Vl1LLZeR1oiBi" variant="ghost">
-            Listen to Gratitude
-          </Button>
         </div>
       </div>
 
@@ -58,13 +54,12 @@ export function MusicSection() {
             <div className="cg-music__card-header">
               <span className="cg-music__badge">Featured release</span>
             <h3 className="cg-music__title">Gratitude</h3>
-            <p className="cg-music__subtitle">Felt piano, tape loops, room tone</p>
-          </div>
+           </div>
           <dl className="cg-music__meta">
-            <div>
+            {/* <div>
               <dt>Duration</dt>
               <dd>{gratitudeMeta.duration}</dd>
-            </div>
+            </div> */}
             <div>
               <dt>Instrumentation</dt>
               <dd>{gratitudeMeta.instrumentation}</dd>

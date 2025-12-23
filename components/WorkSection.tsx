@@ -78,18 +78,23 @@ export function WorkSection() {
             <Button as="a" href="#contact">
               Book a case review
             </Button>
-            <Button as="a" href="#music" variant="ghost">
-              Listen to Gratitude
-            </Button>
           </div>
         </div>
 
         <aside className="cg-work__aside" aria-label="Launch principles">
+          <p className="cg-work__summary-lede">
+            Composed releases weave design, story, and sound into one brief so internal teams feel the same confident
+            narrative your audience does.
+          </p>
           <ul className="cg-work__summary">
             <li>Launch playbooks with content, motion, and score guidelines</li>
             <li>Analytics-ready builds that stay maintainable after handoff</li>
-            <li>Calm stakeholder rituals that keep decisions in sync</li>
+            <li>Editorial voice kits and cue libraries delivered day-one</li>
+            <li>Calm rituals—screenings, burn-ins, retros—that keep decisions in sync</li>
           </ul>
+          <p className="cg-work__summary-footer">
+            We stage internal premieres, share alt cuts, and refine stems post-launch so the release keeps breathing.
+          </p>
         </aside>
       </div>
 
