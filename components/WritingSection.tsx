@@ -44,7 +44,7 @@ export function WritingSection() {
             </p>
             <div className="cg-writing__hero-actions">
               <Button as="a" href="#contact">
-                Request writing slate
+                Request the story slate
               </Button>
             </div>
           </div>

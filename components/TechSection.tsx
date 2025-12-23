@@ -71,10 +71,10 @@ export function TechSection() {
               variant="ghost"
               className="cg-tech__cta"
             >
-              Explore Appreesh.org
+              Enter Appreesh.org
             </Button>
             <Button as="a" href="#contact" variant="secondary">
-              Start a systems brief
+              Initiate the systems brief
             </Button>
           </div>
         </div>

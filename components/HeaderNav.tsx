@@ -83,7 +83,7 @@ export function HeaderNav() {
           className="cg-header__cta"
           onClick={() => handleNavigate(CONTACT_ANCHOR_ID)}
         >
-          Contact
+          Begin the narrative
         </button>
       </div>
     </header>

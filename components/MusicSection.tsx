@@ -44,7 +44,7 @@ export function MusicSection() {
         </ul>
         <div className="cg-split__actions">
           <Button as="a" href="#contact">
-            Request release catalog
+            Request the score folio
           </Button>
         </div>
       </div>

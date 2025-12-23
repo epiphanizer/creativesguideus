@@ -363,6 +363,15 @@
   align-items: start;
 }
 
+#contact.cg-section {
+  padding-top: clamp(var(--cg-space-3xl), 10vw, var(--cg-space-5xl));
+  padding-bottom: clamp(var(--cg-space-3xl), 9vw, var(--cg-space-5xl));
+}
+
+#contact .cg-section__inner {
+  gap: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
+}
+
 .cg-contact__intro {
   display: grid;
   gap: var(--cg-space-xl);
@@ -378,11 +387,14 @@
 .cg-contact__form {
   display: grid;
   gap: var(--cg-space-lg);
-  padding: var(--cg-space-2xl);
+  padding: clamp(var(--cg-space-lg), 3vw, var(--cg-space-xl));
   border-radius: calc(var(--cg-radius-lg) * 1.05);
   border: 1px solid var(--cg-color-border);
   background: rgba(255, 255, 255, 0.78);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+  width: min(100%, 34rem);
+  max-width: 100%;
+  justify-self: end;
 }
 
 .cg-contact__field {
@@ -801,12 +813,10 @@ p + ol {
   position: relative;
   background-color: var(--cg-color-canvas);
   background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 246, 255, 0.98)),
-    radial-gradient(circle at 12% 6%, rgba(108, 139, 255, 0.14), transparent 58%),
-    radial-gradient(circle at 82% 14%, rgba(255, 176, 189, 0.12), transparent 62%),
-    repeating-linear-gradient(0deg, rgba(108, 139, 255, 0.045), rgba(108, 139, 255, 0.045) 1px, transparent 1px, transparent 120px),
-    repeating-linear-gradient(90deg, rgba(108, 139, 255, 0.035), rgba(108, 139, 255, 0.035) 1px, transparent 1px, transparent 160px);
-  background-blend-mode: normal, screen, screen, multiply, multiply;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(240, 240, 240, 0.98)),
+    repeating-linear-gradient(0deg, rgba(30, 30, 30, 0.035), rgba(30, 30, 30, 0.035) 1px, transparent 1px, transparent 120px),
+    repeating-linear-gradient(90deg, rgba(30, 30, 30, 0.025), rgba(30, 30, 30, 0.025) 1px, transparent 1px, transparent 160px);
+  background-blend-mode: multiply, normal, normal;
   color: var(--cg-color-ink-900);
   -webkit-font-smoothing: antialiased;
 }
@@ -915,7 +925,11 @@ p + ol {
 }
 
 .cg-header__identity {
-  display: grid;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
   gap: var(--cg-space-2xs);
   font-size: var(--cg-type-body-sm);
   letter-spacing: 0.12em;
@@ -932,6 +946,9 @@ p + ol {
 
 .cg-header__nav {
   justify-self: center;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
 }
 
 .cg-header__list {
@@ -949,8 +966,9 @@ p + ol {
   position: relative;
   padding: var(--cg-space-xs) 0;
   font-size: var(--cg-type-body-sm);
+  font-family: var(--cg-font-sans);
   color: var(--cg-color-ink-500);
-  transition: color var(--cg-transition-fade);
+  transition: color var(--cg-transition-fade), transform var(--cg-transition-move);
 }
 
 .cg-header__link::after {
@@ -962,13 +980,20 @@ p + ol {
   height: 2px;
   background: var(--cg-color-ink-900);
   opacity: 0;
-  transform: scaleX(0.2);
+  transform: scaleX(0.3);
   transition: opacity var(--cg-transition-fade), transform var(--cg-transition-move);
 }
 
 .cg-header__link:hover,
 .cg-header__link:focus-visible {
   color: var(--cg-color-ink-900);
+  transform: translateY(-1px);
+}
+
+.cg-header__link:hover::after,
+.cg-header__link:focus-visible::after {
+  opacity: 0.6;
+  transform: scaleX(1);
 }
 
 .cg-header__link--active {
@@ -986,6 +1011,7 @@ p + ol {
   background: var(--cg-color-ink-900);
   color: var(--cg-color-canvas);
   font-size: var(--cg-type-body-sm);
+  font-family: var(--cg-font-sans);
   font-weight: 600;
   transition: background var(--cg-transition-fade), transform var(--cg-transition-move);
 }
@@ -1299,7 +1325,7 @@ p + ol {
   height: 1.8rem;
   border-radius: 0.75rem;
   border: 1px solid var(--cg-color-accent-strong);
-  background: linear-gradient(160deg, rgba(108, 139, 255, 0.2), rgba(108, 139, 255, 0.06));
+  background: linear-gradient(160deg, rgba(30, 30, 30, 0.16), rgba(30, 30, 30, 0.04));
   color: var(--cg-color-accent);
 }
 
@@ -1815,8 +1841,8 @@ h1,
  h4,
  h5,
  h6 {
-  font-family: var(--cg-font-sans);
-  letter-spacing: -0.01em;
+  font-family: var(--cg-font-serif);
+  letter-spacing: -0.02em;
   line-height: var(--cg-type-tight);
 }
 

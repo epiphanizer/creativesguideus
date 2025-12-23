@@ -6,7 +6,7 @@ const projectTypes = [
   "Brand / Web",
   "Music / Score",
   "Narrative / Writing",
-  "Integrated (All Pillars)",
+  "Integrated Suite",
   "Consult / Advisory"
 ];
 
@@ -17,9 +17,9 @@ export function ContactSection() {
         <div className="cg-contact__intro">
           <SectionHeader
             id="contact-title"
-            eyebrow="Contact"
-            title="Start a composed launch"
-            description="Two Q1 2026 openings — remote-friendly and deeply collaborative."
+            eyebrow="Begin dialogue"
+            title="Stage the composed launch"
+            description="Two Q1 2026 residencies remain—remote-friendly, intensely collaborative."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4 7h16v10H4z" />
@@ -30,8 +30,8 @@ export function ContactSection() {
           />
           <div className="cg-contact__meta">
             <p>
-              Prefer a direct line? Email hello@creativesguide.us and include a calendar link if speed matters. We reply within two
-              business days.
+              Prefer a direct line? Email hello@creativesguide.us with a calendar link and any existing materials—we answer within
+              two studio days.
             </p>
           </div>
         </div>
@@ -58,7 +58,7 @@ export function ContactSection() {
             <label htmlFor="contact-project-type">Project Type</label>
             <select id="contact-project-type" name="projectType" defaultValue="" required>
               <option value="" disabled>
-                Choose the focus
+                Select the focus
               </option>
               {projectTypes.map((type) => (
                 <option key={type} value={type}>
@@ -80,8 +80,8 @@ export function ContactSection() {
           </div>
 
           <div className="cg-contact__footer">
-            <Button type="submit">Send project outline</Button>
-            <span className="cg-contact__privacy">We never share details outside the project team.</span>
+            <Button type="submit">Share the narrative brief</Button>
+            <span className="cg-contact__privacy">Your details stay within the core studio—always.</span>
           </div>
         </form>
       </div>

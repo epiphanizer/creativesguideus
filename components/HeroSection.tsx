@@ -56,10 +56,10 @@ export function HeroSection() {
           actions={
             <div className="cg-hero__actions">
               <Button as="a" href="#contact">
-                Start a Project
+                Invite the narrative
               </Button>
               <Button as="a" href="#work" variant="ghost">
-                View Selected Work
+                Survey the proof
               </Button>
             </div>
           }

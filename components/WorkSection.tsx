@@ -16,7 +16,7 @@ const highlightProjects = [
     tags: ["Nonprofit", "Donations", "Grant Programs", "Athlete Support", "Community"],
     caseHref: "/work/world-cup-dreams",
     siteHref: "https://www.worldcupdreams.org",
-    siteLabel: "Visit worldcupdreams.org",
+    siteLabel: "Enter worldcupdreams.org",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M6 23 16 9l10 14" />
@@ -31,7 +31,7 @@ const highlightProjects = [
     tags: ["Product", "Brand", "Web3"],
     caseHref: "/work/appreesh",
     siteHref: "https://appreesh.org",
-    siteLabel: "Explore appreesh.org",
+    siteLabel: "Enter appreesh.org",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M9.5 12.5a3.5 3.5 0 1 1 5 5L16 19l1.5-1.5a3.5 3.5 0 1 1 5-5" />
@@ -46,7 +46,7 @@ const highlightProjects = [
     tags: ["Product", "Music", "Story"],
     caseHref: "/work/lead-me-guide-me",
     siteHref: "https://leadmeguideme.org",
-    siteLabel: "Visit leadmeguideme.org",
+    siteLabel: "Enter leadmeguideme.org",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M9 7h14v18H9z" />
@@ -89,7 +89,7 @@ export function WorkSection() {
           </p>
           <div className="cg-split__actions">
             <Button as="a" href="#contact">
-              Book a case review
+              Book the case salon
             </Button>
           </div>
         </div>

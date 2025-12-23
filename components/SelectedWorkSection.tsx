@@ -58,7 +58,7 @@ export function SelectedWorkSection() {
             iconLabel="Creative portfolio emblem"
             actions={
               <Button as="a" href="mailto:hello@creativesguide.us?subject=Selected%20Work" variant="ghost">
-                Request full deck
+                Request the full dossier
               </Button>
             }
           />

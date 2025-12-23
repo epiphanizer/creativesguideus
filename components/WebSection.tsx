@@ -106,10 +106,10 @@ export function WebSection() {
           </p>
           <div className="cg-split__actions">
             <Button as="a" href="#contact">
-              Schedule a scope call
+              Open the scope salon
             </Button>
             <Button as="a" href="#work" variant="ghost">
-              Review recent systems
+              Study recent systems
             </Button>
           </div>
         </div>

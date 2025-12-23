@@ -21,8 +21,24 @@ Carry-forward guardrails
 
 Return a diff summary + list of touched files.
 
+Sprint 2- 
+Codex Instructions for Optimization
+To improve the site's consistency, you can provide the following specific instructions to your development or design tool:
 
-Sprint 2 — Blog + database-driven content (Firestore)
+1. Aligning the Tone of Voice
+"Rewrite all functional copy to match the 'narrative-first' brand voice. Replace utilitarian phrases with more evocative, proprietary language. For example, change 'Contact' or 'Send project outline' to 'Begin the Narrative' or 'Start the Dialogue'. Ensure all micro-copy reflects a tone that is human, insightful, and protective of the creative process".
+
+2. Refacing the Visual Framework
+"Implement a strict monochrome minimalist grid system. Reduce the size of the contact form's input fields to match the 'Ship More Narrative' text block's width, maintaining a consistent column structure. Increase negative space (white space) around the 'Start' section to ensure it feels like a continuation of the brand’s 'no-noise' philosophy".
+
+3. Standardizing Brand Assets
+"Update the global CSS to ensure typography hierarchy is consistent across all pages. Set a primary serif font for all narrative-driven headers and a secondary, high-legibility sans-serif for functional links. Ensure the header logo 'Creatives Guide Us' is vertically aligned with the navigation menu to prevent visual 'stutter' during scrolling".
+
+4. Interactive Branding
+"Add subtle hover animations to navigation links—such as a simple fade or underline—to add a layer of 'boutique' polish without adding visual clutter. Ensure all transitions are timed to feel deliberate and calm, reinforcing the brand's 'Build Less Noise' promise".
+
+
+Sprint 3 — Blog + database-driven content (Firestore)
 
 Goal: posts/projects come from Firestore, not hardcoded.
 Tasks
