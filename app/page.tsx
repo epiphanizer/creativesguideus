@@ -1,31 +1,9 @@
 import { HeroSection } from "@/components/HeroSection";
+import { WebSection } from "@/components/WebSection";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
-
-const services = [
-  {
-    title: "Brand Strategy",
-    description: "Clarify the promise so every touchpoint speaks in one spare, resonant voice."
-  },
-  {
-    title: "Visual Identity",
-    description: "Architect monochrome systems with typographic gravity and flexible motion rules."
-  },
-  {
-    title: "Web Design (UI/UX)",
-    description: "Compose gallery-grade interfaces that feel inevitable and convert without noise."
-  },
-  {
-    title: "Web Development",
-    description: "Ship performant, accessible builds on modern stacks with obsessive layout craft."
-  },
-  {
-    title: "Storytelling / Copy",
-    description: "Write crisp, poetic language that holds attention and earns trust in one breath."
-  }
-];
 
 const cueHighlights = [
   { title: "North River", duration: "02:11" },
@@ -53,25 +31,7 @@ export default function HomePage() {
     <main className="cg-page" id="page-top">
       <HeroSection />
 
-      <SectionShell id="web" labelledBy="web-title">
-        <SectionHeader
-          id="web-title"
-          eyebrow="Web / Brand"
-          title="Websites + Brands that tell the truth"
-          description="Strategy, identity, and digital build executed with restrained conviction."
-        />
-        <div className="cg-card-grid" role="list">
-          {services.map((service) => (
-            <div key={service.title} role="listitem">
-              <Card
-                title={service.title}
-                description={service.description}
-                className="cg-card--service"
-              />
-            </div>
-          ))}
-        </div>
-      </SectionShell>
+      <WebSection />
 
       <SectionShell id="music" labelledBy="music-title">
         <SectionHeader

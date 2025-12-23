@@ -5,7 +5,7 @@ Execution Checklist
 2. Complete EPIC 1 — Navigation + UX Plumbing — DONE
 3. Complete EPIC 2 — Shared UI Primitives (DRY) — DONE
 4. Complete EPIC 3 — Hero + Signature Motif — DONE
-5. Complete EPIC 4 — Web / Branding / Storytelling Section
+5. Complete EPIC 4 — Web / Branding / Storytelling Section — DONE
 6. Complete EPIC 5 — Music Section (Zine-ish)
 7. Complete EPIC 6 — Writing Section (Screenwriting + Copywriting)
 8. Complete EPIC 7 — Selected Work (Optional) + About
@@ -92,19 +92,19 @@ Files: components/motif/LineGridMotif.tsx, hooks/usePrefersReducedMotion.ts
 
 EPIC 4 — Web / Branding / Storytelling Section
 
-T4.1 Web services card grid
+T4.1 Web services card grid — DONE
 
 AC: 4–6 cards with tight copy placeholders; consistent spacing and hover
 
 Files: components/WebSection.tsx
 
-T4.2 Process mini-strip (Discover → Design → Build → Launch)
+T4.2 Process mini-strip (Discover → Design → Build → Launch) — DONE
 
 AC: appears in Web section and/or shared Process section; looks premium
 
 Files: components/ProcessStrip.tsx (or embedded)
 
-T4.3 Case preview blocks (placeholder)
+T4.3 Case preview blocks (placeholder) — DONE
 
 AC: 1–2 case preview components exist with image placeholder + one-liner
 
