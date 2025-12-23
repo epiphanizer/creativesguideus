@@ -14,6 +14,9 @@ type SectionHeaderProps = {
   align?: "start" | "center";
   className?: string;
   actions?: ReactNode;
+  icon?: ReactNode;
+  iconLabel?: string;
+  badge?: string;
 };
 
 export function SectionHeader({
@@ -25,14 +28,30 @@ export function SectionHeader({
   id,
   align = "start",
   className,
-  actions
+  actions,
+  icon,
+  iconLabel,
+  badge
 }: SectionHeaderProps) {
   const Heading = headingLevel;
+  const hasTopline = Boolean(eyebrow || icon || badge);
+  const iconRole = iconLabel ? "img" : "presentation";
+  const iconAria = iconLabel ? { "aria-label": iconLabel } : { "aria-hidden": true };
 
   return (
     <header className={cx("cg-section-header", `cg-section-header--${align}`, className)}>
       <div className="cg-section-header__content">
-        {eyebrow ? <p className="cg-section-header__eyebrow">{eyebrow}</p> : null}
+        {hasTopline ? (
+          <p className="cg-section-header__eyebrow">
+            {icon ? (
+              <span className="cg-section-header__icon" role={iconRole} {...iconAria}>
+                {icon}
+              </span>
+            ) : null}
+            {eyebrow ? <span>{eyebrow}</span> : null}
+            {badge ? <span className="cg-section-header__badge">{badge}</span> : null}
+          </p>
+        ) : null}
         <Heading id={id} className="cg-section-header__title">
           {title}
         </Heading>

@@ -48,6 +48,15 @@ export function SelectedWorkSection() {
             eyebrow="Selected Work"
             title="Outcomes built quietly, shipped confidently"
             description="A rotating mix of launches, retainer programs, and narrative experiments across web, music, and writing."
+            icon={
+              <svg viewBox="0 0 24 24">
+                <path d="M4 6h16" />
+                <path d="M4 12h13" />
+                <path d="M4 18h9" />
+              </svg>
+            }
+            iconLabel="Creative portfolio emblem"
+            badge="Creative!!!"
             actions={
               <Button as="a" href="mailto:hello@creativesguide.us?subject=Selected%20Work" variant="ghost">
                 Request full deck

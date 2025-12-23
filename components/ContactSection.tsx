@@ -20,6 +20,14 @@ export function ContactSection() {
             eyebrow="Contact"
             title="Start a composed launch"
             description="Two Q1 2026 openings — remote-friendly and deeply collaborative."
+            icon={
+              <svg viewBox="0 0 24 24">
+                <path d="M4 7h16v10H4z" />
+                <path d="M4 9l8 5 8-5" />
+              </svg>
+            }
+            iconLabel="Creative contact emblem"
+            badge="Creative!!!"
           />
           <div className="cg-contact__meta">
             <p>

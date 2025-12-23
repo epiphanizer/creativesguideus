@@ -1,9 +1,15 @@
+import fs from "node:fs";
+import path from "node:path";
+
 import Image from "next/image";
 
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import posterImage from "@/app/bong-tour/bong-tour-poster.png";
+
+const treatmentPath = path.join(process.cwd(), "app/bong-tour/treatment.txt");
+const treatmentSource = fs.readFileSync(treatmentPath, "utf8").trim();
 
 const globalComps = ["The Big Lebowski (stoner philosophy)", "Tropic Thunder (industry satire)", "Fear and Loathing in Las Vegas (trip momentum)", "The Player (meta Hollywood)"];
 
@@ -117,12 +123,21 @@ export function BongTourFeature() {
                 </Button>
               </div>
             }
+            icon={
+              <svg viewBox="0 0 24 24">
+                <path d="M4 7h16v10H4z" />
+                <circle cx="9" cy="12" r="1.5" />
+                <circle cx="15" cy="12" r="1.5" />
+              </svg>
+            }
+            iconLabel="Creative screenplay emblem"
+            badge="Creative!!!"
           />
           <div className="cg-bong-feature__logline">
             <h3>Logline</h3>
             <p>
               A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to its smoke-script.
-              They pitch "Bhang Tour"; Hollywood hears "Bong Tour" and the artifact rewrites the film through them until Mount Doom asks:
+              They pitch &ldquo;Bhang Tour&rdquo;; Hollywood hears &ldquo;Bong Tour&rdquo; and the artifact rewrites the film through them until Mount Doom asks:
               cash it, or cast it into fire?
             </p>
           </div>
@@ -160,7 +175,7 @@ export function BongTourFeature() {
           </div>
         </div>
         <p className="cg-bong-feature__note">
-          This is not "India as seasoning." India is the myth engine and the emotional truth. West Bengal is origin, Kolkata is arrival, and Rishikesh is reckoning.
+          This is not &ldquo;India as seasoning.&rdquo; India is the myth engine and the emotional truth. West Bengal is origin, Kolkata is arrival, and Rishikesh is reckoning.
         </p>
       </section>
 
@@ -218,6 +233,11 @@ export function BongTourFeature() {
             <li key={note}>{note}</li>
           ))}
         </ul>
+      </section>
+
+      <section className="cg-bong-feature__treatment" aria-label="Full treatment transcript">
+        <h3>Treatment</h3>
+        <pre>{treatmentSource}</pre>
       </section>
 
       <section className="cg-bong-feature__finale" aria-label="Closing call to action">

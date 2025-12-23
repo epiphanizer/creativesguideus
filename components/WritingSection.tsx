@@ -23,6 +23,15 @@ export function WritingSection() {
           eyebrow="Screenwriting"
           title="We author worlds your launch can live in"
           description="Script, copy, and cadence plans grow alongside design and score so the release lands composed."
+          icon={
+            <svg viewBox="0 0 24 24">
+              <path d="M4 19l6.5-6.5" />
+              <path d="M12 11l5-5a2.5 2.5 0 1 1 3.5 3.5l-5 5" />
+              <path d="M4 19h5" />
+            </svg>
+          }
+          iconLabel="Creative writing emblem"
+          badge="Creative!!!"
         />
         <div className="cg-writing__hero-copy">
           {writingHeroCopy.map((paragraph) => (

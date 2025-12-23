@@ -57,6 +57,15 @@ export function WorkSection() {
             eyebrow="Composed releases"
             title="Proof in the field"
             description="Digital, score, and story engagements that ship as one calm sequence."
+            icon={
+              <svg viewBox="0 0 24 24">
+                <path d="M4.5 15.5c2.5 0 4.5-2 6-5 1.5 3 3.5 5 6 5" />
+                <path d="M6 9c1.2-2 3-4 6-4 3 0 4.8 2 6 4" />
+                <path d="M4.5 15.5l3.5-1.5L6 20l4-3 1.5 3.5" />
+              </svg>
+            }
+            iconLabel="Creative release emblem"
+            badge="Creative!!!"
           />
           <p>
             We lead cross-disciplinary launches where donors, fans, and leadership experience the same crafted release—no crash

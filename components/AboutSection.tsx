@@ -32,6 +32,15 @@ export function AboutSection() {
           eyebrow="About / Process"
           title="Creatives Guide Us is a hybrid studio for narrative systems"
           description="Founded by a writer/composer and an interactive director to bridge story, sound, and interface with one voice."
+          icon={
+            <svg viewBox="0 0 24 24">
+              <circle cx="8" cy="12" r="3" />
+              <path d="M12 6h8v12h-8z" />
+              <path d="M4 18h4" />
+            </svg>
+          }
+          iconLabel="Creative studio emblem"
+          badge="Creative!!!"
         />
 
         <div className="cg-about__grid">

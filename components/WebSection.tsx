@@ -87,6 +87,15 @@ export function WebSection() {
             eyebrow="Web & Brand"
             title="Architect calm product releases"
             description="Sites, systems, and scripts that land like a premiere—not a fire drill."
+            icon={
+              <svg viewBox="0 0 24 24">
+                <rect x="3.5" y="6" width="17" height="12" rx="2" />
+                <path d="M3.5 11.5h17" />
+                <path d="M9 18V11.5" />
+              </svg>
+            }
+            iconLabel="Creative interface emblem"
+            badge="Creative!!!"
           />
           <p>
             We choreograph UX, tone, and score in one monochrome room so every touchpoint arrives with the same composed energy.

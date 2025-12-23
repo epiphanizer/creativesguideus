@@ -1,15 +1,17 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 import { anchors } from "./nav/anchors";
 import { useActiveSection } from "../hooks/useActiveSection";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
-
 const CONTACT_ANCHOR_ID = "contact";
 
 export function HeaderNav() {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const pathname = usePathname();
+  const router = useRouter();
   const activeAnchors = useMemo(() => anchors, []);
   const anchorIds = useMemo(() => activeAnchors.map((anchor) => anchor.id), [activeAnchors]);
   const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
@@ -28,6 +30,19 @@ export function HeaderNav() {
       });
     },
     [manuallySetActiveId, prefersReducedMotion]
+  );
+
+  const handleNavigate = useCallback(
+    (anchorId: string) => {
+      if (pathname !== "/") {
+        router.push(`/#${anchorId}`);
+
+        return;
+      }
+
+      scrollToAnchor(anchorId);
+    },
+    [pathname, router, scrollToAnchor]
   );
 
   return (
@@ -54,7 +69,7 @@ export function HeaderNav() {
                     .join(" ")}
                   onClick={(event) => {
                     event.preventDefault();
-                    scrollToAnchor(anchor.id);
+                    handleNavigate(anchor.id);
                   }}
                 >
                   {anchor.label}
@@ -66,7 +81,7 @@ export function HeaderNav() {
         <button
           type="button"
           className="cg-header__cta"
-          onClick={() => scrollToAnchor(CONTACT_ANCHOR_ID)}
+          onClick={() => handleNavigate(CONTACT_ANCHOR_ID)}
         >
           Contact
         </button>

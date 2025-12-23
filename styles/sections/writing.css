@@ -1,0 +1,191 @@
+.cg-writing {
+  display: grid;
+  gap: clamp(var(--cg-space-xl), 4vw, var(--cg-space-3xl));
+}
+
+.cg-writing__hero {
+  display: grid;
+  gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
+  padding: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
+  border-radius: calc(var(--cg-radius-lg) * 1.05);
+  border: 1px solid rgba(15, 15, 15, 0.08);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.cg-writing__hero-copy {
+  display: grid;
+  gap: var(--cg-space-md);
+  color: var(--cg-color-ink-500);
+}
+
+.cg-writing__points {
+  list-style: none;
+  display: grid;
+  gap: var(--cg-space-xs);
+  max-width: 56ch;
+  color: var(--cg-color-ink-500);
+}
+
+.cg-writing__points li::before {
+  content: "—";
+  margin-right: var(--cg-space-2xs);
+  color: var(--cg-color-ink-300);
+}
+
+.cg-writing__note {
+  font-size: var(--cg-type-body-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-400);
+}
+
+.cg-writing__hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cg-space-sm);
+}
+
+.cg-writing-tabs__tab[data-state="active"] {
+  border-color: var(--cg-color-ink-200);
+  background: linear-gradient(120deg, rgba(245, 245, 245, 0.9), rgba(230, 230, 230, 0.7));
+  color: var(--cg-color-ink-900);
+}
+
+.cg-writing-tabs__tab:focus-visible {
+  outline: 2px solid var(--cg-color-ink-500);
+  outline-offset: 3px;
+}
+
+.cg-writing-tabs__label {
+  font-size: var(--cg-type-body-sm);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.cg-writing-tabs__summary {
+  color: var(--cg-color-ink-400);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+.cg-writing-tabs__panel {
+  border: 1px solid var(--cg-color-border);
+  border-radius: calc(var(--cg-radius-lg) * 1.05);
+  background: rgba(255, 255, 255, 0.78);
+  padding: var(--cg-space-xl);
+  display: grid;
+  gap: var(--cg-space-lg);
+}
+
+.cg-writing__panel-lede {
+  max-width: 52ch;
+  color: var(--cg-color-ink-500);
+}
+
+.cg-writing__loglines {
+  list-style: none;
+  display: grid;
+  gap: var(--cg-space-lg);
+}
+
+.cg-writing__logline {
+  display: grid;
+  gap: var(--cg-space-2xs);
+}
+
+.cg-writing__logline-meta {
+  font-size: var(--cg-type-body-sm);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-400);
+}
+
+.cg-writing__logline-title {
+  font-size: var(--cg-type-subtitle);
+  letter-spacing: -0.01em;
+}
+
+.cg-writing__logline-copy {
+  color: var(--cg-color-ink-600);
+}
+
+.cg-writing__panel-grid {
+  display: grid;
+  gap: var(--cg-space-xl);
+  align-items: start;
+}
+
+@media (min-width: 720px) {
+  .cg-writing__panel-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.cg-writing__services {
+  display: grid;
+  gap: var(--cg-space-sm);
+}
+
+.cg-writing__services h3 {
+  font-size: var(--cg-type-body);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-400);
+}
+
+.cg-writing__services ul {
+  list-style: none;
+  display: grid;
+  gap: var(--cg-space-sm);
+  color: var(--cg-color-ink-600);
+}
+
+.cg-writing__sample {
+  display: grid;
+  gap: var(--cg-space-sm);
+  padding: var(--cg-space-lg);
+  border-radius: var(--cg-radius-md);
+  border: 1px solid rgba(15, 15, 15, 0.08);
+  background: rgba(247, 247, 247, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  color: var(--cg-color-ink-600);
+}
+
+.cg-writing__sample-footnote {
+  font-size: var(--cg-type-body-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-400);
+}
+
+.cg-writing__voice-steps {
+  list-style: decimal-leading-zero;
+  display: grid;
+  gap: var(--cg-space-sm);
+  padding-left: var(--cg-space-lg);
+  color: var(--cg-color-ink-600);
+}
+
+.cg-writing__voice-steps li {
+  padding-left: var(--cg-space-2xs);
+}
+
+.cg-writing__deliverable-card {
+  display: grid;
+  gap: var(--cg-space-2xs);
+  padding: var(--cg-space-lg);
+  border-radius: var(--cg-radius-md);
+  border: 1px solid rgba(15, 15, 15, 0.08);
+  background: linear-gradient(140deg, rgba(240, 240, 240, 0.85), rgba(230, 230, 230, 0.6));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  color: var(--cg-color-ink-600);
+}
+
+.cg-writing__deliverable-label {
+  font-size: var(--cg-type-body-sm);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-400);
+}

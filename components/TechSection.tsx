@@ -44,6 +44,15 @@ export function TechSection() {
         eyebrow="Technology"
         title="Code, crypto, and agentic systems that keep releases alive"
         description="We build black-and-white worlds, but the stack underneath is anything but simple—engineered for calm updates, on-chain trust, and rapid iteration."
+        icon={
+          <svg viewBox="0 0 24 24">
+            <path d="M4 8h16v8H4z" />
+            <path d="M8 4h8v4H8z" />
+            <path d="M8 16h8v4H8z" />
+          </svg>
+        }
+        iconLabel="Creative systems emblem"
+        badge="Creative!!!"
       />
 
       <div className="cg-tech__grid">
