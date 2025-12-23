@@ -33,7 +33,7 @@ export function WritingSection() {
           iconLabel="Creative writing emblem"
         />
         <div className="cg-writing__hero-grid">
-          <div className="cg-writing__hero-main">
+          <div className="cg-writing__primary">
             <div className="cg-writing__hero-copy">
               {writingHeroCopy.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -42,20 +42,26 @@ export function WritingSection() {
             <p className="cg-writing__note">
               Request the slate to hear table reads, review decks, and stage rewrites without opening new teams.
             </p>
+            <div className="cg-writing__hero-actions">
+              <Button as="a" href="#contact">
+                Request writing slate
+              </Button>
+            </div>
           </div>
-          <div className="cg-writing__hero-side">
+          <div className="cg-writing__secondary">
             <ul className="cg-writing__points">
               {writingHighlights.map((statement) => (
                 <li key={statement}>{statement}</li>
               ))}
             </ul>
-            <div className="cg-writing__hero-actions">
-              <Button as="a" href="#contact">
-                Request writing slate
-              </Button>
-              <Button as="a" href="/bong-tour" variant="ghost">
-                Read the Bong Tour treatment
-              </Button>
+            <div className="cg-writing__bong">
+              <span className="cg-writing__bong-label">In development</span>
+              <a className="cg-writing__bong-link" href="/bong-tour">
+                Bong Tour treatment <span aria-hidden="true">↗</span>
+              </a>
+              <p className="cg-writing__bong-note">
+                Invitation-only slate surface with finance deck, cue list, and tone essays.
+              </p>
             </div>
           </div>
         </div>

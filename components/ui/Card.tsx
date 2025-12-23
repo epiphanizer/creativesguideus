@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+"use client";
+
+import type { KeyboardEvent, ReactNode } from "react";
 
 import { cx } from "@/lib/cx";
 import { Tag } from "./Tag";
@@ -7,39 +9,48 @@ type CardProps = {
   title: string;
   eyebrow?: string;
   description?: string;
-  href?: string;
   tags?: string[];
   footer?: ReactNode;
   className?: string;
   children?: ReactNode;
   icon?: ReactNode;
+  onClick?: () => void;
+  ariaLabel?: string;
 };
 
 export function Card({
   title,
   eyebrow,
   description,
-  href,
   tags,
   footer,
   className,
   children,
-  icon
+  icon,
+  onClick,
+  ariaLabel
 }: CardProps) {
-  const Wrapper = href ? "a" : "article";
-  const wrapperProps = href
-    ? {
-        href,
-        className: cx("cg-card", href && "cg-card--link", className)
-      }
-    : {
-        className: cx("cg-card", className)
-      };
-
   const showTopline = Boolean(icon || eyebrow);
+  const isInteractive = typeof onClick === "function";
+  const cardClassName = cx("cg-card", isInteractive && "cg-card--link", className);
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (!isInteractive) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onClick?.();
+    }
+  };
 
   return (
-    <Wrapper {...wrapperProps}>
+    <article
+      className={cardClassName}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role={isInteractive ? "button" : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
+      aria-label={isInteractive ? ariaLabel ?? `Open ${title}` : undefined}
+    >
       <div className="cg-card__content">
         {showTopline ? (
           <div className="cg-card__topline">
@@ -63,7 +74,7 @@ export function Card({
         </div>
       ) : null}
       {footer ? <div className="cg-card__footer">{footer}</div> : null}
-    </Wrapper>
+    </article>
   );
 }
 

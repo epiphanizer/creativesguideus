@@ -2,6 +2,18 @@
   gap: clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
 }
 
+@media (min-width: 960px) {
+  .cg-music {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
+    align-items: start;
+  }
+
+  .cg-music .cg-split__body {
+    max-width: clamp(260px, 32vw, 420px);
+    justify-self: end;
+  }
+}
+
 .cg-music__points {
   list-style: none;
   display: grid;
@@ -78,4 +90,5 @@
   display: block;
   width: 100%;
   border: 0;
+  min-height: 260px;
 }

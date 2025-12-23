@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
-import { LineGridMotif } from "@/components/motif/LineGridMotif";
 
 const processSteps = [
   {
@@ -77,11 +76,6 @@ export function HeroSection() {
               </div>
             </div>
           ))}
-        </div>
-        <div className="cg-hero__visual" aria-hidden="true">
-          <div className="cg-hero__visual-frame">
-            <LineGridMotif className="cg-hero__motif" />
-          </div>
         </div>
       </div>
     </SectionShell>

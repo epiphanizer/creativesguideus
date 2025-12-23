@@ -1,3 +1,7 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -7,9 +11,12 @@ const highlightProjects = [
   {
     title: "World Cup Dreams Foundation",
     eyebrow: "Ski fundraising platform",
-    description: "Story-led giving site with an athlete journal cadence to rally donors for the 2025 season.",
-    tags: ["Web", "Story", "Donor UX"],
-    href: "https://www.worldcupdreams.org",
+    description:
+      "World Cup Dreams Foundation is an athlete-first WordPress experience tailored to guide athletes and donors toward one mission: fund elite snowsport talent.",
+    tags: ["Nonprofit", "Donations", "Grant Programs", "Athlete Support", "Community"],
+    caseHref: "/work/world-cup-dreams",
+    siteHref: "https://www.worldcupdreams.org",
+    siteLabel: "Visit worldcupdreams.org",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M6 23 16 9l10 14" />
@@ -20,9 +27,11 @@ const highlightProjects = [
   {
     title: "Appreesh",
     eyebrow: "Gratitude gifting co-op",
-    description: "Built a community-owned platform with monochrome UX, token rituals, and a composed launch kit.",
-    tags: ["Product", "Brand", "Web"],
-    href: "https://appreesh.org",
+    description: "Community-owned gratitude economy with on-chain rituals, editorial UX, and a composed launch kit.",
+    tags: ["Product", "Brand", "Web3"],
+    caseHref: "/work/appreesh",
+    siteHref: "https://appreesh.org",
+    siteLabel: "Explore appreesh.org",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M9.5 12.5a3.5 3.5 0 1 1 5 5L16 19l1.5-1.5a3.5 3.5 0 1 1 5-5" />
@@ -33,9 +42,11 @@ const highlightProjects = [
   {
     title: "Lead Me Guide Me",
     eyebrow: "Scripture application",
-    description: "iOS scripture companion that pairs daily prompts with original rehearsal cues for gospel choirs.",
+    description: "iOS scripture companion pairing daily prompts with original rehearsal cues for gospel choirs.",
     tags: ["Product", "Music", "Story"],
-    href: "/work/lead-me-guide-me",
+    caseHref: "/work/lead-me-guide-me",
+    siteHref: "https://leadmeguideme.org",
+    siteLabel: "Visit leadmeguideme.org",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M9 7h14v18H9z" />
@@ -48,6 +59,8 @@ const highlightProjects = [
 ];
 
 export function WorkSection() {
+  const router = useRouter();
+
   return (
     <SectionShell id="work" labelledBy="work-title" innerClassName="cg-work">
       <div className="cg-split cg-work__layout">
@@ -98,23 +111,41 @@ export function WorkSection() {
         </aside>
       </div>
 
-      <div className="cg-card-grid cg-work__grid" role="list">
+      <div className="cg-card-grid cg-work__grid">
         {highlightProjects.map((project) => (
-          <div key={project.title} role="listitem">
+          <div key={project.title}>
             <Card
               title={project.title}
               eyebrow={project.eyebrow}
               description={project.description}
               tags={project.tags}
-              href={project.href}
               icon={project.icon}
               className="cg-work__card"
+              onClick={() => router.push(project.caseHref)}
+              ariaLabel={`Open case study for ${project.title}`}
+              footer={
+                project.siteHref ? (
+                  <a
+                    className="cg-work__card-link"
+                    href={project.siteHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(event) => event.stopPropagation()}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.stopPropagation();
+                      }
+                    }}
+                  >
+                    {project.siteLabel ?? `Visit ${project.title}`} <span aria-hidden="true">&rarr;</span>
+                  </a>
+                ) : undefined
+              }
             />
           </div>
         ))}
+        <div className="cg-work__note">Every release stacks strategy, build, and score into one composed kit.</div>
       </div>
-
-      <p className="cg-work__note">Every release stacks strategy, build, and score into one composed kit.</p>
     </SectionShell>
   );
 }

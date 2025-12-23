@@ -50,16 +50,12 @@ export function MusicSection() {
       </div>
 
       <div className="cg-split__body">
-          <div className="cg-music__card">
-            <div className="cg-music__card-header">
-              <span className="cg-music__badge">Featured release</span>
+        <div className="cg-music__card">
+          <div className="cg-music__card-header">
+            <span className="cg-music__badge">Featured release</span>
             <h3 className="cg-music__title">Gratitude</h3>
-           </div>
+          </div>
           <dl className="cg-music__meta">
-            {/* <div>
-              <dt>Duration</dt>
-              <dd>{gratitudeMeta.duration}</dd>
-            </div> */}
             <div>
               <dt>Instrumentation</dt>
               <dd>{gratitudeMeta.instrumentation}</dd>
@@ -74,7 +70,7 @@ export function MusicSection() {
               title="Gratitude — Creatives Guide Us"
               src={gratitudeEmbedSrc}
               width="100%"
-              height="320"
+              height="280"
               loading="lazy"
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
               allowFullScreen
