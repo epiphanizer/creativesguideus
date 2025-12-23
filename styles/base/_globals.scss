@@ -1222,10 +1222,9 @@ p + ol {
 
 .cg-hero__process-step {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: clamp(var(--cg-space-4xs), 1vw, var(--cg-space-xs));
-  row-gap: clamp(var(--cg-space-4xs), 0.75vw, var(--cg-space-2xs));
-  align-items: start;
+  justify-items: center;
+  text-align: center;
+  gap: clamp(var(--cg-space-4xs), 1vw, var(--cg-space-xs));
 }
 
 .cg-hero__process-icon {
@@ -1237,12 +1236,13 @@ p + ol {
   stroke-linecap: round;
   stroke-linejoin: round;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
-  align-self: start;
+  justify-self: center;
 }
 
 .cg-hero__process-copy {
   display: grid;
   gap: clamp(var(--cg-space-4xs), 0.9vw, var(--cg-space-2xs));
+  text-align: center;
 }
 
 .cg-hero__process-title {
