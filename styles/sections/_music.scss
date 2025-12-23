@@ -1,5 +1,5 @@
 .cg-music {
-  gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
+  gap: clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
 }
 
 .cg-music__points {
@@ -17,8 +17,8 @@
 
 .cg-music__card {
   display: grid;
-  gap: var(--cg-space-lg);
-  padding: clamp(var(--cg-space-md), 3vw, var(--cg-space-lg));
+  gap: clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
+  padding: clamp(var(--cg-space-md), 2.5vw, var(--cg-space-lg));
   border-radius: calc(var(--cg-radius-lg) * 0.9);
   border: 1px solid rgba(15, 15, 15, 0.08);
   background: rgba(255, 255, 255, 0.85);
@@ -27,7 +27,7 @@
 
 .cg-music__card-header {
   display: grid;
-  gap: var(--cg-space-2xs);
+  gap: var(--cg-space-3xs);
 }
 
 .cg-music__badge {
@@ -48,7 +48,7 @@
 
 .cg-music__meta {
   display: grid;
-  gap: var(--cg-space-sm);
+  gap: var(--cg-space-2xs);
   font-size: var(--cg-type-body-sm);
   color: var(--cg-color-ink-500);
 }
@@ -61,7 +61,7 @@
 
 .cg-music__meta div {
   display: grid;
-  gap: var(--cg-space-2xs);
+  gap: var(--cg-space-3xs);
 }
 
 .cg-music__cta {

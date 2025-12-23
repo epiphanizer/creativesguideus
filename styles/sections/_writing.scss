@@ -5,7 +5,7 @@
 
 .cg-writing__hero {
   display: grid;
-  gap: clamp(var(--cg-space-lg), 3.5vw, var(--cg-space-2xl));
+  gap: clamp(var(--cg-space-xl), 4vw, var(--cg-space-3xl));
   padding: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
   border-radius: calc(var(--cg-radius-lg) * 1.05);
   border: 1px solid rgba(15, 15, 15, 0.08);
@@ -15,14 +15,14 @@
 
 .cg-writing__hero-grid {
   display: grid;
-  gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
+  gap: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
 }
 
 @media (min-width: 960px) {
   .cg-writing__hero-grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
     align-items: start;
-    gap: clamp(var(--cg-space-xl), 4vw, var(--cg-space-3xl));
+    gap: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
   }
 }
 
@@ -143,7 +143,7 @@
 
 .cg-writing__panel-grid {
   display: grid;
-  gap: var(--cg-space-xl);
+  gap: clamp(var(--cg-space-xl), 4vw, var(--cg-space-3xl));
   align-items: start;
 }
 

@@ -48,7 +48,7 @@ const heroSubhead = "One monochrome studio guiding every release from first outl
 export function HeroSection() {
   return (
     <SectionShell id="hero" variant="hero" labelledBy="hero-title" innerClassName="cg-hero">
-      <div className="cg-hero__content">
+      <div className="cg-hero__lede">
         <SectionHeader
           headingLevel="h1"
           id="hero-title"
@@ -65,7 +65,8 @@ export function HeroSection() {
             </div>
           }
         />
-
+      </div>
+      <div className="cg-hero__aside">
         <div className="cg-hero__process" aria-label="Studio process">
           {processSteps.map((step) => (
             <div key={step.title} className="cg-hero__process-step">
@@ -77,10 +78,10 @@ export function HeroSection() {
             </div>
           ))}
         </div>
-      </div>
-      <div className="cg-hero__visual" aria-hidden="true">
-        <div className="cg-hero__visual-frame">
-          <LineGridMotif className="cg-hero__motif" />
+        <div className="cg-hero__visual" aria-hidden="true">
+          <div className="cg-hero__visual-frame">
+            <LineGridMotif className="cg-hero__motif" />
+          </div>
         </div>
       </div>
     </SectionShell>
