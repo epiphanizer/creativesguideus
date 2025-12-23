@@ -5,22 +5,25 @@ import { SectionShell } from "@/components/ui/SectionShell";
 
 const highlightProjects = [
   {
-    title: "World Cup Dreams 2025",
-    eyebrow: "Sports docu-series",
-    description: "Digital storytelling hub, weekly vignette cadence, and broadcast-ready score suite for NBC Sports.",
-    tags: ["Brand", "Web", "Score"]
+    title: "World Cup Dreams Foundation",
+    eyebrow: "Ski fundraising platform",
+    description: "Story-led giving site with an athlete journal cadence to rally donors for the 2025 season.",
+    tags: ["Web", "Story", "Donor UX"],
+    href: "https://www.worldcupdreams.org"
   },
   {
-    title: "Appreesh.org",
-    eyebrow: "Web3 gratitude economy",
-    description: "On-chain gifting platform built with calm UX, tokenized rituals, and agentic release tooling.",
-    tags: ["Web3", "Product", "Systems"]
+    title: "Appreesh",
+    eyebrow: "Gratitude gifting co-op",
+    description: "Built a community-owned platform with monochrome UX, token rituals, and a composed launch kit.",
+    tags: ["Product", "Brand", "Web"],
+    href: "https://appreesh.org"
   },
   {
-    title: "Modern Rituals Studio",
-    eyebrow: "Cultural collective",
-    description: "WordPress-to-React migration with monochrome identity, content ops, and adaptive score palette.",
-    tags: ["Identity", "React", "Music"]
+    title: "Gratitude Sessions",
+    eyebrow: "Original score release",
+    description: "Modular cue series we adapt for film, campaign, and event licensing—stream the anchor track anytime.",
+    tags: ["Music", "Licensing", "Score"],
+    href: "https://open.spotify.com/track/62hskoBw5Vl1LLZeR1oiBi"
   }
 ];
 
@@ -42,6 +45,7 @@ export function WorkSection() {
               eyebrow={project.eyebrow}
               description={project.description}
               tags={project.tags}
+              href={project.href}
               className="cg-work__card"
             />
           </div>

@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
-import { PlayerStub } from "@/components/music/PlayerStub";
 
 const gratitudeMeta = {
   duration: "02:32",
   instrumentation: "Piano, modular synth, field recordings",
   project: "Theme study for a short-form doc series"
 };
+
+const gratitudeEmbedSrc = "https://open.spotify.com/embed/track/62hskoBw5Vl1LLZeR1oiBi?utm_source=generator";
 
 export function MusicSection() {
   return (
@@ -47,7 +48,17 @@ export function MusicSection() {
               <dd>{gratitudeMeta.project}</dd>
             </div>
           </dl>
-          <PlayerStub title="Gratitude" duration={gratitudeMeta.duration} status="paused" />
+          <div className="cg-music__embed">
+            <iframe
+              title="Gratitude — Creatives Guide Us"
+              src={gratitudeEmbedSrc}
+              width="100%"
+              height="320"
+              loading="lazy"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
           <Button as="a" href="#contact" variant="secondary" className="cg-music__cta">
             Request stems or licensing
           </Button>

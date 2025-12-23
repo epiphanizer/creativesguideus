@@ -59,8 +59,8 @@ export function HeroSection() {
               <Button as="a" href="#contact">
                 Start a Project
               </Button>
-              <Button as="a" href="#music" variant="ghost">
-                Hear Gratitude
+              <Button as="a" href="#work" variant="ghost">
+                View Selected Work
               </Button>
             </div>
           }
