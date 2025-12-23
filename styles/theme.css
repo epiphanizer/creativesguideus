@@ -1,0 +1,65 @@
+:root {
+  --cg-color-ink-950: #050505;
+  --cg-color-ink-900: #0b0b0b;
+  --cg-color-ink-800: #161616;
+  --cg-color-ink-700: #1f1f1f;
+  --cg-color-ink-600: #2a2a2a;
+  --cg-color-ink-500: #3a3a3a;
+  --cg-color-ink-400: #4f4f4f;
+  --cg-color-ink-300: #6a6a6a;
+  --cg-color-ink-200: #8c8c8c;
+  --cg-color-ink-100: #b5b5b5;
+  --cg-color-ink-050: #d9d9d9;
+  --cg-color-ink-025: #efefef;
+  --cg-color-canvas: #f7f7f7;
+  --cg-color-canvas-muted: #f0f0f0;
+  --cg-color-border: rgba(15, 15, 15, 0.12);
+  --cg-color-border-strong: rgba(15, 15, 15, 0.24);
+  --cg-color-elevated: rgba(255, 255, 255, 0.7);
+
+  --cg-font-sans: "Neue Haas Grotesk", "Helvetica Neue", "Inter", "Arial", sans-serif;
+  --cg-font-serif: "Libre Baskerville", "Georgia", "Times New Roman", serif;
+  --cg-font-mono: "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
+
+  --cg-type-display: clamp(3.25rem, 6vw, 5rem);
+  --cg-type-hero: clamp(2.5rem, 5vw, 3.75rem);
+  --cg-type-title: clamp(1.75rem, 3vw, 2.5rem);
+  --cg-type-subtitle: clamp(1.25rem, 2vw, 1.75rem);
+  --cg-type-body-lg: 1.125rem;
+  --cg-type-body: 1rem;
+  --cg-type-body-sm: 0.875rem;
+  --cg-type-tight: 1.2;
+  --cg-type-relaxed: 1.6;
+
+  --cg-space-2xs: 0.25rem;
+  --cg-space-xs: 0.5rem;
+  --cg-space-sm: 0.75rem;
+  --cg-space-md: 1rem;
+  --cg-space-lg: 1.5rem;
+  --cg-space-xl: 2rem;
+  --cg-space-2xl: 3rem;
+  --cg-space-3xl: 4rem;
+  --cg-space-4xl: 6rem;
+
+  --cg-radius-sm: 4px;
+  --cg-radius-md: 8px;
+  --cg-radius-lg: 16px;
+
+  --cg-shadow-soft: 0 20px 40px rgba(10, 10, 10, 0.14);
+  --cg-shadow-sharp: 0 18px 36px rgba(5, 5, 5, 0.24);
+
+  --cg-transition-fade: 220ms ease;
+  --cg-transition-move: 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  --cg-header-height: 4.5rem;
+  --cg-header-blur: 18px;
+
+  color-scheme: only light;
+  scroll-padding-top: calc(var(--cg-header-height) + var(--cg-space-md));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --cg-transition-fade: 1ms linear;
+    --cg-transition-move: 1ms linear;
+  }
+}

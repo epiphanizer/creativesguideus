@@ -1,0 +1,12 @@
+{
+  "root": true,
+  "extends": ["next/core-web-vitals"],
+  "settings": {
+    "next": {
+      "rootDir": ["./"]
+    }
+  },
+  "rules": {
+    "newline-before-return": "warn"
+  }
+}
