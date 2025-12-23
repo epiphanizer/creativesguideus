@@ -1,43 +1,25 @@
-Sprint 1:
+Sprint 1 — Boutique funnel refinement (Dec 2025 refresh)
 
-One typeface + one accent rule (like a gallery placard)
+Goal: keep the single-page experience reading in under 30 seconds while restoring gallery-grade restraint.
 
-Kill any section that doesn’t support the CTA
+What shipped
+- Locked a single monochrome type stack and iconography language across SectionShell, Card, and pulse grids.
+- Trimmed hero, Web, Work, Music, and Writing copy to decisive 1–3 sentence beats with CTA-first sequencing.
+- Reframed Work to three proof cases with icon badges and slimmer cards so nothing overlaps or spills.
+- Pulled Bong Tour off the home narrative—Writing now links out while keeping the slate copy full width for breathing room.
+- Standardized spacing via SectionShell rhythm and reduced-motion guards so the page feels composed at every breakpoint.
 
-Constrain width + enforce rhythm (most “messy” sites are spacing, not design)
+Success signals
+- Visitors can scan the entire page in <30 seconds without encountering visual clutter.
+- Every section resolves to a primary CTA or booked conversation path.
+- Cards, grids, and copy stay inside the shared rhythm (1→2→3 column logic, icon caps, text never overflows).
 
-Sprint 1 — Marketing-first copy + page slimming
+Carry-forward guardrails
+- Keep any new section within the SectionShell spacing scale.
+- Prefer icon-backed summaries over dense paragraphs.
+- If a story needs depth (e.g., Bong Tour), break it into its own surface and link out.
 
-Goal: remove low-value content; sharpen the funnel.
-Tasks
-
-Rewrite hero + offers + process + CTA copy (short, punchy)
-
-Reduce Work tiles to “best of” (3–6)
-
-Add proof strip (3 bullets/logos/testimonial fragment)
-Done when
-
-Home page reads in under 30 seconds
-
-Every section leads naturally to the CTA
-
-Refactor the site to enforce consistent spacing/typography.
-- Create a reusable <Section> wrapper with standardized padding, max-width container, and optional id/anchor.
-- Replace ad-hoc spacing across Home sections with the wrapper.
-- Add a small typography scale (4 sizes) and apply consistently.
-- Ensure prefers-reduced-motion is respected for any animations.
 Return a diff summary + list of touched files.
-
-Streamline the homepage into a marketing-first funnel:
-- Rewrite copy to be minimalist (1–3 sentences per section).
-- Hero: headline + subhead + 2 CTAs.
-- Add a proof strip (3 bullets).
-- Selected work: 3–6 tiles only.
-- Offer: 3 cards.
-- Process: 3 steps.
-- End with a strong CTA section.
-Focus on spacing polish and modern minimalist aesthetics.
 
 
 Sprint 2 — Blog + database-driven content (Firestore)

@@ -12,6 +12,7 @@ type CardProps = {
   footer?: ReactNode;
   className?: string;
   children?: ReactNode;
+  icon?: ReactNode;
 };
 
 export function Card({
@@ -22,7 +23,8 @@ export function Card({
   tags,
   footer,
   className,
-  children
+  children,
+  icon
 }: CardProps) {
   const Wrapper = href ? "a" : "article";
   const wrapperProps = href
@@ -36,6 +38,11 @@ export function Card({
 
   return (
     <Wrapper {...wrapperProps}>
+      {icon ? (
+        <span className="cg-card__icon" aria-hidden="true">
+          {icon}
+        </span>
+      ) : null}
       <div className="cg-card__content">
         {eyebrow ? <p className="cg-card__eyebrow">{eyebrow}</p> : null}
         <h3 className="cg-card__title">{title}</h3>
