@@ -18,12 +18,14 @@ export function ContactSection() {
           <SectionHeader
             id="contact-title"
             eyebrow="Contact"
-            title="Bring us the concept that's keeping you up"
-            description="Availability: accepting two new engagements for Q1 2026 with remote-friendly collaboration windows."
+            title="Start a composed launch"
+            description="Two Q1 2026 openings — remote-friendly and deeply collaborative."
           />
           <div className="cg-contact__meta">
-            <p>Prefer a direct line? Email hello@creativesguide.us or include your calendar link for scheduling.</p>
-            <p className="cg-contact__response">Responses within two business days. Rush projects considered when scope is clear.</p>
+            <p>
+              Prefer a direct line? Email hello@creativesguide.us and include a calendar link if speed matters. We reply within two
+              business days.
+            </p>
           </div>
         </div>
 

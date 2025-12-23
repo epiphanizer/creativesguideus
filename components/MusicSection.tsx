@@ -15,20 +15,15 @@ export function MusicSection() {
       <SectionHeader
         id="music-title"
         eyebrow="Music"
-        title="Gratitude — a theme for quiet revolutions"
-        description="We release one evolving cue at a time so collaborators can feel the craft, not just the catalog."
+        title="Gratitude — one cue, many releases"
+        description="A single evolving cue that lets films, campaigns, and experiences breathe."
       />
 
       <div className="cg-music__feature">
         <div className="cg-music__story">
           <p>
-            Gratitude began as a meditation on breathing room—pulsed piano, softened synth, and found sound layered to
-            pace narratives that unfold gently. We iterate with directors in shared sessions, adjusting tone before
-            adding color.
-          </p>
-          <p>
-            Bring us into films, brand anthems, or experiential work that needs a score anchored in restraint. We stay on
-            to supervise delivery, provide stems, and adapt the theme as your story grows.
+            Pulsed piano, softened synth, and found sound pace each release with intention. We iterate live with
+            directors, keep stems ready, and stay through delivery so your launch stays composed.
           </p>
         </div>
 

@@ -1,10 +1,9 @@
 import { HeroSection } from "@/components/HeroSection";
+import { ProofStrip } from "@/components/ProofStrip";
 import { WebSection } from "@/components/WebSection";
-import { TechSection } from "@/components/TechSection";
 import { WorkSection } from "@/components/WorkSection";
 import { MusicSection } from "@/components/MusicSection";
 import { WritingSection } from "@/components/WritingSection";
-import { AboutSection } from "@/components/AboutSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 
@@ -13,9 +12,9 @@ export default function HomePage() {
     <main className="cg-page" id="page-top">
       <HeroSection />
 
-      <WebSection />
+      <ProofStrip />
 
-      <TechSection />
+      <WebSection />
 
       <WorkSection />
 
@@ -24,8 +23,6 @@ export default function HomePage() {
       <WritingSection />
 
       <ContactSection />
-
-      <AboutSection />
 
       <Footer />
     </main>

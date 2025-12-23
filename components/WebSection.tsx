@@ -5,34 +5,30 @@ import { SectionShell } from "@/components/ui/SectionShell";
 const practicePillars = [
   {
     title: "Digital architecture",
-    description: "Calm, editorial websites and product surfaces with pacing that lets the story breathe."
+    description: "Calm, editorial surfaces in grayscale so the story leads."
   },
   {
     title: "Identity systems",
-    description: "Monochrome brand worlds, typographic voice, and restrained motion built to feel inevitable."
+    description: "Typographic voice and restrained motion built to feel inevitable."
   },
   {
     title: "Narrative stewardship",
-    description: "Copy, treatments, and launch narratives shaped alongside the pixels and the music."
+    description: "Copy, treatments, and launch narrative shaped alongside the score."
   }
 ];
 
 const cadenceNotes = [
   {
-    label: "Week 01",
-    detail: "Listening salons, voice audit, shared mood boards"
+    label: "Step 01",
+    detail: "Listening salon, intent map, and shared mood boards"
   },
   {
-    label: "Week 02",
-    detail: "System sketches, script drafts, sonic motifs"
+    label: "Step 02",
+    detail: "System sketches, script fragments, and theme studies"
   },
   {
-    label: "Week 03",
-    detail: "Prototypes + score stems for live review"
-  },
-  {
-    label: "Week 04",
-    detail: "Polish, documentation, and launch orchestration"
+    label: "Step 03",
+    detail: "Prototypes, score stems, and launch orchestration"
   }
 ];
 
@@ -48,10 +44,10 @@ export function WebSection() {
 
       <div className="cg-practice__intro">
         <p>
-          Each engagement is a tightly curated collaboration. We research, storyboard, and prototype in parallel so
-          site, sound, and script evolve together.
+          Every build pairs site, score, and script so launches feel composed. We keep teams inside one intentional cadence,
+          never a content scramble.
         </p>
-        <p className="cg-practice__note">Typical engagements run four to six weeks with shared reviews every Friday.</p>
+        <p className="cg-practice__note">Three-step engagements with weekly reviews and a single point of contact.</p>
       </div>
 
       <div className="cg-practice__pillars" role="list">
@@ -62,8 +58,8 @@ export function WebSection() {
         ))}
       </div>
 
-      <aside className="cg-practice__cadence" aria-label="Typical cadence">
-        <h3 className="cg-practice__cadence-title">Cadence</h3>
+      <aside className="cg-practice__cadence" aria-label="Process">
+        <h3 className="cg-practice__cadence-title">Process</h3>
         <ul className="cg-practice__cadence-list">
           {cadenceNotes.map((note) => (
             <li key={note.label} className="cg-practice__cadence-item">

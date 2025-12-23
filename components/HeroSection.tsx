@@ -6,7 +6,7 @@ import { LineGridMotif } from "@/components/motif/LineGridMotif";
 const processSteps = [
   {
     title: "Listen",
-    description: "Salons, shared references, and tone poems turn vision into language.",
+    description: "Workshops and tone poems surface the story worth telling.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <circle cx="32" cy="32" r="21" />
@@ -17,7 +17,7 @@ const processSteps = [
   },
   {
     title: "Shape",
-    description: "Grids, scripts, and score sketches develop in monochrome layers.",
+    description: "We draft grids, scripts, and cues together in monochrome clarity.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <rect x="14" y="14" width="36" height="36" rx="6" />
@@ -28,7 +28,7 @@ const processSteps = [
   },
   {
     title: "Score",
-    description: "We arrange launch cadence, sonic cues, and delivery for calm debuts.",
+    description: "Launch plans, sonic cues, and delivery kits land as one calm debut.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <path d="M20 44c0-6 24-6 24 0" />
@@ -41,10 +41,9 @@ const processSteps = [
   }
 ];
 
-const heroTitle = "Art-led digital, sound, and story direction.";
+const heroTitle = "Boutique web, score, and story direction.";
 
-const heroSubhead =
-  "We help emerging studios slow down, make room for intention, and release work that feels composed rather than rushed.";
+const heroSubhead = "One monochrome studio guiding every release from first outline to final premiere.";
 
 export function HeroSection() {
   return (

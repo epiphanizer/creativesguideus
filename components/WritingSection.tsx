@@ -4,15 +4,15 @@ import { SectionShell } from "@/components/ui/SectionShell";
 import { Tag } from "@/components/ui/Tag";
 
 const offerings = [
-  "Feature screenplay — 108 pages, current draft June 2025",
-  "Lookbook + tonal score palette for films and experiential",
-  "Short-form companion scripts for festival or digital rollout"
+  "Feature screenplay · June 2025 polish draft",
+  "Lookbook + tonal score palette",
+  "Companion scripts for festival rollout"
 ];
 
 const partnerships = [
-  "Producers with appetite for character-driven road narratives",
-  "Financiers aligned with art-house theatrical release",
-  "Festival strategists and international co-production allies"
+  "Character-first producers",
+  "Art-house aligned financiers",
+  "Festival + co-production strategists"
 ];
 
 export function WritingSection() {
@@ -21,23 +21,20 @@ export function WritingSection() {
       <SectionHeader
         id="writing-title"
         eyebrow="For Screen"
-        title="Featured work — Bong Tour"
-        description="A surreal road film about a washed-up tour manager escorting a banned band across the American Southwest."
+        title="Featured — Bong Tour"
+        description="Surreal road feature now shopping with deck, score palette, and partner-ready materials."
       />
 
       <div className="cg-bong">
         <div className="cg-bong__story">
           <Tag className="cg-bong__tag">Feature screenplay · June 2025 draft</Tag>
           <p className="cg-bong__logline">
-            When a legendary Korean psych-rock band is secretly invited back to the US for one night, their former tour
-            manager must shepherd them through border towns, desert cults, and her own burnout to get them on stage.
+            A washed-up tour manager must shepherd a banned Korean psych band through the Southwest for one impossible encore.
           </p>
           <p>
-            We are developing Bong Tour as a feature with the flexibility to extend into episodic anthologies. The script is
-            accompanied by tonal essays, music sketches, and a visual bible that carries the same monochrome discipline as
-            our design work.
+            The package ships with tonal essays, music sketches, and a monochrome visual bible extending easily into episodic form.
           </p>
-          <p className="cg-bong__status">Currently circulating for producers and financing partners aligned with art-house theatrical release.</p>
+          <p className="cg-bong__status">Circulating now for producers and financing partners.</p>
           <Button as="a" href="#contact" variant="secondary" className="cg-bong__cta">
             Request the Bong Tour deck
           </Button>
