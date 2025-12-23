@@ -33,24 +33,32 @@ export function WritingSection() {
           iconLabel="Creative writing emblem"
           badge="Creative!!!"
         />
-        <div className="cg-writing__hero-copy">
-          {writingHeroCopy.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-        </div>
-        <ul className="cg-writing__points">
-          {writingHighlights.map((statement) => (
-            <li key={statement}>{statement}</li>
-          ))}
-        </ul>
-        <p className="cg-writing__note">Request the slate to hear table reads, review decks, and stage rewrites without opening new teams.</p>
-        <div className="cg-writing__hero-actions">
-          <Button as="a" href="#contact">
-            Request writing slate
-          </Button>
-          <Button as="a" href="/bong-tour" variant="ghost">
-            Read the Bong Tour treatment
-          </Button>
+        <div className="cg-writing__hero-grid">
+          <div className="cg-writing__hero-main">
+            <div className="cg-writing__hero-copy">
+              {writingHeroCopy.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+            <p className="cg-writing__note">
+              Request the slate to hear table reads, review decks, and stage rewrites without opening new teams.
+            </p>
+          </div>
+          <div className="cg-writing__hero-side">
+            <ul className="cg-writing__points">
+              {writingHighlights.map((statement) => (
+                <li key={statement}>{statement}</li>
+              ))}
+            </ul>
+            <div className="cg-writing__hero-actions">
+              <Button as="a" href="#contact">
+                Request writing slate
+              </Button>
+              <Button as="a" href="/bong-tour" variant="ghost">
+                Read the Bong Tour treatment
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </SectionShell>

@@ -1,15 +1,9 @@
-import fs from "node:fs";
-import path from "node:path";
-
 import Image from "next/image";
 
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import posterImage from "@/app/bong-tour/bong-tour-poster.png";
-
-const treatmentPath = path.join(process.cwd(), "app/bong-tour/treatment.txt");
-const treatmentSource = fs.readFileSync(treatmentPath, "utf8").trim();
 
 const globalComps = ["The Big Lebowski (stoner philosophy)", "Tropic Thunder (industry satire)", "Fear and Loathing in Las Vegas (trip momentum)", "The Player (meta Hollywood)"];
 
@@ -107,7 +101,8 @@ export function BongTourFeature() {
   return (
     <SectionShell id="bong-tour" labelledBy="bong-tour-title" innerClassName="cg-bong-feature">
       <div className="cg-bong-feature__hero">
-        <div className="cg-bong-feature__intro">
+        <div className="cg-bong-feature__hero-bg" aria-hidden="true" />
+        <div className="cg-bong-feature__hero-content">
           <SectionHeader
             id="bong-tour-title"
             eyebrow="Feature Screenplay"
@@ -233,11 +228,6 @@ export function BongTourFeature() {
             <li key={note}>{note}</li>
           ))}
         </ul>
-      </section>
-
-      <section className="cg-bong-feature__treatment" aria-label="Full treatment transcript">
-        <h3>Treatment</h3>
-        <pre>{treatmentSource}</pre>
       </section>
 
       <section className="cg-bong-feature__finale" aria-label="Closing call to action">

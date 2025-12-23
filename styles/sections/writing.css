@@ -5,25 +5,48 @@
 
 .cg-writing__hero {
   display: grid;
-  gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
+  gap: clamp(var(--cg-space-lg), 3.5vw, var(--cg-space-2xl));
   padding: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
   border-radius: calc(var(--cg-radius-lg) * 1.05);
   border: 1px solid rgba(15, 15, 15, 0.08);
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.9);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.cg-writing__hero-grid {
+  display: grid;
+  gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
+}
+
+@media (min-width: 960px) {
+  .cg-writing__hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    align-items: start;
+    gap: clamp(var(--cg-space-xl), 4vw, var(--cg-space-3xl));
+  }
+}
+
+.cg-writing__hero-main {
+  display: grid;
+  gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
+}
+
+.cg-writing__hero-side {
+  display: grid;
+  gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
 }
 
 .cg-writing__hero-copy {
   display: grid;
-  gap: var(--cg-space-md);
+  gap: var(--cg-space-sm);
   color: var(--cg-color-ink-500);
 }
 
 .cg-writing__points {
   list-style: none;
   display: grid;
-  gap: var(--cg-space-xs);
-  max-width: 56ch;
+  gap: var(--cg-space-sm);
+  max-width: none;
   color: var(--cg-color-ink-500);
 }
 
@@ -31,6 +54,13 @@
   content: "—";
   margin-right: var(--cg-space-2xs);
   color: var(--cg-color-ink-300);
+}
+
+@media (min-width: 780px) {
+  .cg-writing__points {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
+  }
 }
 
 .cg-writing__note {
