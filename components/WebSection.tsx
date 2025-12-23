@@ -1,74 +1,95 @@
+import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 
-const practicePillars = [
+const practiceHighlights = [
   {
-    title: "Digital architecture",
-    description: "Calm, editorial surfaces in grayscale so the story leads."
+    title: "Interface architecture",
+    eyebrow: "Product",
+    description: "Calm, editorial surfaces in grayscale so the release narrative leads every screen."
   },
   {
     title: "Identity systems",
-    description: "Typographic voice and restrained motion built to feel inevitable."
+    eyebrow: "Brand",
+    description: "Monochrome voice, restraint in motion, and type that feels inevitable across touchpoints."
   },
   {
     title: "Narrative stewardship",
-    description: "Copy, treatments, and launch narrative shaped alongside the score."
+    eyebrow: "Story",
+    description: "Scripts, decks, and score cues shaped together so the launch arc lands composed, not chaotic."
   }
 ];
 
 const cadenceNotes = [
   {
-    label: "Step 01",
-    detail: "Listening salon, intent map, and shared mood boards"
+    label: "Pulse 01",
+    detail: "Immersion salon, launch intent map, and monochrome inspiration grid"
   },
   {
-    label: "Step 02",
-    detail: "System sketches, script fragments, and theme studies"
+    label: "Pulse 02",
+    detail: "System sketches, screenplay fragments, and iterative theme studies"
   },
   {
-    label: "Step 03",
-    detail: "Prototypes, score stems, and launch orchestration"
+    label: "Pulse 03",
+    detail: "Interactive proofs, score stems, and composed launch orchestration"
   }
 ];
 
 export function WebSection() {
   return (
-    <SectionShell id="web" labelledBy="web-title" innerClassName="cg-practice">
-      <SectionHeader
-        id="web-title"
-        eyebrow="Our Method"
-        title="Composed digital, identity, and narrative direction"
-        description="We build in grayscale to keep attention on story, pacing each release so audiences experience intention—not urgency."
-      />
-
-      <div className="cg-practice__intro">
+    <SectionShell id="web" labelledBy="web-title" innerClassName="cg-practice cg-split">
+      <div className="cg-split__lede">
+        <SectionHeader
+          id="web-title"
+          eyebrow="Web & Brand"
+          title="Architect calm product releases"
+          description="Sites, systems, and scripts that land like a premiere—not a fire drill."
+        />
         <p>
-          Every build pairs site, score, and script so launches feel composed. We keep teams inside one intentional cadence,
-          never a content scramble.
+          We choreograph UX, tone, and score in one monochrome room so every touchpoint arrives with the same composed energy.
+          Creative, engineering, and comms stay inside one cadence, never a frantic handoff.
         </p>
-        <p className="cg-practice__note">Three-step engagements with weekly reviews and a single point of contact.</p>
+        <p>
+          Weekly immersion pulses keep decisions aligned, while every Friday ships an interactive proof so stakeholders feel the
+          next move before it goes live.
+        </p>
+        <div className="cg-split__actions">
+          <Button as="a" href="#contact">
+            Schedule a scope call
+          </Button>
+          <Button as="a" href="#work" variant="ghost">
+            Review recent systems
+          </Button>
+        </div>
       </div>
 
-      <div className="cg-practice__pillars" role="list">
-        {practicePillars.map((pillar) => (
-          <div key={pillar.title} role="listitem">
-            <Card title={pillar.title} description={pillar.description} className="cg-practice__card" />
-          </div>
-        ))}
-      </div>
-
-      <aside className="cg-practice__cadence" aria-label="Process">
-        <h3 className="cg-practice__cadence-title">Process</h3>
-        <ul className="cg-practice__cadence-list">
-          {cadenceNotes.map((note) => (
-            <li key={note.label} className="cg-practice__cadence-item">
-              <span className="cg-practice__cadence-label">{note.label}</span>
-              <p>{note.detail}</p>
-            </li>
+      <div className="cg-split__body cg-practice__body">
+        <div className="cg-card-grid cg-practice__highlights" role="list">
+          {practiceHighlights.map((highlight) => (
+            <div key={highlight.title} role="listitem">
+              <Card
+                title={highlight.title}
+                eyebrow={highlight.eyebrow}
+                description={highlight.description}
+                className="cg-practice__card"
+              />
+            </div>
           ))}
-        </ul>
-      </aside>
+        </div>
+
+        <aside className="cg-practice__cadence" aria-label="Engagement cadence">
+          <h3 className="cg-practice__cadence-title">Three pulses</h3>
+          <ul className="cg-practice__cadence-list">
+            {cadenceNotes.map((note) => (
+              <li key={note.label} className="cg-practice__cadence-item">
+                <span className="cg-practice__cadence-label">{note.label}</span>
+                <p>{note.detail}</p>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      </div>
     </SectionShell>
   );
 }

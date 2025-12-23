@@ -29,32 +29,54 @@ const highlightProjects = [
 
 export function WorkSection() {
   return (
-    <SectionShell id="work" labelledBy="work-title" innerClassName="cg-work">
-      <SectionHeader
-        id="work-title"
-        eyebrow="Our Work"
-        title="Selected work — 2025 highlights"
-        description="Three recent engagements that show how we blend product, narrative, and score into one composed release."
-      />
-
-      <div className="cg-work__list" role="list">
-        {highlightProjects.map((project) => (
-          <div key={project.title} role="listitem">
-            <Card
-              title={project.title}
-              eyebrow={project.eyebrow}
-              description={project.description}
-              tags={project.tags}
-              href={project.href}
-              className="cg-work__card"
-            />
-          </div>
-        ))}
+    <SectionShell id="work" labelledBy="work-title" innerClassName="cg-work cg-split">
+      <div className="cg-split__lede">
+        <SectionHeader
+          id="work-title"
+          eyebrow="Composed releases"
+          title="Proof in the field"
+          description="Digital, score, and story engagements that ship as one calm sequence."
+        />
+        <p>
+          We lead cross-disciplinary launches where donors, fans, and leadership experience the same crafted release—no crash
+          landings, no overtime triage.
+        </p>
+        <p>
+          Each engagement moves through weekly proofs, composed music cues, and a narrative kit so partners can act quickly
+          without spinning up new teams.
+        </p>
+        <ul className="cg-work__summary">
+          <li>Launch playbooks with content, motion, and score guidelines</li>
+          <li>Analytics-ready builds that stay maintainable after handoff</li>
+          <li>Calm stakeholder rituals that keep decisions in sync</li>
+        </ul>
+        <div className="cg-split__actions">
+          <Button as="a" href="#contact">
+            Book a case review
+          </Button>
+          <Button as="a" href="#music" variant="ghost">
+            Listen to Gratitude
+          </Button>
+        </div>
       </div>
 
-      <Button as="a" href="#contact" className="cg-work__cta">
-        Book a case review
-      </Button>
+      <div className="cg-split__body cg-work__body">
+        <div className="cg-card-grid cg-work__grid" role="list">
+          {highlightProjects.map((project) => (
+            <div key={project.title} role="listitem">
+              <Card
+                title={project.title}
+                eyebrow={project.eyebrow}
+                description={project.description}
+                tags={project.tags}
+                href={project.href}
+                className="cg-work__card"
+              />
+            </div>
+          ))}
+        </div>
+        <p className="cg-work__note">Every release stacks strategy, build, and score into one composed kit.</p>
+      </div>
     </SectionShell>
   );
 }

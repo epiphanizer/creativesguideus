@@ -1,5 +1,4 @@
 import { HeroSection } from "@/components/HeroSection";
-import { ProofStrip } from "@/components/ProofStrip";
 import { WebSection } from "@/components/WebSection";
 import { WorkSection } from "@/components/WorkSection";
 import { MusicSection } from "@/components/MusicSection";
@@ -11,8 +10,6 @@ export default function HomePage() {
   return (
     <main className="cg-page" id="page-top">
       <HeroSection />
-
-      <ProofStrip />
 
       <WebSection />
 

@@ -10,24 +10,42 @@ const gratitudeMeta = {
 
 const gratitudeEmbedSrc = "https://open.spotify.com/embed/track/62hskoBw5Vl1LLZeR1oiBi?utm_source=generator";
 
+const cueHighlights = [
+  "Modular cue adapts to films, campaigns, and experiential soundtracks in hours",
+  "Deliverable suite ships with stems, notation, and edit-ready mixes",
+  "We stay through launch to sculpt instrumentation alongside your team"
+];
+
 export function MusicSection() {
   return (
-    <SectionShell id="music" labelledBy="music-title" innerClassName="cg-music">
-      <SectionHeader
-        id="music-title"
-        eyebrow="Music"
-        title="Gratitude — one cue, many releases"
-        description="A single evolving cue that lets films, campaigns, and experiences breathe."
-      />
-
-      <div className="cg-music__feature">
-        <div className="cg-music__story">
-          <p>
-            Pulsed piano, softened synth, and found sound pace each release with intention. We iterate live with
-            directors, keep stems ready, and stay through delivery so your launch stays composed.
-          </p>
+    <SectionShell id="music" labelledBy="music-title" innerClassName="cg-music cg-split">
+      <div className="cg-split__lede">
+        <SectionHeader
+          id="music-title"
+          eyebrow="Music"
+          title="Score licensing without friction"
+          description="Gratitude is our modular cue suite—built to adapt, licensed to stay calm."
+        />
+        <p>
+          Pulsed piano, softened synth, and field recordings pace each release with intention. We iterate live with
+          directors and producers, while stems, mixes, and notation stay ready for every deliverable.
+        </p>
+        <ul className="cg-music__points">
+          {cueHighlights.map((highlight) => (
+            <li key={highlight}>{highlight}</li>
+          ))}
+        </ul>
+        <div className="cg-split__actions">
+          <Button as="a" href="#contact">
+            Request stems or licensing
+          </Button>
+          <Button as="a" href="https://open.spotify.com/track/62hskoBw5Vl1LLZeR1oiBi" variant="ghost">
+            Stream Gratitude
+          </Button>
         </div>
+      </div>
 
+      <div className="cg-split__body">
         <div className="cg-music__card">
           <div className="cg-music__card-header">
             <span className="cg-music__badge">Featured cue</span>
@@ -59,9 +77,6 @@ export function MusicSection() {
               allowFullScreen
             />
           </div>
-          <Button as="a" href="#contact" variant="secondary" className="cg-music__cta">
-            Request stems or licensing
-          </Button>
         </div>
       </div>
     </SectionShell>
