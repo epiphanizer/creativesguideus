@@ -6,7 +6,7 @@ Execution Checklist
 3. Complete EPIC 2 — Shared UI Primitives (DRY) — DONE
 4. Complete EPIC 3 — Hero + Signature Motif — DONE
 5. Complete EPIC 4 — Web / Branding / Storytelling Section — DONE
-6. Complete EPIC 5 — Music Section (Zine-ish)
+6. Complete EPIC 5 — Music Section (Zine-ish) — DONE
 7. Complete EPIC 6 — Writing Section (Screenwriting + Copywriting)
 8. Complete EPIC 7 — Selected Work (Optional) + About
 9. Complete EPIC 8 — Contact + Launch Readiness
@@ -112,19 +112,19 @@ Files: components/WebSection.tsx, components/ui/CasePreview.tsx (optional)
 
 EPIC 5 — Music Section (Zine-ish)
 
-T5.1 Zine layout scaffold
+T5.1 Zine layout scaffold — DONE
 
 AC: editorial grid layout; minimal liner-notes vibe; not “tech startup”
 
 Files: components/MusicSection.tsx
 
-T5.2 Cue list with hover reveal metadata
+T5.2 Cue list with hover reveal metadata — DONE
 
 AC: list shows cue title + duration; hover reveals mood/instrumentation; keyboard accessible
 
 Files: components/music/CueList.tsx
 
-T5.3 Audio player UI stubs
+T5.3 Audio player UI stubs — DONE
 
 AC: 2–3 player placeholders styled (no real audio required); looks intentional
 

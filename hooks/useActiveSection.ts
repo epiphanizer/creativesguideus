@@ -61,7 +61,7 @@ export function useActiveSection(sectionIds: string[]) {
 
     const targets = stableIds
       .map((id) => document.getElementById(id))
-      .filter((el): el is Element => Boolean(el));
+      .filter((el): el is HTMLElement => Boolean(el));
 
     targets.forEach((target) => observer.observe(target));
 

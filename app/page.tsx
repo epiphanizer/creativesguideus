@@ -1,15 +1,10 @@
 import { HeroSection } from "@/components/HeroSection";
 import { WebSection } from "@/components/WebSection";
+import { MusicSection } from "@/components/MusicSection";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
-
-const cueHighlights = [
-  { title: "North River", duration: "02:11" },
-  { title: "Signal Bloom", duration: "01:34" },
-  { title: "Afterlight", duration: "00:58" }
-];
 
 const writingLanes = [
   {
@@ -33,25 +28,7 @@ export default function HomePage() {
 
       <WebSection />
 
-      <SectionShell id="music" labelledBy="music-title">
-        <SectionHeader
-          id="music-title"
-          eyebrow="Music"
-          title="Music for film & projects"
-          description="Cue design, thematic composition, and supervision support shaped like a minimalist zine."
-        />
-        <div className="cg-card-grid" role="list">
-          {cueHighlights.map((cue) => (
-            <div key={cue.title} role="listitem">
-              <Card
-                title={cue.title}
-                description={`Duration ${cue.duration} · Mood TBD`}
-                className="cg-card--cue"
-              />
-            </div>
-          ))}
-        </div>
-      </SectionShell>
+      <MusicSection />
 
       <SectionShell id="writing" labelledBy="writing-title">
         <SectionHeader
