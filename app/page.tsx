@@ -1,10 +1,8 @@
+import { HeroSection } from "@/components/HeroSection";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
-
-const heroCopy =
-  "Boutique studio weaving web, music, and writing into one monochrome signature for brave creatives.";
 
 const services = [
   {
@@ -53,22 +51,7 @@ const writingLanes = [
 export default function HomePage() {
   return (
     <main className="cg-page" id="page-top">
-      <SectionShell id="hero" variant="hero" labelledBy="hero-title">
-        <SectionHeader
-          headingLevel="h1"
-          id="hero-title"
-          title="Creatives Guide Us"
-          description={heroCopy}
-          actions={
-            <>
-              <Button>Start a Project</Button>
-              <Button as="a" href="#work" variant="ghost">
-                View Work
-              </Button>
-            </>
-          }
-        />
-      </SectionShell>
+      <HeroSection />
 
       <SectionShell id="web" labelledBy="web-title">
         <SectionHeader

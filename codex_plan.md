@@ -4,7 +4,7 @@ Execution Checklist
 1. Complete EPIC 0 — Repo + Baseline — DONE
 2. Complete EPIC 1 — Navigation + UX Plumbing — DONE
 3. Complete EPIC 2 — Shared UI Primitives (DRY) — DONE
-4. Complete EPIC 3 — Hero + Signature Motif
+4. Complete EPIC 3 — Hero + Signature Motif — DONE
 5. Complete EPIC 4 — Web / Branding / Storytelling Section
 6. Complete EPIC 5 — Music Section (Zine-ish)
 7. Complete EPIC 6 — Writing Section (Screenwriting + Copywriting)
@@ -72,19 +72,19 @@ Files: components/ui/Card.tsx, components/ui/Tag.tsx, components/ui/Button.tsx
 
 EPIC 3 — Hero + Signature Motif (Monochrome Line Art)
 
-T3.1 Hero content + CTA pair
+T3.1 Hero content + CTA pair — DONE
 
 AC: headline/subhead/CTAs in place; responsive; clear hierarchy
 
 Files: components/HeroSection.tsx
 
-T3.2 Line grid motif component
+T3.2 Line grid motif component — DONE
 
 AC: grayscale line-art grid renders behind hero; looks “NY-grid / Mondrian-ish”
 
 Files: components/motif/LineGridMotif.tsx
 
-T3.3 Parallax layering (restrained)
+T3.3 Parallax layering (restrained) — DONE
 
 AC: subtle parallax on scroll; disabled under reduced motion; no performance spikes
 
