@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "../styles/globals.css";
+import "../styles/styles.scss";
 
 import HeaderNav from "@/components/HeaderNav";
 

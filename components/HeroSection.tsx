@@ -78,7 +78,11 @@ export function HeroSection() {
           ))}
         </div>
       </div>
-      <LineGridMotif className="cg-hero__motif" />
+      <div className="cg-hero__visual" aria-hidden="true">
+        <div className="cg-hero__visual-frame">
+          <LineGridMotif className="cg-hero__motif" />
+        </div>
+      </div>
     </SectionShell>
   );
 }
