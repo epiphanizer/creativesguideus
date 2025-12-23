@@ -1221,10 +1221,11 @@ p + ol {
 }
 
 .cg-hero__process-step {
-  display: grid;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  gap: clamp(var(--cg-space-4xs), 1vw, var(--cg-space-xs));
+  gap: clamp(18px, 3vw, 30px);
 }
 
 .cg-hero__process-icon {
@@ -1241,7 +1242,7 @@ p + ol {
 
 .cg-hero__process-copy {
   display: grid;
-  gap: clamp(var(--cg-space-4xs), 0.9vw, var(--cg-space-2xs));
+  gap: clamp(var(--cg-space-4xs), 1.2vw, var(--cg-space-xs));
   text-align: center;
 }
 
