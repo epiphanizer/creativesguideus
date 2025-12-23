@@ -40,7 +40,6 @@ export function AboutSection() {
             </svg>
           }
           iconLabel="Creative studio emblem"
-          badge="Creative!!!"
         />
 
         <div className="cg-about__grid">

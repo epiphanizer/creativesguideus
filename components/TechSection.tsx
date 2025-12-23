@@ -52,7 +52,6 @@ export function TechSection() {
           </svg>
         }
         iconLabel="Creative systems emblem"
-        badge="Creative!!!"
       />
 
       <div className="cg-tech__grid">

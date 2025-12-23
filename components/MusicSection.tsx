@@ -32,7 +32,6 @@ export function MusicSection() {
             </svg>
           }
           iconLabel="Creative score emblem"
-          badge="Creative!!!"
         />
         <p>
           Recorded late-night to quarter-inch tape, the cue layers quiet piano patterns, tape loops, and captured room

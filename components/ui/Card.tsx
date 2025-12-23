@@ -36,15 +36,21 @@ export function Card({
         className: cx("cg-card", className)
       };
 
+  const showTopline = Boolean(icon || eyebrow);
+
   return (
     <Wrapper {...wrapperProps}>
-      {icon ? (
-        <span className="cg-card__icon" aria-hidden="true">
-          {icon}
-        </span>
-      ) : null}
       <div className="cg-card__content">
-        {eyebrow ? <p className="cg-card__eyebrow">{eyebrow}</p> : null}
+        {showTopline ? (
+          <div className="cg-card__topline">
+            {icon ? (
+              <span className="cg-card__icon" aria-hidden="true">
+                {icon}
+              </span>
+            ) : null}
+            {eyebrow ? <span className="cg-card__eyebrow">{eyebrow}</span> : null}
+          </div>
+        ) : null}
         <h3 className="cg-card__title">{title}</h3>
         {description ? <p className="cg-card__description">{description}</p> : null}
         {children}

@@ -27,7 +27,6 @@ export function ContactSection() {
               </svg>
             }
             iconLabel="Creative contact emblem"
-            badge="Creative!!!"
           />
           <div className="cg-contact__meta">
             <p>

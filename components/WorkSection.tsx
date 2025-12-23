@@ -65,7 +65,6 @@ export function WorkSection() {
               </svg>
             }
             iconLabel="Creative release emblem"
-            badge="Creative!!!"
           />
           <p>
             We lead cross-disciplinary launches where donors, fans, and leadership experience the same crafted release—no crash

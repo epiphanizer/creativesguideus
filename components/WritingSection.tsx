@@ -31,7 +31,6 @@ export function WritingSection() {
             </svg>
           }
           iconLabel="Creative writing emblem"
-          badge="Creative!!!"
         />
         <div className="cg-writing__hero-grid">
           <div className="cg-writing__hero-main">

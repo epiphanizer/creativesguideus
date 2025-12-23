@@ -56,7 +56,6 @@ export function SelectedWorkSection() {
               </svg>
             }
             iconLabel="Creative portfolio emblem"
-            badge="Creative!!!"
             actions={
               <Button as="a" href="mailto:hello@creativesguide.us?subject=Selected%20Work" variant="ghost">
                 Request full deck

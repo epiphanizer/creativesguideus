@@ -95,7 +95,6 @@ export function WebSection() {
               </svg>
             }
             iconLabel="Creative interface emblem"
-            badge="Creative!!!"
           />
           <p>
             We choreograph UX, tone, and score in one monochrome room so every touchpoint arrives with the same composed energy.

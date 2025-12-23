@@ -126,7 +126,6 @@ export function BongTourFeature() {
               </svg>
             }
             iconLabel="Creative screenplay emblem"
-            badge="Creative!!!"
           />
           <div className="cg-bong-feature__logline">
             <h3>Logline</h3>
