@@ -9,8 +9,7 @@ const anchorRegistry: AnchorConfig[] = [
   { id: "web", label: "Studio Method" },
   { id: "work", label: "Proof" },
   { id: "music", label: "Scorebook" },
-  { id: "writing", label: "Story Slate" },
-  { id: "contact", label: "Begin Dialogue" }
+  { id: "writing", label: "Story Slate" }
 ];
 
 export const anchors = anchorRegistry.filter((anchor) => anchor.isEnabled !== false);

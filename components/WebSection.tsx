@@ -46,7 +46,7 @@ const practiceHighlights = [
 const cadenceNotes = [
   {
     label: "Pulse 01",
-    detail: "Immersion salon, launch intent map, and monochrome inspiration grid",
+    detail: "Immersion salon frames the release spine with intent storyboards and a monochrome mood grid",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <circle cx="16" cy="16" r="9" />
@@ -56,7 +56,7 @@ const cadenceNotes = [
   },
   {
     label: "Pulse 02",
-    detail: "System sketches, screenplay fragments, and iterative theme studies",
+    detail: "System sketches braid with screenplay fragments and cue studies so tone and interface march together",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <rect x="7" y="9" width="18" height="14" rx="3" />
@@ -66,7 +66,7 @@ const cadenceNotes = [
   },
   {
     label: "Pulse 03",
-    detail: "Interactive proofs, score stems, and composed launch orchestration",
+    detail: "Interactive proof screenings, score stems, and a composed launch kit rehearse the debut before it lands",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M8 22h16" />

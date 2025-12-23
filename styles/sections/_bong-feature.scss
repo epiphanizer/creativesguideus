@@ -48,8 +48,8 @@
 
 .cg-bong-feature__hero {
   position: relative;
-  min-height: clamp(64vh, 78vh, 880px);
-  padding: clamp(var(--cg-space-xl), 6vw, var(--cg-space-4xl));
+  min-height: clamp(52vh, 64vh, 760px);
+  padding: clamp(var(--cg-space-xl), 5vw, var(--cg-space-4xl));
   border-radius: calc(var(--cg-radius-2xl) * 0.9);
   border: 1px solid var(--bong-panel-border);
   background: linear-gradient(160deg, var(--bong-surface), var(--bong-surface-muted));
@@ -108,12 +108,12 @@
   display: grid;
   gap: var(--cg-space-2xs);
   justify-items: center;
-  padding: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
+  padding: clamp(var(--cg-space-md), 2.4vw, var(--cg-space-lg));
   border-radius: calc(var(--cg-radius-2xl) * 0.72);
   border: 1px solid var(--bong-panel-border);
   background: linear-gradient(180deg, #ffffff, var(--bong-surface-soft));
   box-shadow: 0 36px 70px rgba(15, 23, 42, 0.16);
-  width: min(420px, 32vw);
+  width: min(360px, 28vw);
   margin-left: auto;
   animation: cg-bong-poster-reveal 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   z-index: 2;
@@ -121,6 +121,7 @@
 
 .cg-bong-feature__poster-image {
   width: 100%;
+  max-height: clamp(360px, 48vh, 520px);
   border-radius: calc(var(--cg-radius-lg) * 0.9);
   box-shadow: 0 30px 60px rgba(15, 23, 42, 0.2);
 }

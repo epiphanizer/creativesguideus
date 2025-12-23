@@ -29,6 +29,10 @@ export function ContactSection() {
             iconLabel="Creative contact emblem"
           />
           <div className="cg-contact__meta">
+            <div className="cg-contact__slots" aria-label="Residency availability">
+              <span>Residencies</span>
+              <p>We hold just two Q1 2026 start dates. Secure your slot when you send the composed brief.</p>
+            </div>
             <p>
               Prefer a direct line? Email hello@creativesguide.us with a calendar link and any existing materials—we answer within
               two studio days.
@@ -80,7 +84,9 @@ export function ContactSection() {
           </div>
 
           <div className="cg-contact__footer">
-            <Button type="submit">Share the narrative brief</Button>
+            <Button type="submit" className="cg-contact__submit">
+              Send the composed brief
+            </Button>
             <span className="cg-contact__privacy">Your details stay within the core studio—always.</span>
           </div>
         </form>

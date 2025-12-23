@@ -169,9 +169,6 @@ export function BongTourFeature() {
                   <Button as="a" href="/#contact">
                     Request a producer session
                   </Button>
-                  <Button as="a" href="/#music" variant="ghost">
-                    License the score cues
-                  </Button>
                 </div>
               }
               icon={
@@ -250,7 +247,7 @@ export function BongTourFeature() {
           </p>
         </section>
 
-        <section className="cg-bong-feature__panel cg-bong-feature__cast" aria-label="Principal characters">
+        <section className="cg-bong-feature__panel cg-bong-feature__panel--wide cg-bong-feature__cast" aria-label="Principal characters">
           <div className="cg-bong-feature__panel-title">
             <span className="cg-bong-feature__icon" aria-hidden="true">
               {panelIcons.cast}
