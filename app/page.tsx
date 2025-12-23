@@ -1,5 +1,7 @@
 import { HeroSection } from "@/components/HeroSection";
 import { WebSection } from "@/components/WebSection";
+import { TechSection } from "@/components/TechSection";
+import { WorkSection } from "@/components/WorkSection";
 import { MusicSection } from "@/components/MusicSection";
 import { WritingSection } from "@/components/WritingSection";
 import { AboutSection } from "@/components/AboutSection";
@@ -12,6 +14,10 @@ export default function HomePage() {
       <HeroSection />
 
       <WebSection />
+
+      <TechSection />
+
+      <WorkSection />
 
       <MusicSection />
 

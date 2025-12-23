@@ -41,8 +41,8 @@ export function WebSection() {
     <SectionShell id="web" labelledBy="web-title" innerClassName="cg-practice">
       <SectionHeader
         id="web-title"
-        eyebrow="Practice"
-        title="One studio for digital, identity, and narrative direction"
+        eyebrow="Our Method"
+        title="Composed digital, identity, and narrative direction"
         description="We build in grayscale to keep attention on story, pacing each release so audiences experience intention—not urgency."
       />
 
@@ -73,30 +73,6 @@ export function WebSection() {
           ))}
         </ul>
       </aside>
-    </SectionShell>
-  );
-}
-          <ProcessStrip />
-          <div className="cg-web__outcomes" aria-label="Selected outcomes">
-            <h3 className="cg-web__outcomes-title">Selected outcomes</h3>
-            <ul className="cg-web__outcomes-list">
-              {outcomes.map((outcome) => (
-                <li key={outcome} className="cg-web__outcome">
-                  {outcome}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
-      </div>
-
-      <div className="cg-web__cases" role="list">
-        {casePreviews.map((preview) => (
-          <div key={preview.title} role="listitem">
-            <CasePreview title={preview.title} summary={preview.summary} meta={preview.meta} />
-          </div>
-        ))}
-      </div>
     </SectionShell>
   );
 }

@@ -1,191 +1,40 @@
-Creatives Guide Us — Codex Task List (Sprint-style)
+Sprint 1:
 
-Execution Checklist
-1. Complete EPIC 0 — Repo + Baseline — DONE
-2. Complete EPIC 1 — Navigation + UX Plumbing — DONE
-3. Complete EPIC 2 — Shared UI Primitives (DRY) — DONE
-4. Complete EPIC 3 — Hero + Signature Motif — DONE
-5. Complete EPIC 4 — Web / Branding / Storytelling Section — DONE
-6. Complete EPIC 5 — Music Section (Zine-ish) — DONE
-7. Complete EPIC 6 — Writing Section (Screenwriting + Copywriting) — DONE
-8. Complete EPIC 7 — Selected Work (Optional) + About — DONE
-9. Complete EPIC 8 — Contact + Launch Readiness — IN PROGRESS
-EPIC 0 — Repo + Baseline
+One typeface + one accent rule (like a gallery placard)
 
-T0.1 Initialize Next.js App Router — DONE
+Kill any section that doesn’t support the CTA
 
-AC: npm run dev boots, App Router structure present (app/layout.tsx, app/page.tsx)
+Constrain width + enforce rhythm (most “messy” sites are spacing, not design)
 
-Files: app/layout.tsx, app/page.tsx, package.json
+Sprint 1 — Marketing-first copy + page slimming
 
-T0.2 Add global styles + theme tokens — DONE
+Goal: remove low-value content; sharpen the funnel.
+Tasks
 
-AC: grayscale palette tokens + type scale + spacing vars exist; applied to body + headings
+Rewrite hero + offers + process + CTA copy (short, punchy)
 
-Files: styles/theme.css, styles/globals.css, app/layout.tsx
+Reduce Work tiles to “best of” (3–6)
 
-T0.3 Add lint/format conventions — DONE
+Add proof strip (3 bullets/logos/testimonial fragment)
+Done when
 
-AC: eslint + prettier config present; npm run lint passes
+Home page reads in under 30 seconds
 
-Files: .eslintrc*, .prettierrc*, package.json
+Every section leads naturally to the CTA
 
-EPIC 1 — Navigation + UX Plumbing
+Refactor the site to enforce consistent spacing/typography.
+- Create a reusable <Section> wrapper with standardized padding, max-width container, and optional id/anchor.
+- Replace ad-hoc spacing across Home sections with the wrapper.
+- Add a small typography scale (4 sizes) and apply consistently.
+- Ensure prefers-reduced-motion is respected for any animations.
+Return a diff summary + list of touched files.
 
-T1.1 Create anchor registry — DONE
-
-AC: single source of truth exports anchors { id, label }
-
-Files: components/nav/anchors.ts
-
-T1.2 Build sticky header nav — DONE
-
-AC: header sticks; anchor links scroll to sections; active link style exists
-
-Files: components/HeaderNav.tsx
-
-T1.3 Active section observer hook — DONE
-
-AC: active nav updates as user scrolls; no flicker; handles edge cases at top/bottom
-
-Files: hooks/useActiveSection.ts
-
-T1.4 Reduced motion hook + smooth scroll guard — DONE
-
-AC: when prefers-reduced-motion, animations/parallax disabled and scroll is instant
-
-Files: hooks/usePrefersReducedMotion.ts, components/HeaderNav.tsx
-
-EPIC 2 — Shared UI Primitives (DRY)
-
-T2.1 Section shell + section header components — DONE
-
-AC: consistent spacing + layout; supports optional eyebrow, title, subtitle
-
-Files: components/ui/SectionShell.tsx, components/ui/SectionHeader.tsx
-
-T2.2 Card + tag + button primitives — DONE
-
-AC: consistent card styling used by all sections; hover states subtle
-
-Files: components/ui/Card.tsx, components/ui/Tag.tsx, components/ui/Button.tsx
-
-EPIC 3 — Hero + Signature Motif (Monochrome Line Art)
-
-T3.1 Hero content + CTA pair — DONE
-
-AC: headline/subhead/CTAs in place; responsive; clear hierarchy
-
-Files: components/HeroSection.tsx
-
-T3.2 Line grid motif component — DONE
-
-AC: grayscale line-art grid renders behind hero; looks “NY-grid / Mondrian-ish”
-
-Files: components/motif/LineGridMotif.tsx
-
-T3.3 Parallax layering (restrained) — DONE
-
-AC: subtle parallax on scroll; disabled under reduced motion; no performance spikes
-
-Files: components/motif/LineGridMotif.tsx, hooks/usePrefersReducedMotion.ts
-
-EPIC 4 — Web / Branding / Storytelling Section
-
-T4.1 Web services card grid — DONE
-
-AC: 4–6 cards with tight copy placeholders; consistent spacing and hover
-
-Files: components/WebSection.tsx
-
-T4.2 Process mini-strip (Discover → Design → Build → Launch) — DONE
-
-AC: appears in Web section and/or shared Process section; looks premium
-
-Files: components/ProcessStrip.tsx (or embedded)
-
-T4.3 Case preview blocks (placeholder) — DONE
-
-AC: 1–2 case preview components exist with image placeholder + one-liner
-
-Files: components/WebSection.tsx, components/ui/CasePreview.tsx (optional)
-
-EPIC 5 — Music Section (Zine-ish)
-
-T5.1 Zine layout scaffold — DONE
-
-AC: editorial grid layout; minimal liner-notes vibe; not “tech startup”
-
-Files: components/MusicSection.tsx
-
-T5.2 Cue list with hover reveal metadata — DONE
-
-AC: list shows cue title + duration; hover reveals mood/instrumentation; keyboard accessible
-
-Files: components/music/CueList.tsx
-
-T5.3 Audio player UI stubs — DONE
-
-AC: 2–3 player placeholders styled (no real audio required); looks intentional
-
-Files: components/music/PlayerStub.tsx
-
-EPIC 6 — Writing Section (Screenwriting + Copywriting)
-
-T6.1 Choose interaction pattern: Tabs or Accordion — DONE
-
-AC: one chosen pattern implemented; works on mobile; accessible
-
-Files: components/writing/WritingTabs.tsx
-
-T6.2 Screenwriting lane (loglines) — DONE
-
-AC: 3–5 loglines in polished placeholders; formatted like one-sheet
-
-Files: components/WritingSection.tsx
-
-T6.3 Copywriting lane (offer + samples) — DONE
-
-AC: short service bullets + 1–2 sample snippets; no fluff
-
-Files: components/WritingSection.tsx
-
-EPIC 7 — Selected Work (Optional) + About
-
-T7.1 Selected Work module decision — DONE
-
-AC: either placeholder WorkGrid/Carousel exists OR explicitly deferred with no dead nav link
-
-Files: components/SelectedWorkSection.tsx, components/ui/CasePreview.tsx
-
-T7.2 About + “why us” microcopy — DONE
-
-AC: short studio story + promise; fits brand voice; minimal layout
-
-Files: components/AboutSection.tsx, components/ProcessStrip.tsx
-
-EPIC 8 — Contact + Launch Readiness
-
-T8.1 Contact section + form — DONE
-
-AC: Name/Email/Project Type/Notes; basic validation; clear CTA; includes availability line
-
-Files: components/ContactSection.tsx
-
-T8.2 Footer manifesto — DONE
-
-AC: 12–18 word manifesto line; minimalist footer
-
-Files: components/Footer.tsx
-
-T8.3 Performance + a11y pass — DONE (manual checklist)
-
-AC: no layout shift; images optimized; reduced motion works; keyboard nav works
-
-Files: styles/globals.css, components/ContactSection.tsx
-
-T8.4 Deploy — TODO
-
-AC: site live on creativesguide.us; build passes; environment documented
-
-Files: README.md, deployment config (your platform)
+Streamline the homepage into a marketing-first funnel:
+- Rewrite copy to be minimalist (1–3 sentences per section).
+- Hero: headline + subhead + 2 CTAs.
+- Add a proof strip (3 bullets).
+- Selected work: 3–6 tiles only.
+- Offer: 3 cards.
+- Process: 3 steps.
+- End with a strong CTA section.
+Focus on spacing polish and modern minimalist aesthetics.
