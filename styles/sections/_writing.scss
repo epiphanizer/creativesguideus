@@ -15,7 +15,8 @@
 
 .cg-writing__hero-grid {
   display: grid;
-  gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
+  row-gap: clamp(var(--cg-space-md), 2.5vw, var(--cg-space-xl));
+  column-gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
   align-items: start;
 }
 
@@ -26,7 +27,8 @@
 @media (min-width: 960px) {
   .cg-writing__hero-grid {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-    gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-3xl));
+    column-gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-3xl));
+    row-gap: clamp(var(--cg-space-md), 2vw, var(--cg-space-lg));
   }
 }
 

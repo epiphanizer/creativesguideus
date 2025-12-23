@@ -42,8 +42,8 @@ export function TechSection() {
       <SectionHeader
         id="tech-title"
         eyebrow="Technology"
-        title="Code, crypto, and agentic systems that keep releases alive"
-        description="We build black-and-white worlds, but the stack underneath is anything but simple—engineered for calm updates, on-chain trust, and rapid iteration."
+        title="Engineer future-ready systems that never plateau"
+        description="We blend full-stack engineering, protocol design, and automation to deliver infrastructure that scales momentum across platforms, chains, and channels."
         icon={
           <svg viewBox="0 0 24 24">
             <path d="M4 8h16v8H4z" />
@@ -56,11 +56,10 @@ export function TechSection() {
 
       <div className="cg-tech__grid">
         <div className="cg-tech__story">
-          <Tag className="cg-tech__tag">Code-driven studio</Tag>
+          <Tag className="cg-tech__tag">Future-built practice</Tag>
           <p>
-            Our build practice spans product, protocol, and performance. We write the code, tune the infrastructure, and pair every
-            launch with the score and narrative it deserves. From Web2 migrations to Web3 pilots, we act as both designers and
-            engineers.
+            Our engineers, composers, and strategists architect platforms where data, experience, and sound reinforce each other.
+            We migrate legacy stacks, prototype emerging tech, and weave automation so teams stay focused on commanding the market.
           </p>
           <div className="cg-tech__actions">
             <Button
@@ -71,10 +70,10 @@ export function TechSection() {
               variant="ghost"
               className="cg-tech__cta"
             >
-              Enter Appreesh.org
+              Explore Appreesh.org
             </Button>
             <Button as="a" href="#contact" variant="secondary">
-              Initiate the systems brief
+              Build Your Systems Roadmap
             </Button>
           </div>
         </div>

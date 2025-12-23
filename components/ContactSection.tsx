@@ -3,11 +3,11 @@ import { SectionShell } from "@/components/ui/SectionShell";
 import { Button } from "@/components/ui/Button";
 
 const projectTypes = [
-  "Brand / Web",
-  "Music / Score",
-  "Narrative / Writing",
-  "Integrated Suite",
-  "Consult / Advisory"
+  "Software / Platforms",
+  "Music / Sonic",
+  "Story / Narrative",
+  "Unified Engine",
+  "Advisory / Labs"
 ];
 
 export function ContactSection() {
@@ -17,9 +17,9 @@ export function ContactSection() {
         <div className="cg-contact__intro">
           <SectionHeader
             id="contact-title"
-            eyebrow="Begin dialogue"
-            title="Stage the composed launch"
-            description="Two Q1 2026 residencies remain—remote-friendly, intensely collaborative."
+            eyebrow="Engage"
+            title="Activate your bespoke engine"
+            description="Two Q1 2026 residencies remain for future-ready partners—remote-friendly, intensely embedded."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4 7h16v10H4z" />
@@ -31,11 +31,10 @@ export function ContactSection() {
           <div className="cg-contact__meta">
             <div className="cg-contact__slots" aria-label="Residency availability">
               <span>Residencies</span>
-              <p>We hold just two Q1 2026 start dates. Secure your slot when you send the composed brief.</p>
+              <p>We hold just two Q1 2026 start dates. Secure your slot by sharing the impact you’re ready to scale.</p>
             </div>
             <p>
-              Prefer a direct line? Email hello@creativesguide.us with a calendar link and any existing materials—we answer within
-              two studio days.
+              Prefer a direct line? Email hello@creativesguide.us with a calendar link and the assets you want us to amplify—we respond within two studio days.
             </p>
           </div>
         </div>
@@ -85,9 +84,9 @@ export function ContactSection() {
 
           <div className="cg-contact__footer">
             <Button type="submit" className="cg-contact__submit">
-              Send the composed brief
+              Build Your Future Plan
             </Button>
-            <span className="cg-contact__privacy">Your details stay within the core studio—always.</span>
+            <span className="cg-contact__privacy">Your intelligence stays within the core studio—always.</span>
           </div>
         </form>
       </div>

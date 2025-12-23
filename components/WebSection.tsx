@@ -5,9 +5,9 @@ import { SectionShell } from "@/components/ui/SectionShell";
 
 const practiceHighlights = [
   {
-    title: "Interface architecture",
-    eyebrow: "Product",
-    description: "Calm, editorial surfaces in grayscale so the release narrative leads every screen.",
+    title: "Platform architecture",
+    eyebrow: "Software",
+    description: "Resilient interfaces, service maps, and data flows engineered to evolve with your roadmap.",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <rect x="6" y="8" width="20" height="16" rx="3" />
@@ -19,7 +19,7 @@ const practiceHighlights = [
   {
     title: "Identity systems",
     eyebrow: "Brand",
-    description: "Monochrome voice, restraint in motion, and type that feels inevitable across touchpoints.",
+    description: "Adaptive design languages and motion standards that amplify authority across every channel.",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <circle cx="11" cy="16" r="5" />
@@ -29,9 +29,9 @@ const practiceHighlights = [
     )
   },
   {
-    title: "Narrative stewardship",
+    title: "Narrative operations",
     eyebrow: "Story",
-    description: "Scripts, decks, and score cues shaped together so the launch arc lands composed, not chaotic.",
+    description: "Scripts, release decks, and sonic cues that keep product, marketing, and leadership in the same storyline.",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M7 9h18v14H7z" />
@@ -46,7 +46,7 @@ const practiceHighlights = [
 const cadenceNotes = [
   {
     label: "Pulse 01",
-    detail: "Immersion salon frames the release spine with intent storyboards and a monochrome mood grid",
+    detail: "Immersion salons translate market signals into systems diagrams, prototype interfaces, and sensory tone boards.",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <circle cx="16" cy="16" r="9" />
@@ -56,7 +56,7 @@ const cadenceNotes = [
   },
   {
     label: "Pulse 02",
-    detail: "System sketches braid with screenplay fragments and cue studies so tone and interface march together",
+    detail: "Component libraries, narrative frameworks, and sonic sketches refine together to prove the model early.",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <rect x="7" y="9" width="18" height="14" rx="3" />
@@ -66,7 +66,7 @@ const cadenceNotes = [
   },
   {
     label: "Pulse 03",
-    detail: "Interactive proof screenings, score stems, and a composed launch kit rehearse the debut before it lands",
+    detail: "Live environments, instrumentation, and enablement kits rehearse the launch before production.",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M8 22h16" />
@@ -84,9 +84,9 @@ export function WebSection() {
         <div className="cg-split__lede">
           <SectionHeader
             id="web-title"
-            eyebrow="Web & Brand"
-            title="Architect calm product releases"
-            description="Sites, systems, and scripts that land like a premiere—not a fire drill."
+            eyebrow="Software / Web"
+            title="Engineer resilient digital ecosystems"
+            description="We design and deploy future-ready platforms where product utility, brand authority, and story momentum move as one."
             icon={
               <svg viewBox="0 0 24 24">
                 <rect x="3.5" y="6" width="17" height="12" rx="2" />
@@ -97,25 +97,25 @@ export function WebSection() {
             iconLabel="Creative interface emblem"
           />
           <p>
-            We choreograph UX, tone, and score in one monochrome room so every touchpoint arrives with the same composed energy.
-            Creative, engineering, and comms stay inside one cadence, never a frantic handoff.
+            Software architects, brand directors, and composers share the same backlog here. We harden infrastructure while shaping
+            the emotional cues that signal confidence to your market. No silos, no retrofitting.
           </p>
           <p>
-            Weekly immersion pulses keep decisions aligned, while every Friday ships an interactive proof so stakeholders feel the
-            next move before it goes live.
+            Decision-makers see traction fast through living prototypes, instrumentation, and narrative rehearsal decks. Every
+            milestone pushes the release toward measurable adoption.
           </p>
           <div className="cg-split__actions">
             <Button as="a" href="#contact">
-              Open the scope salon
+              Forge Your Platform
             </Button>
             <Button as="a" href="#work" variant="ghost">
-              Study recent systems
+              Review the Outcomes
             </Button>
           </div>
         </div>
 
         <aside className="cg-practice__cadence" aria-label="Engagement cadence">
-          <h3 className="cg-practice__cadence-title">Three pulses</h3>
+          <h3 className="cg-practice__cadence-title">Three resonance pulses</h3>
           <ul className="cg-practice__cadence-list">
             {cadenceNotes.map((note) => (
               <li key={note.label} className="cg-practice__cadence-item">

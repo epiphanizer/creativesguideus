@@ -3,16 +3,16 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 
 const gratitudeMeta = {
-  instrumentation: "Felt piano, tape loops, room tone, drums",
-  project: "Standalone post-rock release"
+  instrumentation: "Expanded piano, analog synthesis, percussive design",
+  project: "Future-ready post-rock release"
 };
 
 const gratitudeEmbedSrc = "https://open.spotify.com/embed/track/62hskoBw5Vl1LLZeR1oiBi?utm_source=generator";
 
 const releaseHighlights = [
-  "Catalog spans felt piano miniatures, analog drones, and narrative interludes ready to license",
-  "Each cue ships with stems, instrumentals, alt mixes, and cue sheets for fast clearance",
-  "We stay through the premiere window to tailor edits, pacing, and delivery kits"
+  "Catalog spans cinematic piano, modular textures, and narrative interludes tuned for instant sync",
+  "Every cue delivers stems, alternates, and score strategy notes for rapid placement",
+  "We steward premieres with live edits, pacing guidance, and delivery kits that keep momentum high"
 ];
 
 export function MusicSection() {
@@ -21,9 +21,9 @@ export function MusicSection() {
       <div className="cg-split__lede">
         <SectionHeader
           id="music-title"
-          eyebrow="Music"
-          title="Release-ready scores without the scramble"
-          description="Gratitude is our felt piano motif—tracked in a single take and cleared for film, campaigns, and experiential rooms."
+          eyebrow="Music / Score"
+          title="Command audiences with sonic authority"
+          description="Gratitude showcases how we craft emotionally precise scores—engineered for film, product launches, and experiential worlds."
           icon={
             <svg viewBox="0 0 24 24">
               <path d="M15 5v10.5a2.5 2.5 0 1 1-1.5-2.3V7.5" />
@@ -33,9 +33,9 @@ export function MusicSection() {
           iconLabel="Creative score emblem"
         />
         <p>
-          Recorded late-night to quarter-inch tape, the cue layers quiet piano patterns, tape loops, and captured room
-          tone. We release on our own cadence, maintain the masters, and license directly so your team moves from brief
-          to score without a scramble.
+          Recorded across analog and digital rigs, the cue threads expansive piano motifs with modular synthesis and
+          percussive design. We retain masters, manage licensing, and tailor every deployment so teams move from concept
+          to placement without friction.
         </p>
         <ul className="cg-music__points">
           {releaseHighlights.map((highlight) => (
@@ -44,7 +44,7 @@ export function MusicSection() {
         </ul>
         <div className="cg-split__actions">
           <Button as="a" href="#contact">
-            Request the score folio
+            Score Your Launch
           </Button>
         </div>
       </div>

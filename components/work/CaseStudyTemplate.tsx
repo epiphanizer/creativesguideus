@@ -145,7 +145,7 @@ export function CaseStudyTemplate({
       <SectionShell id={`${id}-deliverables`} labelledBy={`${id}-deliverables-title`} innerClassName="cg-case-study__deliverables">
         <div className="cg-case-study__deliverables-header">
           <h2 id={`${id}-deliverables-title`}>Deliverables</h2>
-          <p>Everything shipped together so the partner could roll out the release in one composed moment.</p>
+          <p>Everything ships together so partners can command the release in one decisive moment.</p>
         </div>
         <ul>
           {deliverables.map((deliverable) => (

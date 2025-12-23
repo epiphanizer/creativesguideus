@@ -4,8 +4,8 @@ import { SectionShell } from "@/components/ui/SectionShell";
 
 const processSteps = [
   {
-    title: "Listen",
-    description: "Workshops and tone poems surface the story worth telling.",
+    title: "Diagnose",
+    description: "Immersion labs surface the signals shaping your next generation release.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <circle cx="32" cy="32" r="21" />
@@ -15,8 +15,8 @@ const processSteps = [
     )
   },
   {
-    title: "Shape",
-    description: "We draft grids, scripts, and cues together in monochrome clarity.",
+    title: "Engineer",
+    description: "We prototype software, story, and score as one resilient system.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <rect x="14" y="14" width="36" height="36" rx="6" />
@@ -26,8 +26,8 @@ const processSteps = [
     )
   },
   {
-    title: "Score",
-    description: "Launch plans, sonic cues, and delivery kits land as one calm debut.",
+    title: "Orchestrate",
+    description: "Release kits, sonic authority, and cultural playbooks scale impact fast.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <path d="M20 44c0-6 24-6 24 0" />
@@ -40,9 +40,9 @@ const processSteps = [
   }
 ];
 
-const heroTitle = "Boutique web, score, and story direction.";
+const heroTitle = "Architecting tomorrow’s digital and sensory landscapes.";
 
-const heroSubhead = "One monochrome studio guiding every release from first outline to final premiere.";
+const heroSubhead = "We build future-ready software, music, and narrative engines that compound brand authority.";
 
 export function HeroSection() {
   return (
@@ -56,10 +56,10 @@ export function HeroSection() {
           actions={
             <div className="cg-hero__actions">
               <Button as="a" href="#contact">
-                Invite the narrative
+                Build Your Future
               </Button>
               <Button as="a" href="#work" variant="ghost">
-                Survey the proof
+                Scale Your Impact
               </Button>
             </div>
           }

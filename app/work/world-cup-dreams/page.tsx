@@ -29,9 +29,9 @@ export default function WorldCupDreamsCaseStudy() {
           description: "Funding and resources for the next generation of elite snow-sports athletes—from junior dreams to U.S. Ski Team podium pursuits.",
           body: [
             "Elite snowsport careers are built in thin air—where talent is real, and costs are relentless. World Cup Dreams Foundation turns fundraising into forward motion: a site that explains the pipeline, invites donors into impact, and guides athletes toward the right door—grants, team support, or a safety-net fundraising platform—without confusion.",
-            "We designed and engineered a monochrome, athlete-led WordPress experience that puts the mission up front, clarifies pathways for every visitor, and makes supporting athletes as intuitive as cheering for them.",
-            "Content modules were tailored to WCDF’s internal workflow so staff can update copy, swap stats, and surface new programs without touching code.",
-            "Internal teams now tell one story across programs, impact metrics, and campaign rollouts while athletes gain a calm, respectful hub for their season planning."
+            "We designed and engineered an athlete-led WordPress experience that makes the mission unmistakable, clarifies pathways for every visitor, and turns supporter action into instinct.",
+            "Content modules were tailored to WCDF’s internal workflow so staff can update copy, surface new programs, and adapt metrics in seconds without touching code.",
+              "Internal teams now tell one story across programs, impact metrics, and campaign rollouts while athletes gain a high-resonance hub for their season planning."
           ],
           actions: heroActions
         }}
@@ -53,7 +53,7 @@ export default function WorldCupDreamsCaseStudy() {
           },
           {
             title: "Clear pathways for athletes",
-            detail: "Eligibility guides and application hubs cover ARCO, On the Rise, World Cup, and Team Support programs in one calm view."
+              detail: "Eligibility guides and application hubs cover ARCO (U16), On the Rise (16–21), World Cup (USST + invitees), and Team Support programs in one intuitive view."
           },
           {
             title: "Donor pathways",
@@ -128,12 +128,12 @@ export default function WorldCupDreamsCaseStudy() {
           }
         ]}
         quote={{
-          text: "The site finally sounds like our athletes. Donors know exactly where dollars go, and our staff has a calm system to match need with support.",
+          text: "The site finally sounds like our athletes. Donors know exactly where dollars go, and our staff has a decisive system to match need with support.",
           attribution: "Jessi Oglesby · Executive Director, World Cup Dreams Foundation"
         }}
         closing={{
           note: "If your nonprofit needs a clear grant pipeline and donor journey, we can map it in weeks—not quarters.",
-          actionLabel: "Start your nonprofit plan",
+          actionLabel: "Scale Your Nonprofit Impact",
           actionHref: "/#contact"
         }}
       />

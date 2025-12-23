@@ -46,8 +46,8 @@ export function SelectedWorkSection() {
           <SectionHeader
             id="work-title"
             eyebrow="Selected Work"
-            title="Outcomes built quietly, shipped confidently"
-            description="A rotating mix of launches, retainer programs, and narrative experiments across web, music, and writing."
+            title="Outcomes engineered for momentum"
+            description="Launches, retainers, and narrative experiments that blend software, sound, and story into measurable authority."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4 6h16" />
@@ -58,7 +58,7 @@ export function SelectedWorkSection() {
             iconLabel="Creative portfolio emblem"
             actions={
               <Button as="a" href="mailto:hello@creativesguide.us?subject=Selected%20Work" variant="ghost">
-                Request the full dossier
+                Access the Impact Dossier
               </Button>
             }
           />

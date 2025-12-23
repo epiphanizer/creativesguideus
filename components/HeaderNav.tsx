@@ -53,7 +53,7 @@ export function HeaderNav() {
       <div className="cg-header__inner">
         <div className="cg-header__identity">
           <span className="cg-header__studio">Creatives Guide Us</span>
-          <span className="cg-header__tagline">web / music / writing</span>
+          <span className="cg-header__tagline">code · composition · story</span>
         </div>
         <nav className="cg-header__nav" aria-label="Primary">
           <ul className="cg-header__list">
@@ -83,7 +83,7 @@ export function HeaderNav() {
           className="cg-header__cta"
           onClick={() => handleNavigate(CONTACT_ANCHOR_ID)}
         >
-          Start The Narrative
+          Build Your Future
         </button>
       </div>
     </header>

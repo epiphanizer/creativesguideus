@@ -3,26 +3,26 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 
 const writingHeroCopy = [
-  "Screenplays, treatments, and copy frameworks are the labs where we build tone before a launch ever hits the web.",
-  "We keep an active slate—features, brand stories, and campaign scripts—so partners can plug into a voice that already carries momentum.",
-  "Slate previews are invitation-only; Bong Tour now lives on its own surface for producers and financiers."
+  "Screenplays, treatments, and executive narratives turn complex vision into strategic clarity before the first release hits production.",
+  "Our live slate spans film, brand manifestos, and campaign architectures so partners tap a voice already tuned for influence.",
+  "Slate previews remain invitation-only; Bong Tour now operates as a dedicated hub for producers and financiers."
 ];
 
 const writingHighlights = [
-  "Pages, decks, and music cues develop together so every release feels authored",
-  "Each draft ships with tonal essays, voice notes, and scene lift-outs teams can circulate",
-  "We stay on through launch windows to guide rewrites and partner comms"
+  "Scripts, decks, and sonic motifs evolve together so every release arrives authored and aligned",
+  "Each draft includes stakeholder briefs, cultural references, and scene lift-outs ready for circulation",
+  "We stay embedded through launch windows, guiding rewrites and executive communications"
 ];
 
 export function WritingSection() {
   return (
     <SectionShell id="writing" labelledBy="writing-title" innerClassName="cg-writing">
       <div className="cg-writing__hero">
-        <SectionHeader
-          id="writing-title"
-          eyebrow="Screenwriting"
-          title="We author worlds your launch can live in"
-          description="Script, copy, and cadence plans grow alongside design and score so the release lands composed."
+          <SectionHeader
+            id="writing-title"
+            eyebrow="Writing / Story"
+            title="Deliver narratives with cultural impact"
+            description="We craft future-facing scripts, treatments, and copy systems that move markets and deepen loyalty."
           icon={
             <svg viewBox="0 0 24 24">
               <path d="M4 19l6.5-6.5" />
@@ -40,11 +40,11 @@ export function WritingSection() {
               ))}
             </div>
             <p className="cg-writing__note">
-              Request the slate to hear table reads, review decks, and stage rewrites without opening new teams.
+              Request the slate to access table reads, narrative prototypes, and rewrites that plug directly into your growth plan.
             </p>
             <div className="cg-writing__hero-actions">
               <Button as="a" href="#contact">
-                Request the story slate
+                Command the Narrative
               </Button>
             </div>
           </div>

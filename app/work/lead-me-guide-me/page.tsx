@@ -17,7 +17,7 @@ export default function LeadMeGuideMeCaseStudy() {
           title: "Lead Me Guide Me",
           description: "iOS scripture companion for choir leaders",
           body: [
-            "We partnered with the Lead Me Guide Me liturgy collective to craft a calm mobile companion that keeps choir directors in Scripture while organizing weekly rehearsals.",
+            "We partnered with the Lead Me Guide Me liturgy collective to craft a precision-built mobile companion that keeps choir directors in Scripture while organizing weekly rehearsals.",
             "The sprint braided UX, composition, and editorial voice so directors could move from verse to rehearsal cue without juggling separate tools."
           ],
           actions: heroActions
@@ -114,7 +114,7 @@ export default function LeadMeGuideMeCaseStudy() {
         }}
         closing={{
           note: "Your next release can braid story, product, and score the same way. Let’s map the first four weeks together.",
-          actionLabel: "Plan your release",
+          actionLabel: "Scale Your Release Momentum",
           actionHref: "/#contact"
         }}
       />

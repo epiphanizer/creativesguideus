@@ -167,7 +167,7 @@ export function BongTourFeature() {
               actions={
                 <div className="cg-bong-feature__actions">
                   <Button as="a" href="/#contact">
-                    Request a producer session
+                    Schedule a producer summit
                   </Button>
                 </div>
               }
@@ -338,7 +338,7 @@ export function BongTourFeature() {
           <p>{finalThought}</p>
           <div className="cg-bong-feature__cta">
             <Button as="a" href="/#contact" variant="secondary">
-              Request the Bong Tour package
+              Access the Bong Tour engine
             </Button>
           </div>
         </section>

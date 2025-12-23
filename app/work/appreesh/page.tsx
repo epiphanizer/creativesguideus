@@ -23,7 +23,7 @@ export default function AppreeshCaseStudy() {
           description: "Web3 gifting platform where rituals, not speculation, keep the token alive.",
           body: [
             "Appreesh is a gratitude co-op backed by smart contracts, but guided by real human rituals. We co-founded the product, choreographed the brand, and built the launch kit so communities could circulate thank-yous without defaulting to extractive mechanics.",
-            "Every surface—from onboarding to treasury dashboards—runs monochrome, editorial, and calm. Tokens move with purpose, founders steward the loop, and contributors see value beyond price swings."
+            "Every surface—from onboarding to treasury dashboards—runs with deliberate contrast and clarity. Tokens move with purpose, founders steward the loop, and contributors see value beyond price swings."
           ],
           actions: heroActions
         }}
@@ -121,7 +121,7 @@ export default function AppreeshCaseStudy() {
         }}
         closing={{
           note: "Let’s build your next cooperative so the community feels the ritual—not the risk.",
-          actionLabel: "Start a cooperative sprint",
+          actionLabel: "Build Your Cooperative Future",
           actionHref: "/#contact"
         }}
       />

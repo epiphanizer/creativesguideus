@@ -4,23 +4,23 @@ import { SectionShell } from "@/components/ui/SectionShell";
 
 const studioValues = [
   {
-    title: "Boutique on purpose",
-    detail: "Two-person core with a vetted roster of collaborators—keeps every deliverable personal."
+    title: "One bespoke engine",
+    detail: "Senior software, scoring, and story leads build in one cadence so every output reinforces the same ambition."
   },
   {
-    title: "Format agnostic",
-    detail: "Scripts, scores, and sites share a common editorial brain so narratives stay in sync."
+    title: "Future in production",
+    detail: "We prototype resilient systems early—infra diagrams, sonic sketches, cultural playbooks—so leaders can scale with confidence."
   },
   {
-    title: "Proof-first",
-    detail: "Each engagement ships artifacts early: wire stories, demo cues, or copyboards before full production."
+    title: "Momentum as a metric",
+    detail: "Weekly proofs and data-backed decisions keep growth visible while protecting creative integrity."
   }
 ];
 
 const collaborationNotes = [
-  "Preferred engagements run 6–12 weeks with weekly working sessions",
-  "Retainer clients receive quarterly narrative tune-ups and sonic refresh drops",
-  "Available for partnerships across NYC, LA, and remote-friendly time zones"
+  "Typical engagements span 6–12 weeks with embedded strategy and build crews",
+  "Retainers include roadmap stewardship, release analytics, and score expansions",
+  "Operating across NYC, LA, and remote-first teams with bilingual technical/creative facilitation"
 ];
 
 export function AboutSection() {
@@ -30,8 +30,8 @@ export function AboutSection() {
         <SectionHeader
           id="about-title"
           eyebrow="About / Process"
-          title="Creatives Guide Us is a hybrid studio for narrative systems"
-          description="Founded by a writer/composer and an interactive director to bridge story, sound, and interface with one voice."
+          title="Creatives Guide Us is the bespoke engine for digital evolution"
+          description="Co-founded by a software architect and composer-writer duo, we fuse code, composition, and story into one future-ready practice."
           icon={
             <svg viewBox="0 0 24 24">
               <circle cx="8" cy="12" r="3" />
@@ -45,11 +45,12 @@ export function AboutSection() {
         <div className="cg-about__grid">
           <div className="cg-about__story">
             <p>
-              We help founders, filmmakers, and curators translate messy ideas into disciplined releases. Projects begin with
-              interviews and research sprints, then move into layered delivery where copy, score, and visuals evolve in tandem.
+              We partner with founders, cultural leaders, and product teams to architect tomorrow’s platforms—software that scales,
+              scores that command attention, and narratives that claim new territory. Discovery labs translate vision into actionable roadmaps.
             </p>
             <p>
-              Expect transparent timelines, annotated handoffs, and an editorial partner who obsesses over cadence as much as visuals.
+              Expect technical clarity, executive-level storytelling, and sonic direction moving in lockstep. Every sprint blends
+              infrastructure decisions with emotional resonance so launches feel inevitable, not improvised.
             </p>
             <ProcessStrip className="cg-about__process" />
           </div>

@@ -16,7 +16,7 @@ const highlightProjects = [
     tags: ["Nonprofit", "Donations", "Grant Programs", "Athlete Support", "Community"],
     caseHref: "/work/world-cup-dreams",
     siteHref: "https://www.worldcupdreams.org",
-    siteLabel: "Enter worldcupdreams.org",
+    siteLabel: "Visit worldcupdreams.org",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M6 23 16 9l10 14" />
@@ -27,11 +27,11 @@ const highlightProjects = [
   {
     title: "Appreesh",
     eyebrow: "Gratitude gifting co-op",
-    description: "Community-owned gratitude economy with on-chain rituals, editorial UX, and a composed launch kit.",
+    description: "Community-owned gratitude economy with on-chain rituals, editorial UX, and an innovation-led launch kit.",
     tags: ["Product", "Brand", "Web3"],
     caseHref: "/work/appreesh",
     siteHref: "https://appreesh.org",
-    siteLabel: "Enter appreesh.org",
+    siteLabel: "Visit appreesh.org",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M9.5 12.5a3.5 3.5 0 1 1 5 5L16 19l1.5-1.5a3.5 3.5 0 1 1 5-5" />
@@ -46,7 +46,7 @@ const highlightProjects = [
     tags: ["Product", "Music", "Story"],
     caseHref: "/work/lead-me-guide-me",
     siteHref: "https://leadmeguideme.org",
-    siteLabel: "Enter leadmeguideme.org",
+    siteLabel: "Visit leadmeguideme.org",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M9 7h14v18H9z" />
@@ -67,9 +67,9 @@ export function WorkSection() {
         <div className="cg-split__lede">
           <SectionHeader
             id="work-title"
-            eyebrow="Composed releases"
-            title="Proof in the field"
-            description="Digital, score, and story engagements that ship as one calm sequence."
+            eyebrow="Integrated outcomes"
+            title="Outcomes in motion"
+            description="Cross-disciplinary engagements that launch next-generation platforms, scores, and stories in one trajectory."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4.5 15.5c2.5 0 4.5-2 6-5 1.5 3 3.5 5 6 5" />
@@ -80,33 +80,33 @@ export function WorkSection() {
             iconLabel="Creative release emblem"
           />
           <p>
-            We lead cross-disciplinary launches where donors, fans, and leadership experience the same crafted release—no crash
-            landings, no overtime triage.
+            We orchestrate software, sonic, and narrative teams so audiences, investors, and internal stakeholders witness the same
+            commanding debut. Every move is architected for momentum, not maintenance.
           </p>
           <p>
-            Each engagement moves through weekly proofs, composed music cues, and a narrative kit so partners can act quickly
-            without spinning up new teams.
+            Weekly proofs, instrumentation, and cultural playbooks keep leadership aligned while we handle the build. Your teams stay
+            focused on scaling impact—not stitching silos together.
           </p>
           <div className="cg-split__actions">
             <Button as="a" href="#contact">
-              Book the case salon
+              Schedule Your Blueprint
             </Button>
           </div>
         </div>
 
         <aside className="cg-work__aside" aria-label="Launch principles">
           <p className="cg-work__summary-lede">
-            Composed releases weave design, story, and sound into one brief so internal teams feel the same confident
-            narrative your audience does.
+            High-resonance launches merge design, story, and sound into one operating system so internal teams project the same
+            authority as your audience perceives.
           </p>
           <ul className="cg-work__summary">
-            <li>Launch playbooks with content, motion, and score guidelines</li>
-            <li>Analytics-ready builds that stay maintainable after handoff</li>
-            <li>Editorial voice kits and cue libraries delivered day-one</li>
-            <li>Calm rituals—screenings, burn-ins, retros—that keep decisions in sync</li>
+            <li>Launch playbooks covering content, interaction, score, and activation queues</li>
+            <li>Analytics-ready builds hardened for growth long after handoff</li>
+            <li>Executive voice kits, cue libraries, and enablement decks delivered day one</li>
+            <li>High-resonance rituals—screenings, retros, signal reviews—that keep decisions in sync</li>
           </ul>
           <p className="cg-work__summary-footer">
-            We stage internal premieres, share alt cuts, and refine stems post-launch so the release keeps breathing.
+            We stage internal premieres, evolve score stems, and optimize data loops post-launch so momentum compounds.
           </p>
         </aside>
       </div>
@@ -144,7 +144,7 @@ export function WorkSection() {
             />
           </div>
         ))}
-        <div className="cg-work__note">Every release stacks strategy, build, and score into one composed kit.</div>
+        <div className="cg-work__note">Every engagement fuses strategy, build, and sound into one future-ready engine.</div>
       </div>
     </SectionShell>
   );
