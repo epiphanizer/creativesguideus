@@ -9,6 +9,12 @@ const globalComps = ["The Big Lebowski (stoner philosophy)", "Tropic Thunder (in
 
 const indiaComps = ["Go Goa Gone energy", "Delhi Belly irreverence", "Luck By Chance insider bite"];
 
+const keyDetails = [
+  { label: "Format", detail: "Feature screenplay · 118 pages" },
+  { label: "Budget lane", detail: "Streaming mid-tier · USD $12M" },
+  { label: "Visual lane", detail: "Masala satire · neon noir" }
+];
+
 const cast = [
   {
     name: "Vishal",
@@ -102,7 +108,8 @@ export function BongTourFeature() {
     <SectionShell id="bong-tour" labelledBy="bong-tour-title" innerClassName="cg-bong-feature">
       <div className="cg-bong-feature__hero">
         <div className="cg-bong-feature__hero-bg" aria-hidden="true" />
-        <div className="cg-bong-feature__hero-content">
+        <div className="cg-bong-feature__hero-grid">
+          <div className="cg-bong-feature__hero-stack">
           <SectionHeader
             id="bong-tour-title"
             eyebrow="Feature Screenplay"
@@ -127,6 +134,14 @@ export function BongTourFeature() {
             }
             iconLabel="Creative screenplay emblem"
           />
+            <dl className="cg-bong-feature__meta" aria-label="Pitch quick facts">
+              {keyDetails.map((item) => (
+                <div key={item.label}>
+                  <dt>{item.label}</dt>
+                  <dd>{item.detail}</dd>
+                </div>
+              ))}
+            </dl>
           <div className="cg-bong-feature__logline">
             <h3>Logline</h3>
             <p>
@@ -138,11 +153,12 @@ export function BongTourFeature() {
           <p className="cg-bong-feature__overview">
             Bong Tour plays like a cult comedy but lands like a fable. Fame is a drug. The industry is a trip. The only antidote is choosing what is real.
           </p>
+          </div>
+          <figure className="cg-bong-feature__poster">
+            <Image className="cg-bong-feature__poster-image" src={posterImage} alt="Concept poster artwork for Bong Tour" priority />
+            <figcaption>Concept poster · art dept. exploration</figcaption>
+          </figure>
         </div>
-        <figure className="cg-bong-feature__poster">
-          <Image className="cg-bong-feature__poster-image" src={posterImage} alt="Concept poster artwork for Bong Tour" priority />
-          <figcaption>Concept poster · art dept. exploration</figcaption>
-        </figure>
       </div>
 
       <section className="cg-bong-feature__tonality" aria-label="Tone and reference grid">
