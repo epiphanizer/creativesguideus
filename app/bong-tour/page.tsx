@@ -17,7 +17,7 @@ const thematicMotifs = [
 const materialSuite = [
   "Feature screenplay · June 2025 partner draft (112 pages)",
   "Lookbook + monochrome treatment deck",
-  "Tonal score sketchbook anchored by the Gratitude cue",
+  "Tonal score sketchbook anchored by the Gratitude release",
   "Limited series companion outline + festival strategy notes"
 ];
 
@@ -42,7 +42,7 @@ export default function BongTourPage() {
                 Start a conversation
               </Button>
               <Button as="a" href="https://open.spotify.com/track/62hskoBw5Vl1LLZeR1oiBi" variant="ghost">
-                Hear the anchor cue
+                Hear the anchor track
               </Button>
             </div>
           }
@@ -56,8 +56,8 @@ export default function BongTourPage() {
           </p>
           <p>
             We develop the screenplay alongside design and score so partners can feel the world instantly. Every draft ships with a
-            monochrome deck, sonic sketches, and motion references. Gratitude—the modular cue from our music practice—threads through the
-            film and is ready for licensing out of the box.
+            monochrome deck, sonic sketches, and motion references. Gratitude—our latest release from the music practice—threads through
+            the film and is ready for licensing out of the box.
           </p>
         </div>
 

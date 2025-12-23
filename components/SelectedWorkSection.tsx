@@ -34,7 +34,7 @@ const inProgressNotes = [
   },
   {
     label: "Score",
-    detail: "Hybrid orchestral + modular synth package for a short-form fashion film"
+    detail: "Hybrid orchestral + analog synth package for a short-form fashion film"
   }
 ];
 

@@ -21,7 +21,7 @@ const highlightProjects = [
   {
     title: "Gratitude Sessions",
     eyebrow: "Original score release",
-    description: "Modular cue series we adapt for film, campaign, and event licensing—stream the anchor track anytime.",
+    description: "Small-batch score release we license for film, campaigns, and event sound—stream the anchor track anytime.",
     tags: ["Music", "Licensing", "Score"],
     href: "https://open.spotify.com/track/62hskoBw5Vl1LLZeR1oiBi"
   }
