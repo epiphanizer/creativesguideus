@@ -17,9 +17,9 @@ export function ContactSection() {
         <div className="cg-contact__intro">
           <SectionHeader
             id="contact-title"
-            eyebrow="Engage"
-            title="Activate your bespoke engine"
-            description="Two Q1 2026 residencies remain for future-ready partners—remote-friendly, intensely embedded."
+            eyebrow="UPLINK"
+            title="Engineered for Momentum"
+            description="Drop the signal when you’re ready to architect, score, and ship in the same sprint cadence."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4 7h16v10H4z" />
@@ -31,22 +31,29 @@ export function ContactSection() {
           <div className="cg-contact__meta">
             <div className="cg-contact__slots" aria-label="Residency availability">
               <span>Residencies</span>
-              <p>We hold just two Q1 2026 start dates. Secure your slot by sharing the impact you’re ready to scale.</p>
+              <p>We hold two seats for Q1 2026. Reserved for partners ready to move at the speed of their vision.</p>
             </div>
             <p>
-              Prefer a direct line? Email hello@creativesguide.us with a calendar link and the assets you want us to amplify—we respond within two studio days.
+              Prefer a direct uplink? Email hello@creativesguide.us with your calendar signal and mission intel—we respond inside two studio days.
             </p>
           </div>
         </div>
 
         <form className="cg-contact__form" method="post" action="#" noValidate>
           <div className="cg-contact__field">
-            <label htmlFor="contact-name">Name</label>
-            <input id="contact-name" name="name" type="text" autoComplete="name" required placeholder="Your name" />
+            <label htmlFor="contact-name">Identify yourself</label>
+            <input
+              id="contact-name"
+              name="name"
+              type="text"
+              autoComplete="name"
+              required
+              placeholder="Call sign, alias, or full name"
+            />
           </div>
 
           <div className="cg-contact__field">
-            <label htmlFor="contact-email">Email</label>
+            <label htmlFor="contact-email">Contact uplink</label>
             <input
               id="contact-email"
               name="email"
@@ -58,10 +65,10 @@ export function ContactSection() {
           </div>
 
           <div className="cg-contact__field">
-            <label htmlFor="contact-project-type">Project Type</label>
+            <label htmlFor="contact-project-type">Select the focus</label>
             <select id="contact-project-type" name="projectType" defaultValue="" required>
               <option value="" disabled>
-                Select the focus
+                Choose the channel
               </option>
               {projectTypes.map((type) => (
                 <option key={type} value={type}>
@@ -72,19 +79,19 @@ export function ContactSection() {
           </div>
 
           <div className="cg-contact__field cg-contact__field--full">
-            <label htmlFor="contact-notes">Project Notes</label>
+            <label htmlFor="contact-notes">Timeline, goals, and the playlist you're building to...</label>
             <textarea
               id="contact-notes"
               name="notes"
               rows={5}
-              placeholder="Timeline, goals, collaborators, links..."
+              placeholder="Drop milestones, collaborators, and links we should spin up alongside you."
               required
             />
           </div>
 
           <div className="cg-contact__footer">
             <Button type="submit" className="cg-contact__submit">
-              Build Your Future Plan
+              INITIATE BUILD
             </Button>
             <span className="cg-contact__privacy">Your intelligence stays within the core studio—always.</span>
           </div>
