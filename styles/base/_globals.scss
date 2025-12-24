@@ -1354,8 +1354,11 @@ p + ol {
 
 .cg-section-header__content {
   display: grid;
+  grid-gap: var(--cg-space-2xs);
   gap: var(--cg-space-2xs);
-  max-width: 60ch;
+  max-width: 80ch;
+  border-bottom: 1px solid gray;
+  padding-bottom: 1rem;
 }
 
 .cg-section-header__eyebrow {

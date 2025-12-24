@@ -8,6 +8,7 @@ const anchorRegistry: AnchorConfig[] = [
   { id: "hero", label: "Vision" },
   { id: "web", label: "Software Systems" },
   { id: "work", label: "Outcomes" },
+  { id: "who", label: "Who We Are" },
   { id: "music", label: "Sonic Authority" },
   { id: "writing", label: "Narrative Impact" }
 ];
