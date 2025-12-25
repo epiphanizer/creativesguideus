@@ -505,7 +505,7 @@
   isolation: isolate;
   z-index: 1;
   width: 100%;
-  max-width: 1180px;
+  max-width: min(100%, 1100px);
   margin-inline: auto;
   padding: clamp(28px, 4vw, 52px);
   border: 1px solid var(--bt-border-strong);
@@ -517,6 +517,18 @@
 .bt-stage > section {
   width: 100%;
   max-width: min(100%, 1060px);
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
+.bt-hero__layout,
+.bt-tonality__grid,
+.bt-cast__grid,
+.bt-storyboard__grid,
+.bt-themes__grid,
+.bt-packaging > ul,
+.bt-finale__body {
+  max-width: min(100%, 960px);
   margin-inline: auto;
 }
 
@@ -543,7 +555,10 @@
   margin: 0;
   display: grid;
   gap: var(--cg-space-4xs);
-  justify-items: center;
+  justify-items: start;
+  align-items: start;
+  align-self: start;
+  justify-self: start;
 }
 
 .bt-hero__poster-frame {
@@ -605,6 +620,7 @@
   gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-2xl));
   align-items: center;
   justify-items: center;
+  padding-top: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
 }
 
 @media (min-width: 960px) {
@@ -612,6 +628,7 @@
     align-items: flex-start;
     justify-items: flex-start;
     text-align: left;
+    padding-top: clamp(var(--cg-space-sm), 2.2vw, var(--cg-space-lg));
   }
 }
 
@@ -695,6 +712,7 @@
   flex-wrap: wrap;
   gap: var(--cg-space-sm);
   justify-content: center;
+  width: 100%;
 }
 
 
@@ -706,6 +724,7 @@
   border-radius: calc(var(--cg-radius-2xl, 48px) * 0.9);
   border: 1px solid var(--bt-border);
   background-color: var(--bt-panel);
+  box-sizing: border-box;
 }
 
 .bt-tonality__grid {
@@ -816,6 +835,18 @@
 
 .bt-storyboard__card:nth-child(even) {
   justify-self: end;
+}
+
+@media (max-width: 920px) {
+  .bt-storyboard__grid {
+    justify-items: center;
+  }
+
+  .bt-storyboard__card,
+  .bt-storyboard__card:nth-child(odd),
+  .bt-storyboard__card:nth-child(even) {
+    justify-self: center;
+  }
 }
 
 .bt-storyboard__card::after {
@@ -1033,6 +1064,11 @@
   display: grid;
   gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
   max-width: 820px;
+  margin-inline: auto;
+  justify-items: start;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .bt-finale__body h2 {
@@ -1051,6 +1087,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--cg-space-sm);
+  justify-content: center;
 }
 
 .cg-button.bt-button {

@@ -9,10 +9,22 @@ const writingHeroCopy = [
 ];
 
 const writingHighlights = [
-  "Scripts, decks, and sonic motifs evolve together so every release arrives authored and aligned",
-  "Each draft includes stakeholder briefs, cultural references, and scene lift-outs ready for circulation",
-  "We stay embedded through launch windows, guiding rewrites and executive communications"
+  {
+    title: "Signal sweeps",
+    detail: "Market noise turns into a single brief with playlists, prototypes, and proof of the first win."
+  },
+  {
+    title: "Unified sprint",
+    detail: "Design, story, and score move together so the product's voice is set before code goes wide."
+  },
+  {
+    title: "Launch rehearsal",
+    detail: "Sandboxes, enablement kits, and instrumentation runs make launch day operational, not hopeful."
+  }
 ];
+
+const writingSummaryFooter =
+  "We stay embedded as editors and playback partners so narrative, telemetry, and teams keep advancing in sync.";
 
 export function WritingSection() {
   return (
@@ -53,17 +65,22 @@ export function WritingSection() {
             <div className="cg-writing__bong">
               <span className="cg-writing__bong-label">In development</span>
               <a className="cg-writing__bong-link" href="/bong-tour">
-                Bong Tour treatment <span aria-hidden="true">↗</span>
+                Bong Tour <span aria-hidden="true">↗</span>
               </a>
               <p className="cg-writing__bong-note">
                 Invitation-only slate surface with finance deck, cue list, and tone essays.
               </p>
             </div>
-            <ul className="cg-writing__points">
-              {writingHighlights.map((statement) => (
-                <li key={statement}>{statement}</li>
+            <p className="cg-writing__summary-title">How we keep pace</p>
+            <ul className="cg-writing__summary">
+              {writingHighlights.map((highlight) => (
+                <li key={highlight.title} className="cg-writing__summary-item">
+                  <strong>{highlight.title}</strong>
+                  <span>{highlight.detail}</span>
+                </li>
               ))}
             </ul>
+            <p className="cg-writing__summary-footer">{writingSummaryFooter}</p>
           </aside>
         </div>
       </div>
