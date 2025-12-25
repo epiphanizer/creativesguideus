@@ -64,7 +64,7 @@ export function ContactSection() {
             />
           </div>
 
-          <div className="cg-contact__field">
+          <div className="cg-contact__field cg-contact__field--full">
             <label htmlFor="contact-project-type">Select the focus</label>
             <select id="contact-project-type" name="projectType" defaultValue="" required>
               <option value="" disabled>

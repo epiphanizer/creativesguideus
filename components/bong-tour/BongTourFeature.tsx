@@ -1,8 +1,6 @@
 import Image from "next/image";
 
 import { Button } from "@/components/ui/Button";
-import { SectionHeader } from "@/components/ui/SectionHeader";
-import { SectionShell } from "@/components/ui/SectionShell";
 import posterImage from "@/app/bong-tour/bong-tour-poster.png";
 
 const globalComps = ["The Big Lebowski (stoner philosophy)", "Tropic Thunder (industry satire)", "Fear and Loathing in Las Vegas (trip momentum)", "The Player (meta Hollywood)"];
@@ -105,127 +103,60 @@ const finalThought = "Bong Tour moves like smoke—fast, shape shifting, impossi
 
 const guidingTagline = "Smoke rewrites the myth before it lets you onstage.";
 
-const panelIcons = {
-  tone: (
-    <svg viewBox="0 0 24 24" strokeWidth="1.6" fill="none" stroke="currentColor">
-      <path d="M4 7c2.9 0 2.9 10 5.8 10s2.9-10 5.8-10 2.9 10 5.8 10" strokeLinecap="round" />
-      <path d="M4 17h16" opacity="0.6" />
-    </svg>
-  ),
-  cast: (
-    <svg viewBox="0 0 24 24" strokeWidth="1.6" fill="none" stroke="currentColor">
-      <circle cx="6.5" cy="8" r="2.5" />
-      <circle cx="17.5" cy="8" r="2.5" />
-      <path d="M3 18c0-2.3 1.9-4.2 4.2-4.2h1.6c2.3 0 4.2 1.9 4.2 4.2" strokeLinecap="round" />
-      <path d="M12 18c0-2.3 1.9-4.2 4.2-4.2h1.6C20.1 13.8 22 15.7 22 18" strokeLinecap="round" />
-    </svg>
-  ),
-  story: (
-    <svg viewBox="0 0 24 24" strokeWidth="1.6" fill="none" stroke="currentColor">
-      <path d="M4 5h16v14H4z" opacity="0.3" />
-      <path d="M6 9.5h6.5L15 7l2.5 2.5H18" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M6 14h4l1.5 1.5H18" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ),
-  themes: (
-    <svg viewBox="0 0 24 24" strokeWidth="1.6" fill="none" stroke="currentColor">
-      <path d="M12 4.5 14 9l4.5.3-3.4 2.8L16.5 17 12 14.7 7.5 17l1.4-4.9L5.5 9.3 10 9z" strokeLinejoin="round" />
-    </svg>
-  ),
-  market: (
-    <svg viewBox="0 0 24 24" strokeWidth="1.6" fill="none" stroke="currentColor">
-      <circle cx="12" cy="12" r="6.5" opacity="0.4" />
-      <path d="m12 6 1.6 5.4H19l-4.3 3.1 1.6 5.5L12 16.8l-4.3 2.8 1.6-5.5L5 11.4h5.4z" strokeLinejoin="round" />
-    </svg>
-  ),
-  packaging: (
-    <svg viewBox="0 0 24 24" strokeWidth="1.6" fill="none" stroke="currentColor">
-      <path d="m4.5 7 7.5-3 7.5 3v10l-7.5 3-7.5-3z" strokeLinejoin="round" />
-      <path d="m4.5 7 7.5 3 7.5-3" strokeLinejoin="round" />
-      <path d="M12 10v10" opacity="0.5" />
-    </svg>
-  ),
-  finale: (
-    <svg viewBox="0 0 24 24" strokeWidth="1.6" fill="none" stroke="currentColor">
-      <path d="M12 4c1.2 1.4 2 3.1 2 5 0 1.3-.4 2.4-1.1 3.4-.7 1-1 1.8-1 2.6 0 1 .4 1.8 1.1 2.5.7.7 1.7 1.1 3 1.1-1.3 1.4-3 2.2-5 2.2s-3.7-.8-5-2.2c1.3 0 2.3-.4 3-1.1a3.4 3.4 0 0 0 1.1-2.5c0-.8-.3-1.6-1-2.6A5.7 5.7 0 0 1 10 9c0-1.9.8-3.6 2-5z" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-} as const;
+const storyboardTilts = [-2.5, 1.5, -1.2, 2.2, -1.8, 1.8, -0.8];
 
 export function BongTourFeature() {
   return (
-    <SectionShell id="bong-tour" labelledBy="bong-tour-title" innerClassName="cg-bong-feature">
-      <div className="cg-bong-feature__hero">
-        <div className="cg-bong-feature__hero-bg" aria-hidden="true" />
-        <div className="cg-bong-feature__hero-grid">
-          <div className="cg-bong-feature__hero-stack">
-            <SectionHeader
-              id="bong-tour-title"
-              eyebrow="Feature Screenplay"
-              title="Bong Tour"
-              description="A diaspora masala satire where Hollywood mania collides with Indian myth logic."
-              actions={
-                <div className="cg-bong-feature__actions">
-                  <Button as="a" href="/#contact">
-                    Schedule a producer summit
-                  </Button>
-                </div>
-              }
-              icon={
-                <svg viewBox="0 0 24 24">
-                  <path d="M4 7h16v10H4z" />
-                  <circle cx="9" cy="12" r="1.5" />
-                  <circle cx="15" cy="12" r="1.5" />
-                </svg>
-              }
-              iconLabel="Creative screenplay emblem"
-            />
-            <dl className="cg-bong-feature__meta" aria-label="Pitch quick facts">
-              {keyDetails.map((item) => (
-                <div key={item.label}>
-                  <dt>{item.label}</dt>
-                  <dd>{item.detail}</dd>
-                </div>
-              ))}
-            </dl>
-            <div className="cg-bong-feature__logline">
-              <h3>Logline</h3>
-              <p>
-                A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to its smoke-script. They pitch
-                &ldquo;Bhang Tour&rdquo;; Hollywood hears &ldquo;Bong Tour&rdquo; and the artifact rewrites the film through them until Mount Doom asks:
-                cash it, or cast it into fire?
-              </p>
-            </div>
-            <p className="cg-bong-feature__overview">
-              Bong Tour plays like a cult comedy but lands like a fable. Fame is a drug. The industry is a trip. The only antidote is choosing what is
-              real.
+    <div className="bt-stage">
+      <section className="bt-hero" id="bong-tour">
+        <div className="bt-hero__grain" aria-hidden="true" />
+        <div className="bt-hero__glow" aria-hidden="true" />
+        <div className="bt-hero__content">
+          <span className="bt-hero__eyebrow">Feature Screenplay</span>
+          <h1>Bong Tour</h1>
+          <p className="bt-hero__descriptor">A diaspora neon noir masquerading as a stoner comedy.</p>
+          <div className="bt-hero__logline">
+            <h2>Logline</h2>
+            <p>
+              A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to its smoke-script.
+              Hollywood keeps hearing &ldquo;Bong Tour&rdquo;; the artifact keeps rewriting the myth until they choose who must burn.
             </p>
           </div>
-          <figure className="cg-bong-feature__poster">
-            <Image className="cg-bong-feature__poster-image" src={posterImage} alt="Concept poster artwork for Bong Tour" priority />
-            <figcaption>Concept poster · art dept. exploration</figcaption>
-          </figure>
+          <dl className="bt-hero__facts" aria-label="Pitch quick facts">
+            {keyDetails.map((item) => (
+              <div key={item.label}>
+                <dt>{item.label}</dt>
+                <dd>{item.detail}</dd>
+              </div>
+            ))}
+          </dl>
+          <div className="bt-hero__actions">
+            <Button as="a" href="/#contact" className="bt-button">
+              Producer invitation
+            </Button>
+          </div>
         </div>
-      </div>
+        <figure className="bt-hero__poster">
+          <div className="bt-hero__poster-frame">
+            <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority />
+          </div>
+          <figcaption>Concept poster · art dept. exploration</figcaption>
+        </figure>
+      </section>
 
-      <div className="cg-bong-feature__grid">
-        <section className="cg-bong-feature__panel cg-bong-feature__panel--wide cg-bong-feature__tonality" aria-label="Tone and reference grid">
-          <div className="cg-bong-feature__panel-intro">
-            <div className="cg-bong-feature__panel-title">
-              <span className="cg-bong-feature__icon" aria-hidden="true">
-                {panelIcons.tone}
-              </span>
-              <h3>Genre and tone</h3>
-            </div>
+      <section className="bt-tonality" aria-label="Tone and references">
+        <div className="bt-tonality__grid">
+          <div className="bt-tonality__copy">
+            <h2>Genre &amp; tone</h2>
             <p>Comedy, satire, and adventure with psychedelic propulsion and a grounded emotional spine.</p>
+            <div className="bt-tonality__tagline">
+              <span>Tagline</span>
+              <p>{guidingTagline}</p>
+            </div>
           </div>
-          <div className="cg-bong-feature__tagline">
-            <span>Tagline</span>
-            <p>{guidingTagline}</p>
-          </div>
-          <div className="cg-bong-feature__comparisons">
+          <div className="bt-tonality__comps">
             <div>
-              <h4>Global comps</h4>
+              <h3>Global comps</h3>
               <ul>
                 {globalComps.map((comp) => (
                   <li key={comp}>{comp}</li>
@@ -233,7 +164,7 @@ export function BongTourFeature() {
               </ul>
             </div>
             <div>
-              <h4>India comps</h4>
+              <h3>India comps</h3>
               <ul>
                 {indiaComps.map((comp) => (
                   <li key={comp}>{comp}</li>
@@ -241,109 +172,101 @@ export function BongTourFeature() {
               </ul>
             </div>
           </div>
-          <p className="cg-bong-feature__note">
-            This is not &ldquo;India as seasoning.&rdquo; India is the myth engine and the emotional truth. West Bengal is origin, Kolkata is arrival, and
-            Rishikesh is reckoning.
-          </p>
-        </section>
+        </div>
+        <p className="bt-tonality__note">
+          India isn&rsquo;t seasoning. It&rsquo;s the myth engine and the emotional truth—West Bengal as origin, Kolkata as arrival, Rishikesh as reckoning.
+        </p>
+      </section>
 
-        <section className="cg-bong-feature__panel cg-bong-feature__panel--wide cg-bong-feature__cast" aria-label="Principal characters">
-          <div className="cg-bong-feature__panel-title">
-            <span className="cg-bong-feature__icon" aria-hidden="true">
-              {panelIcons.cast}
-            </span>
-            <h3>Core cast</h3>
-          </div>
-          <ul>
-            {cast.map((character) => (
-              <li key={character.name}>
-                <span>{character.name}</span>
-                <p>{character.detail}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="cg-bong-feature__panel cg-bong-feature__panel--wide cg-bong-feature__story" aria-label="Story structure">
-          <div className="cg-bong-feature__panel-title">
-            <span className="cg-bong-feature__icon" aria-hidden="true">
-              {panelIcons.story}
-            </span>
-            <h3>Story breakdown</h3>
-          </div>
-          <div className="cg-bong-feature__acts">
-            {storyActs.map((act) => (
-              <article key={act.title}>
-                <h4>{act.title}</h4>
+      <section className="bt-storyboard" aria-label="Storyboard breakdown">
+        <div className="bt-storyboard__film" aria-hidden="true" />
+        <div className="bt-storyboard__reel">
+          {storyActs.map((act, index) => (
+            <article key={act.title} className="bt-storyboard__panel">
+              <header>
+                <span>{`Scene Card ${index + 1}`}</span>
+                <h3>{act.title}</h3>
+              </header>
+              <div className="bt-storyboard__copy">
                 {act.summary.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="cg-bong-feature__panel cg-bong-feature__themes" aria-label="Themes">
-          <div className="cg-bong-feature__panel-title">
-            <span className="cg-bong-feature__icon" aria-hidden="true">
-              {panelIcons.themes}
-            </span>
-            <h3>What lingers</h3>
-          </div>
-          <ul>
-            {themes.map((theme) => (
-              <li key={theme}>{theme}</li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="cg-bong-feature__panel cg-bong-feature__market" aria-label="Market positioning">
-          <div className="cg-bong-feature__panel-title">
-            <span className="cg-bong-feature__icon" aria-hidden="true">
-              {panelIcons.market}
-            </span>
-            <h3>Market and positioning</h3>
-          </div>
-          <dl>
-            {marketSignals.map((signal) => (
-              <div key={signal.label}>
-                <dt>{signal.label}</dt>
-                <dd>{signal.detail}</dd>
               </div>
-            ))}
-          </dl>
-        </section>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        <section className="cg-bong-feature__panel cg-bong-feature__packaging" aria-label="Packaging notes">
-          <div className="cg-bong-feature__panel-title">
-            <span className="cg-bong-feature__icon" aria-hidden="true">
-              {panelIcons.packaging}
-            </span>
-            <h3>Packaging notes</h3>
-          </div>
-          <ul>
-            {packagingNotes.map((note) => (
-              <li key={note}>{note}</li>
-            ))}
-          </ul>
-        </section>
+      <section className="bt-cast" aria-label="Core cast">
+        <header className="bt-section-header">
+          <h2>Core cast</h2>
+          <p>The energy, posture, and myth weight that keep the satire sharp.</p>
+        </header>
+        <ul className="bt-cast__grid">
+          {cast.map((character, index) => (
+            <li
+              key={character.name}
+              className="bt-cast__card"
+              style={{ transform: `rotate(${storyboardTilts[index % storyboardTilts.length]}deg)` }}
+            >
+              <span>{character.name}</span>
+              <p>{character.detail}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-        <section className="cg-bong-feature__panel cg-bong-feature__panel--wide cg-bong-feature__finale" aria-label="Closing call to action">
-          <div className="cg-bong-feature__panel-title">
-            <span className="cg-bong-feature__icon" aria-hidden="true">
-              {panelIcons.finale}
-            </span>
-            <h3>Producer invitation</h3>
+      <section className="bt-themes" aria-label="Themes and market">
+        <div className="bt-themes__grid">
+          <div className="bt-themes__panel">
+            <h2>What lingers</h2>
+            <ul>
+              {themes.map((theme) => (
+                <li key={theme}>{theme}</li>
+              ))}
+            </ul>
           </div>
+          <div className="bt-themes__panel">
+            <h2>Market pulse</h2>
+            <dl>
+              {marketSignals.map((signal) => (
+                <div key={signal.label}>
+                  <dt>{signal.label}</dt>
+                  <dd>{signal.detail}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section className="bt-packaging" aria-label="Packaging notes">
+        <header className="bt-section-header">
+          <h2>Packaging directives</h2>
+          <p>Guard the myth. Protect the collaborators. Keep the smoke sacred.</p>
+        </header>
+        <ul>
+          {packagingNotes.map((note) => (
+            <li key={note}>{note}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="bt-finale" aria-label="Producer invitation">
+        <div className="bt-finale__body">
+          <h2>Producer invitation</h2>
           <p>{finalThought}</p>
-          <div className="cg-bong-feature__cta">
-            <Button as="a" href="/#contact" variant="secondary">
+          <div className="bt-finale__actions">
+            <Button as="a" href="/#contact" className="bt-button bt-button--outline">
               Access the Bong Tour engine
             </Button>
+            <Button as="a" href="/#contact" className="bt-button bt-button--record">
+              Build your future
+            </Button>
           </div>
-        </section>
-      </div>
-    </SectionShell>
+        </div>
+      </section>
+    </div>
   );
 }
 

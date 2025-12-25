@@ -243,7 +243,22 @@
 }
 
 .cg-work__card .cg-card__tags {
-  gap: var(--cg-space-2xs);
+  gap: var(--cg-space-3xs);
+  flex-wrap: nowrap;
+  align-items: center;
+  overflow-x: auto;
+  padding-bottom: var(--cg-space-4xs);
+  margin: 0;
+  scrollbar-color: rgba(28, 33, 67, 0.2) transparent;
+}
+
+.cg-work__card .cg-card__tags::-webkit-scrollbar {
+  height: 0.35rem;
+}
+
+.cg-work__card .cg-card__tags::-webkit-scrollbar-thumb {
+  background: rgba(28, 33, 67, 0.2);
+  border-radius: 999px;
 }
 
 .cg-work__card-link {
@@ -414,15 +429,25 @@
 
 .cg-contact__form {
   display: grid;
-  gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-lg));
-  padding: clamp(var(--cg-space-md), 3vw, var(--cg-space-lg));
-  border-radius: calc(var(--cg-radius-lg) * 0.9);
-  border: 1px solid var(--cg-color-border);
-  background: var(--cg-color-canvas);
-  box-shadow: none;
+  align-content: start;
+  grid-template-columns: 1fr;
+  row-gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
+  column-gap: 0;
+  padding: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
+  border-radius: calc(var(--cg-radius-xl) * 0.68);
+  border: 1px solid rgba(25, 25, 30, 0.08);
+  background: linear-gradient(190deg, rgba(255, 255, 255, 0.96), rgba(246, 246, 248, 0.98));
+  box-shadow: 0 28px 72px rgba(8, 8, 15, 0.08);
   width: 100%;
-  max-width: 28rem;
+  max-width: min(36rem, 100%);
   justify-self: stretch;
+}
+
+@media (min-width: 720px) {
+  .cg-contact__form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(var(--cg-space-md), 4vw, var(--cg-space-xl));
+  }
 }
 
 @media (min-width: 960px) {
@@ -434,6 +459,7 @@
 .cg-contact__field {
   display: grid;
   gap: var(--cg-space-3xs);
+  min-width: 0;
 }
 
 .cg-contact__field label {
@@ -447,21 +473,21 @@
 .cg-contact__field select,
 .cg-contact__field textarea {
   width: 100%;
-  border-radius: var(--cg-radius-md);
-  border: 1px solid var(--cg-color-border);
-  padding: 0.85rem 1rem;
+  border-radius: calc(var(--cg-radius-md) * 1.1);
+  border: 1px solid rgba(32, 32, 48, 0.14);
+  padding: 0.9rem 1.1rem;
   font-size: var(--cg-type-body);
   color: var(--cg-color-ink-800);
-  background: var(--cg-color-canvas);
-  transition: border-color var(--cg-transition-fade), background var(--cg-transition-fade);
+  background: rgba(250, 250, 252, 0.92);
+  transition: border-color var(--cg-transition-fade), box-shadow var(--cg-transition-fade), background var(--cg-transition-fade);
 }
 
 .cg-contact__field input:focus-visible,
 .cg-contact__field select:focus-visible,
 .cg-contact__field textarea:focus-visible {
-  border-color: var(--cg-color-ink-400);
+  border-color: rgba(99, 102, 241, 0.6);
   background: #fff;
-  box-shadow: none;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
 }
 
 .cg-contact__field textarea {
@@ -478,6 +504,7 @@
   flex-wrap: wrap;
   gap: var(--cg-space-2xs);
   align-items: center;
+  grid-column: 1 / -1;
 }
 
 .cg-button.cg-contact__submit {
@@ -1620,7 +1647,7 @@ p + ol {
 .cg-card__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(var(--cg-space-2xs), 1.4vw, var(--cg-space-sm));
+  gap: clamp(var(--cg-space-2xs), 1.2vw, var(--cg-space-sm));
 }
 
 .cg-card__footer {
@@ -1633,20 +1660,20 @@ p + ol {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: clamp(2.7rem, 4vw, 3.75rem);
-  min-width: clamp(6.5rem, 18vw, 8.5rem);
-  padding: 0 clamp(var(--cg-space-sm), 2.2vw, var(--cg-space-lg));
-  font-size: clamp(0.58rem, 1.6vw, 0.68rem);
+  min-height: clamp(2.2rem, 3.5vw, 2.8rem);
+  padding: clamp(0.4rem, 1.2vw, 0.6rem) clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
+  font-size: clamp(0.52rem, 1.4vw, 0.65rem);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   border-radius: 999px;
-  border: 1px solid rgba(28, 33, 67, 0.16);
+  border: 1px solid rgba(28, 33, 67, 0.18);
   color: var(--cg-color-ink-600);
-  background: linear-gradient(130deg, rgba(255, 255, 255, 0.94), rgba(230, 235, 255, 0.7));
-  box-shadow: 0 10px 30px rgba(20, 24, 48, 0.14);
+  background: linear-gradient(130deg, rgba(255, 255, 255, 0.94), rgba(230, 235, 255, 0.75));
+  box-shadow: 0 10px 30px rgba(20, 24, 48, 0.12);
   white-space: nowrap;
   transition: transform var(--cg-transition-move), box-shadow var(--cg-transition-fade);
+  flex: 0 0 auto;
 }
 
 .cg-tag:hover,
