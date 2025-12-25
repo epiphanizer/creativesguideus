@@ -75,9 +75,10 @@ export function HeaderNav() {
         </a>
         <button
           type="button"
-          className="cg-header__menu-toggle"
+          className={["cg-header__menu-toggle", isMenuOpen ? "cg-header__menu-toggle--open" : ""].filter(Boolean).join(" ")}
           aria-expanded={isMenuOpen}
           aria-controls="primary-navigation"
+          aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
           onClick={() => setIsMenuOpen((prev) => !prev)}
         >
           <span className="cg-header__menu-toggle-icon" aria-hidden="true">
