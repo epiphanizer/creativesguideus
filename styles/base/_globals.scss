@@ -886,7 +886,7 @@ p + ol {
 
 @media (min-width: 960px) {
   .cg-split {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 0.4fr);
     align-items: start;
   }
 }

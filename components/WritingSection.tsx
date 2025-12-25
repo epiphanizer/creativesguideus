@@ -17,23 +17,23 @@ const writingHighlights = [
 export function WritingSection() {
   return (
     <SectionShell id="writing" labelledBy="writing-title" innerClassName="cg-writing">
-      <div className="cg-writing__hero">
-          <SectionHeader
-            id="writing-title"
-            eyebrow="Writing / Story"
-            title="Deliver narratives with cultural impact"
-            description="We craft future-facing scripts, treatments, and copy systems that move markets and deepen loyalty."
-          icon={
-            <svg viewBox="0 0 24 24">
-              <path d="M4 19l6.5-6.5" />
-              <path d="M12 11l5-5a2.5 2.5 0 1 1 3.5 3.5l-5 5" />
-              <path d="M4 19h5" />
-            </svg>
-          }
-          iconLabel="Creative writing emblem"
-        />
-        <div className="cg-writing__hero-grid">
-          <div className="cg-writing__primary">
+      <div className="cg-writing__surface">
+        <div className="cg-writing__layout cg-split">
+          <div className="cg-writing__column cg-writing__column--primary">
+            <SectionHeader
+              id="writing-title"
+              eyebrow="Writing / Story"
+              title="Deliver narratives with cultural impact"
+              description="We craft future-facing scripts, treatments, and copy systems that move markets and deepen loyalty."
+              icon={
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 19l6.5-6.5" />
+                  <path d="M12 11l5-5a2.5 2.5 0 1 1 3.5 3.5l-5 5" />
+                  <path d="M4 19h5" />
+                </svg>
+              }
+              iconLabel="Creative writing emblem"
+            />
             <div className="cg-writing__hero-copy">
               {writingHeroCopy.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -48,7 +48,8 @@ export function WritingSection() {
               </Button>
             </div>
           </div>
-          <div className="cg-writing__secondary">
+
+          <aside className="cg-writing__column cg-writing__column--secondary" aria-label="Writing slate highlight">
             <div className="cg-writing__bong">
               <span className="cg-writing__bong-label">In development</span>
               <a className="cg-writing__bong-link" href="/bong-tour">
@@ -63,7 +64,7 @@ export function WritingSection() {
                 <li key={statement}>{statement}</li>
               ))}
             </ul>
-          </div>
+          </aside>
         </div>
       </div>
     </SectionShell>
