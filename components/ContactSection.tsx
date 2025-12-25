@@ -19,7 +19,7 @@ export function ContactSection() {
             id="contact-title"
             eyebrow="UPLINK"
             title="Engineered for Momentum"
-            description="Drop the signal when you’re ready to architect, score, and ship in the same sprint cadence."
+            description="Send the coordinates when you’re ready to compose product, score, and story on one track."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4 7h16v10H4z" />
@@ -31,14 +31,11 @@ export function ContactSection() {
           <div className="cg-contact__meta">
             <div className="cg-contact__slots" aria-label="Residency availability">
               <span>Residencies</span>
-              <p>We hold two seats for Q1 2026. Reserved for partners ready to move at the speed of their vision.</p>
+              <p>Two seats are open for Q1 2026—held for partners ready to move in stride.</p>
             </div>
             <p>
-              Prefer a direct uplink? Email
-              {" "}
-              <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a>
-              {" "}
-              with your calendar signal and mission intel—we respond inside two studio days.
+              Prefer a direct uplink? Email <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a> with a calendar pin and
+              mission intel—we reply within two studio days.
             </p>
           </div>
         </div>
@@ -95,7 +92,7 @@ export function ContactSection() {
 
           <div className="cg-contact__footer">
             <Button type="submit" className="cg-contact__submit">
-              INITIATE BUILD
+              INITIATE DIALOGUE
             </Button>
             <span className="cg-contact__privacy">Your intelligence stays within the core studio—always.</span>
           </div>

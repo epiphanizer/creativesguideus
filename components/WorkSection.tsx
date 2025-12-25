@@ -58,6 +58,41 @@ const highlightProjects = [
   }
 ];
 
+const launchPrinciples = [
+  {
+    title: "Tempo blueprints",
+    detail: "Product, narrative, and score run one shared cadence, ready for investors and teams alike.",
+    icon: (
+      <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+        <path d="M4 17.5h16" />
+        <path d="M4 12h10" />
+        <path d="M4 6.5h6" />
+      </svg>
+    )
+  },
+  {
+    title: "Proof sprints",
+    detail: "Each cycle ships a shareable signal—live states, narrative cuts, and performance telemetry.",
+    icon: (
+      <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+        <path d="M4 18 10 6l4 8 6-5" />
+        <path d="M4 18h16" />
+      </svg>
+    )
+  },
+  {
+    title: "Steady stewardship",
+    detail: "After lift-off we stay embedded, tuning cues, dashboards, and handoffs so clarity compounds.",
+    icon: (
+      <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+        <path d="M4 5h16v14H4z" />
+        <path d="M9 9h6" />
+        <path d="M9 12h6" />
+      </svg>
+    )
+  }
+];
+
 export function WorkSection() {
   const router = useRouter();
 
@@ -95,33 +130,23 @@ export function WorkSection() {
         </div>
 
         <aside className="cg-work__aside" aria-label="Launch principles">
-          <div className="cg-work__summary-visual" aria-hidden="true">
-            <span>Signal → Launch</span>
-            <svg viewBox="0 0 160 120" role="presentation">
-              <defs>
-                <linearGradient id="workPulse" x1="0%" x2="100%">
-                  <stop offset="0%" stopColor="#7f7bff" stopOpacity="0.18" />
-                  <stop offset="45%" stopColor="#39ff14" stopOpacity="0.45" />
-                  <stop offset="100%" stopColor="#ff00ff" stopOpacity="0.5" />
-                </linearGradient>
-              </defs>
-              <path d="M8 92L34 68l22 18 30-54 18 32 24-14 24 30" fill="none" stroke="url(#workPulse)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-              <circle cx="34" cy="68" r="6" fill="#39ff14" opacity="0.6" />
-              <circle cx="84" cy="56" r="6" fill="#ff00ff" opacity="0.6" />
-              <circle cx="134" cy="80" r="6" fill="#7f7bff" opacity="0.6" />
-            </svg>
-          </div>
           <p className="cg-work__summary-lede">
-            High-resonance launches let teams and markets feel the same move—signal captured, systems composed, story amplified.
+            Launches land when the narrative, the build, and the score advance together. We choreograph that momentum and keep it in
+            motion.
           </p>
           <ul className="cg-work__summary">
-            <li>Launch playbooks choreographing product states, narrative beats, and score cues.</li>
-            <li>Growth-ready platforms with telemetry, governance, and automation wired in.</li>
-            <li>Voice kits, cue libraries, and creative assets engineered for every stakeholder.</li>
-            <li>Signal reviews, retros, and premiere rituals that keep leadership in tempo.</li>
+            {launchPrinciples.map((principle) => (
+              <li key={principle.title} className="cg-work__summary-item">
+                <span className="cg-work__summary-icon">{principle.icon}</span>
+                <span className="cg-work__summary-text">
+                  <strong>{principle.title}</strong>
+                  <span>{principle.detail}</span>
+                </span>
+              </li>
+            ))}
           </ul>
           <p className="cg-work__summary-footer">
-            After launch we stay on deck—optimizing data loops, evolving score stems, and fine-tuning culture so clarity keeps compounding.
+            We stay embedded post-launch, refining telemetry, evolving cues, and protecting the momentum we start together.
           </p>
         </aside>
       </div>
