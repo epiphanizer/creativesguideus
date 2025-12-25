@@ -60,8 +60,8 @@ export function HeaderNav() {
             handleNavigate("hero");
           }}
         >
-          <span className="cg-header__logo" aria-hidden="true">
-            <Image src="/images/logo.jpeg" alt="" width={28} height={28} priority />
+            <span className="cg-header__logo" aria-hidden="true">
+              <Image src="/images/logo.jpeg" alt="" width={84} height={84} priority />
           </span>
           <span className="cg-header__copy">
             <span className="cg-header__studio">Creatives Guide Us</span>

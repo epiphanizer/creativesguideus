@@ -108,39 +108,40 @@ const storyboardTilts = [-2.5, 1.5, -1.2, 2.2, -1.8, 1.8, -0.8];
 export function BongTourFeature() {
   return (
     <div className="bt-stage">
-      <figure className="bt-poster">
-        <div className="bt-poster__frame">
-          <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority />
-        </div>
-        <figcaption>Concept poster · art dept. exploration</figcaption>
-      </figure>
-
       <section className="bt-hero" id="bong-tour">
         <div className="bt-hero__grain" aria-hidden="true" />
         <div className="bt-hero__glow" aria-hidden="true" />
-        <div className="bt-hero__content">
-          <span className="bt-hero__eyebrow">Feature Screenplay</span>
-          <h1>Bong Tour</h1>
-          <p className="bt-hero__descriptor">A diaspora neon noir masquerading as a stoner comedy.</p>
-          <div className="bt-hero__logline">
-            <h2>Logline</h2>
-            <p>
-              A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to its smoke-script.
-              Hollywood keeps hearing &ldquo;Bong Tour&rdquo;; the artifact keeps rewriting the myth until they choose who must burn.
-            </p>
-          </div>
-          <dl className="bt-hero__facts" aria-label="Pitch quick facts">
-            {keyDetails.map((item) => (
-              <div key={item.label}>
-                <dt>{item.label}</dt>
-                <dd>{item.detail}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className="bt-hero__actions">
-            <Button as="a" href="/#contact" className="bt-button">
-              Producer invitation
-            </Button>
+        <div className="bt-hero__layout">
+          <figure className="bt-hero__poster">
+            <div className="bt-hero__poster-frame">
+              <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority />
+            </div>
+            <figcaption>Concept poster · art dept. exploration</figcaption>
+          </figure>
+          <div className="bt-hero__content">
+            <span className="bt-hero__eyebrow">Feature Screenplay</span>
+            <h1>Bong Tour</h1>
+            <p className="bt-hero__descriptor">A diaspora neon noir masquerading as a stoner comedy.</p>
+            <div className="bt-hero__logline">
+              <h2>Logline</h2>
+              <p>
+                A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to its smoke-script.
+                Hollywood keeps hearing &ldquo;Bong Tour&rdquo;; the artifact keeps rewriting the myth until they choose who must burn.
+              </p>
+            </div>
+            <dl className="bt-hero__facts" aria-label="Pitch quick facts">
+              {keyDetails.map((item) => (
+                <div key={item.label}>
+                  <dt>{item.label}</dt>
+                  <dd>{item.detail}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="bt-hero__actions">
+              <Button as="a" href="/#contact" className="bt-button">
+                Producer invitation
+              </Button>
+            </div>
           </div>
         </div>
       </section>
