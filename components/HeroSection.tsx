@@ -4,8 +4,8 @@ import { SectionShell } from "@/components/ui/SectionShell";
 
 const processSteps = [
   {
-    title: "Diagnose",
-    description: "Immersion labs surface the signals shaping your next generation release.",
+    title: "Signal Sweep",
+    description: "Immersion crews compress market noise into the handful of signals worth scaling.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <circle cx="32" cy="32" r="21" />
@@ -15,8 +15,8 @@ const processSteps = [
     )
   },
   {
-    title: "Engineer",
-    description: "We prototype software, story, and score as one resilient system.",
+    title: "System Chorus",
+    description: "Design, engineering, and sonic drafts converge in one sprint to translate signals into clarity.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <rect x="14" y="14" width="36" height="36" rx="6" />
@@ -26,8 +26,8 @@ const processSteps = [
     )
   },
   {
-    title: "Orchestrate",
-    description: "Release kits, sonic authority, and cultural playbooks scale impact fast.",
+    title: "Rhythm Launch",
+    description: "Enablement kits, playlists, and ops cadences keep momentum compounding after drop day.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <path d="M20 44c0-6 24-6 24 0" />
@@ -40,9 +40,9 @@ const processSteps = [
   }
 ];
 
-const heroTitle = "Architecting tomorrow’s digital and sensory landscapes.";
+const heroTitle = "Bring your project from noise to clarity.";
 
-const heroSubhead = "We build future-ready software, music, and narrative engines that compound brand authority.";
+const heroSubhead = "Partner directly with us to align software, story, and score until the launch vision is unmistakable.";
 
 export function HeroSection() {
   return (

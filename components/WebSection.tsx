@@ -46,7 +46,7 @@ const practiceHighlights = [
 const cadenceNotes = [
   {
     label: "Pulse 01",
-    detail: "Immersion salons translate market signals into systems diagrams, prototype interfaces, and sensory tone boards.",
+    detail: "Signal safaris turn market noise into clarity, playlists, and quick-win interface sketches.",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <circle cx="16" cy="16" r="9" />
@@ -56,7 +56,7 @@ const cadenceNotes = [
   },
   {
     label: "Pulse 02",
-    detail: "Component libraries, narrative frameworks, and sonic sketches refine together to prove the model early.",
+    detail: "Designers, writers, and composers jam in one sprint so the story and product vibe lock before launch.",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <rect x="7" y="9" width="18" height="14" rx="3" />
@@ -66,7 +66,7 @@ const cadenceNotes = [
   },
   {
     label: "Pulse 03",
-    detail: "Live environments, instrumentation, and enablement kits rehearse the launch before production.",
+    detail: "Live sandboxes, enablement hype kits, and instrumentation rehearsals make launch day feel like a victory lap.",
     icon: (
       <svg viewBox="0 0 32 32" role="presentation">
         <path d="M8 22h16" />
@@ -115,7 +115,7 @@ export function WebSection() {
         </div>
 
         <aside className="cg-practice__cadence" aria-label="Engagement cadence">
-          <h3 className="cg-practice__cadence-title">Three resonance pulses</h3>
+          <h3 className="cg-practice__cadence-title">Three playful pulses</h3>
           <ul className="cg-practice__cadence-list">
             {cadenceNotes.map((note) => (
               <li key={note.label} className="cg-practice__cadence-item">

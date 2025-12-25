@@ -4,13 +4,14 @@
 
 @media (min-width: 960px) {
   .cg-music {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
-    align-items: start;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    align-items: center;
   }
 
   .cg-music .cg-split__body {
-    max-width: clamp(260px, 32vw, 420px);
-    justify-self: end;
+    width: 100%;
+    max-width: clamp(260px, 35vw, 420px);
+    justify-self: stretch;
   }
 }
 
