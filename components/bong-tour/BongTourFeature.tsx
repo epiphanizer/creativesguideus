@@ -106,23 +106,6 @@ const guidingTagline = "Smoke rewrites the myth before it lets you onstage.";
 const storyboardTilts = [-2.5, 1.5, -1.2, 2.2, -1.8, 1.8, -0.8];
 
 export function BongTourFeature() {
-  const heroMeta = [
-    ...keyDetails.map((item) => ({
-      label: item.label,
-      content: item.detail,
-      type: "fact" as const
-    })),
-    {
-      label: "Producer invitation",
-      content: (
-        <Button as="a" href="/#contact" className="bt-button">
-          Producer invitation
-        </Button>
-      ),
-      type: "action" as const
-    }
-  ];
-
   return (
     <div className="bt-stage">
       <section className="bt-hero" id="bong-tour">
@@ -146,20 +129,22 @@ export function BongTourFeature() {
                 Hollywood keeps hearing &ldquo;Bong Tour&rdquo;; the artifact keeps rewriting the myth until they choose who must burn.
               </p>
             </div>
+
           </div>
         </div>
-        <ul className="bt-hero__meta" aria-label="Pitch quick facts">
-          {heroMeta.map((item) => (
-            <li key={item.label} className="bt-hero__meta-item" data-type={item.type}>
+        <div className="bt-hero__meta" aria-label="Pitch quick facts">
+          {keyDetails.map((item) => (
+            <div key={item.label} className="bt-hero__meta-item">
               <span className="bt-hero__meta-label">{item.label}</span>
-              {item.type === "fact" ? (
-                <span className="bt-hero__meta-value">{item.content}</span>
-              ) : (
-                item.content
-              )}
-            </li>
+              <span className="bt-hero__meta-value">{item.detail}</span>
+            </div>
           ))}
-        </ul>
+        </div>
+        <div className="bt-hero__cta">
+          <Button as="a" href="/#contact" className="bt-button">
+            Producer invitation
+          </Button>
+        </div>
       </section>
 
       <section className="bt-tonality" aria-label="Tone and references">
