@@ -415,196 +415,6 @@
   color: var(--cg-color-ink-600);
 }
 
-.cg-contact {
-  display: grid;
-  row-gap: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
-  column-gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
-  align-items: start;
-}
-
-@media (min-width: 960px) {
-  .cg-contact {
-    grid-template-columns: minmax(0, 0.58fr) minmax(0, 0.42fr);
-  }
-}
-
-#contact.cg-section {
-  padding-top: clamp(var(--cg-space-3xl), 10vw, var(--cg-space-5xl));
-  padding-bottom: clamp(var(--cg-space-3xl), 9vw, var(--cg-space-5xl));
-}
-
-#contact .cg-section__inner {
-  gap: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
-}
-
-.cg-contact__intro {
-  display: grid;
-  gap: clamp(var(--cg-space-xl), 4vw, var(--cg-space-2xl));
-}
-
-@media (min-width: 960px) {
-  .cg-contact__intro {
-    padding-right: clamp(var(--cg-space-sm), 3vw, var(--cg-space-xl));
-  }
-}
-
-.cg-contact__meta {
-  position: relative;
-  display: grid;
-  gap: clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
-  padding: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
-  max-width: min(520px, 100%);
-  width: min(520px, 100%);
-  box-sizing: border-box;
-  border-radius: calc(var(--cg-radius-lg) * 0.9);
-  border: 1px solid var(--cg-color-border);
-  background-color: rgba(255, 255, 255, 0.85);
-  box-shadow: none;
-  color: var(--cg-color-ink-600);
-  margin-inline: auto;
-}
-
-.cg-contact__meta::before {
-  display: none;
-}
-
-.cg-contact__meta > * {
-  position: relative;
-  z-index: 1;
-}
-
-.cg-contact__meta p {
-  margin: 0;
-  line-height: 1.65;
-}
-
-.cg-contact__meta a {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--cg-space-5xs);
-  margin-left: 0.35em;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--cg-color-ink-700);
-}
-
-.cg-contact__meta a::after {
-  content: "→";
-  display: inline-block;
-  font-size: 0.85em;
-  transform: translateY(-0.05em);
-}
-
-.cg-contact__slots {
-  display: grid;
-  gap: clamp(var(--cg-space-4xs), 1.2vw, var(--cg-space-3xs));
-  padding: clamp(var(--cg-space-sm), 3vw, var(--cg-space-lg));
-  border-radius: calc(var(--cg-radius-md) * 1.1);
-  border: 1px solid var(--cg-color-border);
-  background-color: var(--cg-color-canvas);
-  box-shadow: none;
-}
-
-.cg-contact__slots p {
-  margin: 0;
-  font-size: var(--cg-type-body);
-  color: var(--cg-color-ink-700);
-}
-
-.cg-contact__form {
-  display: grid;
-  align-content: start;
-  grid-template-columns: 1fr;
-  row-gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
-  column-gap: clamp(var(--cg-space-sm), 3vw, var(--cg-space-lg));
-  padding: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
-  border-radius: calc(var(--cg-radius-xl) * 0.68);
-  border: 1px solid var(--cg-color-border);
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: none;
-  width: min(520px, 100%);
-  max-width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-  justify-self: center;
-  margin-inline: auto;
-  overflow: hidden;
-}
-
-.cg-contact__field {
-  display: grid;
-  gap: var(--cg-space-3xs);
-  min-width: 0;
-}
-
-.cg-contact__field label {
-  font-size: var(--cg-type-body-sm);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--cg-color-ink-400);
-}
-
-.cg-contact__field input,
-.cg-contact__field select,
-.cg-contact__field textarea {
-  width: 100%;
-  border-radius: calc(var(--cg-radius-md) * 1.1);
-  border: 1px solid var(--cg-color-border);
-  padding: 0.9rem 1.1rem;
-  font-size: var(--cg-type-body);
-  color: var(--cg-color-ink-800);
-  background-color: #fff;
-  transition: border-color var(--cg-transition-fade), background-color var(--cg-transition-fade);
-}
-
-.cg-contact__field input:focus-visible,
-.cg-contact__field select:focus-visible,
-.cg-contact__field textarea:focus-visible {
-  border-color: var(--cg-color-ink-700);
-  background-color: #fff;
-  outline: none;
-}
-
-.cg-contact__field textarea {
-  resize: vertical;
-  min-height: 160px;
-}
-
-.cg-contact__field--full {
-  grid-column: 1 / -1;
-}
-
-.cg-contact__footer {
-  display: flex;
-  flex-direction: column;
-  gap: var(--cg-space-xs);
-  align-items: flex-start;
-  grid-column: 1 / -1;
-}
-
-.cg-button.cg-contact__submit {
-  padding-inline: clamp(var(--cg-space-md), 4vw, var(--cg-space-xl));
-  border: 1px solid var(--cg-color-ink-900);
-  background: var(--cg-color-ink-900);
-  box-shadow: none;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: var(--cg-space-2xs);
-}
-
-.cg-button.cg-contact__submit:hover,
-.cg-button.cg-contact__submit:focus-visible {
-  transform: translateY(0);
-  background: var(--cg-color-ink-700);
-  border-color: var(--cg-color-ink-700);
-  box-shadow: none;
-}
-.cg-contact__privacy {
-  font-size: var(--cg-type-body-sm);
-  color: var(--cg-color-ink-400);
-  letter-spacing: 0.04em;
-}
-
 .cg-footer {
   margin-top: var(--cg-space-5xl);
   border-top: 1px solid var(--cg-color-border);
@@ -2058,11 +1868,6 @@ p + ol {
     transition: none;
   }
 
-  .cg-contact__field input,
-  .cg-contact__field select,
-  .cg-contact__field textarea {
-    transition: none;
-  }
 }
 
 @media (max-width: 768px) {
@@ -2122,7 +1927,7 @@ p + ol {
 
   .cg-header__nav {
     width: 100%;
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .cg-header__list {
@@ -2130,7 +1935,7 @@ p + ol {
     align-items: stretch;
     gap: var(--cg-space-xs);
     padding: var(--cg-space-xs) 0;
-    text-align: left;
+    text-align: center;
   }
 
   .cg-header__cta {
@@ -2161,7 +1966,7 @@ p + ol {
   .cg-header__item:hover,
   .cg-header__item:focus-within {
     background: rgba(15, 15, 15, 0.04);
-    transform: translateX(2px);
+    transform: none;
   }
 
   .cg-header__link {
@@ -2171,6 +1976,7 @@ p + ol {
     letter-spacing: 0.16em;
     padding: clamp(0.55rem, 3vw, 0.75rem) 0;
     text-transform: uppercase;
+    justify-content: center;
   }
 
   .cg-header__link::after {
@@ -2276,17 +2082,6 @@ p + ol {
     gap: var(--cg-space-xl);
   }
 
-  .cg-contact {
-    grid-template-columns: 1fr;
-  }
-
-  .cg-contact__form {
-    padding: var(--cg-space-xl);
-  }
-
-  .cg-contact__footer {
-    align-items: stretch;
-  }
 }
 
 a {
