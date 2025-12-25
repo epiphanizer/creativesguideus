@@ -5,6 +5,39 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { cx } from "@/lib/cx";
 
+/*
+Content Contract — CaseStudyTemplate
+
+Hero
+  • eyebrow: literal string "Case study"
+  • title: 3–7 words, high-impact
+  • description: single sentence articulating outcome + audience
+  • body: exactly two paragraphs, each 1–3 sentences
+  • actions: two CTAs (primary + secondary)
+
+Quick facts
+  • 5–7 rows using shared labels in this order:
+    Partner, Practices, Platform, Timeline, Release mode, Impact (optional), Metrics (optional)
+
+Highlights
+  • 3–4 items
+
+Narrative
+  • 3 sections titled Discovery, Design, Build + Launch
+
+Process
+  • 4 stages
+
+Deliverables
+  • 5 items
+
+Quote
+  • Optional; must be 1–2 sentences if present
+
+Closing
+  • Short next-step note + contact CTA
+*/
+
 export type CaseStudyHero = {
   eyebrow: string;
   title: string;

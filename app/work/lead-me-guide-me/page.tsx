@@ -2,9 +2,12 @@ import { Button } from "@/components/ui/Button";
 import { CaseStudyTemplate } from "@/components/work/CaseStudyTemplate";
 
 const heroActions = (
-  <Button as="a" href="/#contact">
-    Request a rehearsal audit
-  </Button>
+  <>
+    <Button as="a" href="/#contact">Request a rehearsal audit</Button>
+    <Button as="a" href="/#work" variant="ghost">
+      Review our approach
+    </Button>
+  </>
 );
 
 export default function LeadMeGuideMeCaseStudy() {

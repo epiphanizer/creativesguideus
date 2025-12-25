@@ -6,14 +6,8 @@ const heroActions = (
     <Button as="a" href="https://www.worldcupdreams.org/donate" target="_blank" rel="noreferrer">
       Donate
     </Button>
-    <Button as="a" href="https://www.worldcupdreams.org/ways-to-give" target="_blank" rel="noreferrer" variant="secondary">
+    <Button as="a" href="https://www.worldcupdreams.org/ways-to-give" target="_blank" rel="noreferrer" variant="ghost">
       Ways to give
-    </Button>
-    <Button as="a" href="https://www.worldcupdreams.org/grants" target="_blank" rel="noreferrer" variant="ghost">
-      Apply for a grant
-    </Button>
-    <Button as="a" href="https://www.worldcupdreams.org/support-an-athlete" target="_blank" rel="noreferrer" variant="ghost">
-      Support an athlete
     </Button>
   </>
 );
@@ -28,10 +22,8 @@ export default function WorldCupDreamsCaseStudy() {
           title: "By the athlete. For the athlete.",
           description: "Funding and resources for the next generation of elite snow-sports athletes—from junior dreams to U.S. Ski Team podium pursuits.",
           body: [
-            "Elite snowsport careers are built in thin air—where talent is real, and costs are relentless. World Cup Dreams Foundation turns fundraising into forward motion: a site that explains the pipeline, invites donors into impact, and guides athletes toward the right door—grants, team support, or a safety-net fundraising platform—without confusion.",
-            "We designed and engineered an athlete-led WordPress experience that makes the mission unmistakable, clarifies pathways for every visitor, and turns supporter action into instinct.",
-            "Content modules were tailored to WCDF’s internal workflow so staff can update copy, surface new programs, and adapt metrics in seconds without touching code.",
-              "Internal teams now tell one story across programs, impact metrics, and campaign rollouts while athletes gain a high-resonance hub for their season planning."
+            "Elite snowsport careers are built in thin air where talent is real and costs are relentless. World Cup Dreams Foundation turns fundraising into forward motion—a site that explains the pipeline, invites donors into impact, and guides athletes toward the right door without confusion.",
+            "We delivered an athlete-led WordPress system so staff can update programs in seconds, surface fresh metrics, and keep every campaign in sync while athletes gain a high-resonance hub for season planning."
           ],
           actions: heroActions
         }}
@@ -41,10 +33,8 @@ export default function WorldCupDreamsCaseStudy() {
           { label: "Platform", value: "Custom WordPress build" },
           { label: "Timeline", value: "14-week redesign and rollout" },
           { label: "Release mode", value: "Athlete grants, fundraising campaigns, donor education" },
-          { label: "Impact to date", value: "$7,000,000+ granted to athletes" },
-          { label: "Athletes supported", value: "265 beneficiaries since founding" },
-          { label: "Donor momentum", value: "$10,000,000 raised for U.S. ski racers" },
-          { label: "Season reality", value: "$45,000 average race-season cost for 'On the Rise'" }
+          { label: "Impact", value: "$7,000,000+ granted to athletes" },
+          { label: "Metrics", value: "$10,000,000 raised · 265 athletes supported" }
         ]}
         highlights={[
           {

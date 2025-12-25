@@ -1,134 +1,288 @@
-Sprint 1 — Boutique funnel refinement (Dec 2025 refresh)
+Codex Instructions: Case Studies Makeover (Unify + Upgrade + Convert)
+Goal
 
-Goal: keep the single-page experience reading in under 30 seconds while restoring gallery-grade restraint.
+Make every case study feel like the same “premium editorial product page”:
 
-What shipped
-- Locked a single monochrome type stack and iconography language across SectionShell, Card, and pulse grids.
-- Trimmed hero, Web, Work, Music, and Writing copy to decisive 1–3 sentence beats with CTA-first sequencing.
-- Reframed Work to three proof cases with icon badges and slimmer cards so nothing overlaps or spills.
-- Pulled Bong Tour off the home narrative—Writing now links out while keeping the slate copy full width for breathing room.
-- Standardized spacing via SectionShell rhythm and reduced-motion guards so the page feels composed at every breakpoint.
+consistent visual rhythm
 
-Success signals
-- Visitors can scan the entire page in <30 seconds without encountering visual clutter.
-- Every section resolves to a primary CTA or booked conversation path.
-- Cards, grids, and copy stay inside the shared rhythm (1→2→3 column logic, icon caps, text never overflows).
+strong hierarchy + scannability
 
-Carry-forward guardrails
-- Keep any new section within the SectionShell spacing scale.
-- Prefer icon-backed summaries over dense paragraphs.
-- If a story needs depth (e.g., Bong Tour), break it into its own surface and link out.
+trust signals (proof, metrics, constraints)
 
-Return a diff summary + list of touched files.
+a clear “hire us” conversion path
 
-Sprint 2- 
-Codex Instructions for Optimization
-To improve the site's consistency, you can provide the following specific instructions to your development or design tool:
+zero sloppy spacing or ad-hoc layout drift
 
-1. Aligning the Tone of Voice
-"Rewrite all functional copy to match the 'narrative-first' brand voice. Replace utilitarian phrases with more evocative, proprietary language. For example, change 'Contact' or 'Send project outline' to 'Begin the Narrative' or 'Start the Dialogue'. Ensure all micro-copy reflects a tone that is human, insightful, and protective of the creative process".
+You will:
 
-2. Refacing the Visual Framework
-"Implement a strict monochrome minimalist grid system. Reduce the size of the contact form's input fields to match the 'Ship More Narrative' text block's width, maintaining a consistent column structure. Increase negative space (white space) around the 'Start' section to ensure it feels like a continuation of the brand’s 'no-noise' philosophy".
+Lock a single shell layout (already exists) and enforce strict content rules.
 
-3. Standardizing Brand Assets
-"Update the global CSS to ensure typography hierarchy is consistent across all pages. Set a primary serif font for all narrative-driven headers and a secondary, high-legibility sans-serif for functional links. Ensure the header logo 'Creatives Guide Us' is vertically aligned with the navigation menu to prevent visual 'stutter' during scrolling".
+Upgrade the template UI/UX to be more modern, corporate, and polished.
 
-4. Interactive Branding
-"Add subtle hover animations to navigation links—such as a simple fade or underline—to add a layer of 'boutique' polish without adding visual clutter. Ensure all transitions are timed to feel deliberate and calm, reinforcing the brand's 'Build Less Noise' promise".
+Normalize the 3 case studies so they read as cohesive work.
 
+Add a case-studies index grid page (if not already) that drives clicks + contact.
 
-Sprint 3 — Blog + database-driven content (Firestore)
+Sprint 1 — Audit + Content Contract (No Design Yet)
+1.1 Create a “content contract” for every case study
 
-Goal: posts/projects come from Firestore, not hardcoded.
-Tasks
+In /components/work/CaseStudyTemplate.tsx, treat the sections as a required schema. Document rules in a comment block at the top:
 
-Firestore collections: posts, projects, globals
+Rules
 
-Public routes: /blog, /blog/[slug], /work, /work/[slug]
+Hero:
 
-Markdown rendering with safe components
-Done when
+eyebrow always "Case study"
 
-You can add a post in Firestore and it appears on the site
+title: 3–7 words, punchy
 
-Codex prompt
-Implement Firestore-backed content:
-- Define collections: posts, projects, globals.
-- Add routes /blog, /blog/[slug], /work, /work/[slug].
-- Render post/project bodies from Markdown with a controlled renderer.
-- Add caching/revalidation so public pages remain fast.
-Provide the Firestore document schema and example docs.
+description: 1 sentence, outcome + audience
 
-Sprint 3 — Terry-friendly Admin
+body: 2 paragraphs max (each 1–3 sentences)
 
-Goal: Terry can create/edit/publish without git.
-Tasks
+actions: always 2 CTAs (Primary + Secondary)
 
-/admin with Firebase Auth (Google sign-in)
+Quick facts:
 
-Role-based access (editor/admin)
+always 5–7 rows (avoid 3 on one page and 9 on another)
 
-CRUD UI for posts + projects + globals
+consistent labels across all studies: Partner, Practices, Platform, Timeline, Release mode, optional Impact
 
-Markdown editor + preview
+Highlights:
 
-Storage upload for images
-Done when
+always 3–4 items
 
-Terry can publish a post end-to-end in < 5 minutes
+Narrative:
 
-Codex prompt
-Build a simple /admin CMS:
-- Firebase Auth with Google sign-in.
-- Restrict access by role (admin/editor).
-- CRUD for posts/projects/globals.
-- Markdown editor with live preview.
-- Image upload to Firebase Storage and insert URL into content.
-Keep UI minimalist and foolproof.
+always 3 sections (Discovery / Design / Build+Launch style)
 
-Sprint 4 — Analytics wiring (GA4 + GTM) + event tracking
+Process:
 
-Goal: measure what matters; enable iteration.
-Tasks
+always 4 stages
 
-Add GA4 + GTM
+Deliverables:
 
-Implement event helpers + events listed above
+always 5 items
 
-UTM capture and persistence (session-level)
-Done when
+Quote:
 
-CTA clicks + contact submits show up cleanly in GA4
+optional, but if present must be 1–2 sentences max
 
-Codex prompt
-Add analytics:
-- Integrate GA4 and Google Tag Manager.
-- Implement event tracking: cta_click, contact_submit, work_open, post_open, scroll_depth, outbound_click.
-- Include useful parameters (section, label, slug, destination).
-- Add UTM capture and store in session/local storage to attach to events.
-Ensure privacy-friendly defaults and no duplicate firing.
+Closing:
 
-Sprint 5 — SEO + performance polish
+must include a confident next step + contact CTA
 
-Goal: rank + load like a whisper.
-Tasks
+Codex task: add this contract comment without changing runtime behavior yet. 
 
-Metadata per post/project (OpenGraph, titles, descriptions)
+CaseStudyTemplate
 
-Sitemap + robots
+1.2 Normalize copy across the 3 existing case study pages
 
-Schema.org for posts/projects
+Edit each page so it follows the same shape:
 
-Fix remaining CLS/LCP issues
-Done when
+Appreesh: already close; ensure quickFacts count matches target; keep hero body to exactly 2 paragraphs. 
 
-Lighthouse is strong and previews look correct in social shares
+page
 
-Codex prompt
-Improve SEO + performance:
-- Add dynamic metadata (title/description/OG) for posts and projects.
-- Generate sitemap.xml and robots.txt.
-- Add schema.org structured data for blog posts and portfolio projects.
-- Audit and fix CLS/LCP issues (images, fonts, layout).
-Summarize results and key metrics improvements.
+Lead Me Guide Me: already close; same normalization. 
+
+page
+
+World Cup Dreams: hero body has more drift/length; trim to 2 paragraphs; fix inconsistent indentation; ensure highlights and facts match counts. 
+
+page
+
+Important: No new content invention needed—just tighten and standardize.
+
+Deliverable for Sprint 1: The 3 pages read like siblings.
+
+Sprint 2 — Template Becomes “State of the Art”
+
+Your template is structurally good, but visually it likely needs:
+
+stronger grid control
+
+better spacing rhythm
+
+more premium “editorial” sections
+
+improved CTA treatment
+
+consistent card styles
+
+better mobile stacking rules
+
+2.1 Upgrade layout hierarchy in CaseStudyTemplate
+
+Edit /components/work/CaseStudyTemplate.tsx:
+
+Hero
+
+Add a hero “meta row” under the header:
+
+left: description + body
+
+right: a compact “facts preview” (top 3 facts only) to create immediate credibility above the fold
+
+Keep the full “Quick facts” section below as-is for depth.
+
+Quick facts + highlights
+
+Render quick facts in a 2-column definition list on desktop.
+
+Render highlights as cards with consistent height and tighter typography.
+
+Narrative
+
+Switch narrative layout to:
+
+left sticky mini-TOC (the 3 narrative titles)
+
+right content column
+
+If you don’t want sticky: at least enforce a clean 2-column grid with equal padding and max line length.
+
+Process
+
+Make process an “indexed timeline” (01/02/03/04), with a thin divider line.
+
+Ensure mobile becomes stacked cards.
+
+Deliverables
+
+Turn deliverables into a two-column list on desktop with a small “pill” label + detail.
+
+Quote
+
+Make quote visually distinct (border, padding, subtle background).
+
+Keep it compact.
+
+Closing
+
+Make closing a “conversion banner” with:
+
+short note
+
+1 primary CTA button
+
+optional small secondary link (like “See more work”)
+
+All of this stays within the existing template API—you’re changing presentation, not data shape. 
+
+CaseStudyTemplate
+
+2.2 Add “Proof row” support (optional but recommended)
+
+Add an optional prop like:
+
+proof?: { label: string; value: string }[] (3 items max)
+
+Use it as a small row near the hero:
+
+“Timeline: 14 weeks”
+
+“Platform: WordPress”
+
+“Impact: $7M+ granted”
+
+Then for each case study, populate with 2–3 high-confidence numbers/claims that already exist in the copy/facts.
+
+This creates immediate corporate trust without forcing people to read paragraphs. 
+
+page
+
+Deliverable for Sprint 2: template looks like a premium product page, not a blog post.
+
+Sprint 3 — Make All Case Studies Feel Like One System
+3.1 Standardize CTA language and intent
+
+Across all pages, enforce the same CTA pattern:
+
+Primary: “Start a project” / “Book a consult” / “Plan a pilot”
+
+Secondary: “View live site” (if external) OR “See our process” (internal anchor)
+
+Right now, CTA patterns vary a lot (some have 1 button, some have 4). That feels messy and non-corporate. Normalize to 2 max in the hero actions.
+
+3.2 Normalize facts labels + ordering
+
+Pick one order and apply it everywhere:
+
+Partner
+
+Practices
+
+Platform
+
+Timeline
+
+Release mode
+
+Impact (optional)
+
+Metrics (optional)
+
+World Cup Dreams has many facts—keep the extra ones, but move them into an “Impact” sub-block below the primary facts so it doesn’t overwhelm the grid. 
+
+page
+
+3.3 Tighten narrative voice consistency
+
+Make sure each narrative’s 3 sections follow consistent naming:
+
+“Discovery”
+
+“Design”
+
+“Build + Launch”
+
+If you want flavor, keep it in the paragraph text—not in the structure headings.
+
+Deliverable for Sprint 3: no one can tell these were written at different times.
+
+Sprint 4 — Case Study Index Page That Converts
+4.1 Build /work (or /case-studies) index page
+
+Create an index page that:
+
+has a short hero: “Work that ships. Stories that convert.”
+
+shows a grid of 3 case studies as cards:
+
+title
+
+one-line description
+
+2–3 proof pills (platform/timeline/impact)
+
+“Read case study →”
+
+ends with a strong contact band CTA
+
+This page should be the “send this to a prospect” link.
+
+4.2 Add “Related case studies” at bottom of each case study
+
+In CaseStudyTemplate, add an optional related section:
+
+renders 2 small cards linking to other case studies
+
+keeps people moving through proof, then to contact
+
+Deliverable for Sprint 4: the work section becomes a funnel, not a dead-end.
+
+Acceptance Criteria (Definition of Done)
+
+All 3 case studies use the same content contract and visual rhythm.
+
+Above-the-fold includes proof + clear next step.
+
+No page has more than 2 hero CTAs.
+
+Facts, highlights, narrative, process, deliverables have consistent counts and styling.
+
+Mobile feels intentional (no awkward stacking, no giant whitespace).
+
+Index page exists and drives contact.
+

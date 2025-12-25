@@ -111,9 +111,9 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  border: 1px solid rgba(15, 15, 15, 0.08);
-  background: rgba(247, 247, 247, 0.65);
+  border-radius: 0;
+  border: none;
+  background: transparent;
 }
 
 .cg-practice__cadence-icon svg {
@@ -150,8 +150,8 @@
 .cg-practice__card .cg-card__icon {
   width: clamp(1.75rem, 2.2vw, 2.1rem);
   height: clamp(1.75rem, 2.2vw, 2.1rem);
-  border-radius: 0.7rem;
-  background: rgba(15, 15, 15, 0.05);
+  border-radius: 0;
+  background: none;
   box-shadow: none;
 }
 
@@ -218,9 +218,9 @@
   place-items: center;
   width: clamp(2.2rem, 4vw, 2.8rem);
   height: clamp(2.2rem, 4vw, 2.8rem);
-  border: 1px solid var(--cg-color-border);
-  border-radius: 999px;
-  background-color: var(--cg-color-canvas);
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
 }
 
 .cg-work__summary-icon svg {
@@ -1520,17 +1520,17 @@ p + ol {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.8rem;
-  height: 1.8rem;
-  border-radius: 0.75rem;
-  border: 1px solid var(--cg-color-accent-strong);
-  background: linear-gradient(160deg, rgba(30, 30, 30, 0.16), rgba(30, 30, 30, 0.04));
-  color: var(--cg-color-accent);
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  color: var(--cg-color-ink-700);
 }
 
 .cg-section-header__icon svg {
-  width: 1rem;
-  height: 1rem;
+  width: 1.1rem;
+  height: 1.1rem;
   stroke: currentColor;
   fill: none;
   stroke-width: 1.5;
@@ -1702,11 +1702,11 @@ p + ol {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: clamp(2.2rem, 3vw, 2.6rem);
-  height: clamp(2.2rem, 3vw, 2.6rem);
-  border-radius: 1rem;
-  background: radial-gradient(circle at 20% 20%, rgba(246, 249, 255, 0.95), rgba(215, 223, 255, 0.58));
-  box-shadow: 0 18px 30px rgba(20, 24, 48, 0.16), inset 0 0 0 1px rgba(255, 255, 255, 0.65);
+  width: clamp(2rem, 2.8vw, 2.4rem);
+  height: clamp(2rem, 2.8vw, 2.4rem);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
   color: var(--cg-color-ink-700);
 }
 
@@ -1716,7 +1716,7 @@ p + ol {
   stroke: currentColor;
   fill: none;
   stroke-width: 1.6;
-  filter: drop-shadow(0 4px 10px rgba(12, 18, 48, 0.15));
+  filter: none;
 }
 
 .cg-card__eyebrow {
