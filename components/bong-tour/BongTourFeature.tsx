@@ -264,11 +264,8 @@ export function BongTourFeature() {
           <h2>Producer invitation</h2>
           <p>{finalThought}</p>
           <div className="bt-finale__actions">
-            <Button as="a" href="/#contact" className="bt-button bt-button--outline">
-              Access the Bong Tour engine
-            </Button>
             <Button as="a" href="/#contact" className="bt-button bt-button--record">
-              Build your future
+             Connect about Bong Tour
             </Button>
           </div>
         </div>

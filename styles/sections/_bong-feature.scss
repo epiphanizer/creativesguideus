@@ -682,9 +682,9 @@
   display: grid;
   gap: clamp(var(--cg-space-sm), 3vw, var(--cg-space-lg));
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  width: 100%;
   padding-inline: 1.5%;
-  margin: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl)) 0 0;
+  margin-top: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
+  margin-inline: 1.5%;
 }
 
 @media (min-width: 960px) {
@@ -720,6 +720,8 @@
   display: flex;
   justify-content: center;
   margin-top: clamp(var(--cg-space-md), 4vw, var(--cg-space-xl));
+  margin-inline: 1.5%;
+  margin-bottom: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
 }
 
 .bt-hero__cta .bt-button {
