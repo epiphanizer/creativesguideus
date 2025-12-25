@@ -5,7 +5,7 @@ import { SectionShell } from "@/components/ui/SectionShell";
 const processSteps = [
   {
     title: "Signal Sweep",
-    description: "Immersion crews compress market noise into the handful of signals worth scaling.",
+    description: "We isolate what matters inside the market noise.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <circle cx="32" cy="32" r="21" />
@@ -16,7 +16,7 @@ const processSteps = [
   },
   {
     title: "System Chorus",
-    description: "Design, engineering, and sonic drafts converge in one sprint to translate signals into clarity.",
+    description: "Product, code, and story move in one sprint-ready system.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <rect x="14" y="14" width="36" height="36" rx="6" />
@@ -26,8 +26,8 @@ const processSteps = [
     )
   },
   {
-    title: "Rhythm Launch",
-    description: "Enablement kits, playlists, and ops cadences keep momentum compounding after drop day.",
+    title: "Launch",
+    description: "We hand off enablement that keeps the clarity compounding.",
     icon: (
       <svg className="cg-hero__process-icon" viewBox="0 0 64 64" role="presentation" aria-hidden>
         <path d="M20 44c0-6 24-6 24 0" />
@@ -42,7 +42,7 @@ const processSteps = [
 
 const heroTitle = "Bring your project from noise to clarity.";
 
-const heroSubhead = "Partner directly with us to align software, story, and score until the launch vision is unmistakable.";
+const heroSubhead = "Partner with us to take your project from noise to clarity with software, story, and score in lockstep.";
 
 export function HeroSection() {
   return (
@@ -67,8 +67,9 @@ export function HeroSection() {
       </div>
       <div className="cg-hero__aside">
         <div className="cg-hero__process" aria-label="Studio process">
-          {processSteps.map((step) => (
+          {processSteps.map((step, index) => (
             <div key={step.title} className="cg-hero__process-step">
+              <span className="cg-hero__process-number">{index + 1}</span>
               {step.icon}
               <div className="cg-hero__process-copy">
                 <p className="cg-hero__process-title">{step.title}</p>

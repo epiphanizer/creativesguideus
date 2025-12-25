@@ -12,11 +12,11 @@ export default function HomePage() {
     <main className="cg-page" id="page-top">
       <HeroSection />
 
+      <WhoWeAreSection />
+
       <WebSection />
 
       <WorkSection />
-
-      <WhoWeAreSection />
 
       <MusicSection />
 

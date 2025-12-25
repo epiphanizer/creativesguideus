@@ -80,12 +80,12 @@ export function WorkSection() {
             iconLabel="Creative release emblem"
           />
           <p>
-            We orchestrate software, sonic, and narrative teams so audiences, investors, and internal stakeholders witness the same
-            commanding debut. Every move is architected for momentum, not maintenance.
+            Projects stop stalling when strategy, product, and performance share one tempo. We embed with leadership, translate the
+            vision, and ship proof that momentum is real.
           </p>
           <p>
-            Weekly proofs, instrumentation, and cultural playbooks keep leadership aligned while we handle the build. Your teams stay
-            focused on scaling impact—not stitching silos together.
+            Every sprint braids code, composition, and narrative so investors, internal teams, and your audience feel the same story—clarity
+            in market, culture, and product all at once.
           </p>
           <div className="cg-split__actions">
             <Button as="a" href="#contact">
@@ -95,18 +95,33 @@ export function WorkSection() {
         </div>
 
         <aside className="cg-work__aside" aria-label="Launch principles">
+          <div className="cg-work__summary-visual" aria-hidden="true">
+            <span>Signal → Launch</span>
+            <svg viewBox="0 0 160 120" role="presentation">
+              <defs>
+                <linearGradient id="workPulse" x1="0%" x2="100%">
+                  <stop offset="0%" stopColor="#7f7bff" stopOpacity="0.18" />
+                  <stop offset="45%" stopColor="#39ff14" stopOpacity="0.45" />
+                  <stop offset="100%" stopColor="#ff00ff" stopOpacity="0.5" />
+                </linearGradient>
+              </defs>
+              <path d="M8 92L34 68l22 18 30-54 18 32 24-14 24 30" fill="none" stroke="url(#workPulse)" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="34" cy="68" r="6" fill="#39ff14" opacity="0.6" />
+              <circle cx="84" cy="56" r="6" fill="#ff00ff" opacity="0.6" />
+              <circle cx="134" cy="80" r="6" fill="#7f7bff" opacity="0.6" />
+            </svg>
+          </div>
           <p className="cg-work__summary-lede">
-            High-resonance launches merge design, story, and sound into one operating system so internal teams project the same
-            authority as your audience perceives.
+            High-resonance launches let teams and markets feel the same move—signal captured, systems composed, story amplified.
           </p>
           <ul className="cg-work__summary">
-            <li>Launch playbooks covering content, interaction, score, and activation queues</li>
-            <li>Analytics-ready builds hardened for growth long after handoff</li>
-            <li>Executive voice kits, cue libraries, and enablement decks delivered day one</li>
-            <li>High-resonance rituals—screenings, retros, signal reviews—that keep decisions in sync</li>
+            <li>Launch playbooks choreographing product states, narrative beats, and score cues.</li>
+            <li>Growth-ready platforms with telemetry, governance, and automation wired in.</li>
+            <li>Voice kits, cue libraries, and creative assets engineered for every stakeholder.</li>
+            <li>Signal reviews, retros, and premiere rituals that keep leadership in tempo.</li>
           </ul>
           <p className="cg-work__summary-footer">
-            We stage internal premieres, evolve score stems, and optimize data loops post-launch so momentum compounds.
+            After launch we stay on deck—optimizing data loops, evolving score stems, and fine-tuning culture so clarity keeps compounding.
           </p>
         </aside>
       </div>

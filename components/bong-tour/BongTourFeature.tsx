@@ -108,6 +108,13 @@ const storyboardTilts = [-2.5, 1.5, -1.2, 2.2, -1.8, 1.8, -0.8];
 export function BongTourFeature() {
   return (
     <div className="bt-stage">
+      <figure className="bt-poster">
+        <div className="bt-poster__frame">
+          <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority />
+        </div>
+        <figcaption>Concept poster · art dept. exploration</figcaption>
+      </figure>
+
       <section className="bt-hero" id="bong-tour">
         <div className="bt-hero__grain" aria-hidden="true" />
         <div className="bt-hero__glow" aria-hidden="true" />
@@ -136,12 +143,6 @@ export function BongTourFeature() {
             </Button>
           </div>
         </div>
-        <figure className="bt-hero__poster">
-          <div className="bt-hero__poster-frame">
-            <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority />
-          </div>
-          <figcaption>Concept poster · art dept. exploration</figcaption>
-        </figure>
       </section>
 
       <section className="bt-tonality" aria-label="Tone and references">

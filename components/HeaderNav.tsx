@@ -51,10 +51,17 @@ export function HeaderNav() {
         Skip to content
       </a>
       <div className="cg-header__inner">
-        <div className="cg-header__identity">
+        <a
+          className="cg-header__identity"
+          href="/"
+          onClick={(event) => {
+            event.preventDefault();
+            handleNavigate("hero");
+          }}
+        >
           <span className="cg-header__studio">Creatives Guide Us</span>
           <span className="cg-header__tagline">code · composition · story</span>
-        </div>
+        </a>
         <nav className="cg-header__nav" aria-label="Primary">
           <ul className="cg-header__list">
             {activeAnchors.map((anchor) => (

@@ -34,7 +34,11 @@ export function ContactSection() {
               <p>We hold two seats for Q1 2026. Reserved for partners ready to move at the speed of their vision.</p>
             </div>
             <p>
-              Prefer a direct uplink? Email hello@creativesguide.us with your calendar signal and mission intel—we respond inside two studio days.
+              Prefer a direct uplink? Email
+              {" "}
+              <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a>
+              {" "}
+              with your calendar signal and mission intel—we respond inside two studio days.
             </p>
           </div>
         </div>
