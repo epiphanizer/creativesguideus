@@ -3,11 +3,9 @@ import { CaseStudyTemplate } from "@/components/work/CaseStudyTemplate";
 
 const heroActions = (
   <>
-    <Button as="a" href="https://www.worldcupdreams.org/donate" target="_blank" rel="noreferrer">
-      Donate
-    </Button>
-    <Button as="a" href="https://www.worldcupdreams.org/ways-to-give" target="_blank" rel="noreferrer" variant="ghost">
-      Ways to give
+    <Button as="a" href="/#contact">Start a project</Button>
+    <Button as="a" href="https://www.worldcupdreams.org" target="_blank" rel="noreferrer" variant="ghost">
+      View live site
     </Button>
   </>
 );
@@ -36,6 +34,11 @@ export default function WorldCupDreamsCaseStudy() {
           { label: "Impact", value: "$7,000,000+ granted to athletes" },
           { label: "Metrics", value: "$10,000,000 raised · 265 athletes supported" }
         ]}
+        proof={[
+          { label: "Timeline", value: "14 weeks" },
+          { label: "Platform", value: "Custom WordPress" },
+          { label: "Impact", value: "$7M+ athlete grants" }
+        ]}
         highlights={[
           {
             title: "Story and mission pages",
@@ -43,7 +46,7 @@ export default function WorldCupDreamsCaseStudy() {
           },
           {
             title: "Clear pathways for athletes",
-              detail: "Eligibility guides and application hubs cover ARCO (U16), On the Rise (16–21), World Cup (USST + invitees), and Team Support programs in one intuitive view."
+            detail: "Eligibility guides and application hubs cover ARCO (U16), On the Rise (16–21), World Cup (USST + invitees), and Team Support programs in one intuitive view."
           },
           {
             title: "Donor pathways",
@@ -56,21 +59,21 @@ export default function WorldCupDreamsCaseStudy() {
         ]}
         narrative={[
           {
-            title: "Listening to athletes and donors",
+            title: "Discovery",
             paragraphs: [
-              "Stakeholder interviews surfaced two urgent needs: athletes craved clarity and dignity, while donors wanted transparency and proof. We rebuilt the architecture so both audiences meet the mission before choosing their path.",
+              "Stakeholder interviews surfaced two urgent needs: athletes craved clarity and dignity, while donors wanted transparency and proof. That discovery work reshaped the architecture so both audiences meet the mission before choosing their path.",
               "Copy, imagery, and motion follow a disciplined hierarchy—athlete testimony, mission framing, fiscal transparency—to reinforce trust."
             ]
           },
           {
-            title: "Grant pipeline without guesswork",
+            title: "Design",
             paragraphs: [
               "We mapped every program—ARCO (U16), On the Rise (16–21), World Cup (USST + invitees), and Team Support—to a modular grid that translates policy into plain language.",
               "Eligibility checklists, timelines, and prep packs keep athletes moving, even when they are downloading forms from a lodge or bus, all managed through custom fields inside WordPress."
             ]
           },
           {
-            title: "Fueling donor momentum",
+            title: "Build + Launch",
             paragraphs: [
               "Donor pathways pair instant donations with ways-to-give guidance, sponsorship options, and athlete-led fundraising templates configured as reusable WordPress components.",
               "WCDF and T2 Foundation leadership alignment feeds one stewardship dashboard, so internal teams can launch campaigns and report impact in the same breath."
@@ -123,9 +126,21 @@ export default function WorldCupDreamsCaseStudy() {
         }}
         closing={{
           note: "If your nonprofit needs a clear grant pipeline and donor journey, we can map it in weeks—not quarters.",
-          actionLabel: "Scale Your Nonprofit Impact",
+          actionLabel: "Start a project",
           actionHref: "/#contact"
         }}
+        related={[
+          {
+            title: "Appreesh",
+            description: "Cooperative web3 launch where gratitude rituals, product, and score moved as one journey.",
+            href: "/work/appreesh"
+          },
+          {
+            title: "Lead Me Guide Me",
+            description: "SwiftUI scripture companion orchestrating daily meditations with choir rehearsal cues.",
+            href: "/work/lead-me-guide-me"
+          }
+        ]}
       />
     </main>
   );

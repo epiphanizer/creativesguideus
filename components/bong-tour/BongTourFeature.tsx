@@ -179,25 +179,6 @@ export function BongTourFeature() {
         </p>
       </section>
 
-      <section className="bt-storyboard" aria-label="Storyboard breakdown">
-        <div className="bt-storyboard__film" aria-hidden="true" />
-        <div className="bt-storyboard__reel">
-          {storyActs.map((act, index) => (
-            <article key={act.title} className="bt-storyboard__panel">
-              <header>
-                <span>{`Scene Card ${index + 1}`}</span>
-                <h3>{act.title}</h3>
-              </header>
-              <div className="bt-storyboard__copy">
-                {act.summary.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
       <section className="bt-cast" aria-label="Core cast">
         <header className="bt-section-header">
           <h2>Core cast</h2>
@@ -212,6 +193,29 @@ export function BongTourFeature() {
             >
               <span>{character.name}</span>
               <p>{character.detail}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="bt-storyboard" aria-label="Storyboard breakdown">
+        <div className="bt-storyboard__film" aria-hidden="true" />
+        <ul className="bt-storyboard__grid">
+          {storyActs.map((act, index) => (
+            <li
+              key={act.title}
+              className="bt-storyboard__card bt-cast__card"
+              style={{ transform: `rotate(${storyboardTilts[index % storyboardTilts.length]}deg)` }}
+            >
+              <header className="bt-storyboard__header">
+                <span>{`Scene Card ${index + 1}`}</span>
+                <h3>{act.title}</h3>
+              </header>
+              <div className="bt-storyboard__copy">
+                {act.summary.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
             </li>
           ))}
         </ul>

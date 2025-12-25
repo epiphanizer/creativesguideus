@@ -3,9 +3,9 @@ import { CaseStudyTemplate } from "@/components/work/CaseStudyTemplate";
 
 const heroActions = (
   <>
-    <Button as="a" href="/#contact">Request a rehearsal audit</Button>
+    <Button as="a" href="/#contact">Start a project</Button>
     <Button as="a" href="/#work" variant="ghost">
-      Review our approach
+      See our process
     </Button>
   </>
 );
@@ -32,6 +32,11 @@ export default function LeadMeGuideMeCaseStudy() {
           { label: "Timeline", value: "12-week private beta" },
           { label: "Release mode", value: "Daily scripture companion for choir teams" }
         ]}
+        proof={[
+          { label: "Platform", value: "SwiftUI iOS" },
+          { label: "Timeline", value: "12-week beta" },
+          { label: "Practices", value: "Product · UX · Score" }
+        ]}
         highlights={[
           {
             title: "Scripture-led rehearsal flow",
@@ -48,14 +53,14 @@ export default function LeadMeGuideMeCaseStudy() {
         ]}
         narrative={[
           {
-            title: "Listening before structure",
+            title: "Discovery",
             paragraphs: [
               "We ran listening sessions with choir directors, music ministers, and choir mothers to map how scripture prep actually happens during the week.",
-              "Insights pushed us to prioritize morning reflections, rehearsal prep, and Sunday service anchor points instead of building a generic reading plan."
+              "Those insights pushed us to prioritize morning reflections, rehearsal prep, and Sunday service anchor points instead of building a generic reading plan."
             ]
           },
           {
-            title: "Designing the rehearsal loop",
+            title: "Design",
             paragraphs: [
               "Wireframes anchored around a single flow: verse of the day, commentary, rehearsal tasks, and playback.",
               "We composed thirty bespoke score cues matched to the calendar, each with dynamic markings and tempo notes so directors could rehearse quickly.",
@@ -63,7 +68,7 @@ export default function LeadMeGuideMeCaseStudy() {
             ]
           },
           {
-            title: "Stewarding launch",
+            title: "Build + Launch",
             paragraphs: [
               "We piloted with three choirs, running weekly office hours and monitoring analytics to tune the cadence.",
               "A launch kit—talking points, pastoral letter template, and one-minute walkthrough video—armed ministry leads to invite their teams with confidence.",
@@ -117,9 +122,21 @@ export default function LeadMeGuideMeCaseStudy() {
         }}
         closing={{
           note: "Your next release can braid story, product, and score the same way. Let’s map the first four weeks together.",
-          actionLabel: "Scale Your Release Momentum",
+          actionLabel: "Start a project",
           actionHref: "/#contact"
         }}
+        related={[
+          {
+            title: "Appreesh",
+            description: "Gratitude cooperative launch blending smart contracts, analytics, and ritual-first storytelling.",
+            href: "/work/appreesh"
+          },
+          {
+            title: "World Cup Dreams",
+            description: "Nonprofit grant hub where experience design and editorial voice unlock sustained donor support.",
+            href: "/work/world-cup-dreams"
+          }
+        ]}
       />
     </main>
   );

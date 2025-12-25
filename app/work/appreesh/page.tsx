@@ -3,11 +3,9 @@ import { CaseStudyTemplate } from "@/components/work/CaseStudyTemplate";
 
 const heroActions = (
   <>
-    <Button as="a" href="https://appreesh.org" target="_blank" rel="noreferrer">
-      Explore Appreesh
-    </Button>
-    <Button as="a" href="/#contact" variant="ghost">
-      Spin up a community pilot
+    <Button as="a" href="/#contact">Start a project</Button>
+    <Button as="a" href="https://appreesh.org" target="_blank" rel="noreferrer" variant="ghost">
+      View live site
     </Button>
   </>
 );
@@ -34,6 +32,11 @@ export default function AppreeshCaseStudy() {
           { label: "Timeline", value: "18-week build and invite-only launch" },
           { label: "Release mode", value: "Tokenized gratitude rituals for creative communities" }
         ]}
+        proof={[
+          { label: "Timeline", value: "18-week build" },
+          { label: "Platform", value: "Next.js + Solidity" },
+          { label: "Release mode", value: "Invite-only cooperative launch" }
+        ]}
         highlights={[
           {
             title: "Rituals over speculation",
@@ -54,21 +57,21 @@ export default function AppreeshCaseStudy() {
         ]}
         narrative={[
           {
-            title: "Naming the economy",
+            title: "Discovery",
             paragraphs: [
-              "We started by workshopping why gratitude needs a protocol. Personas from artists, DAOs, and co-ops defined success as sustained appreciation—not yield.",
-              "This shaped the manifesto, cooperative charter, and token policy so every future feature could ladder up to the same promise."
+              "We workshopped why gratitude needs a protocol. Personas from artists, DAOs, and co-ops defined success as sustained appreciation—not yield.",
+              "Those insights shaped the manifesto, cooperative charter, and token policy so every future feature ladders up to the same promise."
             ]
           },
           {
-            title: "Designing the loop",
+            title: "Design",
             paragraphs: [
               "Game designers, economists, and choir directors (yes, really) pressure-tested the ritual flow: request, nominate, celebrate, allocate.",
-              "Smart contracts track issuance and burn while UX keeps the loop legible: steps, status, and gratitude stories stay side-by-side."
+              "Smart contracts track issuance and burn while UX keeps the loop legible—steps, status, and gratitude stories stay side-by-side."
             ]
           },
           {
-            title: "Shipping the cooperative",
+            title: "Build + Launch",
             paragraphs: [
               "We developed the Next.js front end, Solidity contracts, subgraphs, and admin console, then ran dry-runs with 40 founding members.",
               "The launch kit—brand film, score EP, ceremonial scripts, and analytics board—gave stewards everything needed to run the first gratitude season."
@@ -120,10 +123,22 @@ export default function AppreeshCaseStudy() {
           attribution: "Rae Ibarra · Co-founder, Appreesh"
         }}
         closing={{
-          note: "Let’s build your next cooperative so the community feels the ritual—not the risk.",
-          actionLabel: "Build Your Cooperative Future",
+          note: "Let’s build your cooperative so gratitude feels tangible from day one.",
+          actionLabel: "Start a project",
           actionHref: "/#contact"
         }}
+        related={[
+          {
+            title: "Lead Me Guide Me",
+            description: "SwiftUI scripture companion proving how product, ritual, and score release together.",
+            href: "/work/lead-me-guide-me"
+          },
+          {
+            title: "World Cup Dreams",
+            description: "Athlete-led WordPress system that pairs narrative clarity with measurable donor momentum.",
+            href: "/work/world-cup-dreams"
+          }
+        ]}
       />
     </main>
   );

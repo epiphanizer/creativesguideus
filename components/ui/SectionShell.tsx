@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { JSX as ReactJSX, ReactNode } from "react";
 
 import { cx } from "@/lib/cx";
 
@@ -8,7 +8,7 @@ type SectionShellProps = {
   innerClassName?: string;
   labelledBy?: string;
   variant?: "default" | "hero" | "compact";
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof ReactJSX.IntrinsicElements;
   children: ReactNode;
 };
 

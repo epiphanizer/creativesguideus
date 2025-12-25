@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -59,8 +60,13 @@ export function HeaderNav() {
             handleNavigate("hero");
           }}
         >
-          <span className="cg-header__studio">Creatives Guide Us</span>
-          <span className="cg-header__tagline">code · composition · story</span>
+          <span className="cg-header__logo" aria-hidden="true">
+            <Image src="/images/logo.jpeg" alt="" width={28} height={28} priority />
+          </span>
+          <span className="cg-header__copy">
+            <span className="cg-header__studio">Creatives Guide Us</span>
+            <span className="cg-header__tagline">code · composition · story</span>
+          </span>
         </a>
         <nav className="cg-header__nav" aria-label="Primary">
           <ul className="cg-header__list">

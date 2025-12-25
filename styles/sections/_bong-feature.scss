@@ -463,7 +463,8 @@
   background-color: var(--bt-bg);
   color: var(--bt-text);
   font-family: "Roboto Mono", var(--cg-font-mono, monospace);
-  padding: clamp(var(--cg-space-lg), 5vw, var(--cg-space-4xl)) 0;
+  padding-block-start: clamp(var(--cg-space-md), 4vw, var(--cg-space-2xl));
+  padding-block-end: clamp(var(--cg-space-xl), 6vw, var(--cg-space-4xl));
   position: relative;
   overflow: hidden;
 }
@@ -500,17 +501,27 @@
 .bt-stage {
   position: relative;
   display: grid;
-  gap: clamp(var(--cg-space-3xl), 10vw, var(--cg-space-6xl));
+  gap: clamp(var(--cg-space-2xl), 9vw, var(--cg-space-6xl));
   isolation: isolate;
   z-index: 1;
   width: 100%;
   max-width: 1180px;
   margin-inline: auto;
-  padding-inline: clamp(var(--cg-space-sm), 4vw, var(--cg-space-xl));
+  padding: clamp(28px, 4vw, 52px);
+  border: 1px solid var(--bt-border-strong);
+  border-radius: calc(var(--cg-radius-2xl, 48px) * 1.05);
+  background-color: var(--bt-bg);
+  box-shadow: 0 24px 64px rgba(17, 17, 17, 0.06);
 }
 
 .bt-stage > section {
   width: 100%;
+  max-width: min(100%, 1060px);
+  margin-inline: auto;
+}
+
+.bt-stage > section + section {
+  margin-block-start: clamp(var(--cg-space-xl), 6vw, var(--cg-space-3xl));
 }
 
 .bt-poster {
@@ -547,9 +558,10 @@
 
 .bt-hero {
   position: relative;
-  min-height: min(100vh, 960px);
+  min-height: min(88vh, 840px);
   display: grid;
-  place-items: center;
+  align-items: start;
+  justify-items: center;
   text-align: center;
   padding: clamp(var(--cg-space-xxl), 10vw, var(--cg-space-5xl)) clamp(var(--cg-space-lg), 6vw, var(--cg-space-4xl));
   border-radius: calc(var(--cg-radius-2xl, 48px) * 1.15);
@@ -638,7 +650,7 @@
 .bt-hero__facts div {
   display: grid;
   gap: var(--cg-space-4xs);
-  padding: clamp(var(--cg-space-sm), 2vw, var(--cg-space-md));
+  padding: clamp(var(--cg-space-md), 3vw, var(--cg-space-lg));
   border-radius: calc(var(--cg-radius-md) * 1.2);
   border: 1px solid var(--bt-border);
   background-color: var(--bt-panel-soft);
@@ -652,9 +664,9 @@
 
 .bt-hero__facts dd {
   margin: 0;
-  font-size: clamp(1rem, 2.4vw, 1.3rem);
+  font-size: clamp(0.92rem, 1.9vw, 1.15rem);
   color: var(--bt-text);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
 }
 
 .bt-hero__actions {
@@ -761,51 +773,50 @@
   display: none;
 }
 
-.bt-storyboard__reel {
-  position: relative;
-  display: flex;
+.bt-storyboard__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
   gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
-  overflow-x: auto;
-  padding: clamp(var(--cg-space-lg), 3vw, var(--cg-space-2xl)) 0;
-  scroll-snap-type: x mandatory;
+  justify-items: stretch;
 }
 
-.bt-storyboard__reel::-webkit-scrollbar {
-  height: 8px;
-}
-
-.bt-storyboard__reel::-webkit-scrollbar-thumb {
-  background: rgba(17, 17, 17, 0.2);
-  border-radius: 999px;
-}
-
-.bt-storyboard__panel {
-  min-width: clamp(260px, 42vw, 360px);
+.bt-storyboard__card {
+  position: relative;
   display: grid;
   gap: var(--cg-space-sm);
-  padding: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
-  border-radius: calc(var(--cg-radius-lg) * 1.2);
-  border: 1px solid var(--bt-border);
-  background-color: var(--bt-panel-soft);
-  scroll-snap-align: start;
-  }
+  max-width: clamp(320px, 70%, 680px);
+}
 
-.bt-storyboard__panel header {
+.bt-storyboard__card:nth-child(odd) {
+  justify-self: start;
+}
+
+.bt-storyboard__card:nth-child(even) {
+  justify-self: end;
+}
+
+.bt-storyboard__card::after {
+  border-color: rgba(17, 17, 17, 0.12);
+}
+
+.bt-storyboard__header {
   display: grid;
   gap: var(--cg-space-4xs);
   text-align: left;
 }
 
-.bt-storyboard__panel header span {
-  font-size: 0.58rem;
+.bt-storyboard__header span {
+  font-size: 0.62rem;
   letter-spacing: 0.28em;
   color: var(--bt-text-muted);
 }
 
-.bt-storyboard__panel h3 {
+.bt-storyboard__header h3 {
   margin: 0;
-  font-size: clamp(1rem, 2.2vw, 1.25rem);
-  letter-spacing: 0.18em;
+  font-size: clamp(1.05rem, 2.4vw, 1.4rem);
+  letter-spacing: 0.2em;
 }
 
 .bt-storyboard__copy {
@@ -1004,7 +1015,7 @@
 }
 
 .bt-finale__body h2 {
-  margin: 0;
+  margin: 0 0 clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
   font-size: clamp(1.4rem, 3vw, 2rem);
   letter-spacing: 0.24em;
 }
@@ -1073,7 +1084,8 @@
 
 @media (max-width: 720px) {
   .bt-page {
-    padding: clamp(var(--cg-space-md), 6vw, var(--cg-space-2xl));
+    padding-block-start: clamp(var(--cg-space-md), 8vw, var(--cg-space-2xl));
+    padding-block-end: clamp(var(--cg-space-lg), 10vw, var(--cg-space-3xl));
   }
 
   .bt-hero {
