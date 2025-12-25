@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { anchors } from "./nav/anchors";
@@ -15,6 +15,11 @@ export function HeaderNav() {
   const activeAnchors = useMemo(() => anchors, []);
   const anchorIds = useMemo(() => activeAnchors.map((anchor) => anchor.id), [activeAnchors]);
   const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
 
   const scrollToAnchor = useCallback(
     (anchorId: string) => {
@@ -36,14 +41,18 @@ export function HeaderNav() {
     (anchorId: string) => {
       if (pathname !== "/") {
         router.push(`/#${anchorId}`);
-
-        return;
+      } else {
+        scrollToAnchor(anchorId);
       }
 
-      scrollToAnchor(anchorId);
+      closeMenu();
     },
-    [pathname, router, scrollToAnchor]
+    [closeMenu, pathname, router, scrollToAnchor]
   );
+
+  useEffect(() => {
+    closeMenu();
+  }, [closeMenu, pathname]);
 
   return (
     <header className="cg-header" role="banner">
@@ -64,36 +73,52 @@ export function HeaderNav() {
             <span className="cg-header__tagline">code · composition · story</span>
           </span>
         </a>
-        <nav className="cg-header__nav" aria-label="Primary">
-          <ul className="cg-header__list">
-            {activeAnchors.map((anchor) => (
-              <li key={anchor.id} className="cg-header__item">
-                <a
-                  href={`#${anchor.id}`}
-                  className={[
-                    "cg-header__link",
-                    activeId === anchor.id ? "cg-header__link--active" : ""
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    handleNavigate(anchor.id);
-                  }}
-                >
-                  {anchor.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
         <button
           type="button"
-          className="cg-header__cta"
-          onClick={() => handleNavigate(CONTACT_ANCHOR_ID)}
+          className="cg-header__menu-toggle"
+          aria-expanded={isMenuOpen}
+          aria-controls="primary-navigation"
+          onClick={() => setIsMenuOpen((prev) => !prev)}
         >
-          Build Your Future
+          <span className="cg-header__menu-toggle-icon" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+          <span className="cg-header__menu-toggle-label">Menu</span>
         </button>
+        <div className={["cg-header__menu", isMenuOpen ? "cg-header__menu--open" : ""].filter(Boolean).join(" ")}>
+          <nav className="cg-header__nav" aria-label="Primary" id="primary-navigation">
+            <ul className="cg-header__list">
+              {activeAnchors.map((anchor) => (
+                <li key={anchor.id} className="cg-header__item">
+                  <a
+                    href={`#${anchor.id}`}
+                    className={[
+                      "cg-header__link",
+                      activeId === anchor.id ? "cg-header__link--active" : ""
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      handleNavigate(anchor.id);
+                    }}
+                  >
+                    {anchor.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <button
+            type="button"
+            className="cg-header__cta"
+            onClick={() => handleNavigate(CONTACT_ANCHOR_ID)}
+          >
+            Build Your Future
+          </button>
+        </div>
       </div>
     </header>
   );

@@ -67,9 +67,8 @@ export function HeroSection() {
       </div>
       <div className="cg-hero__aside">
         <div className="cg-hero__process" aria-label="Studio process">
-          {processSteps.map((step, index) => (
+          {processSteps.map((step) => (
             <div key={step.title} className="cg-hero__process-step">
-              <span className="cg-hero__process-number">{index + 1}</span>
               {step.icon}
               <div className="cg-hero__process-copy">
                 <p className="cg-hero__process-title">{step.title}</p>
