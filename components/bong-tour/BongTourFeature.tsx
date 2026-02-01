@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import Image from "next/image";
 
 import { Button } from "@/components/ui/Button";
@@ -33,6 +35,10 @@ const cast = [
   {
     name: "The C lister",
     detail: "A washed up actor turned parasite mentor who ushers the writers into the underworld and wants his renaissance at any cost."
+  },
+  {
+    name: "The Comedian",
+    detail: "A strike-season prophet whose set weaponizes truth. She sees the bong as an instrument, not a gag, and pushes the writers to choose a side."
   },
   {
     name: "The A lister",
@@ -105,6 +111,82 @@ const guidingTagline = "Smoke rewrites the myth before it lets you onstage.";
 
 const storyboardTilts = [-2.5, 1.5, -1.2, 2.2, -1.8, 1.8, -0.8];
 
+const holiPalettes = [
+  {
+    splash:
+      "radial-gradient(120% 120% at 16% 18%, rgba(255, 86, 122, 0.6) 0%, rgba(255, 86, 122, 0) 62%), radial-gradient(140% 140% at 82% 22%, rgba(255, 213, 79, 0.58) 0%, rgba(255, 213, 79, 0) 64%), radial-gradient(160% 160% at 52% 100%, rgba(88, 196, 255, 0.55) 0%, rgba(88, 196, 255, 0) 70%)",
+    glow: "radial-gradient(120% 120% at 46% 52%, rgba(255, 86, 122, 0.22) 0%, rgba(255, 86, 122, 0) 68%)"
+  },
+  {
+    splash:
+      "radial-gradient(120% 120% at 20% 24%, rgba(13, 192, 186, 0.58) 0%, rgba(13, 192, 186, 0) 60%), radial-gradient(160% 160% at 78% 14%, rgba(255, 102, 176, 0.55) 0%, rgba(255, 102, 176, 0) 58%), radial-gradient(150% 150% at 50% 92%, rgba(255, 180, 70, 0.48) 0%, rgba(255, 180, 70, 0) 68%)",
+    glow: "radial-gradient(130% 130% at 48% 62%, rgba(255, 102, 176, 0.2) 0%, rgba(255, 102, 176, 0) 70%)"
+  },
+  {
+    splash:
+      "radial-gradient(140% 140% at 18% 12%, rgba(134, 99, 255, 0.58) 0%, rgba(134, 99, 255, 0) 58%), radial-gradient(150% 150% at 80% 28%, rgba(30, 200, 190, 0.55) 0%, rgba(30, 200, 190, 0) 60%), radial-gradient(160% 160% at 46% 94%, rgba(255, 210, 82, 0.5) 0%, rgba(255, 210, 82, 0) 68%)",
+    glow: "radial-gradient(140% 140% at 50% 54%, rgba(134, 99, 255, 0.2) 0%, rgba(134, 99, 255, 0) 72%)"
+  },
+  {
+    splash:
+      "radial-gradient(150% 150% at 18% 32%, rgba(255, 94, 165, 0.6) 0%, rgba(255, 94, 165, 0) 58%), radial-gradient(140% 140% at 86% 20%, rgba(82, 67, 255, 0.55) 0%, rgba(82, 67, 255, 0) 62%), radial-gradient(150% 150% at 48% 90%, rgba(142, 255, 107, 0.52) 0%, rgba(142, 255, 107, 0) 68%)",
+    glow: "radial-gradient(130% 130% at 52% 58%, rgba(82, 67, 255, 0.22) 0%, rgba(82, 67, 255, 0) 70%)"
+  },
+  {
+    splash:
+      "radial-gradient(150% 150% at 16% 18%, rgba(255, 170, 59, 0.6) 0%, rgba(255, 170, 59, 0) 56%), radial-gradient(140% 140% at 84% 16%, rgba(18, 204, 190, 0.52) 0%, rgba(18, 204, 190, 0) 60%), radial-gradient(160% 160% at 40% 96%, rgba(255, 88, 126, 0.52) 0%, rgba(255, 88, 126, 0) 70%)",
+    glow: "radial-gradient(130% 130% at 48% 54%, rgba(255, 88, 126, 0.22) 0%, rgba(255, 88, 126, 0) 70%)"
+  },
+  {
+    splash:
+      "radial-gradient(130% 130% at 18% 20%, rgba(255, 132, 102, 0.62) 0%, rgba(255, 132, 102, 0) 58%), radial-gradient(150% 150% at 82% 18%, rgba(108, 84, 255, 0.55) 0%, rgba(108, 84, 255, 0) 62%), radial-gradient(150% 150% at 46% 96%, rgba(94, 196, 255, 0.5) 0%, rgba(94, 196, 255, 0) 68%)",
+    glow: "radial-gradient(130% 130% at 50% 56%, rgba(108, 84, 255, 0.2) 0%, rgba(108, 84, 255, 0) 70%)"
+  },
+  {
+    splash:
+      "radial-gradient(140% 140% at 14% 24%, rgba(108, 219, 168, 0.58) 0%, rgba(108, 219, 168, 0) 60%), radial-gradient(160% 160% at 82% 14%, rgba(255, 101, 101, 0.55) 0%, rgba(255, 101, 101, 0) 58%), radial-gradient(150% 150% at 52% 94%, rgba(255, 208, 112, 0.5) 0%, rgba(255, 208, 112, 0) 68%)",
+    glow: "radial-gradient(130% 130% at 52% 54%, rgba(255, 101, 101, 0.22) 0%, rgba(255, 101, 101, 0) 68%)"
+  }
+];
+
+type HoliCastStyle = CSSProperties & {
+  "--bt-cast-holi-bg"?: string;
+  "--bt-cast-holi-glow"?: string;
+};
+
+const musicPosters = [
+  {
+    title: "Joint Queen",
+    tagline: "Psych-funk swagger for the Comedy Store takeover.",
+    description:
+      "Walls/Devine lace fuzz bass with riot brass to score the writers' first smoke-fueled victory. The cue keeps the satire sharp even while the room spins.",
+    highlights: [
+      "Psych-funk built for slo-mo struts and jump cuts",
+      "Designed for the Comedy Store initiation montage"
+    ]
+  },
+  {
+    title: "Stash Daddy",
+    tagline: "Sunset backroom heist groove with neon menace.",
+    description:
+      "A swaggering low-end march that follows the C lister ushering everyone backstage. Analog pulses mirror the industry handshakes that always carry a hook.",
+    highlights: [
+      "Modular synth throb with tabla-inflected percussion",
+      "Underscores the Sunset Boulevard midnight plotting"
+    ]
+  },
+  {
+    title: "Space Cruiser",
+    tagline: "Diaspora dreamscape for the Ganges finale.",
+    description:
+      "Shimmering pads, processed tanpura, and choirs blur time as the bong completes its circuit back to the river. The cue lets the myth breathe before the sequel chase.",
+    highlights: [
+      "5/4 pulse drifting into weightless ambience",
+      "Bridges Hollywood excess with Rishikesh clarity"
+    ]
+  }
+];
+
 export function BongTourFeature() {
   return (
     <div className="bt-stage">
@@ -147,6 +229,39 @@ export function BongTourFeature() {
         </div>
       </section>
 
+      <section className="bt-music" aria-label="Score sketches">
+        <header className="bt-section-header">
+          <h2>Score sketches</h2>
+          <p>Walls/Devine cues built to anchor the pitch deck and hold the invitation open.</p>
+        </header>
+        <ul className="bt-music__grid">
+          {musicPosters.map((poster, index) => (
+            <li key={poster.title} className="bt-music__poster">
+              <div className="bt-music__visual" aria-hidden="true">
+                <span className="bt-music__badge">Cue Poster {String(index + 1).padStart(2, "0")}</span>
+                <div className="bt-music__marquee">
+                  <h3>{poster.title}</h3>
+                  <p>{poster.tagline}</p>
+                </div>
+              </div>
+              <div className="bt-music__details">
+                <p className="bt-music__lede">{poster.description}</p>
+                <ul className="bt-music__highlights">
+                  {poster.highlights.map((highlight) => (
+                    <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+                <div className="bt-music__credit">
+                  <span>
+                    Score by <a href="/#music">Walls/Devine</a>
+                  </span>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <section className="bt-tonality" aria-label="Tone and references">
         <div className="bt-tonality__grid">
           <div className="bt-tonality__copy">
@@ -187,16 +302,21 @@ export function BongTourFeature() {
           <p>The energy, posture, and myth weight that keep the satire sharp.</p>
         </header>
         <ul className="bt-cast__grid">
-          {cast.map((character, index) => (
-            <li
-              key={character.name}
-              className="bt-cast__card"
-              style={{ transform: `rotate(${storyboardTilts[index % storyboardTilts.length]}deg)` }}
-            >
-              <span>{character.name}</span>
-              <p>{character.detail}</p>
-            </li>
-          ))}
+          {cast.map((character, index) => {
+            const palette = holiPalettes[index % holiPalettes.length];
+            const holiStyle: HoliCastStyle = {
+              transform: `rotate(${storyboardTilts[index % storyboardTilts.length]}deg)`,
+              "--bt-cast-holi-bg": palette?.splash,
+              "--bt-cast-holi-glow": palette?.glow
+            };
+
+            return (
+              <li key={character.name} className="bt-cast__card" style={holiStyle}>
+                <span>{character.name}</span>
+                <p>{character.detail}</p>
+              </li>
+            );
+          })}
         </ul>
       </section>
 

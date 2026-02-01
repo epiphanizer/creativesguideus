@@ -6,11 +6,10 @@ export type AnchorConfig = {
 
 const anchorRegistry: AnchorConfig[] = [
   { id: "hero", label: "Vision" },
-  { id: "who", label: "Who We Are" },
-  { id: "web", label: "Software Systems" },
-  { id: "work", label: "Outcomes" },
-  { id: "music", label: "Sonic Authority" },
-  { id: "writing", label: "Narrative Impact" }
+  // { id: "who", label: "Who We Are" },
+  { id: "web", label: "Creative" },
+  { id: "music", label: "Music" },
+  { id: "writing", label: "Writing" }
 ];
 
 export const anchors = anchorRegistry.filter((anchor) => anchor.isEnabled !== false);

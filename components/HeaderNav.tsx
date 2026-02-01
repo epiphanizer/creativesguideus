@@ -117,7 +117,7 @@ export function HeaderNav() {
             className="cg-header__cta"
             onClick={() => handleNavigate(CONTACT_ANCHOR_ID)}
           >
-            Build Your Future
+            Connect
           </button>
         </div>
       </div>
