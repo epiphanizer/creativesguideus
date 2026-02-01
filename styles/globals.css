@@ -1372,6 +1372,21 @@ p + ol {
   gap: var(--cg-space-sm);
 }
 
+.cg-hero .cg-section-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--cg-space-3xs);
+}
+
+.cg-hero .cg-section-header__actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--cg-space-2xs);
+  margin-top: clamp(var(--cg-space-xs), 1vw, var(--cg-space-sm));
+}
+
 .cg-proof {
   display: grid;
   gap: var(--cg-space-lg);
