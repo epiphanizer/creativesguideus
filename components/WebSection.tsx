@@ -84,7 +84,7 @@ export function WebSection() {
         <div className="cg-split__lede">
           <SectionHeader
             id="web-title"
-            eyebrow="Software / Web"
+            eyebrow="Creative"
             title="Engineer resilient digital ecosystems"
             description="We design and deploy future-ready platforms where product utility, brand authority, and story momentum move as one."
             icon={
@@ -108,7 +108,7 @@ export function WebSection() {
             <Button as="a" href="#contact">
               Forge Your Platform
             </Button>
-            <Button as="a" href="#work" variant="ghost">
+            <Button as="a" href="/work" variant="ghost">
               Review the Outcomes
             </Button>
           </div>

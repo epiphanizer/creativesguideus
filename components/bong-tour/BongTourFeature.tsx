@@ -15,7 +15,17 @@ const keyDetails = [
   { label: "Visual signature", detail: "Masala satire · neon noir" }
 ];
 
-const cast = [
+type CastMember = {
+  name: string;
+  detail: string;
+  callToAction?: {
+    label: string;
+    href: string;
+    description?: string;
+  };
+};
+
+const cast: CastMember[] = [
   {
     name: "Vishal",
     detail: "Indian American writer. Long haired, anxious, and brilliant. He believes the film means something even when he is too high to stand upright."
@@ -38,7 +48,7 @@ const cast = [
   },
   {
     name: "The Comedian",
-    detail: "A strike-season prophet whose set weaponizes truth. She sees the bong as an instrument, not a gag, and pushes the writers to choose a side."
+    detail: "A strike-season prophet whose set weaponizes truth. He lives the bit like a method comic, rides whichever side is winning, and nurses a feud with the C lister that nobody will explain."
   },
   {
     name: "The A lister",
@@ -46,7 +56,12 @@ const cast = [
   },
   {
     name: "Upper Management",
-    detail: "Not a person but an ecosystem. The industry itself, forever offering the sequel to keep you owned."
+    detail: "Not a person but an ecosystem. The industry itself, forever offering the sequel to keep you owned.",
+    callToAction: {
+      label: "Your Company Here",
+      href: "/#contact",
+      description: "Step into the sequel machine and craft the myth with us."
+    }
   }
 ];
 
@@ -314,6 +329,16 @@ export function BongTourFeature() {
               <li key={character.name} className="bt-cast__card" style={holiStyle}>
                 <span>{character.name}</span>
                 <p>{character.detail}</p>
+                {character.callToAction ? (
+                  <Button
+                    as="a"
+                    href={character.callToAction.href}
+                    className="bt-button bt-button--outline bt-cast__cta"
+                    aria-label={character.callToAction.description ?? character.callToAction.label}
+                  >
+                    {character.callToAction.label}
+                  </Button>
+                ) : null}
               </li>
             );
           })}

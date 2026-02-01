@@ -1,6 +1,5 @@
 import { HeroSection } from "@/components/HeroSection";
 import { WebSection } from "@/components/WebSection";
-import { WorkSection } from "@/components/WorkSection";
 import { WhoWeAreSection } from "@/components/WhoWeAreSection";
 import { MusicSection } from "@/components/MusicSection";
 import { WritingSection } from "@/components/WritingSection";
@@ -15,8 +14,6 @@ export default function HomePage() {
       <WhoWeAreSection />
 
       <WebSection />
-
-      <WorkSection />
 
       <MusicSection />
 

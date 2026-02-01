@@ -12,7 +12,7 @@ const projectTypes = [
 
 export function ContactSection() {
   return (
-    <SectionShell id="contact" labelledBy="contact-title">
+    <SectionShell id="contact" labelledBy="contact-title" innerClassName="cg-contact__shell">
       <div className="cg-contact">
         <div className="cg-contact__intro">
           <SectionHeader

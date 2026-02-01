@@ -1,4 +1,23 @@
+.cg-contact__shell {
+  position: relative;
+  padding: clamp(var(--cg-space-2xl), 7vw, var(--cg-space-4xl));
+  border-radius: calc(var(--cg-radius-2xl, 48px) * 0.85);
+  background: linear-gradient(175deg, rgba(255, 255, 255, 0.98), rgba(244, 244, 244, 0.92));
+  border: 1px solid rgba(15, 15, 15, 0.12);
+  box-shadow: 0 32px 80px rgba(10, 10, 10, 0.14);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+@media (max-width: 640px) {
+  .cg-contact__shell {
+    padding: clamp(var(--cg-space-xl), 8vw, var(--cg-space-3xl));
+    border-radius: calc(var(--cg-radius-xl) * 0.9);
+  }
+}
+
 .cg-contact {
+  width: 100%;
   display: grid;
   row-gap: clamp(var(--cg-space-xl), 5vw, var(--cg-space-3xl));
   column-gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));

@@ -194,60 +194,57 @@
   color: var(--cg-color-ink-500);
 }
 
-.cg-work__summary-item {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--cg-space-sm);
-  align-items: start;
-  padding: var(--cg-space-sm) clamp(var(--cg-space-md), 3vw, var(--cg-space-lg));
-  border: 1px solid var(--cg-color-border);
-  border-radius: var(--cg-radius-lg);
-  background-color: rgba(255, 255, 255, 0.82);
+.cg-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
+  overflow: hidden;
+  padding: clamp(var(--cg-space-xl), 6vw, var(--cg-space-3xl))
+    clamp(var(--cg-space-lg), 5vw, var(--cg-space-2xl));
+  border-radius: calc(var(--cg-radius-lg) * 1.4);
+  background: linear-gradient(155deg, #fdfcf8 0%, #f5f2ec 55%, #efeae4 100%);
+  border: 1px solid rgba(15, 15, 15, 0.06);
+  box-shadow: 0 24px 48px rgba(10, 10, 10, 0.06);
+  color: var(--cg-color-ink-900);
+  text-align: center;
+  isolation: isolate;
 }
 
-.cg-work__summary-icon {
-  display: grid;
-  place-items: center;
-  width: clamp(2.2rem, 4vw, 2.8rem);
-  height: clamp(2.2rem, 4vw, 2.8rem);
-  border: none;
-  border-radius: 0;
-  background-color: transparent;
+.cg-hero::before,
+.cg-hero::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-radius: calc(var(--cg-radius-lg) * 1.1);
+  border: 1px solid rgba(15, 15, 15, 0.08);
+  z-index: 1;
+  opacity: 0.92;
 }
 
-.cg-work__summary-icon svg {
-  width: clamp(1rem, 2.4vw, 1.25rem);
-  height: clamp(1rem, 2.4vw, 1.25rem);
-  stroke: var(--cg-color-ink-700);
-  fill: none;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.cg-hero::before {
+  top: -10%;
+  left: -12%;
+  width: clamp(240px, 30vw, 360px);
+  height: clamp(280px, 40vw, 440px);
+  background: linear-gradient(160deg, #f7f0cb 0%, #f2d4c9 55%, #dbe6f8 100%);
+  box-shadow: 0 28px 60px rgba(10, 10, 10, 0.08);
 }
 
-.cg-work__summary-text {
-  display: grid;
-  gap: var(--cg-space-3xs);
+.cg-hero::after {
+  bottom: -18%;
+  right: -14%;
+  width: clamp(260px, 34vw, 420px);
+  height: clamp(220px, 30vw, 320px);
+  background:
+    linear-gradient(90deg, transparent 0%, transparent 58%, rgba(15, 15, 15, 0.08) 58%, rgba(15, 15, 15, 0.08) 60%, transparent 60%, transparent 100%),
+    linear-gradient(0deg, transparent 0%, transparent 46%, rgba(15, 15, 15, 0.08) 46%, rgba(15, 15, 15, 0.08) 48%, transparent 48%, transparent 100%),
+    linear-gradient(135deg, #dfe7f6 0%, #efe0cb 58%, #f6d7d9 100%);
+  box-shadow: 0 18px 42px rgba(10, 10, 10, 0.06);
 }
-
-.cg-work__summary-text strong {
-  font-size: var(--cg-type-body-sm);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--cg-color-ink-700);
-}
-
-.cg-work__summary-text span {
-  font-size: 0.92rem;
-  line-height: 1.55;
-}
-
-
-.cg-card-grid.cg-work__grid {
-  align-items: stretch;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-}
-
+ 
 @media (min-width: 720px) {
   .cg-card-grid.cg-work__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1125,8 +1122,15 @@ p + ol {
   left: clamp(1.25rem, 6vw, 5rem);
   right: clamp(1.25rem, 6vw, 5rem);
   height: 1px;
-  background: linear-gradient(90deg, rgba(10, 10, 10, 0), rgba(10, 10, 10, 0.18), rgba(10, 10, 10, 0));
-  opacity: 0.65;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 10, 10, 0) 0%,
+    rgba(10, 10, 10, 0.3) 18%,
+    rgba(10, 10, 10, 0.3) 82%,
+    rgba(10, 10, 10, 0) 100%
+  );
+  opacity: 0.9;
+  transform: translateY(-0.5px);
 }
 
 .cg-section__inner {
@@ -1200,58 +1204,59 @@ p + ol {
   max-width: 48ch;
 }
 
-.cg-hero__lede {
+.cg-hero__content {
   position: relative;
   display: grid;
-  gap: clamp(var(--cg-space-md), 2.5vw, var(--cg-space-xl));
+  gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
+  justify-items: center;
+  width: 100%;
+  max-width: 62ch;
   z-index: 2;
-}
-
-.cg-hero__aside {
-  position: relative;
-  display: grid;
-  align-content: start;
-  gap: clamp(var(--cg-space-sm), 1.4vw, var(--cg-space-lg));
-  z-index: 2;
-}
-
-@media (min-width: 960px) {
-  .cg-hero__aside {
-    align-content: center;
-    justify-content: center;
-    justify-items: start;
-  }
 }
 
 .cg-hero__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--cg-space-2xs);
+  justify-content: center;
+  gap: var(--cg-space-sm);
   margin-top: clamp(var(--cg-space-xs), 1vw, var(--cg-space-sm));
+  width: 100%;
+  justify-content: center;
 }
 
+.cg-hero__actions > * {
+  flex: 0 1 auto;
+}
+.cg-process-overview,
 .cg-hero__process {
   display: grid;
   gap: clamp(var(--cg-space-3xs), 2vw, var(--cg-space-sm));
   padding: clamp(var(--cg-space-sm), 3vw, var(--cg-space-lg));
+  margin-top: clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
   border: 1px solid rgba(15, 15, 15, 0.06);
   border-radius: calc(var(--cg-radius-lg) * 1.1);
-  background: rgba(255, 255, 255, 0.68);
+  background: rgba(255, 255, 255, 0.78);
   box-shadow: none;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
 }
 
+@media (min-width: 960px) {
+  .cg-process-overview,
+  .cg-hero__process {
+    margin-top: 0;
+  }
+}
+
 @media (min-width: 900px) {
+  .cg-process-overview,
   .cg-hero__process {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
+.cg-process-overview__step,
 .cg-hero__process-step {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+  display: grid;
   gap: clamp(var(--cg-space-4xs), 1.2vw, var(--cg-space-xs));
   padding: clamp(var(--cg-space-3xs), 1.8vw, var(--cg-space-sm));
   border-radius: calc(var(--cg-radius-md) * 1.1);
@@ -1259,6 +1264,7 @@ p + ol {
   box-shadow: 0 8px 18px rgba(10, 10, 10, 0.04);
 }
 
+.cg-process-overview__icon,
 .cg-hero__process-icon {
   display: block;
   align-self: center;
@@ -1273,6 +1279,7 @@ p + ol {
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
 }
 
+.cg-process-overview__copy,
 .cg-hero__process-copy {
   display: grid;
   gap: clamp(var(--cg-space-5xs), 1vw, var(--cg-space-3xs));
@@ -1280,6 +1287,7 @@ p + ol {
   text-align: left;
 }
 
+.cg-process-overview__title,
 .cg-hero__process-title {
   font-size: clamp(0.65rem, 1.4vw, 0.74rem);
   text-transform: uppercase;
@@ -1287,6 +1295,7 @@ p + ol {
   color: var(--cg-color-ink-400);
 }
 
+.cg-process-overview__copy p,
 .cg-hero__process-copy p {
   font-size: clamp(0.78rem, 1.6vw, 0.88rem);
 }

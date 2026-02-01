@@ -1186,6 +1186,12 @@
   line-height: 1.6;
 }
 
+.bt-cast__cta {
+  margin-top: clamp(var(--cg-space-2xs), 1.6vw, var(--cg-space-sm));
+  align-self: start;
+  justify-self: start;
+}
+
 .bt-cast__card::after {
   content: "";
   position: absolute;
