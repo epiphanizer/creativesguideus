@@ -2,9 +2,10 @@ import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 
-const heroTitle = "Bringing your project from noise to clarity.";
+const heroTitle = "Active projects, clearer entry points.";
 
-const heroSubhead = "A perpetual creative engine aligning product, narrative, and score so your vision keeps compounding.";
+const heroSubhead =
+  "Creatives Guide Us now leads with the work already in motion: Walls & Devine, Bong Tour, and the client builds that prove how product, score, and story align.";
 
 export function HeroSection() {
   return (
@@ -18,11 +19,14 @@ export function HeroSection() {
           align="center"
           actions={
             <div className="cg-hero__actions">
-              <Button as="a" href="#contact">
-                Connect
+              <Button as="a" href="/walls-devine">
+                Open Walls & Devine
               </Button>
-              <Button as="a" href="/work" variant="ghost">
-                Our Work
+              <Button as="a" href="/bong-tour" variant="secondary">
+                Open Bong Tour
+              </Button>
+              <Button as="a" href="#projects" variant="ghost">
+                Browse Project Map
               </Button>
             </div>
           }

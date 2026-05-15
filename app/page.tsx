@@ -1,8 +1,7 @@
 import { HeroSection } from "@/components/HeroSection";
-import { WebSection } from "@/components/WebSection";
-import { WhoWeAreSection } from "@/components/WhoWeAreSection";
 import { MusicSection } from "@/components/MusicSection";
-import { WritingSection } from "@/components/WritingSection";
+import { ProjectHubSection } from "@/components/ProjectHubSection";
+import { WorkSection } from "@/components/WorkSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 
@@ -11,13 +10,11 @@ export default function HomePage() {
     <main className="cg-page" id="page-top">
       <HeroSection />
 
-      <WhoWeAreSection />
-
-      <WebSection />
+      <ProjectHubSection />
 
       <MusicSection />
 
-      <WritingSection />
+      <WorkSection />
 
       <ContactSection />
 

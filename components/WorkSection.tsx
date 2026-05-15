@@ -102,9 +102,9 @@ export function WorkSection() {
         <div className="cg-split__lede">
           <SectionHeader
             id="work-title"
-            eyebrow="Integrated outcomes"
-            title="Outcomes in motion"
-            description="Cross-disciplinary engagements that launch next-generation platforms, scores, and stories in one trajectory."
+            eyebrow="Client builds"
+            title="Published work with clearer proof"
+            description="These are the case studies that show how product, narrative, and score come together once the work leaves the whiteboard."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4.5 15.5c2.5 0 4.5-2 6-5 1.5 3 3.5 5 6 5" />
@@ -115,16 +115,16 @@ export function WorkSection() {
             iconLabel="Creative release emblem"
           />
           <p>
-            Projects stop stalling when strategy, product, and performance share one tempo. We embed with leadership, translate the
-            vision, and ship proof that momentum is real.
+            The front page now points to work that can actually be opened, reviewed, and discussed. Each case study shows a different
+            version of the same discipline: make the product clearer, make the story legible, and give the release a rhythm people can follow.
           </p>
           <p>
-            Every sprint braids code, composition, and narrative so investors, internal teams, and your audience feel the same story—clarity
-            in market, culture, and product all at once.
+            Appreesh, Lead Me Guide Me, and World Cup Dreams are the strongest client-facing proof points in the current site, so they now carry
+            more weight in the homepage structure.
           </p>
           <div className="cg-split__actions">
-            <Button as="a" href="#contact">
-              Schedule Your Blueprint
+            <Button as="a" href="/work">
+              Open Case Studies
             </Button>
           </div>
         </div>

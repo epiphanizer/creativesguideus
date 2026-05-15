@@ -13,7 +13,7 @@ export function HeaderNav() {
   const pathname = usePathname();
   const router = useRouter();
   const activeAnchors = useMemo(() => anchors, []);
-  const anchorIds = useMemo(() => activeAnchors.map((anchor) => anchor.id), [activeAnchors]);
+  const anchorIds = useMemo(() => activeAnchors.flatMap((anchor) => (anchor.id ? [anchor.id] : [])), [activeAnchors]);
   const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -48,6 +48,14 @@ export function HeaderNav() {
       closeMenu();
     },
     [closeMenu, pathname, router, scrollToAnchor]
+  );
+
+  const handleLinkNavigate = useCallback(
+    (href: string) => {
+      router.push(href);
+      closeMenu();
+    },
+    [closeMenu, router]
   );
 
   useEffect(() => {
@@ -92,18 +100,26 @@ export function HeaderNav() {
           <nav className="cg-header__nav" aria-label="Primary" id="primary-navigation">
             <ul className="cg-header__list">
               {activeAnchors.map((anchor) => (
-                <li key={anchor.id} className="cg-header__item">
+                <li key={anchor.id ?? anchor.href ?? anchor.label} className="cg-header__item">
                   <a
-                    href={`#${anchor.id}`}
+                    href={anchor.id ? `#${anchor.id}` : anchor.href ?? "/"}
                     className={[
                       "cg-header__link",
-                      activeId === anchor.id ? "cg-header__link--active" : ""
+                      anchor.id && activeId === anchor.id ? "cg-header__link--active" : "",
+                      anchor.href && pathname === anchor.href ? "cg-header__link--active" : ""
                     ]
                       .filter(Boolean)
                       .join(" ")}
                     onClick={(event) => {
                       event.preventDefault();
-                      handleNavigate(anchor.id);
+                      if (anchor.id) {
+                        handleNavigate(anchor.id);
+                        return;
+                      }
+
+                      if (anchor.href) {
+                        handleLinkNavigate(anchor.href);
+                      }
                     }}
                   >
                     {anchor.label}

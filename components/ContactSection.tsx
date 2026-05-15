@@ -3,11 +3,11 @@ import { SectionShell } from "@/components/ui/SectionShell";
 import { Button } from "@/components/ui/Button";
 
 const projectTypes = [
-  "Software / Platforms",
-  "Music / Sonic",
-  "Story / Narrative",
-  "Unified Engine",
-  "Advisory / Labs"
+  "Walls & Devine",
+  "Bong Tour",
+  "Client Build / Case Study",
+  "Integrated Release System",
+  "Advisory / Strategy"
 ];
 
 export function ContactSection() {
@@ -18,8 +18,8 @@ export function ContactSection() {
           <SectionHeader
             id="contact-title"
             eyebrow="UPLINK"
-            title="Engineered for Momentum"
-            description="Send the coordinates when you’re ready to compose product, score, and story on one track."
+            title="Start With The Right Project Lane"
+            description="Lead with the project that fits: record rollout, screenplay development, or a client build that needs product, score, and story aligned."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4 7h16v10H4z" />
@@ -31,11 +31,11 @@ export function ContactSection() {
           <div className="cg-contact__meta">
             <div className="cg-contact__slots" aria-label="Residency availability">
               <span>Residencies</span>
-              <p>Two seats are open for Q1 2026—held for partners ready to move in stride.</p>
+              <p>Two focused collaboration slots are open for partners ready to move with a defined project surface.</p>
             </div>
             <p>
               Prefer a direct uplink? Email <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a> with a calendar pin and
-              mission intel—we reply within two studio days.
+              project intel and the clearest next step you need. We reply within two studio days.
             </p>
           </div>
         </div>

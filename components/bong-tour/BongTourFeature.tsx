@@ -171,6 +171,7 @@ type HoliCastStyle = CSSProperties & {
 
 const musicPosters = [
   {
+    id: "score-joint-queen",
     title: "Joint Queen",
     tagline: "Psych-funk swagger for the Comedy Store takeover.",
     description:
@@ -181,6 +182,7 @@ const musicPosters = [
     ]
   },
   {
+    id: "score-stash-daddy",
     title: "Stash Daddy",
     tagline: "Sunset backroom heist groove with neon menace.",
     description:
@@ -191,6 +193,7 @@ const musicPosters = [
     ]
   },
   {
+    id: "score-space-cruiser",
     title: "Space Cruiser",
     tagline: "Diaspora dreamscape for the Ganges finale.",
     description:
@@ -244,14 +247,14 @@ export function BongTourFeature() {
         </div>
       </section>
 
-      <section className="bt-music" aria-label="Score sketches">
+      <section className="bt-music" id="score-sketches" aria-label="Score sketches">
         <header className="bt-section-header">
           <h2>Score sketches</h2>
           <p>Walls/Devine cues built to anchor the pitch deck and hold the invitation open.</p>
         </header>
         <ul className="bt-music__grid">
           {musicPosters.map((poster, index) => (
-            <li key={poster.title} className="bt-music__poster">
+            <li key={poster.title} id={poster.id} className="bt-music__poster">
               <div className="bt-music__visual" aria-hidden="true">
                 <span className="bt-music__badge">Cue Poster {String(index + 1).padStart(2, "0")}</span>
                 <div className="bt-music__marquee">
