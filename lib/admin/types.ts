@@ -47,6 +47,29 @@ export type AdminMarkdownFile = {
 
 export type AdminMarkdownCollection = "instagram-posts" | "journals";
 
+export type AdminAudioAnalysis = {
+  fileName: string;
+  relativePath: string;
+  fileSizeBytes: number;
+  fileSizeLabel: string;
+  durationSeconds: number | null;
+  durationLabel: string;
+  sampleRate: number | null;
+  channels: number | null;
+  bitDepth: number | null;
+  bitrateKbps: number | null;
+  codec: string | null;
+  container: string | null;
+  lossless: boolean | null;
+  title: string | null;
+  album: string | null;
+  artist: string | null;
+  albumArtist: string | null;
+  trackNumber: number | null;
+  year: number | null;
+  error?: string;
+};
+
 export type WallsDevineAdminData = {
   plan: ReleasePlan;
   instagramDrafts: AdminMarkdownFile[];

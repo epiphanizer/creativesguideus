@@ -6,7 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { anchors } from "./nav/anchors";
 import { useActiveSection } from "../hooks/useActiveSection";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
-const CONTACT_ANCHOR_ID = "contact";
+
+const PRIMARY_ROUTE = "/walls-devine";
 
 export function HeaderNav() {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -131,9 +132,9 @@ export function HeaderNav() {
           <button
             type="button"
             className="cg-header__cta"
-            onClick={() => handleNavigate(CONTACT_ANCHOR_ID)}
+            onClick={() => handleLinkNavigate(PRIMARY_ROUTE)}
           >
-            Open Channel
+            Enter Volume 1
           </button>
         </div>
       </div>

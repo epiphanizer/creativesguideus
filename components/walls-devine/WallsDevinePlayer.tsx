@@ -13,12 +13,26 @@ import poetryImage from "@/app/walls-devine/assets/instagram/7.poetry.png";
 import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
 import spaceCruiserImage from "@/app/walls-devine/assets/instagram/3.space-cruiser.png";
 import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { SongPostCard } from "@/components/walls-devine/content";
 import { Button } from "@/components/ui/Button";
 import { cx } from "@/lib/cx";
 
 type WallsDevinePlayerProps = {
   tracks: SongPostCard[];
+};
+
+type VisualizerPalette = {
+  primary: string;
+  secondary: string;
+  glow: string;
+  ink: string;
+};
+
+type VisualizerByteArray = Uint8Array<ArrayBuffer>;
+
+type AudioContextWindow = Window & typeof globalThis & {
+  webkitAudioContext?: typeof AudioContext;
 };
 
 const trackPosterImages: Record<number, StaticImageData> = {
@@ -32,6 +46,200 @@ const trackPosterImages: Record<number, StaticImageData> = {
   8: gratitudeImage
 };
 
+const trackVisualizerPalettes: Record<number, VisualizerPalette> = {
+  1: { primary: "#d96a1f", secondary: "#b31612", glow: "#ecbbba", ink: "#1a130d" },
+  2: { primary: "#7e0705", secondary: "#29543b", glow: "#f4e7ce", ink: "#1a130d" },
+  3: { primary: "#29543b", secondary: "#d96a1f", glow: "#f4e7ce", ink: "#1a130d" },
+  4: { primary: "#ca3f3b", secondary: "#29543b", glow: "#fafaf9", ink: "#1a130d" },
+  5: { primary: "#7e0705", secondary: "#ca3f3b", glow: "#ecbbba", ink: "#140d0d" },
+  6: { primary: "#d96a1f", secondary: "#7e0705", glow: "#f7e0e0", ink: "#140d0d" },
+  7: { primary: "#29543b", secondary: "#ca3f3b", glow: "#fafaf9", ink: "#1a130d" },
+  8: { primary: "#d66e6c", secondary: "#d96a1f", glow: "#f4e7ce", ink: "#1a130d" }
+};
+
+function hexToRgba(hex: string, alpha: number) {
+  const sanitized = hex.replace("#", "");
+  const normalized = sanitized.length === 3 ? sanitized.split("").map((part) => `${part}${part}`).join("") : sanitized;
+  const numeric = Number.parseInt(normalized, 16);
+  const red = (numeric >> 16) & 255;
+  const green = (numeric >> 8) & 255;
+  const blue = numeric & 255;
+
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function getTrackVisualizerSeed(track: SongPostCard) {
+  return track.title.split("").reduce((sum, character) => sum + character.charCodeAt(0), track.trackNumber * 17);
+}
+
+function getAudioContextConstructor() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const audioWindow = window as AudioContextWindow;
+  return audioWindow.AudioContext ?? audioWindow.webkitAudioContext ?? null;
+}
+
+function drawRadialVisualizer({
+  canvas,
+  analyser,
+  frequencyData,
+  waveformData,
+  track,
+  isPlaying,
+  elapsed
+}: {
+  canvas: HTMLCanvasElement;
+  analyser: AnalyserNode | null;
+  frequencyData: VisualizerByteArray | null;
+  waveformData: VisualizerByteArray | null;
+  track: SongPostCard;
+  isPlaying: boolean;
+  elapsed: number;
+}) {
+  const rect = canvas.getBoundingClientRect();
+
+  if (!rect.width || !rect.height) {
+    return;
+  }
+
+  const pixelRatio = window.devicePixelRatio || 1;
+  const width = Math.round(rect.width * pixelRatio);
+  const height = Math.round(rect.height * pixelRatio);
+
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+
+  const context = canvas.getContext("2d");
+
+  if (!context) {
+    return;
+  }
+
+  const palette = trackVisualizerPalettes[track.trackNumber] ?? trackVisualizerPalettes[1];
+  const seed = getTrackVisualizerSeed(track);
+  const tau = Math.PI * 2;
+  const drawWidth = rect.width;
+  const drawHeight = rect.height;
+  const centerX = drawWidth / 2;
+  const centerY = drawHeight / 2;
+  const outerRadius = Math.min(drawWidth, drawHeight) * 0.48;
+  const ringRadius = outerRadius * 0.74;
+  const pulseRadius = outerRadius * 0.58;
+
+  context.setTransform(1, 0, 0, 1, 0, 0);
+  context.clearRect(0, 0, width, height);
+  context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+  const backdrop = context.createRadialGradient(centerX, centerY, outerRadius * 0.1, centerX, centerY, outerRadius);
+  backdrop.addColorStop(0, hexToRgba(palette.glow, 0.08));
+  backdrop.addColorStop(0.55, hexToRgba(palette.primary, 0.12));
+  backdrop.addColorStop(1, "rgba(255, 255, 255, 0)");
+  context.fillStyle = backdrop;
+  context.beginPath();
+  context.arc(centerX, centerY, outerRadius, 0, tau);
+  context.fill();
+
+  for (const multiplier of [0.56, 0.72, 0.9]) {
+    context.beginPath();
+    context.lineWidth = multiplier === 0.72 ? 1.25 : 1;
+    context.strokeStyle = hexToRgba(palette.ink, multiplier === 0.72 ? 0.12 : 0.08);
+    context.arc(centerX, centerY, outerRadius * multiplier, 0, tau);
+    context.stroke();
+  }
+
+  const bars = 72;
+  const dynamicValues: number[] = [];
+  let energy = 0;
+
+  if (isPlaying && analyser && frequencyData && waveformData) {
+    analyser.getByteFrequencyData(frequencyData);
+    analyser.getByteTimeDomainData(waveformData);
+
+    const step = Math.max(1, Math.floor(frequencyData.length / bars));
+
+    for (let index = 0; index < bars; index += 1) {
+      const value = frequencyData[index * step] / 255;
+      dynamicValues.push(value);
+      energy += value;
+    }
+
+    energy /= bars;
+  } else {
+    for (let index = 0; index < bars; index += 1) {
+      const wave = Math.sin(seed * 0.07 + elapsed * 0.0012 + index * 0.34) * 0.28;
+      const drift = Math.cos(seed * 0.05 + elapsed * 0.0007 + index * 0.18) * 0.18;
+      dynamicValues.push(0.26 + Math.abs(wave + drift));
+    }
+
+    energy = 0.32;
+  }
+
+  context.lineCap = "round";
+
+  dynamicValues.forEach((value, index) => {
+    const angle = (index / bars) * tau + elapsed * 0.00016 + seed * 0.002;
+    const startRadius = outerRadius * 0.73 + Math.sin(seed * 0.03 + index * 0.3) * 4;
+    const endRadius = startRadius + 10 + value * outerRadius * 0.16;
+    const startX = centerX + Math.cos(angle) * startRadius;
+    const startY = centerY + Math.sin(angle) * startRadius;
+    const endX = centerX + Math.cos(angle) * endRadius;
+    const endY = centerY + Math.sin(angle) * endRadius;
+
+    context.beginPath();
+    context.lineWidth = 1.25 + value * 2.5;
+    context.strokeStyle = index % 3 === 0 ? hexToRgba(palette.primary, 0.82) : hexToRgba(palette.secondary, 0.74);
+    context.moveTo(startX, startY);
+    context.lineTo(endX, endY);
+    context.stroke();
+  });
+
+  context.beginPath();
+  const waveformPoints = 96;
+
+  for (let index = 0; index <= waveformPoints; index += 1) {
+    const angle = (index / waveformPoints) * tau - Math.PI / 2;
+    const waveformSample = isPlaying && waveformData
+      ? (waveformData[Math.min(waveformData.length - 1, Math.floor((index / waveformPoints) * waveformData.length))] - 128) / 128
+      : Math.sin(seed * 0.06 + elapsed * 0.0008 + index * 0.26) * 0.32;
+    const radius = ringRadius + waveformSample * 12;
+    const x = centerX + Math.cos(angle) * radius;
+    const y = centerY + Math.sin(angle) * radius;
+
+    if (index === 0) {
+      context.moveTo(x, y);
+    } else {
+      context.lineTo(x, y);
+    }
+  }
+
+  context.closePath();
+  context.lineWidth = 2;
+  context.strokeStyle = hexToRgba(palette.glow, 0.9);
+  context.stroke();
+
+  context.beginPath();
+  context.arc(centerX, centerY, pulseRadius + energy * 10, 0, tau);
+  context.lineWidth = 2.5;
+  context.strokeStyle = hexToRgba(palette.primary, 0.26 + energy * 0.22);
+  context.stroke();
+
+  for (let index = 0; index < 4; index += 1) {
+    const angle = elapsed * 0.0004 * (index % 2 === 0 ? 1 : -1) + seed * 0.02 + index * (tau / 4);
+    const radius = outerRadius * (0.44 + index * 0.09);
+    const x = centerX + Math.cos(angle) * radius;
+    const y = centerY + Math.sin(angle) * radius;
+
+    context.beginPath();
+    context.fillStyle = hexToRgba(index % 2 === 0 ? palette.primary : palette.secondary, 0.74);
+    context.arc(x, y, 2.4 + energy * 2.6, 0, tau);
+    context.fill();
+  }
+}
+
 function formatTrackNumber(trackNumber: number) {
   return String(trackNumber).padStart(2, "0");
 }
@@ -41,18 +249,128 @@ function getTrackAudioSrc(fileName: string) {
 }
 
 export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const deepLinkHandledRef = useRef(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const visualizerCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const frequencyDataRef = useRef<VisualizerByteArray | null>(null);
+  const waveformDataRef = useRef<VisualizerByteArray | null>(null);
   const titleId = useId();
   const activeTrack = tracks[activeIndex] ?? tracks[0];
   const activeSrc = getTrackAudioSrc(activeTrack.audioFileName);
   const activePosterImage = trackPosterImages[activeTrack.trackNumber] ?? volOneImage;
   const activePosterAlt = `${activeTrack.title} cover artwork`;
 
+  function normalizePlayerTarget(value: string | null | undefined) {
+    return (value ?? "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+  }
+
+  function findTrackIndexFromPlayerTarget(value: string) {
+    return tracks.findIndex((track) =>
+      [track.journalSlug, track.bongTourCueId, track.title, String(track.trackNumber)]
+        .map((candidate) => normalizePlayerTarget(candidate))
+        .includes(value)
+    );
+  }
+
+  async function ensureAudioVisualizer() {
+    const audioElement = audioRef.current;
+
+    if (!audioElement) {
+      return;
+    }
+
+    const AudioContextConstructor = getAudioContextConstructor();
+
+    if (!AudioContextConstructor) {
+      return;
+    }
+
+    if (!audioContextRef.current) {
+      audioContextRef.current = new AudioContextConstructor();
+    }
+
+    if (!sourceNodeRef.current || !analyserRef.current) {
+      const analyser = audioContextRef.current.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.82;
+
+      const source = audioContextRef.current.createMediaElementSource(audioElement);
+      source.connect(analyser);
+      analyser.connect(audioContextRef.current.destination);
+
+      sourceNodeRef.current = source;
+      analyserRef.current = analyser;
+      frequencyDataRef.current = new Uint8Array(new ArrayBuffer(analyser.frequencyBinCount)) as VisualizerByteArray;
+      waveformDataRef.current = new Uint8Array(new ArrayBuffer(analyser.fftSize)) as VisualizerByteArray;
+    }
+
+    if (audioContextRef.current.state === "suspended") {
+      await audioContextRef.current.resume();
+    }
+  }
+
+  function teardownAudioVisualizer() {
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+
+    sourceNodeRef.current?.disconnect();
+    sourceNodeRef.current = null;
+    analyserRef.current?.disconnect();
+    analyserRef.current = null;
+    frequencyDataRef.current = null;
+    waveformDataRef.current = null;
+
+    if (audioContextRef.current && audioContextRef.current.state !== "closed") {
+      void audioContextRef.current.close();
+    }
+
+    audioContextRef.current = null;
+  }
+
+  useEffect(() => {
+    if (deepLinkHandledRef.current || typeof window === "undefined") {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const requestedPlayerTarget = normalizePlayerTarget(params.get("player"));
+
+    if (!requestedPlayerTarget) {
+      return;
+    }
+
+    const nextIndex = findTrackIndexFromPlayerTarget(requestedPlayerTarget);
+
+    if (nextIndex === -1) {
+      return;
+    }
+
+    deepLinkHandledRef.current = true;
+    setActiveIndex(nextIndex);
+    setIsOpen(true);
+
+    const hash = window.location.hash || "#walls-devine-listening-room";
+    window.history.replaceState(window.history.state, "", `${window.location.pathname}${hash}`);
+  }, [tracks]);
+
   useEffect(() => {
     if (!isOpen) {
-      audioRef.current?.pause();
+      setIsPlaying(false);
+      teardownAudioVisualizer();
       return;
     }
 
@@ -81,12 +399,95 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
     audioRef.current?.load();
   }, [activeSrc, isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const audioElement = audioRef.current;
+
+    if (!audioElement) {
+      return;
+    }
+
+    const handlePlay = async () => {
+      setIsPlaying(true);
+      await ensureAudioVisualizer();
+    };
+
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
+    audioElement.addEventListener("play", handlePlay);
+    audioElement.addEventListener("pause", handlePause);
+    audioElement.addEventListener("ended", handlePause);
+
+    if (!audioElement.paused) {
+      void handlePlay();
+    } else {
+      setIsPlaying(false);
+    }
+
+    return () => {
+      audioElement.removeEventListener("play", handlePlay);
+      audioElement.removeEventListener("pause", handlePause);
+      audioElement.removeEventListener("ended", handlePause);
+    };
+  }, [activeSrc, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || !visualizerCanvasRef.current) {
+      return;
+    }
+
+    const drawFrame = (elapsed: number) => {
+      if (!visualizerCanvasRef.current) {
+        return;
+      }
+
+      drawRadialVisualizer({
+        canvas: visualizerCanvasRef.current,
+        analyser: analyserRef.current,
+        frequencyData: frequencyDataRef.current,
+        waveformData: waveformDataRef.current,
+        track: activeTrack,
+        isPlaying,
+        elapsed
+      });
+    };
+
+    if (prefersReducedMotion) {
+      drawFrame(getTrackVisualizerSeed(activeTrack) * 18);
+      return;
+    }
+
+    const render = (elapsed: number) => {
+      drawFrame(elapsed);
+      animationFrameRef.current = requestAnimationFrame(render);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(render);
+
+    return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+    };
+  }, [activeSrc, activeTrack, isOpen, isPlaying, prefersReducedMotion]);
+
+  useEffect(() => () => {
+    teardownAudioVisualizer();
+  }, []);
+
   function openPlayer(index: number) {
     setActiveIndex(index);
     setIsOpen(true);
   }
 
   function closePlayer() {
+    audioRef.current?.pause();
     setIsOpen(false);
   }
 
@@ -212,8 +613,21 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
             <div className="wd-player-modal__layout">
               <section className="wd-player-modal__current" aria-label="Current track player">
                 <div className="wd-player-modal__art">
-                  <div className="wd-player-modal__art-frame">
-                    <Image src={activePosterImage} alt={activePosterAlt} sizes="(max-width: 960px) 72vw, 360px" />
+                  <div className="wd-player-modal__visualizer">
+                    <canvas ref={visualizerCanvasRef} className="wd-player-modal__visualizer-canvas" aria-hidden="true" />
+                    <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--top">
+                      Track {formatTrackNumber(activeTrack.trackNumber)}
+                    </span>
+                    <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--left">{activeTrack.phase}</span>
+                    <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--right">
+                      {isPlaying ? "Live dynamics" : "Idle orbit"}
+                    </span>
+                    <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--bottom">{activeTrack.duration} · WAV</span>
+                    <div className="wd-player-modal__visualizer-core">
+                      <div className="wd-player-modal__art-frame">
+                        <Image src={activePosterImage} alt={activePosterAlt} sizes="(max-width: 960px) 72vw, 360px" />
+                      </div>
+                    </div>
                   </div>
                   <p>
                     Track {formatTrackNumber(activeTrack.trackNumber)} · {activeTrack.duration}

@@ -813,6 +813,12 @@
   gap: clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
 }
 
+.bt-music__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cg-space-sm);
+}
+
 .bt-music__lede {
   margin: 0;
   font-size: clamp(0.98rem, 2.3vw, 1.18rem);

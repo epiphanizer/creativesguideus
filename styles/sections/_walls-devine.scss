@@ -872,10 +872,76 @@
 .wd-player-modal__art {
   display: grid;
   gap: var(--cg-space-xs);
+  justify-items: center;
+  text-align: center;
+}
+
+.wd-player-modal__visualizer {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.wd-player-modal__visualizer-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.wd-player-modal__visualizer-core {
+  position: relative;
+  z-index: 1;
+  width: min(56%, 16rem);
+}
+
+.wd-player-modal__visualizer-badge {
+  position: absolute;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: calc(100% - 1.5rem);
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(156, 7, 5, 0.18);
+  background: rgba(253, 254, 254, 0.78);
+  color: rgba(20, 13, 13, 0.84);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+}
+
+.wd-player-modal__visualizer-badge--top {
+  top: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.wd-player-modal__visualizer-badge--left {
+  top: 50%;
+  left: 1%;
+  transform: translateY(-50%);
+}
+
+.wd-player-modal__visualizer-badge--right {
+  top: 50%;
+  right: 1%;
+  transform: translateY(-50%);
+}
+
+.wd-player-modal__visualizer-badge--bottom {
+  bottom: 3%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .wd-player-modal__art-frame {
-  width: min(100%, 360px);
+  width: 100%;
   padding: clamp(var(--cg-space-2xs), 1vw, var(--cg-space-xs));
   border-radius: calc(var(--cg-radius-md) * 1.05);
   border: 1px solid rgba(156, 7, 5, 0.2);
@@ -888,6 +954,10 @@
   width: 100%;
   height: auto;
   border-radius: calc(var(--cg-radius-sm) * 1.2);
+}
+
+.wd-player-modal__art > p {
+  margin: 0;
 }
 
 .wd-player-modal__audio {
@@ -923,6 +993,31 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.48rem;
+}
+
+@media (max-width: 640px) {
+  .wd-player-modal__visualizer {
+    width: min(100%, 340px);
+  }
+
+  .wd-player-modal__visualizer-core {
+    width: min(58%, 13rem);
+  }
+
+  .wd-player-modal__visualizer-badge--left,
+  .wd-player-modal__visualizer-badge--right {
+    top: auto;
+    bottom: 17%;
+    transform: none;
+  }
+
+  .wd-player-modal__visualizer-badge--left {
+    left: 5%;
+  }
+
+  .wd-player-modal__visualizer-badge--right {
+    right: 5%;
+  }
 }
 
 .wd-player-modal__queue ol {

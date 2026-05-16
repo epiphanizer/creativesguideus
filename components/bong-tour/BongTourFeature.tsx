@@ -191,6 +191,7 @@ const musicPosters = [
   {
     id: "score-joint-queen",
     title: "Joint Queen",
+    playerTarget: "joint-queen",
     tagline: "Psych-funk swagger for the Comedy Store takeover.",
     description:
       "Walls/Devine lace fuzz bass with riot brass to score the writers' first smoke-fueled victory. The cue keeps the satire sharp even while the room spins.",
@@ -202,6 +203,7 @@ const musicPosters = [
   {
     id: "score-stash-daddy",
     title: "Stash Daddy",
+    playerTarget: "stash-daddy",
     tagline: "Sunset backroom heist groove with neon menace.",
     description:
       "A swaggering low-end march that follows the C lister ushering everyone backstage. Analog pulses mirror the industry handshakes that always carry a hook.",
@@ -213,6 +215,7 @@ const musicPosters = [
   {
     id: "score-space-cruiser",
     title: "Space Cruiser",
+    playerTarget: "space-cruiser",
     tagline: "Diaspora dreamscape for the Ganges finale.",
     description:
       "Shimmering pads, processed tanpura, and choirs blur time as the bong completes its circuit back to the river. The cue lets the myth breathe before the sequel chase.",
@@ -353,6 +356,15 @@ export function BongTourFeature() {
                     <li key={highlight}>{highlight}</li>
                   ))}
                 </ul>
+                <div className="bt-music__actions">
+                  <Button
+                    as="a"
+                    href={`/walls-devine?player=${poster.playerTarget}#walls-devine-listening-room`}
+                    className="bt-button bt-button--outline"
+                  >
+                    Open in modular player
+                  </Button>
+                </div>
                 <div className="bt-music__credit">
                   <span>
                     Score by <a href="/#music">Walls/Devine</a>

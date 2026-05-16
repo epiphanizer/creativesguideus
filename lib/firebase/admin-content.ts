@@ -1,5 +1,5 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { getBytes, listAll, ref, uploadString } from "firebase/storage";
+import { deleteObject, getBytes, listAll, ref, uploadString } from "firebase/storage";
 
 import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData } from "@/lib/admin/types";
 
@@ -53,6 +53,16 @@ function getMarkdownPreview(content: string) {
 
 function normalizeMarkdown(content: string) {
   return content.trimEnd() ? `${content.trimEnd()}\n` : "";
+}
+
+function createMarkdownFileRecord(collection: AdminMarkdownCollection, slug: string, content: string) {
+  return {
+    slug,
+    title: getMarkdownTitle(content, `${slug}.md`),
+    filePath: getStoragePath(collection, slug),
+    content,
+    preview: getMarkdownPreview(content)
+  } satisfies AdminMarkdownFile;
 }
 
 async function readMarkdownCollection(collection: AdminMarkdownCollection) {
@@ -114,6 +124,10 @@ function updateMarkdownCollection(
     : [...files, nextFile];
 
   return nextFiles.sort((left, right) => left.slug.localeCompare(right.slug));
+}
+
+function removeMarkdownCollectionFile(files: AdminMarkdownFile[], slug: string) {
+  return files.filter((file) => file.slug !== slug);
 }
 
 export function isActiveAdminProfile(profile: AdminUserProfile | null) {
@@ -187,13 +201,30 @@ export async function updateFirebaseAdminMarkdownFile(collection: AdminMarkdownC
     contentType: "text/markdown; charset=utf-8"
   });
 
-  return {
-    slug,
-    title: getMarkdownTitle(normalizedContent, `${slug}.md`),
-    filePath: getStoragePath(collection, slug),
-    content: normalizedContent,
-    preview: getMarkdownPreview(normalizedContent)
-  } satisfies AdminMarkdownFile;
+  return createMarkdownFileRecord(collection, slug, normalizedContent);
+}
+
+export async function renameFirebaseAdminMarkdownFile(
+  collection: AdminMarkdownCollection,
+  currentSlug: string,
+  nextSlug: string,
+  content: string
+) {
+  const nextFile = await updateFirebaseAdminMarkdownFile(collection, nextSlug, content);
+
+  if (currentSlug !== nextSlug) {
+    await deleteFirebaseAdminMarkdownFile(collection, currentSlug);
+  }
+
+  return nextFile;
+}
+
+export async function deleteFirebaseAdminMarkdownFile(collection: AdminMarkdownCollection, slug: string) {
+  if (!firebaseStorage) {
+    throw new Error("Firebase Storage is not initialized for this Firebase project.");
+  }
+
+  await deleteObject(ref(firebaseStorage, getStoragePath(collection, slug)));
 }
 
 export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdminData): Promise<WallsDevineAdminData> {
@@ -243,5 +274,19 @@ export function replaceAdminMarkdownFile(
   return {
     ...data,
     journalEntries: updateMarkdownCollection(data.journalEntries, nextFile)
+  } satisfies WallsDevineAdminData;
+}
+
+export function removeAdminMarkdownFile(data: WallsDevineAdminData, collection: AdminMarkdownCollection, slug: string) {
+  if (collection === "instagram-posts") {
+    return {
+      ...data,
+      instagramDrafts: removeMarkdownCollectionFile(data.instagramDrafts, slug)
+    } satisfies WallsDevineAdminData;
+  }
+
+  return {
+    ...data,
+    journalEntries: removeMarkdownCollectionFile(data.journalEntries, slug)
   } satisfies WallsDevineAdminData;
 }
