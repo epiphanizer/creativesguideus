@@ -102,9 +102,9 @@
 
 .wd-hero__note-stack {
   display: grid;
-  gap: clamp(0.75rem, 1.8vh, 1.05rem);
+  gap: clamp(0.85rem, 2vh, 1.18rem);
   width: 100%;
-  max-width: 39rem;
+  max-width: 41rem;
 }
 
 .wd-hero__letter,
@@ -112,7 +112,7 @@
   position: relative;
   display: grid;
   gap: clamp(0.7rem, 1.8vh, 1rem);
-  padding: clamp(var(--cg-space-md), 2.2vw, var(--cg-space-lg));
+  padding: clamp(var(--cg-space-md), 2.5vw, var(--cg-space-xl));
   border: 1px solid rgba(156, 7, 5, 0.22);
   border-radius: calc(var(--cg-radius-md) * 1.06);
   background:
@@ -128,7 +128,7 @@
 }
 
 .wd-hero__journal {
-  max-width: min(100%, 31rem);
+  max-width: min(100%, 33rem);
   justify-self: end;
 }
 
@@ -169,7 +169,7 @@
 .wd-hero__letter-kicker,
 .wd-hero__letter-signoff,
 .wd-hero__letter-postscript-label,
-.wd-hero__letter-quote figcaption {
+.wd-hero__letter-quote-source {
   margin: 0;
   font-size: 0.7rem;
   letter-spacing: 0.18em;
@@ -188,9 +188,9 @@
 
 .wd-hero__letter-body {
   margin: 0;
-  max-width: 33ch;
+  max-width: 34ch;
   font-family: "Cormorant Garamond", var(--cg-font-serif);
-  font-size: clamp(1.34rem, 1.2vw + 1.02rem, 1.72rem);
+  font-size: clamp(1.4rem, 1.3vw + 1.02rem, 1.82rem);
   line-height: 1.26;
   letter-spacing: 0.01em;
   color: rgba(27, 21, 21, 0.92);
@@ -201,10 +201,13 @@
   flex-wrap: wrap;
   gap: var(--cg-space-sm);
   padding-top: 0.15rem;
+  justify-content: center;
+  justify-self: center;
 }
 
 .wd-hero__letter-cta {
-  min-width: clamp(14.2rem, 22vw, 16.5rem);
+  min-width: clamp(15rem, 24vw, 17.8rem);
+  justify-self: center;
 }
 
 .wd-hero__letter-postscript {
@@ -221,9 +224,21 @@
   text-align: right;
 }
 
+.wd-hero__journal-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  padding-top: 0.25rem;
+}
+
+.wd-hero__journal-control {
+  min-width: 0;
+}
+
 .wd-hero__letter-quote-rotator {
   position: relative;
-  min-height: 6.4rem;
+  min-height: 7rem;
 }
 
 .wd-hero__letter-quote {
@@ -235,8 +250,14 @@
   margin: 0;
   opacity: 0;
   transform: translateY(6px);
-  animation: wd-hero-letter-quote-rotate var(--wd-letter-quote-duration, 60s) linear infinite;
-  animation-delay: var(--wd-letter-quote-delay, 0s);
+  pointer-events: none;
+  transition: opacity 360ms ease, transform 360ms ease;
+}
+
+.wd-hero__letter-quote[data-active="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .wd-hero__journal .wd-hero__letter-quote {
@@ -254,12 +275,55 @@
 }
 
 .wd-hero__letter-quote figcaption {
-  font-size: 0.64rem;
-  color: rgba(108, 5, 8, 0.68);
+  display: grid;
+  gap: 0.18rem;
+  justify-items: end;
+  text-align: right;
 }
 
 .wd-hero__journal .wd-hero__letter-quote figcaption {
   justify-self: end;
+}
+
+.wd-hero__letter-quote-source {
+  font-size: 0.62rem;
+  color: rgba(108, 5, 8, 0.7);
+}
+
+.wd-hero__letter-quote-author {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-self: end;
+  font-family: "Cormorant Garamond", var(--cg-font-serif);
+  font-size: clamp(1rem, 0.35vw + 0.92rem, 1.18rem);
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: rgba(95, 63, 66, 0.7);
+  text-shadow: 0 0 0 rgba(95, 63, 66, 0.16);
+}
+
+.wd-hero__letter-quote-author::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.14rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(95, 63, 66, 0.22), rgba(95, 63, 66, 0));
+  opacity: 0.52;
+}
+
+.wd-hero__letter {
+  justify-items: center;
+  text-align: center;
+}
+
+.wd-hero__letter-kicker,
+.wd-hero__letter-body {
+  justify-self: center;
+  text-align: center;
 }
 
 .wd-hero__letter-signoff {
@@ -2456,13 +2520,13 @@
 
 .wd-player-dock {
   position: fixed;
-  top: calc(var(--cg-header-height) + clamp(0.6rem, 1.8vw, 1rem));
+  top: auto;
   right: clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
-  bottom: auto;
+  bottom: clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
   z-index: 72;
   display: grid;
   gap: var(--cg-space-sm);
-  width: min(92vw, 24rem);
+  width: min(92vw, 24.5rem);
   padding: clamp(var(--cg-space-sm), 2vw, var(--cg-space-md));
   border: 1px solid rgba(156, 7, 5, 0.24);
   border-radius: calc(var(--cg-radius-md) * 1.2);
@@ -3184,8 +3248,9 @@
 @media (max-width: 640px) {
   .wd-player-dock {
     width: min(calc(100vw - 1rem), 22rem);
-    top: calc(var(--cg-header-height) + 0.5rem);
+    top: auto;
     right: 0.5rem;
+    bottom: 0.5rem;
   }
 
   .wd-player-modal__visualizer {
@@ -3715,7 +3780,8 @@
   }
 
   .wd-hero__copy {
-    width: min(100%, 40vw);
+    width: min(100%, 42vw);
+    max-width: 43rem;
     justify-self: end;
     margin-right: clamp(1rem, 8vw, 7rem);
   }
@@ -3751,11 +3817,11 @@
 
 .wd-hero__letter-body {
   max-width: 30ch;
-  font-size: clamp(1.22rem, 0.7vw + 1.02rem, 1.56rem);
+  font-size: clamp(1.28rem, 0.9vw + 1.02rem, 1.66rem);
 }
 
 .wd-hero__letter-quote-rotator {
-  min-height: 6rem;
+  min-height: 6.8rem;
 }
 
 .wd-hero__cover {
@@ -3842,9 +3908,10 @@
     opacity: 1;
     transform: none;
     animation: none;
+    transition: none;
   }
 
-  .wd-hero__letter-quote:not(:first-child) {
+  .wd-hero__letter-quote[data-active="false"] {
     display: none;
   }
 
@@ -3870,8 +3937,9 @@
 
 /* Keep the listening-room dock available but less intrusive in the hero frame. */
 .wd-page .wd-player-dock {
-  top: calc(var(--cg-header-height) + 0.35rem);
-  right: clamp(0.35rem, 1vw, 0.85rem);
-  width: min(88vw, 18.5rem);
-  opacity: 0.95;
+  top: auto;
+  right: clamp(0.5rem, 1.25vw, 1rem);
+  bottom: clamp(0.75rem, 2vw, 1.35rem);
+  width: min(92vw, 21rem);
+  opacity: 0.98;
 }

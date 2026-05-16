@@ -1048,87 +1048,208 @@ export function BongTourFeature() {
                 </div>
 
                 <div className="bt-room-modal__body">
-                  <div className="bt-room-modal__chips" aria-label="Room highlights">
-                    {activeRoom.chips.map((chip) => (
-                      <span key={chip}>{chip}</span>
-                    ))}
-                  </div>
+                  {isCollectorRoom ? (
+                    <div className="bt-room-modal__collector-shell">
+                      <aside className="bt-room-modal__collector-art">
+                        <div className="bt-room-modal__collector-frame">
+                          <Image src={posterImage} alt="Bong Tour collector room poster artifact" sizes="(max-width: 980px) 84vw, 30vw" />
+                        </div>
 
-                  {activeRoom.beats?.length ? (
-                    <ul className="bt-room-modal__beats">
-                      {activeRoom.beats.map((beat) => (
-                        <li key={beat}>{beat}</li>
-                      ))}
-                    </ul>
-                  ) : null}
+                        <article className="bt-room-modal__collector-card">
+                          <p className="bt-room-modal__challenge-label">Collector note</p>
+                          <p>
+                            Open this room like a cabinet, not a feed. Each move should reveal the artifact, the challenge, and the hidden note as one collector action.
+                          </p>
+                        </article>
 
-                  {activeRoom.challenge ? (
-                    <div className="bt-room-modal__challenge-shell">
-                      <section className="bt-room-modal__challenge-card">
-                        <p className="bt-room-modal__challenge-label">Challenge</p>
-                        <h3>{activeRoom.challenge.label}</h3>
-                        <p>{activeRoom.challenge.prompt}</p>
-                      </section>
+                        <article className="bt-room-modal__collector-card">
+                          <p className="bt-room-modal__challenge-label">Archive drawers</p>
+                          <div className="bt-room-modal__collector-drawer-list">
+                            {collectibleTiles.map((tile) => (
+                              <button
+                                key={tile.slug}
+                                type="button"
+                                className="bt-room-modal__collector-drawer"
+                                onClick={() => setActiveRoom(tile.room)}
+                              >
+                                <span>{tile.badge}</span>
+                                <strong>{tile.title}</strong>
+                                <em>{tile.reward}</em>
+                              </button>
+                            ))}
+                          </div>
+                        </article>
+                      </aside>
 
-                      <RoomChallengeExperience
-                        challenge={activeRoom.challenge}
-                        roomSlug={activeRoom.slug}
-                        onUnlock={() => setChallengeUnlocked(true)}
-                      />
+                      <div className="bt-room-modal__collector-experience">
+                        <div className="bt-room-modal__chips" aria-label="Room highlights">
+                          {activeRoom.chips.map((chip) => (
+                            <span key={chip}>{chip}</span>
+                          ))}
+                        </div>
 
-                      <section
-                        className={`bt-room-modal__hidden-note${challengeUnlocked ? " bt-room-modal__hidden-note--unlocked" : ""}`}
-                        aria-live="polite"
-                      >
-                        <p className="bt-room-modal__challenge-label">{activeRoom.challenge.noteLabel ?? "Hidden note"}</p>
-                        <h3>{challengeUnlocked ? activeRoom.challenge.noteTitle : "Locked until the challenge lands"}</h3>
-                        <p>
-                          {challengeUnlocked
-                            ? activeRoom.challenge.noteBody
-                            : "Beat the game to reveal the hidden note for this collectible chapter."}
-                        </p>
-                      </section>
+                        {activeRoom.beats?.length ? (
+                          <ul className="bt-room-modal__beats">
+                            {activeRoom.beats.map((beat) => (
+                              <li key={beat}>{beat}</li>
+                            ))}
+                          </ul>
+                        ) : null}
+
+                        {activeRoom.challenge ? (
+                          <div className="bt-room-modal__challenge-shell">
+                            <section className="bt-room-modal__challenge-card">
+                              <p className="bt-room-modal__challenge-label">Challenge</p>
+                              <h3>{activeRoom.challenge.label}</h3>
+                              <p>{activeRoom.challenge.prompt}</p>
+                            </section>
+
+                            <RoomChallengeExperience
+                              challenge={activeRoom.challenge}
+                              roomSlug={activeRoom.slug}
+                              onUnlock={() => setChallengeUnlocked(true)}
+                            />
+
+                            <section
+                              className={`bt-room-modal__hidden-note${challengeUnlocked ? " bt-room-modal__hidden-note--unlocked" : ""}`}
+                              aria-live="polite"
+                            >
+                              <p className="bt-room-modal__challenge-label">{activeRoom.challenge.noteLabel ?? "Hidden note"}</p>
+                              <h3>{challengeUnlocked ? activeRoom.challenge.noteTitle : "Locked until the challenge lands"}</h3>
+                              <p>
+                                {challengeUnlocked
+                                  ? activeRoom.challenge.noteBody
+                                  : "Beat the game to reveal the hidden note for this collectible chapter."}
+                              </p>
+                            </section>
+                          </div>
+                        ) : null}
+
+                        <div className="bt-room-modal__actions">
+                          {activeRoom.actions.map((action) => (
+                            action.roomKey ? (
+                              <Button
+                                key={action.label}
+                                type="button"
+                                className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
+                                onClick={() => setActiveRoom(portalRooms[action.roomKey ?? "collector"])}
+                              >
+                                {action.label}
+                              </Button>
+                            ) : (
+                              <Button
+                                key={action.label}
+                                as="a"
+                                href={action.href ?? "/"}
+                                className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
+                              >
+                                {action.label}
+                              </Button>
+                            )
+                          ))}
+                        </div>
+
+                        {activeRoom.signup ? (
+                          <div className="bt-room-modal__signup-shell">
+                            <EcosystemSignupForm
+                              className="bt-room-modal__signup"
+                              source={activeRoom.signup.source}
+                              interest={activeRoom.signup.interest}
+                              submitLabel={activeRoom.signup.submitLabel}
+                              successMessage={activeRoom.signup.successMessage}
+                              note={activeRoom.signup.note}
+                              compact
+                              emailOnly
+                            />
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
-                  ) : null}
+                  ) : (
+                    <>
+                      <div className="bt-room-modal__chips" aria-label="Room highlights">
+                        {activeRoom.chips.map((chip) => (
+                          <span key={chip}>{chip}</span>
+                        ))}
+                      </div>
 
-                  <div className="bt-room-modal__actions">
-                    {activeRoom.actions.map((action) => (
-                      action.roomKey ? (
-                        <Button
-                          key={action.label}
-                          type="button"
-                          className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
-                          onClick={() => setActiveRoom(portalRooms[action.roomKey ?? "collector"])}
-                        >
-                          {action.label}
-                        </Button>
-                      ) : (
-                        <Button
-                          key={action.label}
-                          as="a"
-                          href={action.href ?? "/"}
-                          className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
-                        >
-                          {action.label}
-                        </Button>
-                      )
-                    ))}
-                  </div>
+                      {activeRoom.beats?.length ? (
+                        <ul className="bt-room-modal__beats">
+                          {activeRoom.beats.map((beat) => (
+                            <li key={beat}>{beat}</li>
+                          ))}
+                        </ul>
+                      ) : null}
 
-                  {activeRoom.signup ? (
-                    <div className="bt-room-modal__signup-shell">
-                      <EcosystemSignupForm
-                        className="bt-room-modal__signup"
-                        source={activeRoom.signup.source}
-                        interest={activeRoom.signup.interest}
-                        submitLabel={activeRoom.signup.submitLabel}
-                        successMessage={activeRoom.signup.successMessage}
-                        note={activeRoom.signup.note}
-                        compact
-                        emailOnly
-                      />
-                    </div>
-                  ) : null}
+                      {activeRoom.challenge ? (
+                        <div className="bt-room-modal__challenge-shell">
+                          <section className="bt-room-modal__challenge-card">
+                            <p className="bt-room-modal__challenge-label">Challenge</p>
+                            <h3>{activeRoom.challenge.label}</h3>
+                            <p>{activeRoom.challenge.prompt}</p>
+                          </section>
+
+                          <RoomChallengeExperience
+                            challenge={activeRoom.challenge}
+                            roomSlug={activeRoom.slug}
+                            onUnlock={() => setChallengeUnlocked(true)}
+                          />
+
+                          <section
+                            className={`bt-room-modal__hidden-note${challengeUnlocked ? " bt-room-modal__hidden-note--unlocked" : ""}`}
+                            aria-live="polite"
+                          >
+                            <p className="bt-room-modal__challenge-label">{activeRoom.challenge.noteLabel ?? "Hidden note"}</p>
+                            <h3>{challengeUnlocked ? activeRoom.challenge.noteTitle : "Locked until the challenge lands"}</h3>
+                            <p>
+                              {challengeUnlocked
+                                ? activeRoom.challenge.noteBody
+                                : "Beat the game to reveal the hidden note for this collectible chapter."}
+                            </p>
+                          </section>
+                        </div>
+                      ) : null}
+
+                      <div className="bt-room-modal__actions">
+                        {activeRoom.actions.map((action) => (
+                          action.roomKey ? (
+                            <Button
+                              key={action.label}
+                              type="button"
+                              className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
+                              onClick={() => setActiveRoom(portalRooms[action.roomKey ?? "collector"])}
+                            >
+                              {action.label}
+                            </Button>
+                          ) : (
+                            <Button
+                              key={action.label}
+                              as="a"
+                              href={action.href ?? "/"}
+                              className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
+                            >
+                              {action.label}
+                            </Button>
+                          )
+                        ))}
+                      </div>
+
+                      {activeRoom.signup ? (
+                        <div className="bt-room-modal__signup-shell">
+                          <EcosystemSignupForm
+                            className="bt-room-modal__signup"
+                            source={activeRoom.signup.source}
+                            interest={activeRoom.signup.interest}
+                            submitLabel={activeRoom.signup.submitLabel}
+                            successMessage={activeRoom.signup.successMessage}
+                            note={activeRoom.signup.note}
+                            compact
+                            emailOnly
+                          />
+                        </div>
+                      ) : null}
+                    </>
+                  )}
                 </div>
               </div>
             </div>,

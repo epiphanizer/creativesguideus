@@ -552,6 +552,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const activePosterAlt = `${activeTrack.title} cover artwork`;
   const activeTrackMeta = `Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase} · ${activeTrack.duration}`;
   const activeVisualizerTheme = trackVisualizerThemes[activeTrack.trackNumber] ?? trackVisualizerThemes[1];
+  const isDockVisible = isCollapsed && showDockWhenCollapsed && !isDismissed;
 
   if (typeof document !== "undefined" && !audioPortalHostRef.current) {
     const audioHost = document.createElement("div");
@@ -704,7 +705,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
 
   useLayoutEffect(() => {
     const audioHost = audioPortalHostRef.current;
-    const targetSlot = isOpen ? modalAudioSlotRef.current : dockAudioSlotRef.current;
+    const targetSlot = isOpen ? modalAudioSlotRef.current : isDockVisible ? dockAudioSlotRef.current : null;
 
     if (!audioHost || !targetSlot) {
       return;
@@ -717,7 +718,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
         targetSlot.removeChild(audioHost);
       }
     };
-  }, [isOpen]);
+  }, [isDockVisible, isOpen]);
 
   async function ensureAudioVisualizer() {
     const audioElement = audioRef.current;
@@ -1081,7 +1082,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                   )
                 : null}
 
-              {isCollapsed && showDockWhenCollapsed && !isDismissed ? (
+              {isDockVisible ? (
                 <div
                   ref={dockRef}
                   className={cx("wd-player-dock", isDraggingDock && "wd-player-dock--dragging")}

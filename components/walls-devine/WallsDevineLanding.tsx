@@ -1,6 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
-import type { CSSProperties } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -192,28 +194,106 @@ const instagramGrid: GridTile[] = [
   })
 ];
 
-const collectorLetterQuotes = [
+type CollectorLetterQuote = {
+  source: string;
+  author: string;
+  text: string;
+};
+
+const collectorLetterQuotes: readonly CollectorLetterQuote[] = [
   {
     source: "Joint Queen journal",
+    author: "Terry Devine",
     text: "Joint Queen needed to feel like an entrance cue with authority and swagger, not just a groove loop."
   },
   {
     source: "Poetry journal",
+    author: "John Walls",
     text: "Poetry is the inward core of Volume 1: language first, ornament second."
   },
   {
     source: "Home journal",
+    author: "John Walls",
     text: "Home is the grounded chapter that lets the project breathe between heavier passages."
   },
   {
     source: "Decay journal",
+    author: "Terry Devine",
     text: "Decay is meant to sound like memory collapsing and reforming at the same time."
   }
-] as const;
+];
 
 const collectorQuoteIntervalSeconds = 15;
 
 export function WallsDevineLanding() {
+  const [activeQuoteIndex, setActiveQuoteIndex] = useState(0);
+  const [isQuotePaused, setIsQuotePaused] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
+
+  const activeQuote = collectorLetterQuotes[activeQuoteIndex] ?? collectorLetterQuotes[0];
+
+  useEffect(() => {
+    if (isQuotePaused) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setActiveQuoteIndex((currentIndex) => (currentIndex + 1) % collectorLetterQuotes.length);
+    }, collectorQuoteIntervalSeconds * 1000);
+
+    return () => window.clearTimeout(timer);
+  }, [activeQuoteIndex, isQuotePaused]);
+
+  useEffect(() => {
+    if (shareFeedback === "idle") {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setShareFeedback("idle");
+    }, 1800);
+
+    return () => window.clearTimeout(timer);
+  }, [shareFeedback]);
+
+  function handleNextQuote() {
+    setActiveQuoteIndex((currentIndex) => (currentIndex + 1) % collectorLetterQuotes.length);
+  }
+
+  async function handleShareQuote() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const browserNavigator = window.navigator;
+    const shareUrl = new URL("/walls-devine", window.location.origin).toString();
+    const shareText = `"${activeQuote.text}"\n\n${activeQuote.author} · ${activeQuote.source}`;
+
+    if (typeof browserNavigator.share === "function") {
+      try {
+        await browserNavigator.share({
+          title: `${activeQuote.source} · Walls/Devine Volume 1`,
+          text: shareText,
+          url: shareUrl
+        });
+        setShareFeedback("shared");
+      } catch {
+        return;
+      }
+
+      return;
+    }
+
+    if (browserNavigator.clipboard?.writeText) {
+      try {
+        await browserNavigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+        setShareFeedback("copied");
+      } catch {
+        setShareFeedback("idle");
+      }
+    }
+  }
+
   return (
     <>
       <SectionShell id="hero" labelledBy="walls-devine-title" variant="hero" className="wd-hero-shell" innerClassName="wd-hero">
@@ -243,6 +323,58 @@ export function WallsDevineLanding() {
           <div className="wd-hero__copy">
 
             <div className="wd-hero__note-stack">
+              <div className="wd-hero__journal" aria-label="Rotating journal entries from Volume 1">
+                <div className="wd-hero__letter-postscript">
+                  <span className="wd-hero__letter-postscript-label">From the journals</span>
+                  <div className="wd-hero__letter-quote-rotator" aria-live="polite">
+                    {collectorLetterQuotes.map((quote, index) => (
+                      <figure
+                        key={quote.source}
+                        className="wd-hero__letter-quote"
+                        data-active={index === activeQuoteIndex}
+                        aria-hidden={index !== activeQuoteIndex}
+                      >
+                        <blockquote>{quote.text}</blockquote>
+                        <figcaption>
+                          <span className="wd-hero__letter-quote-source">{quote.source}</span>
+                          <span className="wd-hero__letter-quote-author">{quote.author}</span>
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+
+                  <div className="wd-hero__journal-controls" aria-label="Journal controls">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="wd-hero__journal-control"
+                      onClick={() => setIsQuotePaused((currentState) => !currentState)}
+                    >
+                      {isQuotePaused ? "Resume" : "Pause"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="wd-hero__journal-control"
+                      onClick={handleNextQuote}
+                    >
+                      Next entry
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="wd-hero__journal-control"
+                      onClick={handleShareQuote}
+                    >
+                      {shareFeedback === "shared" ? "Shared" : shareFeedback === "copied" ? "Copied" : "Share entry"}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
               <div className="wd-hero__letter" aria-label="Collector note from John Walls and Terry Devine">
                 <p className="wd-hero__letter-kicker">Dear Collector,</p>
                 <p className="wd-hero__letter-body">
@@ -254,28 +386,6 @@ export function WallsDevineLanding() {
                   <Button as="a" href="#walls-devine-signal-room" variant="primary" className="wd-hero__letter-cta">
                     Jump to the Signal Room
                   </Button>
-                </div>
-              </div>
-
-              <div className="wd-hero__journal" aria-label="Rotating journal entries from Volume 1">
-                <div className="wd-hero__letter-postscript">
-                  <span className="wd-hero__letter-postscript-label">From the journals</span>
-                  <div
-                    className="wd-hero__letter-quote-rotator"
-                    aria-live="polite"
-                    style={{ "--wd-letter-quote-duration": `${collectorLetterQuotes.length * collectorQuoteIntervalSeconds}s` } as CSSProperties}
-                  >
-                    {collectorLetterQuotes.map((quote, index) => (
-                      <figure
-                        key={quote.source}
-                        className="wd-hero__letter-quote"
-                        style={{ "--wd-letter-quote-delay": `${index * collectorQuoteIntervalSeconds}s` } as CSSProperties}
-                      >
-                        <blockquote>{quote.text}</blockquote>
-                        <figcaption>{quote.source}</figcaption>
-                      </figure>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>
