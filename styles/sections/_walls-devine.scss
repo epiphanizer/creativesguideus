@@ -105,6 +105,8 @@
   display: grid;
   gap: var(--cg-space-sm);
   width: 100%;
+  justify-items: center;
+  margin-inline: auto;
 }
 
 .wd-hero__letter,
@@ -194,8 +196,8 @@
   margin: 0;
   max-width: 38ch;
   font-family: "Cormorant Garamond", var(--cg-font-serif);
-  font-size: clamp(0.95rem, 0.28vw + 0.88rem, 1.08rem);
-  line-height: 1.55;
+  font-size: clamp(0.9rem, 0.22vw + 0.84rem, 1rem);
+  line-height: 1.48;
   letter-spacing: 0.01em;
   color: rgba(27, 21, 21, 0.92);
   white-space: pre-line;
@@ -205,9 +207,17 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--cg-space-sm);
-  padding-top: 0.15rem;
+  padding-top: 0.05rem;
   justify-content: center;
   justify-self: center;
+}
+
+.wd-hero__letter-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
 }
 
 .wd-hero__letter-cta {
@@ -215,10 +225,14 @@
   justify-self: center;
 }
 
+.wd-hero__signal-link {
+  min-width: 0;
+}
+
 .wd-hero__letter-postscript {
   display: grid;
-  gap: 0.65rem;
-  padding-top: 0.2rem;
+  gap: 0.45rem;
+  padding-top: 0.1rem;
   border-top: 1px solid rgba(156, 7, 5, 0.14);
 }
 
@@ -233,17 +247,30 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.45rem;
-  padding-top: 0.25rem;
+  gap: 0.3rem;
+  padding-top: 0.12rem;
 }
 
 .wd-hero__journal-control {
   min-width: 0;
 }
 
+.wd-hero__journal-control--icon {
+  width: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
+  padding: 0;
+  border-radius: 999px;
+}
+
+.wd-hero__journal-control--icon svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
 .wd-hero__letter-quote-rotator {
   position: relative;
-  min-height: 7rem;
+  min-height: 6.3rem;
 }
 
 .wd-hero__letter-quote {
@@ -4157,7 +4184,7 @@
 }
 
 .wd-hero__copy {
-  justify-items: end;
+  justify-items: center;
 }
 
 @media (min-width: 1024px) {
@@ -4169,7 +4196,7 @@
   .wd-hero__copy {
     width: 100%;
     max-width: none;
-    justify-self: end;
+    justify-self: center;
     margin-right: 0;
   }
 }
@@ -4235,11 +4262,11 @@
 
 .wd-hero__letter-body {
   max-width: 30ch;
-  font-size: clamp(1.16rem, 0.78vw + 0.96rem, 1.5rem);
+  font-size: clamp(1.02rem, 0.58vw + 0.88rem, 1.28rem);
 }
 
 .wd-hero__letter-quote-rotator {
-  min-height: 6rem;
+  min-height: 5.35rem;
 }
 
 .wd-hero__cover {

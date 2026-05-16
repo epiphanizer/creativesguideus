@@ -3,12 +3,12 @@
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import { useEffect, useState } from "react";
+import { FiCheck, FiPause, FiPlay, FiShare2, FiSkipForward } from "react-icons/fi";
 
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { songPostCards } from "@/components/walls-devine/content";
-import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
 import { getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
 import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
@@ -226,8 +226,6 @@ const collectorLetterQuotes: readonly CollectorLetterQuote[] = [
 ];
 
 const collectorQuoteIntervalSeconds = 15;
-const legacyCollectorHeroBody =
-  "Join the private collector email for first-listen links, studio-journal fragments, artifact drop notes, and release-night signals as each room opens across Volume 1.";
 const heartfeltCollectorHeroBody =
   "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine";
 const wallsDevineBookingIntakeHref = `/contact?${new URLSearchParams({
@@ -241,7 +239,7 @@ export function WallsDevineLanding() {
   const [isQuotePaused, setIsQuotePaused] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
   const [collectorHeroNote, setCollectorHeroNote] = useState(defaultWallsDevineCollectorHeroNote);
-  const collectorHeroBody = collectorHeroNote.body.trim() === legacyCollectorHeroBody ? heartfeltCollectorHeroBody : collectorHeroNote.body;
+  const collectorHeroBody = collectorHeroNote.body.trim() === defaultWallsDevineCollectorHeroNote.body.trim() ? heartfeltCollectorHeroBody : collectorHeroNote.body;
 
   const activeQuote = collectorLetterQuotes[activeQuoteIndex] ?? collectorLetterQuotes[0];
 
@@ -353,31 +351,6 @@ export function WallsDevineLanding() {
               <div className="wd-hero__letter" aria-label="Personal collector note for Walls/Devine Volume 1">
                 <p className="wd-hero__letter-kicker">{collectorHeroNote.salutation}</p>
                 <p className="wd-hero__letter-body">{collectorHeroBody}</p>
-
-                <div className="wd-hero__letter-actions">
-                  <WallsDevineCollectorAccess
-                    source="walls-devine-hero"
-                    interest="Walls Devine private collector email"
-                    cardTitle="A private note from Terry"
-                    cardDescription="If the record meets you where you are, come into the Signal Room and listen with us chapter by chapter."
-                    benefits={["First-listen links", "Journal fragments", "Artifact drop notes"]}
-                    modalTitle="Enter the Signal Room"
-                    modalDescription={legacyCollectorHeroBody}
-                    signupEyebrow="Collector access includes"
-                    signupTitle="What arrives first"
-                    signupDescription={legacyCollectorHeroBody}
-                    submitLabel="Request Signal Room access"
-                    successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector note."
-                    note="High-signal only. Reserved for first listens, journal fragments, artifact drops, and release-night updates."
-                    roomOverlayScript="Collector Letter"
-                    roomOverlaySubtitle="Private first-listen access"
-                    renderTrigger={(openCollectorLetter) => (
-                      <Button type="button" variant="primary" className="wd-hero__letter-cta" onClick={openCollectorLetter}>
-                        Enter the listening room
-                      </Button>
-                    )}
-                  />
-                </div>
               </div>
 
               <div className="wd-hero__journal" aria-label="Rotating journal entries from Volume 1">
@@ -405,28 +378,34 @@ export function WallsDevineLanding() {
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="wd-hero__journal-control"
+                      className="wd-hero__journal-control wd-hero__journal-control--icon"
                       onClick={() => setIsQuotePaused((currentState) => !currentState)}
+                      aria-label={isQuotePaused ? "Resume journal rotation" : "Pause journal rotation"}
+                      title={isQuotePaused ? "Resume" : "Pause"}
                     >
-                      {isQuotePaused ? "Resume" : "Pause"}
+                      {isQuotePaused ? <FiPlay aria-hidden="true" /> : <FiPause aria-hidden="true" />}
                     </Button>
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="wd-hero__journal-control"
+                      className="wd-hero__journal-control wd-hero__journal-control--icon"
                       onClick={handleNextQuote}
+                      aria-label="Next journal entry"
+                      title="Next entry"
                     >
-                      Next entry
+                      <FiSkipForward aria-hidden="true" />
                     </Button>
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="wd-hero__journal-control"
+                      className="wd-hero__journal-control wd-hero__journal-control--icon"
                       onClick={handleShareQuote}
+                      aria-label={shareFeedback === "shared" ? "Journal entry shared" : shareFeedback === "copied" ? "Journal entry copied" : "Share journal entry"}
+                      title={shareFeedback === "shared" ? "Shared" : shareFeedback === "copied" ? "Copied" : "Share entry"}
                     >
-                      {shareFeedback === "shared" ? "Shared" : shareFeedback === "copied" ? "Copied" : "Share entry"}
+                      {shareFeedback === "shared" || shareFeedback === "copied" ? <FiCheck aria-hidden="true" /> : <FiShare2 aria-hidden="true" />}
                     </Button>
                   </div>
                 </div>
