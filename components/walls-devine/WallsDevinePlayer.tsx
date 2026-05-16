@@ -52,6 +52,18 @@ type PersistedPlayerState = {
   dockPosition?: PlayerDockPosition | null;
 };
 
+type PlayerAudioSurface = "dock" | "modal";
+
+type PendingAudioHandoff = {
+  target: PlayerAudioSurface;
+  trackSrc: string;
+  currentTime: number;
+  shouldResume: boolean;
+  volume: number;
+  muted: boolean;
+  playbackRate: number;
+};
+
 const playerQueryKeys = ["player", "song", "track", "slug"] as const;
 
 type PlayerQueryKey = (typeof playerQueryKeys)[number];
@@ -537,13 +549,16 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const deepLinkHandledRef = useRef(false);
   const trackedVisitRef = useRef<string | null>(null);
   const playerStateRestoredRef = useRef(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const dockAudioRef = useRef<HTMLAudioElement | null>(null);
+  const modalAudioRef = useRef<HTMLAudioElement | null>(null);
+  const pendingAudioHandoffRef = useRef<PendingAudioHandoff | null>(null);
   const dockRef = useRef<HTMLDivElement | null>(null);
   const dockPointerOffsetRef = useRef<PlayerDockPosition | null>(null);
   const visualizerCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const visualizerAudioElementRef = useRef<HTMLAudioElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const frequencyDataRef = useRef<VisualizerByteArray | null>(null);
   const waveformDataRef = useRef<VisualizerByteArray | null>(null);
@@ -554,6 +569,37 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const activePosterAlt = `${activeTrack.title} cover artwork`;
   const activeTrackMeta = `Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase} · ${activeTrack.duration}`;
   const activeVisualizerTheme = trackVisualizerThemes[activeTrack.trackNumber] ?? trackVisualizerThemes[1];
+
+  function getPlayerAudioElement(surface: PlayerAudioSurface) {
+    return surface === "modal" ? modalAudioRef.current : dockAudioRef.current;
+  }
+
+  function getVisibleAudioElement() {
+    if (isOpen) {
+      return modalAudioRef.current ?? dockAudioRef.current;
+    }
+
+    return dockAudioRef.current ?? modalAudioRef.current;
+  }
+
+  function queueAudioHandoff(target: PlayerAudioSurface) {
+    const audioElement = getVisibleAudioElement();
+
+    if (!audioElement) {
+      pendingAudioHandoffRef.current = null;
+      return;
+    }
+
+    pendingAudioHandoffRef.current = {
+      target,
+      trackSrc: activeSrc,
+      currentTime: audioElement.currentTime,
+      shouldResume: !audioElement.paused && !audioElement.ended,
+      volume: audioElement.volume,
+      muted: audioElement.muted,
+      playbackRate: audioElement.playbackRate
+    };
+  }
 
   function normalizePlayerTarget(value: string | null | undefined) {
     return (value ?? "")
@@ -697,7 +743,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }, [isDraggingDock]);
 
   async function ensureAudioVisualizer() {
-    const audioElement = audioRef.current;
+    const audioElement = modalAudioRef.current ?? getVisibleAudioElement();
 
     if (!audioElement) {
       return;
@@ -713,6 +759,15 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
       audioContextRef.current = new AudioContextConstructor();
     }
 
+    if (visualizerAudioElementRef.current && visualizerAudioElementRef.current !== audioElement) {
+      sourceNodeRef.current?.disconnect();
+      sourceNodeRef.current = null;
+      analyserRef.current?.disconnect();
+      analyserRef.current = null;
+      frequencyDataRef.current = null;
+      waveformDataRef.current = null;
+    }
+
     if (!sourceNodeRef.current || !analyserRef.current) {
       const analyser = audioContextRef.current.createAnalyser();
       analyser.fftSize = 256;
@@ -724,6 +779,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
       sourceNodeRef.current = source;
       analyserRef.current = analyser;
+      visualizerAudioElementRef.current = audioElement;
       frequencyDataRef.current = new Uint8Array(new ArrayBuffer(analyser.frequencyBinCount)) as VisualizerByteArray;
       waveformDataRef.current = new Uint8Array(new ArrayBuffer(analyser.fftSize)) as VisualizerByteArray;
     }
@@ -743,6 +799,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
     sourceNodeRef.current = null;
     analyserRef.current?.disconnect();
     analyserRef.current = null;
+    visualizerAudioElementRef.current = null;
     frequencyDataRef.current = null;
     waveformDataRef.current = null;
 
@@ -838,11 +895,84 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }, [isOpen]);
 
   useEffect(() => {
-    audioRef.current?.load();
+    getVisibleAudioElement()?.load();
   }, [activeSrc]);
 
   useEffect(() => {
-    const audioElement = audioRef.current;
+    const pendingHandoff = pendingAudioHandoffRef.current;
+
+    if (!pendingHandoff) {
+      return;
+    }
+
+    if (pendingHandoff.trackSrc !== activeSrc) {
+      pendingAudioHandoffRef.current = null;
+      return;
+    }
+
+    const targetAudioElement = getPlayerAudioElement(pendingHandoff.target);
+
+    if (!targetAudioElement) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const syncHandoff = async () => {
+      if (cancelled) {
+        return;
+      }
+
+      targetAudioElement.volume = pendingHandoff.volume;
+      targetAudioElement.muted = pendingHandoff.muted;
+      targetAudioElement.playbackRate = pendingHandoff.playbackRate;
+
+      if (Number.isFinite(pendingHandoff.currentTime)) {
+        const duration = Number.isFinite(targetAudioElement.duration) ? targetAudioElement.duration : Number.POSITIVE_INFINITY;
+        const nextTime = Math.max(0, Math.min(pendingHandoff.currentTime, Math.max(0, duration - 0.05)));
+
+        try {
+          targetAudioElement.currentTime = nextTime;
+        } catch {
+          targetAudioElement.currentTime = 0;
+        }
+      }
+
+      if (pendingHandoff.shouldResume) {
+        try {
+          await targetAudioElement.play();
+        } catch {
+          setIsPlaying(false);
+        }
+      } else {
+        targetAudioElement.pause();
+        setIsPlaying(false);
+      }
+
+      if (!cancelled && pendingAudioHandoffRef.current === pendingHandoff) {
+        pendingAudioHandoffRef.current = null;
+      }
+    };
+
+    if (targetAudioElement.readyState >= 1) {
+      void syncHandoff();
+      return;
+    }
+
+    const handleLoadedMetadata = () => {
+      void syncHandoff();
+    };
+
+    targetAudioElement.addEventListener("loadedmetadata", handleLoadedMetadata, { once: true });
+
+    return () => {
+      cancelled = true;
+      targetAudioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  }, [activeSrc, isCollapsed, isOpen]);
+
+  useEffect(() => {
+    const audioElement = getVisibleAudioElement();
 
     if (!audioElement) {
       return;
@@ -923,18 +1053,23 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }, []);
 
   function openPlayer(index: number) {
+    if (index === activeIndex) {
+      queueAudioHandoff("modal");
+    }
+
     setActiveIndex(index);
     setIsCollapsed(false);
     setIsOpen(true);
   }
 
   function reopenPlayer() {
+    queueAudioHandoff("modal");
     setIsCollapsed(false);
     setIsOpen(true);
   }
 
   async function playCurrentTrack() {
-    const audioElement = audioRef.current;
+    const audioElement = getVisibleAudioElement();
 
     if (!audioElement) {
       return;
@@ -948,7 +1083,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }
 
   function stopCurrentTrack() {
-    const audioElement = audioRef.current;
+    const audioElement = getVisibleAudioElement();
 
     if (!audioElement) {
       return;
@@ -960,6 +1095,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }
 
   function collapsePlayer() {
+    queueAudioHandoff("dock");
     setIsCollapsed(true);
     setIsOpen(false);
   }
@@ -1030,7 +1166,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
                   </div>
 
                   <audio
-                    ref={audioRef}
+                    ref={dockAudioRef}
                     preload="metadata"
                     src={activeSrc}
                     className="wd-player-dock__audio"
@@ -1097,7 +1233,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
                           <div className="wd-player-modal__audio-wrap">
                             <span className="wd-player-modal__audio-label">WAV player</span>
                             <audio
-                              ref={audioRef}
+                              ref={modalAudioRef}
                               preload="metadata"
                               src={activeSrc}
                               className="wd-player-modal__audio"
