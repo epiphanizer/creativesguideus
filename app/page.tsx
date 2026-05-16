@@ -45,24 +45,27 @@ export default function HomePage() {
 
               <div className="cg-home-gate__portal-copy">
                 <h2>{gateway.title}</h2>
-                <p>{gateway.description}</p>
               </div>
             </div>
 
             <div className="cg-home-gate__portal-stage">
-              <Image
-                src={gateway.image}
-                alt={gateway.alt}
-                priority
-                sizes="(max-width: 959px) 86vw, 34vw"
-                className="cg-home-gate__portal-image"
-              />
-            </div>
+              <Link href={gateway.href} className="cg-home-gate__portal-image-link" aria-label={gateway.entryLabel}>
+                <Image
+                  src={gateway.image}
+                  alt={gateway.alt}
+                  priority
+                  sizes="(max-width: 959px) 86vw, 40vw"
+                  className="cg-home-gate__portal-image"
+                />
+              </Link>
 
-            <Link href={gateway.href} className="cg-home-gate__portal-entry">
-              <span className="cg-home-gate__portal-entry-label">{gateway.entryLabel}</span>
-              <small className="cg-home-gate__portal-entry-meta">{gateway.entryMeta}</small>
-            </Link>
+              <p className="cg-home-gate__portal-stage-copy">{gateway.description}</p>
+
+              <Link href={gateway.href} className="cg-home-gate__portal-entry">
+                <span className="cg-home-gate__portal-entry-label">{gateway.entryLabel}</span>
+                <small className="cg-home-gate__portal-entry-meta">{gateway.entryMeta}</small>
+              </Link>
+            </div>
           </article>
         ))}
       </section>

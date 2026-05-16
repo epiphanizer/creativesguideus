@@ -7,11 +7,13 @@
   --cg-home-head-gap: clamp(0.8rem, 1.6vh, 1.15rem);
   --cg-home-meta-gap: clamp(0.3rem, 0.8vh, 0.55rem);
   --cg-home-copy-gap: clamp(0.35rem, 0.8vh, 0.65rem);
+  --cg-home-stage-gap: clamp(0.85rem, 1.5vh, 1.1rem);
+  --cg-home-head-bottom-gap: clamp(1.2rem, 2.5vh, 2rem);
   --cg-home-title-walls: clamp(58px, 5.4vw, 82px);
   --cg-home-title-bong: clamp(62px, 5.8vw, 88px);
   --cg-home-body-max: 34ch;
   --cg-home-visual-frame-max-h: clamp(310px, 42vh, 430px);
-  --cg-home-visual-image-max-h: clamp(290px, 39vh, 400px);
+  --cg-home-visual-image-max-h: clamp(330px, 46vh, 520px);
   --cg-home-visual-frame-pad: clamp(0.5rem, 1vw, 0.875rem);
   position: relative;
   min-height: calc(100svh - var(--cg-home-header-height));
@@ -66,7 +68,7 @@
 
 .cg-home-gate__portal {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
   align-items: start;
   justify-items: center;
   gap: clamp(0.45rem, 1vh, 0.75rem);
@@ -128,6 +130,7 @@
   display: grid;
   justify-items: center;
   gap: var(--cg-home-head-gap);
+  margin-bottom: var(--cg-home-head-bottom-gap);
   width: 100%;
   max-width: 40rem;
   text-align: center;
@@ -183,25 +186,36 @@
   color: var(--cg-color-bong-ink);
 }
 
-.cg-home-gate__portal-copy p {
-  margin: 0;
-  max-width: var(--cg-home-body-max);
-  font-size: clamp(0.95rem, 1.14vw, 1.04rem);
-  line-height: 1.48;
+.cg-home-gate__portal-stage-copy {
+  margin: clamp(0.75rem, 1.4vh, 1rem) 0 clamp(1.8rem, 3vh, 3rem);
+  max-width: min(24ch, var(--cg-home-body-max));
+  font-size: clamp(1.1rem, 1.9vw, 1.56rem);
+  line-height: 1.24;
+  letter-spacing: -0.05em;
   color: rgba(26, 19, 13, 0.74);
+  text-align: center;
+  text-wrap: balance;
 }
 
 .cg-home-gate__portal-stage {
   display: grid;
-  align-content: end;
+  gap: var(--cg-home-stage-gap);
+  align-content: start;
   justify-items: center;
   width: 100%;
   min-height: 0;
 }
 
+.cg-home-gate__portal-image-link {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  text-decoration: none;
+}
+
 .cg-home-gate__portal-image {
   display: block;
-  width: min(76%, 520px);
+  width: min(82%, 600px);
   max-width: 100%;
   max-height: var(--cg-home-visual-image-max-h);
   height: auto;
@@ -213,11 +227,11 @@
 }
 
 .cg-home-gate__portal--walls .cg-home-gate__portal-image {
-  width: min(76%, 520px);
+  width: min(82%, 600px);
 }
 
 .cg-home-gate__portal--bong .cg-home-gate__portal-image {
-  width: min(72%, 470px);
+  width: min(82%, 600px);
 }
 
 .cg-home-gate__portal-entry {
@@ -270,6 +284,12 @@
   border-color: rgba(120, 24, 16, 0.34);
 }
 
+.cg-home-gate__portal-image-link:focus-visible {
+  outline: 2px solid rgba(26, 19, 13, 0.88);
+  outline-offset: 6px;
+  border-radius: clamp(0.8rem, 1vw, 1rem);
+}
+
 .cg-home-gate__portal-entry:focus-visible {
   outline: 2px solid rgba(26, 19, 13, 0.88);
   outline-offset: 3px;
@@ -289,11 +309,13 @@
     --cg-home-panel-top-pad: clamp(0.95rem, 2.2vh, 1.4rem);
     --cg-home-panel-bottom-pad: clamp(0.85rem, 2vh, 1.2rem);
     --cg-home-visual-frame-max-h: clamp(296px, 40vh, 402px);
-    --cg-home-visual-image-max-h: clamp(278px, 36vh, 376px);
+    --cg-home-visual-image-max-h: clamp(300px, 39vh, 420px);
   }
 
-  .cg-home-gate__portal-copy p {
+  .cg-home-gate__portal-stage-copy {
     max-width: 31ch;
+    margin-bottom: clamp(1.35rem, 2.4vh, 2rem);
+    font-size: clamp(1rem, 1.45vw, 1.24rem);
   }
 }
 
@@ -339,7 +361,7 @@
   .cg-home-gate__portal-image,
   .cg-home-gate__portal--walls .cg-home-gate__portal-image,
   .cg-home-gate__portal--bong .cg-home-gate__portal-image {
-    width: min(92%, 32.5rem);
+    width: min(96%, 35rem);
     max-height: none;
   }
 
@@ -349,6 +371,11 @@
 
   .cg-home-gate__portal-entry {
     width: min(100%, 24rem);
+  }
+
+  .cg-home-gate__portal-stage-copy {
+    margin-bottom: 1.5rem;
+    font-size: clamp(1rem, 3.8vw, 1.2rem);
   }
 }
 
@@ -362,8 +389,10 @@
     white-space: normal;
   }
 
-  .cg-home-gate__portal-copy p {
+  .cg-home-gate__portal-stage-copy {
     max-width: 31ch;
+    font-size: clamp(0.98rem, 4.8vw, 1.12rem);
+    line-height: 1.32;
   }
 
   .cg-home-gate__portal-entry {
