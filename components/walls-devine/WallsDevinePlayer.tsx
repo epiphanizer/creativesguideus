@@ -3,7 +3,7 @@
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import { createPortal } from "react-dom";
-import { type CSSProperties, useEffect, useId, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
@@ -16,7 +16,6 @@ import spaceCruiserImage from "@/app/walls-devine/assets/instagram/3.space-cruis
 import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { SongPostCard } from "@/components/walls-devine/content";
-import { Button } from "@/components/ui/Button";
 import { createListeningRoomVisit } from "@/lib/firebase/listening-room-visits";
 import { cx } from "@/lib/cx";
 
@@ -50,18 +49,6 @@ type PersistedPlayerState = {
   isOpen?: boolean;
   isCollapsed?: boolean;
   dockPosition?: PlayerDockPosition | null;
-};
-
-type PlayerAudioSurface = "dock" | "modal";
-
-type PendingAudioHandoff = {
-  target: PlayerAudioSurface;
-  trackSrc: string;
-  currentTime: number;
-  shouldResume: boolean;
-  volume: number;
-  muted: boolean;
-  playbackRate: number;
 };
 
 const playerQueryKeys = ["player", "song", "track", "slug"] as const;
@@ -549,9 +536,10 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const deepLinkHandledRef = useRef(false);
   const trackedVisitRef = useRef<string | null>(null);
   const playerStateRestoredRef = useRef(false);
-  const dockAudioRef = useRef<HTMLAudioElement | null>(null);
-  const modalAudioRef = useRef<HTMLAudioElement | null>(null);
-  const pendingAudioHandoffRef = useRef<PendingAudioHandoff | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const dockAudioSlotRef = useRef<HTMLDivElement | null>(null);
+  const modalAudioSlotRef = useRef<HTMLDivElement | null>(null);
+  const audioPortalHostRef = useRef<HTMLDivElement | null>(null);
   const dockRef = useRef<HTMLDivElement | null>(null);
   const dockPointerOffsetRef = useRef<PlayerDockPosition | null>(null);
   const visualizerCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -570,35 +558,10 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const activeTrackMeta = `Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase} · ${activeTrack.duration}`;
   const activeVisualizerTheme = trackVisualizerThemes[activeTrack.trackNumber] ?? trackVisualizerThemes[1];
 
-  function getPlayerAudioElement(surface: PlayerAudioSurface) {
-    return surface === "modal" ? modalAudioRef.current : dockAudioRef.current;
-  }
-
-  function getVisibleAudioElement() {
-    if (isOpen) {
-      return modalAudioRef.current ?? dockAudioRef.current;
-    }
-
-    return dockAudioRef.current ?? modalAudioRef.current;
-  }
-
-  function queueAudioHandoff(target: PlayerAudioSurface) {
-    const audioElement = getVisibleAudioElement();
-
-    if (!audioElement) {
-      pendingAudioHandoffRef.current = null;
-      return;
-    }
-
-    pendingAudioHandoffRef.current = {
-      target,
-      trackSrc: activeSrc,
-      currentTime: audioElement.currentTime,
-      shouldResume: !audioElement.paused && !audioElement.ended,
-      volume: audioElement.volume,
-      muted: audioElement.muted,
-      playbackRate: audioElement.playbackRate
-    };
+  if (typeof document !== "undefined" && !audioPortalHostRef.current) {
+    const audioHost = document.createElement("div");
+    audioHost.className = "wd-player-audio-host";
+    audioPortalHostRef.current = audioHost;
   }
 
   function normalizePlayerTarget(value: string | null | undefined) {
@@ -742,8 +705,25 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
     };
   }, [isDraggingDock]);
 
+  useLayoutEffect(() => {
+    const audioHost = audioPortalHostRef.current;
+    const targetSlot = isOpen ? modalAudioSlotRef.current : dockAudioSlotRef.current;
+
+    if (!audioHost || !targetSlot) {
+      return;
+    }
+
+    targetSlot.appendChild(audioHost);
+
+    return () => {
+      if (audioHost.parentElement === targetSlot) {
+        targetSlot.removeChild(audioHost);
+      }
+    };
+  }, [isOpen]);
+
   async function ensureAudioVisualizer() {
-    const audioElement = modalAudioRef.current ?? getVisibleAudioElement();
+    const audioElement = audioRef.current;
 
     if (!audioElement) {
       return;
@@ -872,7 +852,6 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
   useEffect(() => {
     if (!isOpen) {
-      setIsPlaying(false);
       teardownAudioVisualizer();
       return;
     }
@@ -895,84 +874,11 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }, [isOpen]);
 
   useEffect(() => {
-    getVisibleAudioElement()?.load();
+    audioRef.current?.load();
   }, [activeSrc]);
 
   useEffect(() => {
-    const pendingHandoff = pendingAudioHandoffRef.current;
-
-    if (!pendingHandoff) {
-      return;
-    }
-
-    if (pendingHandoff.trackSrc !== activeSrc) {
-      pendingAudioHandoffRef.current = null;
-      return;
-    }
-
-    const targetAudioElement = getPlayerAudioElement(pendingHandoff.target);
-
-    if (!targetAudioElement) {
-      return;
-    }
-
-    let cancelled = false;
-
-    const syncHandoff = async () => {
-      if (cancelled) {
-        return;
-      }
-
-      targetAudioElement.volume = pendingHandoff.volume;
-      targetAudioElement.muted = pendingHandoff.muted;
-      targetAudioElement.playbackRate = pendingHandoff.playbackRate;
-
-      if (Number.isFinite(pendingHandoff.currentTime)) {
-        const duration = Number.isFinite(targetAudioElement.duration) ? targetAudioElement.duration : Number.POSITIVE_INFINITY;
-        const nextTime = Math.max(0, Math.min(pendingHandoff.currentTime, Math.max(0, duration - 0.05)));
-
-        try {
-          targetAudioElement.currentTime = nextTime;
-        } catch {
-          targetAudioElement.currentTime = 0;
-        }
-      }
-
-      if (pendingHandoff.shouldResume) {
-        try {
-          await targetAudioElement.play();
-        } catch {
-          setIsPlaying(false);
-        }
-      } else {
-        targetAudioElement.pause();
-        setIsPlaying(false);
-      }
-
-      if (!cancelled && pendingAudioHandoffRef.current === pendingHandoff) {
-        pendingAudioHandoffRef.current = null;
-      }
-    };
-
-    if (targetAudioElement.readyState >= 1) {
-      void syncHandoff();
-      return;
-    }
-
-    const handleLoadedMetadata = () => {
-      void syncHandoff();
-    };
-
-    targetAudioElement.addEventListener("loadedmetadata", handleLoadedMetadata, { once: true });
-
-    return () => {
-      cancelled = true;
-      targetAudioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
-  }, [activeSrc, isCollapsed, isOpen]);
-
-  useEffect(() => {
-    const audioElement = getVisibleAudioElement();
+    const audioElement = audioRef.current;
 
     if (!audioElement) {
       return;
@@ -1053,23 +959,18 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }, []);
 
   function openPlayer(index: number) {
-    if (index === activeIndex) {
-      queueAudioHandoff("modal");
-    }
-
     setActiveIndex(index);
     setIsCollapsed(false);
     setIsOpen(true);
   }
 
   function reopenPlayer() {
-    queueAudioHandoff("modal");
     setIsCollapsed(false);
     setIsOpen(true);
   }
 
   async function playCurrentTrack() {
-    const audioElement = getVisibleAudioElement();
+    const audioElement = audioRef.current;
 
     if (!audioElement) {
       return;
@@ -1083,7 +984,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }
 
   function stopCurrentTrack() {
-    const audioElement = getVisibleAudioElement();
+    const audioElement = audioRef.current;
 
     if (!audioElement) {
       return;
@@ -1095,7 +996,6 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }
 
   function collapsePlayer() {
-    queueAudioHandoff("dock");
     setIsCollapsed(true);
     setIsOpen(false);
   }
@@ -1147,6 +1047,15 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
       {floatingUiRoot
         ? createPortal(
             <>
+              {audioPortalHostRef.current
+                ? createPortal(
+                    <audio ref={audioRef} preload="metadata" src={activeSrc} className="wd-player-audio" controls controlsList="nodownload noplaybackrate">
+                      Your browser does not support audio playback.
+                    </audio>,
+                    audioPortalHostRef.current
+                  )
+                : null}
+
               {isCollapsed ? (
                 <div
                   ref={dockRef}
@@ -1165,17 +1074,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
                     <p>{activeTrackMeta}</p>
                   </div>
 
-                  <audio
-                    ref={dockAudioRef}
-                    preload="metadata"
-                    src={activeSrc}
-                    className="wd-player-dock__audio"
-                    controls
-                    controlsList="nodownload noplaybackrate"
-                    onPointerDown={handleDockActionPointerDown}
-                  >
-                    Your browser does not support audio playback.
-                  </audio>
+                  <div ref={dockAudioSlotRef} className="wd-player-dock__audio-slot" onPointerDown={handleDockActionPointerDown} />
 
                   <button type="button" className="wd-player-dock__tagline" onPointerDown={handleDockActionPointerDown} onClick={reopenPlayer}>
                     Enter the full Listening Room
@@ -1232,16 +1131,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
                           <div className="wd-player-modal__audio-wrap">
                             <span className="wd-player-modal__audio-label">WAV player</span>
-                            <audio
-                              ref={modalAudioRef}
-                              preload="metadata"
-                              src={activeSrc}
-                              className="wd-player-modal__audio"
-                              controls
-                              controlsList="nodownload noplaybackrate"
-                            >
-                              Your browser does not support audio playback.
-                            </audio>
+                            <div ref={modalAudioSlotRef} className="wd-player-modal__audio-slot" />
                           </div>
                         </div>
 

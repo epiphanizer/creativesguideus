@@ -207,21 +207,28 @@ export function WallsDevineLanding() {
               id="walls-devine-title"
               eyebrow="Collector experience"
               title="Walls/Devine Volume 1"
-              subtitle="A premium rollout for the album object, the score world, and the private collector layer around them"
-              description="Walls is the inward ritual. Devine is the outward voltage. Enter the list for first access to artifacts, hidden rooms, and launch-night signals across Volume 1 and Bong Tour."
+              description="Join the private collector email for first-listen links, studio-journal fragments, artifact drop notes, and release-night signals as each room opens across Volume 1."
               headingLevel="h1"
             />
 
             <div className="wd-hero__collector">
-              <p className="wd-hero__collector-lead">Join the collector circle for early drops, hidden-room access, and rollout notes that do not appear on the public page.</p>
+              <p className="wd-hero__collector-lead">Get the next room, journal fragment, and collector drop before the recap hits Instagram.</p>
+              <div className="wd-hero__collector-points" aria-label="Collector access highlights">
+                <span>First-listen links</span>
+                <span>Studio-journal fragments</span>
+                <span>Artifact drops</span>
+              </div>
               <EcosystemSignupForm
                 source="walls-devine-hero"
                 interest="Walls Devine hero collector circle"
                 eyebrow="Private access"
-                title="Get first notice when the next room opens"
-                description="Designed for private drops, passwords, and premium release-world touchpoints."
-                submitLabel="Join the first wave"
+                title="Get the next room before it goes public"
+                description="Built for listeners who want the private signal before the next post, password, journal fragment, or launch-night move lands in the feed."
+                submitLabel="Get collector access"
+                successMessage="You are on the collector list. Watch your inbox for the next room opening, journal fragment, and first-listen signal."
+                note="Low-frequency, high-signal. Used for first listens, hidden-room access, and artifact drops only."
                 compact
+                className="wd-hero__signup"
               />
             </div>
           </div>

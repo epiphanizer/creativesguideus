@@ -1118,6 +1118,15 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
 
   const activeTile = useMemo(() => tiles.find((tile) => tile.slug === activeSlug) ?? null, [activeSlug, tiles]);
 
+  function getTileBadgeLabel(tile: CollectorGridTile) {
+    if (tile.center) {
+      return null;
+    }
+
+    const digits = tile.role.replace(/\D+/g, "");
+    return digits ? digits.padStart(2, "0") : null;
+  }
+
   useEffect(() => {
     setHasMounted(true);
   }, []);
@@ -1149,16 +1158,12 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
       <ol className="wd-grid" aria-label="Walls/Devine release grid">
         {tiles.map((tile) => (
           <li key={tile.title} className={cx("wd-grid__tile", tile.center && "wd-grid__tile--center")}>
-            <button type="button" className="wd-grid__trigger" onClick={() => setActiveSlug(tile.slug)}>
+            <button type="button" className="wd-grid__trigger" aria-label={`Open ${tile.title}`} onClick={() => setActiveSlug(tile.slug)}>
               <figure className="wd-grid__figure">
                 <div className="wd-grid__image-wrap">
+                  {getTileBadgeLabel(tile) ? <span className="wd-grid__badge">{getTileBadgeLabel(tile)}</span> : null}
                   <Image src={tile.image} alt={`${tile.title} cover artwork`} sizes="(max-width: 680px) 88vw, (max-width: 1040px) 45vw, 30vw" />
                 </div>
-                <figcaption>
-                  <span>{tile.role}</span>
-                  <strong>{tile.title}</strong>
-                  <p>{tile.teaser}</p>
-                </figcaption>
               </figure>
             </button>
           </li>
