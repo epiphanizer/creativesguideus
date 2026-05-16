@@ -30,14 +30,14 @@ type GridTile = {
 
 const instagramGrid: GridTile[] = [
   { title: "Joint Queen", role: "Song 01", image: jointQueenImage },
-  { title: "Space Cruiser", role: "Song 03", image: spaceCruiserImage },
   { title: "Stash Daddy", role: "Song 02", image: stashDaddyImage },
-  { title: "Poetry", role: "Song 07", image: poetryImage },
-  { title: "Walls / Devine Vol. 1", role: "Center cover", image: volOneImage, center: true },
-  { title: "Resolve", role: "Song 06", image: resolveImage },
+  { title: "Space Cruiser", role: "Song 03", image: spaceCruiserImage },
   { title: "Home", role: "Song 04", image: homeImage },
-  { title: "Gratitude", role: "Song 08", image: gratitudeImage },
-  { title: "Decay", role: "Song 05", image: decayImage }
+  { title: "Walls / Devine Vol. 1", role: "Collector's item", image: volOneImage, center: true },
+  { title: "Decay", role: "Song 05", image: decayImage },
+  { title: "Resolve", role: "Song 06", image: resolveImage },
+  { title: "Poetry", role: "Song 07", image: poetryImage },
+  { title: "Gratitude", role: "Song 08", image: gratitudeImage }
 ];
 
 const releaseSpecs = [

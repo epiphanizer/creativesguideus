@@ -19,7 +19,7 @@ export function ContactSection() {
             id="contact-title"
             eyebrow="UPLINK"
             title="Choose The Right Signal"
-            description="Lead with the world that fits: album rollout, screenplay development, or a release system that needs score, story, and rollout aligned."
+            description="Lead with the lane that fits: album rollout, screenplay development, or a release system that needs score, story, and rollout aligned."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4 7h16v10H4z" />
@@ -31,7 +31,7 @@ export function ContactSection() {
           <div className="cg-contact__meta">
             <div className="cg-contact__slots" aria-label="Residency availability">
               <span>Residencies</span>
-              <p>Two focused collaboration slots are open for partners ready to move with a defined creative world.</p>
+              <p>Two focused collaboration slots are open for partners ready to move with a defined creative brief.</p>
             </div>
             <p>
               Prefer a direct uplink? Email <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a> with a calendar pin and

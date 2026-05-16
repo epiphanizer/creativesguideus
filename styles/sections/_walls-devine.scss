@@ -264,6 +264,8 @@
 .wd-grid__figure figcaption {
   display: grid;
   gap: 0.1rem;
+  justify-items: center;
+  text-align: center;
 }
 
 .wd-grid__figure figcaption span {

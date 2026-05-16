@@ -21,7 +21,7 @@ export function MusicSection() {
       <div className="cg-split__lede">
         <SectionHeader
           id="music-title"
-          eyebrow="Album world"
+          eyebrow="Album release"
           title="Walls & Devine is the front door"
           description="Volume 1 now carries the music story: release system, song journals, technical notes, and direct crossover into Bong Tour."
           icon={
@@ -33,8 +33,8 @@ export function MusicSection() {
           iconLabel="Creative score emblem"
         />
         <p>
-          The homepage no longer tries to explain music as a generic capability. It points straight to the record that is
-          already alive, with the context needed for listeners, collaborators, and future edits to understand how the world is built.
+          The homepage no longer tries to explain music as a generic capability. It points straight to the record already in motion,
+          with the context listeners, collaborators, and future edits need to understand how the release is built.
         </p>
         <ul className="cg-music__points">
           {releaseHighlights.map((highlight) => (
