@@ -1392,8 +1392,17 @@
 }
 
 @media (max-width: 1080px) {
+  .bt-hero__layout {
+    justify-items: center;
+  }
+
   .bt-hero__poster {
-    display: none;
+    justify-self: center;
+  }
+
+  .bt-hero__poster-frame {
+    width: min(360px, 72vw);
+    transform: none;
   }
 }
 
@@ -1811,8 +1820,3 @@
   background: linear-gradient(135deg, rgba(41, 84, 59, 0.14), rgba(214, 105, 31, 0.14));
 }
 
-@media (max-width: 1080px) {
-  .bt-hero__poster-frame {
-    transform: none;
-  }
-}

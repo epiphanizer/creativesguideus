@@ -203,6 +203,144 @@ function formatLeadSource(source: string) {
   return source.replace(/[-_]/g, " ");
 }
 
+type DashboardModule = {
+  title: string;
+  summary: string;
+  detail: string;
+  status: "ready" | "pending";
+};
+
+const fallbackAdminData: WallsDevineAdminData = {
+  plan: {
+    title: "Walls/Devine Control Room",
+    summary: "Scaffold mode keeps the dashboard visible while Firebase content or bootstrap data reconnects.",
+    updatedAt: "2026-05-15T00:00:00.000Z",
+    lockedDates: [
+      { label: "Dashboard mode", value: "Scaffold fallback" },
+      { label: "Audience layer", value: "Collector leads module visible" },
+      { label: "Content studio", value: "Draft + journal tools scaffolded" }
+    ],
+    guidance: [
+      "Retry the data connection before assuming the backend is empty.",
+      "Use the health panel and module cards below to confirm which systems are already wired.",
+      "Treat scaffold mode as a visibility fallback, not the final source of truth."
+    ],
+    metadataStandards: [
+      { label: "Audience layer", value: "Collector leads via Firestore" },
+      { label: "Content layer", value: "Instagram drafts + song journals" },
+      { label: "Analysis layer", value: "Backend WAV inspection" }
+    ],
+    recommendedSetup: [
+      "Review release operations",
+      "Check audience capture and collector leads",
+      "Inspect content and audio modules"
+    ],
+    avoid: [
+      "Do not block the full console on one missing data source.",
+      "Do not hide already-wired modules just because Firebase seed content is late.",
+      "Do not assume Storage is live until the health check confirms it."
+    ],
+    calendar: [
+      { date: "Now", action: "Reconnect Firebase content", purpose: "Hydrate the release plan and markdown layers" },
+      { date: "Now", action: "Review admin modules", purpose: "Confirm release, audience, content, and audio surfaces are visible" },
+      { date: "Next", action: "Retry data load", purpose: "Replace scaffold mode with live backend data" }
+    ],
+    checklist: [
+      {
+        id: "scaffold-release-ops",
+        phase: "Dashboard scaffold",
+        title: "Release operations module visible",
+        dueDate: "Now",
+        completed: true,
+        notes: "Checklist, calendar, and launch operations remain visible even when live Firebase content is unavailable."
+      },
+      {
+        id: "scaffold-audience-ops",
+        phase: "Dashboard scaffold",
+        title: "Collector lead review module visible",
+        dueDate: "Now",
+        completed: true,
+        notes: "Audience capture and source-mix panels remain exposed after login."
+      },
+      {
+        id: "scaffold-content-ops",
+        phase: "Dashboard scaffold",
+        title: "Content studio scaffold visible",
+        dueDate: "Now",
+        completed: true,
+        notes: "Instagram draft and journal editors stay in view even while Storage-backed content is still reconnecting."
+      }
+    ]
+  },
+  instagramDrafts: [],
+  journalEntries: [],
+  storageBacked: false,
+  contentBackend: "bootstrap"
+};
+
+function countCompletedChecklist(items: ReleasePlanChecklistItem[]) {
+  return items.filter((item) => item.completed).length;
+}
+
+function buildDashboardModules({
+  adminData,
+  isScaffoldMode,
+  hasStorageBackedContent,
+  contentSource,
+  leadsCount,
+  leadSources,
+  audioCount,
+  hasAudioError,
+  hasPanelError
+}: {
+  adminData: WallsDevineAdminData;
+  isScaffoldMode: boolean;
+  hasStorageBackedContent: boolean;
+  contentSource: ContentSource;
+  leadsCount: number;
+  leadSources: Array<[string, number]>;
+  audioCount: number;
+  hasAudioError: boolean;
+  hasPanelError: boolean;
+}) {
+  const completedChecklist = countCompletedChecklist(adminData.plan.checklist);
+  const topLeadSource = leadSources[0]?.[0];
+  const sourceLabel = isScaffoldMode ? "scaffold" : contentSource;
+
+  return [
+    {
+      title: "Release operations",
+      summary: `${completedChecklist}/${adminData.plan.checklist.length} checklist items tracked`,
+      detail: isScaffoldMode ? "Dashboard scaffold is visible while live plan data reconnects." : `Content source: ${sourceLabel}`,
+      status: isScaffoldMode ? "pending" : "ready"
+    },
+    {
+      title: "Collector leads",
+      summary: `${leadsCount} captured email${leadsCount === 1 ? "" : "s"}`,
+      detail: topLeadSource ? `Top source: ${formatLeadSource(topLeadSource)}` : "Audience capture path is wired and waiting on traffic.",
+      status: hasPanelError ? "pending" : "ready"
+    },
+    {
+      title: "Content studio",
+      summary: `${adminData.instagramDrafts.length} drafts · ${adminData.journalEntries.length} journals`,
+      detail: hasStorageBackedContent ? "Live Storage CRUD is enabled." : isScaffoldMode ? "Scaffold only until content hydrates." : "Release plan is live. Storage sync still needs attention.",
+      status: hasStorageBackedContent ? "ready" : "pending"
+    },
+    {
+      title: "Audio QA",
+      summary: `${audioCount} WAV file${audioCount === 1 ? "" : "s"} inspected`,
+      detail: hasAudioError ? "Audio inspection reported an issue. Use refresh to retry." : audioCount ? "Server-side file inspection is returning metadata." : "Run refresh to inspect the live release WAVs.",
+      status: audioCount && !hasAudioError ? "ready" : "pending"
+    },
+    {
+      title: "Backend health",
+      summary: `Auth + Firestore + Storage status at a glance`,
+      detail: hasPanelError ? "One or more backend steps still need attention." : isScaffoldMode ? "Logged in, but showing fallback scaffold data." : `Primary content source: ${sourceLabel}`,
+      status: !hasPanelError && !isScaffoldMode ? "ready" : "pending"
+    }
+  ] satisfies DashboardModule[];
+}
+
 export function AdminConsole() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -225,8 +363,10 @@ export function AdminConsole() {
 
   const hasFirebaseRuntime = Boolean(firebaseAuth);
   const isAuthorized = isActiveAdminProfile(adminProfile);
-  const checklistByPhase = useMemo(() => groupChecklistByPhase(adminData?.plan.checklist ?? []), [adminData]);
-  const hasStorageBackedContent = adminData?.storageBacked !== false;
+  const adminViewData = adminData ?? fallbackAdminData;
+  const isScaffoldMode = !adminData;
+  const checklistByPhase = useMemo(() => groupChecklistByPhase(adminViewData.plan.checklist), [adminViewData.plan.checklist]);
+  const hasStorageBackedContent = adminData ? adminData.storageBacked !== false : false;
   const leadSources = useMemo(() => {
     const counts = new Map<string, number>();
 
@@ -236,6 +376,21 @@ export function AdminConsole() {
 
     return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
   }, [ecosystemLeads]);
+  const dashboardModules = useMemo(
+    () =>
+      buildDashboardModules({
+        adminData: adminViewData,
+        isScaffoldMode,
+        hasStorageBackedContent,
+        contentSource,
+        leadsCount: ecosystemLeads.length,
+        leadSources,
+        audioCount: audioAnalysis.length,
+        hasAudioError: Boolean(audioError),
+        hasPanelError: Boolean(panelError)
+      }),
+    [adminViewData, isScaffoldMode, hasStorageBackedContent, contentSource, ecosystemLeads.length, leadSources, audioAnalysis.length, audioError, panelError]
+  );
 
   function collectionHasDuplicateSlug(collection: AdminMarkdownCollection, slug: string, currentSlug?: string) {
     if (!adminData) {
@@ -281,7 +436,22 @@ export function AdminConsole() {
         setAdminData(nextData);
       });
     } catch (error) {
-      setPanelError(getFirebaseErrorMessage(error));
+      const errorMessage = getFirebaseErrorMessage(error);
+
+      try {
+        const bootstrapSeed = await fetchBootstrapData(await user.getIdToken());
+        setContentSource("bootstrap");
+        setPanelError(`${errorMessage} Showing local dashboard data while Firebase reconnects.`);
+        startTransition(() => {
+          setAdminData({
+            ...bootstrapSeed,
+            storageBacked: false,
+            contentBackend: "bootstrap"
+          });
+        });
+      } catch {
+        setPanelError(`${errorMessage} Showing scaffold mode until the backend is available.`);
+      }
     } finally {
       setDataLoading(false);
     }
@@ -704,7 +874,7 @@ export function AdminConsole() {
     );
   }
 
-  if (dataLoading || !adminData) {
+  if (dataLoading && !adminData) {
     return (
       <main className="cg-page cg-admin-page">
         <SectionShell id="admin-bootstrap" labelledBy="admin-bootstrap-title" innerClassName="cg-admin cg-admin--login" variant="hero">
@@ -729,7 +899,7 @@ export function AdminConsole() {
             id="admin-console-title"
             eyebrow="Admin"
             title="Walls/Devine control room"
-            description="Release plan, calendar, and source content for Volume 1."
+            description={isScaffoldMode ? "Dashboard scaffold for release operations, audience capture, content management, and audio QA while live backend content reconnects." : "Release plan, calendar, and source content for Volume 1."}
           />
 
           <div className="cg-admin__topbar-actions">
@@ -743,17 +913,47 @@ export function AdminConsole() {
         </div>
 
         {panelError ? <p className="cg-admin__error">{panelError}</p> : null}
-        {!hasStorageBackedContent ? (
+        {isScaffoldMode ? (
+          <div className="cg-admin__banner">
+            <div>
+              <strong>Scaffold mode is active</strong>
+              <p>The full dashboard is visible below, but the live Firebase content layer did not hydrate yet. Use retry to pull the real release-plan and content data back in.</p>
+            </div>
+            <div className="cg-admin__banner-actions">
+              <Button type="button" variant="secondary" size="sm" onClick={handleRetryAccess}>
+                Retry data load
+              </Button>
+              <Button type="button" variant="ghost" size="sm" onClick={handleLogout}>
+                Log out
+              </Button>
+            </div>
+          </div>
+        ) : !hasStorageBackedContent ? (
           <p className="cg-admin__helper">
             Draft and journal syncing is still waiting on Firebase Storage initialization. The release plan is live now, and a hidden health check is available below.
           </p>
         ) : null}
 
+        <div className="cg-admin__module-grid">
+          {dashboardModules.map((module) => (
+            <article key={module.title} className="cg-admin__panel cg-admin__module-card">
+              <div className="cg-admin__module-head">
+                <h2>{module.title}</h2>
+                <span className={["cg-admin__status-badge", module.status === "ready" ? "cg-admin__status-badge--ready" : "cg-admin__status-badge--pending"].join(" ")}>
+                  {module.status === "ready" ? "Ready" : "Pending"}
+                </span>
+              </div>
+              <strong className="cg-admin__module-stat">{module.summary}</strong>
+              <p>{module.detail}</p>
+            </article>
+          ))}
+        </div>
+
         <div className="cg-admin__grid cg-admin__grid--summary">
           <article className="cg-admin__panel">
             <h2>Locked dates</h2>
             <ul className="cg-admin__list">
-              {adminData.plan.lockedDates.map((item) => (
+              {adminViewData.plan.lockedDates.map((item) => (
                 <li key={item.label}>
                   <strong>{item.label}</strong>
                   <span>{item.value}</span>
@@ -765,7 +965,7 @@ export function AdminConsole() {
           <article className="cg-admin__panel">
             <h2>Metadata standards</h2>
             <ul className="cg-admin__list">
-              {adminData.plan.metadataStandards.map((item) => (
+              {adminViewData.plan.metadataStandards.map((item) => (
                 <li key={item.label}>
                   <strong>{item.label}</strong>
                   <span>{item.value}</span>
@@ -777,7 +977,7 @@ export function AdminConsole() {
           <article className="cg-admin__panel">
             <h2>Recommended setup</h2>
             <ul className="cg-admin__bullet-list">
-              {adminData.plan.recommendedSetup.map((item) => (
+              {adminViewData.plan.recommendedSetup.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
@@ -786,7 +986,7 @@ export function AdminConsole() {
           <article className="cg-admin__panel">
             <h2>Avoid</h2>
             <ul className="cg-admin__bullet-list">
-              {adminData.plan.avoid.map((item) => (
+              {adminViewData.plan.avoid.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
@@ -803,9 +1003,9 @@ export function AdminConsole() {
         <div className="cg-admin__section-head">
           <div>
             <h2 id="admin-release-plan-title">Release checklist</h2>
-            <p>{adminData.plan.summary}</p>
+            <p>{adminViewData.plan.summary}</p>
           </div>
-          <p className="cg-admin__updated">Updated {new Date(adminData.plan.updatedAt).toLocaleString()}</p>
+          <p className="cg-admin__updated">Updated {new Date(adminViewData.plan.updatedAt).toLocaleString()}</p>
         </div>
 
         <div className="cg-admin__phases">
@@ -823,7 +1023,7 @@ export function AdminConsole() {
                       <span>Due: {item.dueDate}</span>
                       <p>{item.notes}</p>
                     </div>
-                    <Button type="button" variant={item.completed ? "ghost" : "secondary"} size="sm" onClick={() => handleChecklistToggle(item.id, !item.completed)}>
+                    <Button type="button" variant={item.completed ? "ghost" : "secondary"} size="sm" onClick={() => handleChecklistToggle(item.id, !item.completed)} disabled={!adminData}>
                       {item.completed ? "Reopen" : "Complete"}
                     </Button>
                   </div>
@@ -896,7 +1096,7 @@ export function AdminConsole() {
       <SectionShell id="admin-calendar" labelledBy="admin-calendar-title" innerClassName="cg-admin__section">
         <h2 id="admin-calendar-title">Campaign calendar</h2>
         <div className="cg-admin__calendar">
-          {adminData.plan.calendar.map((item) => (
+          {adminViewData.plan.calendar.map((item) => (
             <article key={`${item.date}-${item.action}`} className="cg-admin__panel">
               <span className="cg-admin__calendar-date">{item.date}</span>
               <h3>{item.action}</h3>
@@ -1007,8 +1207,7 @@ export function AdminConsole() {
         ) : null}
       </SectionShell>
 
-      {adminData.instagramDrafts.length || hasStorageBackedContent ? (
-        <SectionShell id="admin-instagram-posts" labelledBy="admin-instagram-posts-title" innerClassName="cg-admin__section">
+      <SectionShell id="admin-instagram-posts" labelledBy="admin-instagram-posts-title" innerClassName="cg-admin__section">
         <div className="cg-admin__section-head">
           <div>
             <h2 id="admin-instagram-posts-title">Instagram drafts</h2>
@@ -1058,7 +1257,7 @@ export function AdminConsole() {
             </form>
           </article>
 
-          {adminData.instagramDrafts.map((draft) => {
+          {adminViewData.instagramDrafts.map((draft) => {
             const saveKey = getSaveNoticeKey("instagram-posts", draft.slug);
             const saveState = saveStates[saveKey];
             const isBusy = saveState === "saving" || saveState === "deleting";
@@ -1099,12 +1298,17 @@ export function AdminConsole() {
               </article>
             );
           })}
-        </div>
-        </SectionShell>
-      ) : null}
 
-      {adminData.journalEntries.length || hasStorageBackedContent ? (
-        <SectionShell id="admin-journals" labelledBy="admin-journals-title" innerClassName="cg-admin__section">
+          {!adminViewData.instagramDrafts.length ? (
+            <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--empty">
+              <h3>No Instagram drafts loaded yet</h3>
+              <p>{isScaffoldMode ? "You are seeing the content-studio scaffold while live Firebase data reconnects." : "Drafts will appear here once the live Firebase Storage layer is initialized."}</p>
+            </article>
+          ) : null}
+        </div>
+      </SectionShell>
+
+      <SectionShell id="admin-journals" labelledBy="admin-journals-title" innerClassName="cg-admin__section">
         <div className="cg-admin__section-head">
           <div>
             <h2 id="admin-journals-title">Song journals</h2>
@@ -1154,7 +1358,7 @@ export function AdminConsole() {
             </form>
           </article>
 
-          {adminData.journalEntries.map((entry) => {
+          {adminViewData.journalEntries.map((entry) => {
             const saveKey = getSaveNoticeKey("journals", entry.slug);
             const saveState = saveStates[saveKey];
             const isBusy = saveState === "saving" || saveState === "deleting";
@@ -1191,9 +1395,15 @@ export function AdminConsole() {
               </article>
             );
           })}
+
+          {!adminViewData.journalEntries.length ? (
+            <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--empty">
+              <h3>No journals loaded yet</h3>
+              <p>{isScaffoldMode ? "The journal editor is scaffolded and ready once the live content layer reconnects." : "Journal entries will appear here once the Firebase-backed content collection is available."}</p>
+            </article>
+          ) : null}
         </div>
-        </SectionShell>
-      ) : null}
+      </SectionShell>
     </main>
   );
 }

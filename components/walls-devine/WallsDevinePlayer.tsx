@@ -292,7 +292,7 @@ function isDockInteractiveTarget(target: EventTarget | null) {
 export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [dockPosition, setDockPosition] = useState<PlayerDockPosition | null>(null);
@@ -346,6 +346,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
     const rawState = window.localStorage.getItem(playerStorageKey);
 
     if (!rawState) {
+      setIsCollapsed(true);
       return;
     }
 
@@ -358,10 +359,9 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
       if (storedState.isOpen) {
         setIsOpen(true);
-        setIsCollapsed(false);
-      } else if (storedState.isCollapsed) {
-        setIsCollapsed(true);
       }
+
+      setIsCollapsed(true);
 
       if (
         storedState.dockPosition &&
@@ -505,7 +505,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
     deepLinkHandledRef.current = true;
     setActiveIndex(nextIndex);
-    setIsCollapsed(false);
+    setIsCollapsed(true);
     setIsOpen(true);
 
     const hash = window.location.hash || "#walls-devine-listening-room";
@@ -623,12 +623,12 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
   function openPlayer(index: number) {
     setActiveIndex(index);
-    setIsCollapsed(false);
+    setIsCollapsed(true);
     setIsOpen(true);
   }
 
   function reopenPlayer() {
-    setIsCollapsed(false);
+    setIsCollapsed(true);
     setIsOpen(true);
   }
 
@@ -659,15 +659,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }
 
   function collapsePlayer() {
-    audioRef.current?.pause();
-    setIsPlaying(false);
     setIsCollapsed(true);
-    setIsOpen(false);
-  }
-
-  function dismissDock() {
-    stopCurrentTrack();
-    setIsCollapsed(false);
     setIsOpen(false);
   }
 
@@ -715,61 +707,10 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
   return (
     <>
-      <section className="wd-player" aria-labelledby="wd-player-title">
-        <div className="wd-player__card">
-          <figure className="wd-player__cover">
-            <div className="wd-player__cover-frame">
-              <Image src={activePosterImage} alt={activePosterAlt} sizes="(max-width: 720px) 42vw, 220px" />
-            </div>
-          </figure>
-
-          <div className="wd-player__summary">
-            <span className="wd-player__eyebrow">Listening room</span>
-            <h3 id="wd-player-title">Walls/Devine Volume 1 modular player</h3>
-            <p>
-              Open the album object, move song to song, and keep each track&apos;s journal access, making notes, and Bong Tour bridge inside the player
-              instead of repeating them in page cards.
-            </p>
-
-            <div className="wd-player__actions">
-              <Button type="button" onClick={() => openPlayer(activeIndex)}>
-                Open player
-              </Button>
-              <Button type="button" variant="secondary" onClick={() => openPlayer(0)}>
-                Start at track 01
-              </Button>
-            </div>
-
-            <p className="wd-player__current">
-              Current module: Track {formatTrackNumber(activeTrack.trackNumber)} · {activeTrack.title} · {activeTrack.duration}
-            </p>
-          </div>
-        </div>
-
-        <div className="wd-player__track-strip" aria-label="Album track modules">
-          {tracks.map((track, index) => (
-            <button
-              key={track.title}
-              type="button"
-              className={cx("wd-player__track-chip", index === activeIndex && "wd-player__track-chip--active")}
-              onClick={() => openPlayer(index)}
-            >
-              <span>{formatTrackNumber(track.trackNumber)}</span>
-              <strong>{track.title}</strong>
-              <em>{track.duration}</em>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <audio ref={audioRef} preload="metadata" src={activeSrc} className="wd-player__audio-host">
-        Your browser does not support audio playback.
-      </audio>
-
       {floatingUiRoot
         ? createPortal(
             <>
-              {isCollapsed && !isOpen ? (
+              {isCollapsed ? (
                 <div
                   ref={dockRef}
                   className={cx("wd-player-dock", isDraggingDock && "wd-player-dock--dragging")}
@@ -787,26 +728,21 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
                     <p>{activeTrackMeta}</p>
                   </div>
 
-                  <div className="wd-player-dock__actions" onPointerDown={handleDockActionPointerDown}>
-                    <button type="button" className="wd-player-dock__button" onPointerDown={handleDockActionPointerDown} onClick={() => void playCurrentTrack()}>
-                      Play
-                    </button>
-                    <button type="button" className="wd-player-dock__button" onPointerDown={handleDockActionPointerDown} onClick={stopCurrentTrack}>
-                      Stop
-                    </button>
-                    <button type="button" className="wd-player-dock__button" onPointerDown={handleDockActionPointerDown} onClick={reopenPlayer}>
-                      Open
-                    </button>
-                    <button
-                      type="button"
-                      className="wd-player-dock__button wd-player-dock__button--close"
-                      onPointerDown={handleDockActionPointerDown}
-                      onClick={dismissDock}
-                      aria-label="Hide listening room mini player"
-                    >
-                      X
-                    </button>
-                  </div>
+                  <audio
+                    ref={audioRef}
+                    preload="metadata"
+                    src={activeSrc}
+                    className="wd-player-dock__audio"
+                    controls
+                    controlsList="nodownload noplaybackrate"
+                    onPointerDown={handleDockActionPointerDown}
+                  >
+                    Your browser does not support audio playback.
+                  </audio>
+
+                  <button type="button" className="wd-player-dock__tagline" onPointerDown={handleDockActionPointerDown} onClick={reopenPlayer}>
+                    Enter the full Listening Room
+                  </button>
                 </div>
               ) : null}
 

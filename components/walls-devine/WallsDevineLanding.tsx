@@ -245,9 +245,11 @@ export function WallsDevineLanding() {
         <WallsDevineCollectorGrid tiles={instagramGrid} />
       </SectionShell>
 
-      <SectionShell id="walls-devine-listening-room" labelledBy="wd-player-title" className="wd-post-shell" innerClassName="wd-post">
+      <div id="walls-devine-listening-room" className="wd-player-anchor" aria-hidden="true" />
+
+      <div className="wd-player-anchor-shell">
         <WallsDevinePlayer tracks={songPostCards} />
-      </SectionShell>
+      </div>
     </>
   );
 }
