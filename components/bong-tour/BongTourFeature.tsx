@@ -980,14 +980,14 @@ export function BongTourFeature() {
           <ul className="bt-music__grid">
             {musicPosters.map((poster) => (
               <li key={poster.title} id={poster.id} className="bt-music__poster">
-                <div className="bt-music__visual" aria-hidden="true">
+                <button type="button" className="bt-music__visual" onClick={() => setActiveRoom(poster.room)} aria-label={`Open ${poster.title} cue room`}>
                   <Image src={poster.image} alt="" className="bt-music__visual-image" sizes="(max-width: 920px) 80vw, 26vw" />
                   <span className="bt-music__badge">{poster.badge}</span>
                   <div className="bt-music__marquee">
                     <h3>{poster.title}</h3>
                     <p>{poster.tagline}</p>
                   </div>
-                </div>
+                </button>
 
                 <div className="bt-music__details">
                   <p className="bt-music__lede">{poster.description}</p>

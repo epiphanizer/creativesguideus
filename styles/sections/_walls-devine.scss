@@ -127,6 +127,10 @@
   max-width: min(100%, 39rem);
 }
 
+.wd-hero__letter {
+  justify-self: center;
+}
+
 .wd-hero__journal {
   max-width: min(100%, 33rem);
   justify-self: end;
@@ -3047,6 +3051,39 @@
 .wd-player-modal__close:focus-visible {
   border-color: rgba(156, 7, 5, 0.4);
   background: rgba(253, 254, 254, 0.9);
+}
+
+.wd-player-dock__icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 1px solid rgba(156, 7, 5, 0.18);
+  background: rgba(253, 254, 254, 0.76);
+  color: rgba(108, 5, 8, 0.84);
+  cursor: pointer;
+  touch-action: manipulation;
+  flex-shrink: 0;
+
+  svg {
+    width: 0.82rem;
+    height: 0.82rem;
+    display: block;
+  }
+
+  &:hover,
+  &:focus-visible {
+    border-color: rgba(156, 7, 5, 0.4);
+    background: rgba(253, 254, 254, 0.9);
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
 }
 
 .wd-player-dock__button:hover,

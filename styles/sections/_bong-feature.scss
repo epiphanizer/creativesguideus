@@ -849,6 +849,10 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #f8f4ef;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  width: 100%;
 }
 
 .bt-music__visual > * {
@@ -863,9 +867,31 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.38;
-  mix-blend-mode: soft-light;
-  filter: saturate(1.16) contrast(1.08);
+  opacity: 0.58;
+  mix-blend-mode: screen;
+  filter: saturate(1.5) contrast(1.1) hue-rotate(0deg);
+  transition: opacity 0.6s ease;
+}
+
+@keyframes bt-psychedelic-dissolve {
+  0%   { filter: saturate(1.5) contrast(1.1) hue-rotate(0deg) brightness(1); opacity: 0.58; }
+  18%  { filter: saturate(2.6) contrast(1.28) hue-rotate(28deg) brightness(1.14); opacity: 0.78; }
+  36%  { filter: saturate(2.0) contrast(1.18) hue-rotate(-20deg) brightness(1.08); opacity: 0.68; }
+  54%  { filter: saturate(3.0) contrast(1.32) hue-rotate(44deg) brightness(1.2); opacity: 0.84; }
+  72%  { filter: saturate(2.2) contrast(1.22) hue-rotate(-10deg) brightness(1.12); opacity: 0.72; }
+  88%  { filter: saturate(1.8) contrast(1.14) hue-rotate(18deg) brightness(1.06); opacity: 0.62; }
+  100% { filter: saturate(1.5) contrast(1.1) hue-rotate(0deg) brightness(1); opacity: 0.58; }
+}
+
+.bt-music__visual:hover .bt-music__visual-image,
+.bt-music__visual:focus-visible .bt-music__visual-image {
+  animation: bt-psychedelic-dissolve 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bt-music__visual .bt-music__visual-image {
+    animation: none;
+  }
 }
 
 .bt-music__poster:nth-child(1) .bt-music__visual {

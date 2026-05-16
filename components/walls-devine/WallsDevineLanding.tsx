@@ -345,6 +345,36 @@ export function WallsDevineLanding() {
           <div className="wd-hero__copy">
 
             <div className="wd-hero__note-stack">
+              <div className="wd-hero__letter" aria-label="Personal collector note for Walls/Devine Volume 1">
+                <p className="wd-hero__letter-kicker">{collectorHeroNote.salutation}</p>
+                <p className="wd-hero__letter-body">{collectorHeroNote.body}</p>
+
+                <div className="wd-hero__letter-actions">
+                  <WallsDevineCollectorAccess
+                    source="walls-devine-hero"
+                    interest="Walls Devine private collector email"
+                    cardTitle="Private collector email"
+                    cardDescription="First-listen links, studio-journal fragments, artifact drop notes, and release-night updates delivered quietly as Volume 1 opens."
+                    benefits={["First-listen links", "Journal fragments", "Artifact drop notes"]}
+                    modalTitle="Private collector email"
+                    modalDescription="Leave your email for first-listen links, studio-journal fragments, artifact drop notes, and release-night updates delivered as Volume 1 opens."
+                    signupEyebrow="Collector access includes"
+                    signupTitle="What arrives first"
+                    signupDescription="First-listen links, studio-journal fragments, artifact drop notes, and release-night updates sent as each Volume 1 room opens."
+                    submitLabel="Join the private collector email"
+                    successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector note."
+                    note="High-signal only. Reserved for first listens, journal fragments, artifact drops, and release-night updates."
+                    roomOverlayScript="Collector Letter"
+                    roomOverlaySubtitle="Private first-listen access"
+                    renderTrigger={(openCollectorLetter) => (
+                      <Button type="button" variant="primary" className="wd-hero__letter-cta" onClick={openCollectorLetter}>
+                        Join the private collector email
+                      </Button>
+                    )}
+                  />
+                </div>
+              </div>
+
               <div className="wd-hero__journal" aria-label="Rotating journal entries from Volume 1">
                 <div className="wd-hero__letter-postscript">
                   <span className="wd-hero__letter-postscript-label">From the journals</span>
@@ -394,36 +424,6 @@ export function WallsDevineLanding() {
                       {shareFeedback === "shared" ? "Shared" : shareFeedback === "copied" ? "Copied" : "Share entry"}
                     </Button>
                   </div>
-                </div>
-              </div>
-
-              <div className="wd-hero__letter" aria-label="Personal collector note for Walls/Devine Volume 1">
-                <p className="wd-hero__letter-kicker">{collectorHeroNote.salutation}</p>
-                <p className="wd-hero__letter-body">{collectorHeroNote.body}</p>
-
-                <div className="wd-hero__letter-actions">
-                  <WallsDevineCollectorAccess
-                    source="walls-devine-hero"
-                    interest="Walls Devine private collector email"
-                    cardTitle="Private collector email"
-                    cardDescription="First-listen links, studio-journal fragments, artifact drop notes, and release-night updates delivered quietly as Volume 1 opens."
-                    benefits={["First-listen links", "Journal fragments", "Artifact drop notes"]}
-                    modalTitle="Private collector email"
-                    modalDescription="Leave your email for first-listen links, studio-journal fragments, artifact drop notes, and release-night updates delivered as Volume 1 opens."
-                    signupEyebrow="Collector access includes"
-                    signupTitle="What arrives first"
-                    signupDescription="First-listen links, studio-journal fragments, artifact drop notes, and release-night updates sent as each Volume 1 room opens."
-                    submitLabel="Join the private collector email"
-                    successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector note."
-                    note="High-signal only. Reserved for first listens, journal fragments, artifact drops, and release-night updates."
-                    roomOverlayScript="Collector Letter"
-                    roomOverlaySubtitle="Private first-listen access"
-                    renderTrigger={(openCollectorLetter) => (
-                      <Button type="button" variant="primary" className="wd-hero__letter-cta" onClick={openCollectorLetter}>
-                        Join the private collector email
-                      </Button>
-                    )}
-                  />
                 </div>
               </div>
             </div>

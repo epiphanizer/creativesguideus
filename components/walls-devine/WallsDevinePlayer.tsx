@@ -1300,11 +1300,35 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                     <div className="wd-player-dock__share-head">
                       <span>Currently playing</span>
                       <div className="wd-player-dock__share-actions">
-                        <button type="button" className="wd-player-dock__button" onClick={handleShareTrack} disabled={!activeShareUrl}>
-                          {supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Share track") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
+                        <button
+                          type="button"
+                          className="wd-player-dock__icon-button"
+                          onClick={handleShareTrack}
+                          disabled={!activeShareUrl}
+                          aria-label={supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Share track") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
+                          title={supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Share track") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
+                        >
+                          {shareFeedback !== "idle" ? (
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="2.5 8 6.5 12 13.5 4" /></svg>
+                          ) : supportsNativeShare ? (
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 10V3M5 6l3-3 3 3" /><path d="M3 10v3a1 1 0 001 1h8a1 1 0 001-1v-3" /></svg>
+                          ) : (
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6.5 9.5a3.5 3.5 0 005 0l2-2a3.5 3.5 0 00-5-5L7 4" /><path d="M9.5 6.5a3.5 3.5 0 00-5 0L2.5 8.5a3.5 3.5 0 005 5L9 12" /></svg>
+                          )}
                         </button>
-                        <button type="button" className="wd-player-dock__button" onClick={handleCopyTrackLink} disabled={!activeShareUrl}>
-                          {shareFeedback === "copied" ? "Link copied" : "Copy link"}
+                        <button
+                          type="button"
+                          className="wd-player-dock__icon-button"
+                          onClick={handleCopyTrackLink}
+                          disabled={!activeShareUrl}
+                          aria-label={shareFeedback === "copied" ? "Link copied" : "Copy direct link"}
+                          title={shareFeedback === "copied" ? "Link copied" : "Copy direct link"}
+                        >
+                          {shareFeedback === "copied" ? (
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="2.5 8 6.5 12 13.5 4" /></svg>
+                          ) : (
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6.5 9.5a3.5 3.5 0 005 0l2-2a3.5 3.5 0 00-5-5L7 4" /><path d="M9.5 6.5a3.5 3.5 0 00-5 0L2.5 8.5a3.5 3.5 0 005 5L9 12" /></svg>
+                          )}
                         </button>
                       </div>
                     </div>
