@@ -226,6 +226,29 @@ type DashboardModule = {
   status: "ready" | "pending";
 };
 
+type AdminTab = "overview" | "checklist" | "leads" | "listening" | "calendar" | "audio" | "posts" | "journals" | "health";
+
+const ADMIN_TABS: { id: AdminTab; label: string }[] = [
+  { id: "overview", label: "Overview" },
+  { id: "checklist", label: "Checklist" },
+  { id: "leads", label: "Leads" },
+  { id: "listening", label: "Listening" },
+  { id: "calendar", label: "Calendar" },
+  { id: "audio", label: "Audio" },
+  { id: "posts", label: "Posts" },
+  { id: "journals", label: "Journals" },
+  { id: "health", label: "Health" }
+];
+
+const MODULE_TAB_MAP: Partial<Record<string, AdminTab>> = {
+  "Release operations": "checklist",
+  "Collector leads": "leads",
+  "Content studio": "posts",
+  "Listening room traffic": "listening",
+  "Audio QA": "audio",
+  "Backend health": "health"
+};
+
 const fallbackAdminData: WallsDevineAdminData = {
   plan: {
     title: "Walls/Devine Control Room",
@@ -370,6 +393,7 @@ function buildDashboardModules({
 }
 
 export function AdminConsole() {
+  const [activeTab, setActiveTab] = useState<AdminTab>("overview");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authUser, setAuthUser] = useState<User | null>(null);
@@ -885,13 +909,8 @@ export function AdminConsole() {
     return (
       <main className="cg-page cg-admin-page">
         <SectionShell id="admin-loading" labelledBy="admin-loading-title" innerClassName="cg-admin cg-admin--login" variant="hero">
-          <SectionHeader
-            id="admin-loading-title"
-            eyebrow="Hidden route"
-            title="Admin Console"
-            description="Checking the current Firebase session before loading the control room."
-          />
-          <p className="cg-admin__helper">Waiting on Firebase Auth…</p>
+          <SectionHeader id="admin-loading-title" eyebrow="Admin" title="Control Room" />
+          <p className="cg-admin__helper">Checking session…</p>
         </SectionShell>
       </main>
     );
@@ -901,12 +920,7 @@ export function AdminConsole() {
     return (
       <main className="cg-page cg-admin-page">
         <SectionShell id="admin-login" labelledBy="admin-login-title" innerClassName="cg-admin cg-admin--login" variant="hero">
-          <SectionHeader
-            id="admin-login-title"
-            eyebrow="Hidden route"
-            title="Admin Console"
-            description="Sign in with the editor account for the Walls/Devine backend."
-          />
+          <SectionHeader id="admin-login-title" eyebrow="Admin" title="Control Room" description="Sign in to continue." />
 
           <form onSubmit={handleLogin} className="cg-admin__login-form">
             <label className="cg-admin__field">
@@ -931,7 +945,7 @@ export function AdminConsole() {
 
             <div className="cg-admin__login-actions">
               <Button type="submit" disabled={!hasFirebaseRuntime}>
-                Enter Admin
+                Sign in
               </Button>
             </div>
           </form>
@@ -944,13 +958,8 @@ export function AdminConsole() {
     return (
       <main className="cg-page cg-admin-page">
         <SectionShell id="admin-bootstrap" labelledBy="admin-bootstrap-title" innerClassName="cg-admin cg-admin--login" variant="hero">
-          <SectionHeader
-            id="admin-bootstrap-title"
-            eyebrow="Firebase admin"
-            title="Preparing the control room"
-            description="Verifying the editor profile and loading any available remote content."
-          />
-          <p className="cg-admin__helper">Signed in as {authUser.email ?? "Unknown email"}</p>
+          <SectionHeader id="admin-bootstrap-title" eyebrow="Admin" title="Loading" />
+          <p className="cg-admin__helper">Signed in as {authUser.email ?? "—"}…</p>
           {panelError ? <p className="cg-admin__error">{panelError}</p> : null}
           <div className="cg-admin__login-actions">
             <Button type="button" variant="ghost" onClick={handleLogout}>
@@ -966,19 +975,14 @@ export function AdminConsole() {
     return (
       <main className="cg-page cg-admin-page">
         <SectionShell id="admin-authorization" labelledBy="admin-authorization-title" innerClassName="cg-admin cg-admin--login" variant="hero">
-          <SectionHeader
-            id="admin-authorization-title"
-            eyebrow="Firebase admin"
-            title="Authorized editor profile required"
-            description="This session signed in correctly, but the editor profile was not visible yet."
-          />
+          <SectionHeader id="admin-authorization-title" eyebrow="Admin" title="Access denied" description="Your account needs an active admin profile." />
 
           <div className="cg-admin__stack">
-            <p className="cg-admin__error">{panelError || "This account is missing its adminUsers document."}</p>
-            <p className="cg-admin__helper">Signed in as: {authUser.email ?? "Unknown email"}</p>
+            <p className="cg-admin__error">{panelError || "No active admin profile found for this account."}</p>
+            <p className="cg-admin__helper">{authUser.email ?? "—"}</p>
             <div className="cg-admin__login-actions">
               <Button type="button" variant="secondary" onClick={handleRetryAccess}>
-                Retry access
+                Retry
               </Button>
               <Button type="button" variant="ghost" onClick={handleLogout}>
                 Log out
@@ -993,18 +997,22 @@ export function AdminConsole() {
   return (
     <main className="cg-page cg-admin-page">
       <SectionShell id="admin-console" labelledBy="admin-console-title" innerClassName="cg-admin">
-        <div className="cg-admin__topbar">
-          <SectionHeader
-            id="admin-console-title"
-            eyebrow="Admin"
-            title="Walls/Devine control room"
-            description={isScaffoldMode ? "Dashboard scaffold for release operations, audience capture, content management, and audio QA while live backend content reconnects." : "Release plan, calendar, and source content for Volume 1."}
-          />
 
+        {/* ── Topbar ── */}
+        <div className="cg-admin__topbar">
+          <div className="cg-admin__topbar-title">
+            <h1 id="admin-console-title">Walls/Devine</h1>
+            <p className="cg-admin__mode">Control room</p>
+          </div>
           <div className="cg-admin__topbar-actions">
-            <p className="cg-admin__mode">{authUser.email ?? "Unknown email"}</p>
+            <p className="cg-admin__mode">{authUser.email ?? "—"}</p>
             <div className="cg-admin__editor-actions">
-              <Button type="button" variant="ghost" onClick={handleLogout}>
+              {isScaffoldMode ? (
+                <Button type="button" variant="secondary" size="sm" onClick={handleRetryAccess}>
+                  Retry
+                </Button>
+              ) : null}
+              <Button type="button" variant="ghost" size="sm" onClick={handleLogout}>
                 Log out
               </Button>
             </div>
@@ -1012,587 +1020,571 @@ export function AdminConsole() {
         </div>
 
         {panelError ? <p className="cg-admin__error">{panelError}</p> : null}
-        {isRefreshingAuthorizedAdmin ? <p className="cg-admin__helper">Refreshing the live Firebase release plan and content while the dashboard stays visible.</p> : null}
-        {isScaffoldMode ? (
-          <div className="cg-admin__banner">
-            <div>
-              <strong>{isRefreshingAuthorizedAdmin ? "Live content is still hydrating" : "Scaffold mode is active"}</strong>
-              <p>
-                {isRefreshingAuthorizedAdmin
-                  ? "The dashboard is visible below while Firebase finishes loading the release plan, markdown content, and any available remote modules."
-                  : "The full dashboard is visible below, but the live Firebase content layer did not hydrate yet. Use retry to pull the real release-plan and content data back in."}
-              </p>
-            </div>
-            <div className="cg-admin__banner-actions">
-              <Button type="button" variant="secondary" size="sm" onClick={handleRetryAccess}>
-                Retry data load
-              </Button>
-              <Button type="button" variant="ghost" size="sm" onClick={handleLogout}>
-                Log out
-              </Button>
-            </div>
-          </div>
-        ) : !hasStorageBackedContent ? (
-          <p className="cg-admin__helper">
-            Draft and journal syncing is still waiting on Firebase Storage initialization. The release plan is live now, and a hidden health check is available below.
-          </p>
-        ) : null}
 
-        <div className="cg-admin__module-grid">
-          {dashboardModules.map((module) => (
-            <article key={module.title} className="cg-admin__panel cg-admin__module-card">
-              <div className="cg-admin__module-head">
-                <h2>{module.title}</h2>
-                <span className={["cg-admin__status-badge", module.status === "ready" ? "cg-admin__status-badge--ready" : "cg-admin__status-badge--pending"].join(" ")}>
-                  {module.status === "ready" ? "Ready" : "Pending"}
-                </span>
+        {/* ── Tab nav ── */}
+        <nav className="cg-admin__tab-nav" aria-label="Admin sections">
+          <div className="cg-admin__tab-list" role="tablist">
+            {ADMIN_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                role="tab"
+                type="button"
+                aria-selected={activeTab === tab.id}
+                aria-controls={`admin-tab-${tab.id}`}
+                id={`admin-tabBtn-${tab.id}`}
+                className={["cg-admin__tab-btn", activeTab === tab.id ? "cg-admin__tab-btn--active" : ""].filter(Boolean).join(" ")}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </nav>
+
+        {/* ── Overview tab ── */}
+        <section
+          id="admin-tab-overview"
+          role="tabpanel"
+          aria-labelledby="admin-tabBtn-overview"
+          className="cg-admin__tab-panel cg-admin__section"
+          hidden={activeTab !== "overview"}
+        >
+          {isScaffoldMode ? (
+            <div className="cg-admin__banner">
+              <div>
+                <strong>{isRefreshingAuthorizedAdmin ? "Loading" : "Live data unavailable"}</strong>
+                <p>Showing cached data while Firebase reconnects.</p>
               </div>
-              <strong className="cg-admin__module-stat">{module.summary}</strong>
-              <p>{module.detail}</p>
-            </article>
-          ))}
-        </div>
+              <div className="cg-admin__banner-actions">
+                <Button type="button" variant="secondary" size="sm" onClick={handleRetryAccess}>
+                  Retry
+                </Button>
+              </div>
+            </div>
+          ) : null}
 
-        <div className="cg-admin__grid cg-admin__grid--summary">
-          <article className="cg-admin__panel">
-            <h2>Data collections</h2>
-            <ul className="cg-admin__list">
-              <li>
-                <strong>Firestore / adminProjects/walls-devine</strong>
-                <span>Release plan is live. Checklist editing is enabled here today.</span>
-              </li>
-              <li>
-                <strong>Firestore / ecosystemLeads</strong>
-                <span>Collector signups are readable in the admin inbox.</span>
-              </li>
-              <li>
-                <strong>Firestore / listeningRoomVisits</strong>
-                <span>Shared song-link arrivals now surface below as analytics.</span>
-              </li>
-              <li>
-                <strong>Storage / instagram-posts + journals</strong>
-                <span>These support create, rename, update, and delete from this console.</span>
-              </li>
-              <li>
-                <strong>Firestore / adminUsers</strong>
-                <span>This collection gates editor access and is not yet editable from the UI.</span>
-              </li>
-            </ul>
-          </article>
-
-          <article className="cg-admin__panel">
-            <h2>Locked dates</h2>
-            <ul className="cg-admin__list">
-              {adminViewData.plan.lockedDates.map((item) => (
-                <li key={item.label}>
-                  <strong>{item.label}</strong>
-                  <span>{item.value}</span>
-                </li>
-              ))}
-            </ul>
-          </article>
-
-          <article className="cg-admin__panel">
-            <h2>Metadata standards</h2>
-            <ul className="cg-admin__list">
-              {adminViewData.plan.metadataStandards.map((item) => (
-                <li key={item.label}>
-                  <strong>{item.label}</strong>
-                  <span>{item.value}</span>
-                </li>
-              ))}
-            </ul>
-          </article>
-
-          <article className="cg-admin__panel">
-            <h2>Recommended setup</h2>
-            <ul className="cg-admin__bullet-list">
-              {adminViewData.plan.recommendedSetup.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </article>
-
-          <article className="cg-admin__panel">
-            <h2>Avoid</h2>
-            <ul className="cg-admin__bullet-list">
-              {adminViewData.plan.avoid.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </article>
-        </div>
-
-        <details className="cg-admin__health-check" open={Boolean(panelError) || isScaffoldMode || !hasStorageBackedContent}>
-          <summary>Health check</summary>
-          <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized notice={panelError || undefined} />
-        </details>
-      </SectionShell>
-
-      <SectionShell id="admin-release-plan" labelledBy="admin-release-plan-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-release-plan-title">Release checklist</h2>
-            <p>{adminViewData.plan.summary}</p>
-          </div>
-          <p className="cg-admin__updated">Updated {new Date(adminViewData.plan.updatedAt).toLocaleString()}</p>
-        </div>
-
-        <div className="cg-admin__phases">
-          {checklistByPhase.map(([phase, items]) => (
-            <article key={phase} className="cg-admin__panel">
-              <h3>{phase}</h3>
-              <div className="cg-admin__checklist">
-                {items.map((item) => (
-                  <div key={item.id} className="cg-admin__check-item">
-                    <span className={["cg-admin__checkmark", item.completed ? "cg-admin__checkmark--done" : ""].filter(Boolean).join(" ")} aria-hidden="true">
-                      {item.completed ? "✓" : "○"}
+          <div className="cg-admin__module-grid">
+            {dashboardModules.map((module) => {
+              const targetTab = MODULE_TAB_MAP[module.title];
+              return (
+                <article
+                  key={module.title}
+                  className={["cg-admin__panel cg-admin__module-card", targetTab ? "cg-admin__module-card--link" : ""].filter(Boolean).join(" ")}
+                  onClick={targetTab ? () => setActiveTab(targetTab) : undefined}
+                  role={targetTab ? "button" : undefined}
+                  tabIndex={targetTab ? 0 : undefined}
+                  onKeyDown={
+                    targetTab
+                      ? (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setActiveTab(targetTab);
+                          }
+                        }
+                      : undefined
+                  }
+                >
+                  <div className="cg-admin__module-head">
+                    <h2>{module.title}</h2>
+                    <span className={["cg-admin__status-badge", module.status === "ready" ? "cg-admin__status-badge--ready" : "cg-admin__status-badge--pending"].join(" ")}>
+                      {module.status === "ready" ? "Ready" : "Pending"}
                     </span>
-                    <div className="cg-admin__check-copy">
-                      <strong>{item.title}</strong>
-                      <span>Due: {item.dueDate}</span>
-                      <p>{item.notes}</p>
-                    </div>
-                    <Button type="button" variant={item.completed ? "ghost" : "secondary"} size="sm" onClick={() => handleChecklistToggle(item.id, !item.completed)} disabled={!adminData}>
-                      {item.completed ? "Reopen" : "Complete"}
-                    </Button>
                   </div>
-                ))}
-              </div>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell id="admin-ecosystem-leads" labelledBy="admin-ecosystem-leads-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-ecosystem-leads-title">Collector leads</h2>
-            <p>Recent email captures from the Walls/Devine hero and each collector-grid takeover room.</p>
+                  <strong className="cg-admin__module-stat">{module.summary}</strong>
+                  <p>{module.detail}</p>
+                </article>
+              );
+            })}
           </div>
-          <div className="cg-admin__section-actions">
-            <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.ecosystemLeadsCollection}</p>
-            <Button type="button" variant="secondary" size="sm" onClick={handleLeadsRefresh} disabled={leadsLoading}>
-              {leadsLoading ? "Refreshing…" : "Refresh leads"}
-            </Button>
+        </section>
+
+        {/* ── Checklist tab ── */}
+        <section
+          id="admin-tab-checklist"
+          role="tabpanel"
+          aria-labelledby="admin-tabBtn-checklist"
+          className="cg-admin__tab-panel cg-admin__section"
+          hidden={activeTab !== "checklist"}
+        >
+          <div className="cg-admin__section-head">
+            <div>
+              <h2>Release checklist</h2>
+            </div>
+            <p className="cg-admin__updated">Updated {new Date(adminViewData.plan.updatedAt).toLocaleString()}</p>
           </div>
-        </div>
 
-        {leadsError ? <p className="cg-admin__error">{leadsError}</p> : null}
-        {leadsLoading && !ecosystemLeads.length ? <p className="cg-admin__helper">Loading collector leads…</p> : null}
-
-        <div className="cg-admin__lead-grid">
-          <article className="cg-admin__panel">
-            <h3>Source mix</h3>
-            {leadSources.length ? (
-              <ul className="cg-admin__list">
-                {leadSources.map(([source, count]) => (
-                  <li key={source}>
-                    <strong>{formatLeadSource(source)}</strong>
-                    <span>{count} capture{count === 1 ? "" : "s"}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="cg-admin__helper">No collector leads have landed yet.</p>
-            )}
-          </article>
-
-          <article className="cg-admin__panel">
-            <h3>Recent signups</h3>
-            {ecosystemLeads.length ? (
-              <ul className="cg-admin__lead-list">
-                {ecosystemLeads.map((lead) => (
-                  <li key={lead.id} className="cg-admin__lead-item">
-                    <div>
-                      <strong>{lead.email}</strong>
-                      <span>{lead.fullName || "Name not provided"}</span>
+          <div className="cg-admin__phases">
+            {checklistByPhase.map(([phase, items]) => (
+              <article key={phase} className="cg-admin__panel">
+                <h3>{phase}</h3>
+                <div className="cg-admin__checklist">
+                  {items.map((item) => (
+                    <div key={item.id} className="cg-admin__check-item">
+                      <span className={["cg-admin__checkmark", item.completed ? "cg-admin__checkmark--done" : ""].filter(Boolean).join(" ")} aria-hidden="true">
+                        {item.completed ? "✓" : "○"}
+                      </span>
+                      <div className="cg-admin__check-copy">
+                        <strong>{item.title}</strong>
+                        <span>Due: {item.dueDate}</span>
+                        {item.notes ? <p>{item.notes}</p> : null}
+                      </div>
+                      <Button type="button" variant={item.completed ? "ghost" : "secondary"} size="sm" onClick={() => handleChecklistToggle(item.id, !item.completed)} disabled={!adminData}>
+                        {item.completed ? "Reopen" : "Complete"}
+                      </Button>
                     </div>
-                    <div className="cg-admin__lead-meta">
-                      <span>{formatLeadSource(lead.source)}</span>
-                      <span>{lead.interest}</span>
-                      <span>{new Date(lead.createdAt).toLocaleString()}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="cg-admin__helper">Collector signups will appear here once the public CTA is live.</p>
-            )}
-          </article>
-        </div>
-      </SectionShell>
-
-      <SectionShell id="admin-listening-room-visits" labelledBy="admin-listening-room-visits-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-listening-room-visits-title">Listening room visits</h2>
-            <p>Recent arrivals from shared song URLs, grouped by the track listeners landed on and the query key that opened the room.</p>
-          </div>
-          <div className="cg-admin__section-actions">
-            <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.listeningRoomVisitsCollection}</p>
-            <Button type="button" variant="secondary" size="sm" onClick={handleListeningRoomVisitsRefresh} disabled={visitsLoading}>
-              {visitsLoading ? "Refreshing…" : "Refresh visits"}
-            </Button>
-          </div>
-        </div>
-
-        {visitsError ? <p className="cg-admin__error">{visitsError}</p> : null}
-        {visitsLoading && !listeningRoomVisits.length ? <p className="cg-admin__helper">Loading listening-room visits…</p> : null}
-
-        <div className="cg-admin__lead-grid">
-          <article className="cg-admin__panel">
-            <h3>Song mix</h3>
-            {visitSongs.length ? (
-              <ul className="cg-admin__list">
-                {visitSongs.map(([songTitle, count]) => (
-                  <li key={songTitle}>
-                    <strong>{songTitle}</strong>
-                    <span>{count} visit{count === 1 ? "" : "s"}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="cg-admin__helper">Shared song-link traffic will appear here once those URLs start circulating.</p>
-            )}
-          </article>
-
-          <article className="cg-admin__panel">
-            <h3>Recent arrivals</h3>
-            {listeningRoomVisits.length ? (
-              <ul className="cg-admin__lead-list">
-                {listeningRoomVisits.map((visit) => (
-                  <li key={visit.id} className="cg-admin__lead-item">
-                    <div>
-                      <strong>{visit.songTitle}</strong>
-                      <span>{visit.songSlug}</span>
-                    </div>
-                    <div className="cg-admin__lead-meta">
-                      <span>{formatListeningRoomQueryKey(visit.queryKey)}</span>
-                      <span>{visit.pagePath}</span>
-                      <span>{visit.referrer || "Direct / unknown referrer"}</span>
-                      <span>{new Date(visit.createdAt).toLocaleString()}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="cg-admin__helper">No shared listening-room arrivals have been tracked yet.</p>
-            )}
-          </article>
-        </div>
-      </SectionShell>
-
-      <SectionShell id="admin-calendar" labelledBy="admin-calendar-title" innerClassName="cg-admin__section">
-        <h2 id="admin-calendar-title">Campaign calendar</h2>
-        <div className="cg-admin__calendar">
-          {adminViewData.plan.calendar.map((item) => (
-            <article key={`${item.date}-${item.action}`} className="cg-admin__panel">
-              <span className="cg-admin__calendar-date">{item.date}</span>
-              <h3>{item.action}</h3>
-              <p>{item.purpose}</p>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell id="admin-audio-analysis" labelledBy="admin-audio-analysis-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-audio-analysis-title">Backend WAV analysis</h2>
-            <p>Server-inspected technical metadata for the live release WAVs in the Volume 1 folder.</p>
-          </div>
-          <div className="cg-admin__section-actions">
-            <p className="cg-admin__path-note">Source: public/walls-devine/releases/volume1</p>
-            <Button type="button" variant="secondary" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
-              {audioLoading ? "Refreshing…" : "Refresh analysis"}
-            </Button>
-          </div>
-        </div>
-
-        {audioError ? <p className="cg-admin__error">{audioError}</p> : null}
-        {audioLoading && !audioAnalysis.length ? <p className="cg-admin__helper">Inspecting release WAVs…</p> : null}
-
-        {audioAnalysis.length ? (
-          <div className="cg-admin__audio-grid">
-            {audioAnalysis.map((analysis) => (
-              <article key={analysis.fileName} className="cg-admin__panel cg-admin__audio-card">
-                <div className="cg-admin__audio-head">
-                  <div>
-                    <h3>{analysis.title ?? analysis.fileName.replace(/\.wav$/i, "")}</h3>
-                    <p>{analysis.relativePath}</p>
-                  </div>
-                  <span className={[
-                    "cg-admin__status-badge",
-                    analysis.error ? "cg-admin__status-badge--pending" : "cg-admin__status-badge--ready"
-                  ].join(" ")}>{analysis.error ? "Parse issue" : "Analyzed"}</span>
+                  ))}
                 </div>
-
-                {analysis.error ? <p className="cg-admin__error">{analysis.error}</p> : null}
-
-                <dl className="cg-admin__audio-metrics">
-                  <div>
-                    <dt>Duration</dt>
-                    <dd>{analysis.durationLabel}</dd>
-                  </div>
-                  <div>
-                    <dt>Sample rate</dt>
-                    <dd>{formatAudioSampleRate(analysis.sampleRate)}</dd>
-                  </div>
-                  <div>
-                    <dt>Channels</dt>
-                    <dd>{formatAudioChannels(analysis.channels)}</dd>
-                  </div>
-                  <div>
-                    <dt>Bit depth</dt>
-                    <dd>{formatAudioBitDepth(analysis.bitDepth)}</dd>
-                  </div>
-                  <div>
-                    <dt>Bitrate</dt>
-                    <dd>{formatAudioBitrate(analysis.bitrateKbps)}</dd>
-                  </div>
-                  <div>
-                    <dt>Format</dt>
-                    <dd>{formatAudioFormat(analysis)}</dd>
-                  </div>
-                  <div>
-                    <dt>Lossless</dt>
-                    <dd>{formatAudioLossless(analysis.lossless)}</dd>
-                  </div>
-                  <div>
-                    <dt>File size</dt>
-                    <dd>{analysis.fileSizeLabel}</dd>
-                  </div>
-                </dl>
-
-                <dl className="cg-admin__audio-tags">
-                  <div>
-                    <dt>Embedded title</dt>
-                    <dd>{analysis.title ?? "—"}</dd>
-                  </div>
-                  <div>
-                    <dt>Artist</dt>
-                    <dd>{analysis.artist ?? "—"}</dd>
-                  </div>
-                  <div>
-                    <dt>Album artist</dt>
-                    <dd>{analysis.albumArtist ?? "—"}</dd>
-                  </div>
-                  <div>
-                    <dt>Album</dt>
-                    <dd>{analysis.album ?? "—"}</dd>
-                  </div>
-                  <div>
-                    <dt>Track</dt>
-                    <dd>{formatAudioTrackNumber(analysis.trackNumber)}</dd>
-                  </div>
-                  <div>
-                    <dt>Year</dt>
-                    <dd>{analysis.year ?? "—"}</dd>
-                  </div>
-                </dl>
               </article>
             ))}
           </div>
-        ) : null}
-      </SectionShell>
+        </section>
 
-      <SectionShell id="admin-instagram-posts" labelledBy="admin-instagram-posts-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-instagram-posts-title">Instagram drafts</h2>
-            <p>These entries now save to Firebase Storage so Terry can create, rename, update, and delete the live draft layer without touching repo files.</p>
-          </div>
-          <p className="cg-admin__path-note">Storage path: {firebaseAdminPaths.storageBasePath}/instagram-posts</p>
-        </div>
-
-        <div className="cg-admin__file-grid">
-          <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--create">
-            <div className="cg-admin__file-head">
-              <div>
-                <h3>New Instagram draft</h3>
-                <p>Create a new live markdown file. Leave the slug blank to derive it from the title.</p>
-              </div>
+        {/* ── Leads tab ── */}
+        <section
+          id="admin-tab-leads"
+          role="tabpanel"
+          aria-labelledby="admin-tabBtn-leads"
+          className="cg-admin__tab-panel cg-admin__section"
+          hidden={activeTab !== "leads"}
+        >
+          <div className="cg-admin__section-head">
+            <div>
+              <h2>Collector leads</h2>
             </div>
-            <form onSubmit={(event) => handleMarkdownCreate(event, "instagram-posts")} className="cg-admin__editor-form">
-              <div className="cg-admin__editor-split">
-                <label className="cg-admin__editor-field">
-                  <span>Title</span>
-                  <input name="title" type="text" className="cg-admin__editor-input" placeholder="Space Cruiser instrumental" required />
-                </label>
-                <label className="cg-admin__editor-field">
-                  <span>Slug</span>
-                  <input name="slug" type="text" className="cg-admin__editor-input" placeholder="space-cruiser-instrumental" spellCheck={false} />
-                </label>
-              </div>
-              <label className="cg-admin__editor-field">
-                <span>Initial markdown</span>
-                <textarea
-                  name="content"
-                  className="cg-admin__editor-textarea"
-                  rows={10}
-                  spellCheck={false}
-                  placeholder="# Space Cruiser instrumental&#10;&#10;Start writing the post here."
-                />
-              </label>
-              <div className="cg-admin__editor-actions">
-                <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || saveStates[getCreateNoticeKey("instagram-posts")] === "saving"}>
-                  Create draft
-                </Button>
-                {saveStates[getCreateNoticeKey("instagram-posts")] === "saving" ? <p className="cg-admin__save-note">Creating…</p> : null}
-                {saveStates[getCreateNoticeKey("instagram-posts")] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Created.</p> : null}
-                {saveStates[getCreateNoticeKey("instagram-posts")] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not create this draft.</p> : null}
-                {!hasStorageBackedContent ? <p className="cg-admin__save-note">Storage must be live before drafts can be changed.</p> : null}
-              </div>
-            </form>
-          </article>
+            <div className="cg-admin__section-actions">
+              <Button type="button" variant="secondary" size="sm" onClick={handleLeadsRefresh} disabled={leadsLoading}>
+                {leadsLoading ? "Refreshing…" : "Refresh"}
+              </Button>
+            </div>
+          </div>
 
-          {adminViewData.instagramDrafts.map((draft) => {
-            const saveKey = getSaveNoticeKey("instagram-posts", draft.slug);
-            const saveState = saveStates[saveKey];
-            const isBusy = saveState === "saving" || saveState === "deleting";
+          {leadsError ? <p className="cg-admin__error">{leadsError}</p> : null}
+          {leadsLoading && !ecosystemLeads.length ? <p className="cg-admin__helper">Loading…</p> : null}
 
-            return (
-              <article key={draft.slug} className="cg-admin__panel cg-admin__file-card">
-                <div className="cg-admin__file-head">
-                  <div>
-                    <h3>{draft.title}</h3>
-                    <p>{draft.filePath}</p>
+          <div className="cg-admin__lead-grid">
+            <article className="cg-admin__panel">
+              <h3>Source mix</h3>
+              {leadSources.length ? (
+                <ul className="cg-admin__list">
+                  {leadSources.map(([source, count]) => (
+                    <li key={source}>
+                      <strong>{formatLeadSource(source)}</strong>
+                      <span>{count} capture{count === 1 ? "" : "s"}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="cg-admin__helper">No leads yet.</p>
+              )}
+            </article>
+
+            <article className="cg-admin__panel">
+              <h3>Recent signups</h3>
+              {ecosystemLeads.length ? (
+                <ul className="cg-admin__lead-list">
+                  {ecosystemLeads.map((lead) => (
+                    <li key={lead.id} className="cg-admin__lead-item">
+                      <div>
+                        <strong>{lead.email}</strong>
+                        <span>{lead.fullName || "—"}</span>
+                      </div>
+                      <div className="cg-admin__lead-meta">
+                        <span>{formatLeadSource(lead.source)}</span>
+                        <span>{lead.interest}</span>
+                        <span>{new Date(lead.createdAt).toLocaleString()}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="cg-admin__helper">Signups will appear here once the collector CTA is live.</p>
+              )}
+            </article>
+          </div>
+        </section>
+
+        {/* ── Listening tab ── */}
+        <section
+          id="admin-tab-listening"
+          role="tabpanel"
+          aria-labelledby="admin-tabBtn-listening"
+          className="cg-admin__tab-panel cg-admin__section"
+          hidden={activeTab !== "listening"}
+        >
+          <div className="cg-admin__section-head">
+            <div>
+              <h2>Listening room visits</h2>
+            </div>
+            <div className="cg-admin__section-actions">
+              <Button type="button" variant="secondary" size="sm" onClick={handleListeningRoomVisitsRefresh} disabled={visitsLoading}>
+                {visitsLoading ? "Refreshing…" : "Refresh"}
+              </Button>
+            </div>
+          </div>
+
+          {visitsError ? <p className="cg-admin__error">{visitsError}</p> : null}
+          {visitsLoading && !listeningRoomVisits.length ? <p className="cg-admin__helper">Loading…</p> : null}
+
+          <div className="cg-admin__lead-grid">
+            <article className="cg-admin__panel">
+              <h3>Song mix</h3>
+              {visitSongs.length ? (
+                <ul className="cg-admin__list">
+                  {visitSongs.map(([songTitle, count]) => (
+                    <li key={songTitle}>
+                      <strong>{songTitle}</strong>
+                      <span>{count} visit{count === 1 ? "" : "s"}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="cg-admin__helper">No visits yet.</p>
+              )}
+            </article>
+
+            <article className="cg-admin__panel">
+              <h3>Recent arrivals</h3>
+              {listeningRoomVisits.length ? (
+                <ul className="cg-admin__lead-list">
+                  {listeningRoomVisits.map((visit) => (
+                    <li key={visit.id} className="cg-admin__lead-item">
+                      <div>
+                        <strong>{visit.songTitle}</strong>
+                        <span>{visit.songSlug}</span>
+                      </div>
+                      <div className="cg-admin__lead-meta">
+                        <span>{formatListeningRoomQueryKey(visit.queryKey)}</span>
+                        <span>{visit.pagePath}</span>
+                        <span>{visit.referrer || "Direct"}</span>
+                        <span>{new Date(visit.createdAt).toLocaleString()}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="cg-admin__helper">No arrivals tracked yet.</p>
+              )}
+            </article>
+          </div>
+        </section>
+
+        {/* ── Calendar tab ── */}
+        <section
+          id="admin-tab-calendar"
+          role="tabpanel"
+          aria-labelledby="admin-tabBtn-calendar"
+          className="cg-admin__tab-panel cg-admin__section"
+          hidden={activeTab !== "calendar"}
+        >
+          <div className="cg-admin__section-head">
+            <div>
+              <h2>Campaign calendar</h2>
+            </div>
+          </div>
+          <div className="cg-admin__calendar">
+            {adminViewData.plan.calendar.map((item) => (
+              <article key={`${item.date}-${item.action}`} className="cg-admin__panel">
+                <span className="cg-admin__calendar-date">{item.date}</span>
+                <h3>{item.action}</h3>
+                <p>{item.purpose}</p>
+              </article>
+            ))}
+          </div>
+          {adminViewData.plan.lockedDates.length ? (
+            <article className="cg-admin__panel">
+              <h3>Locked dates</h3>
+              <ul className="cg-admin__list">
+                {adminViewData.plan.lockedDates.map((item) => (
+                  <li key={item.label}>
+                    <strong>{item.label}</strong>
+                    <span>{item.value}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ) : null}
+        </section>
+
+        {/* ── Audio tab ── */}
+        <section
+          id="admin-tab-audio"
+          role="tabpanel"
+          aria-labelledby="admin-tabBtn-audio"
+          className="cg-admin__tab-panel cg-admin__section"
+          hidden={activeTab !== "audio"}
+        >
+          <div className="cg-admin__section-head">
+            <div>
+              <h2>Audio analysis</h2>
+            </div>
+            <div className="cg-admin__section-actions">
+              <Button type="button" variant="secondary" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
+                {audioLoading ? "Refreshing…" : "Refresh"}
+              </Button>
+            </div>
+          </div>
+
+          {audioError ? <p className="cg-admin__error">{audioError}</p> : null}
+          {audioLoading && !audioAnalysis.length ? <p className="cg-admin__helper">Inspecting WAVs…</p> : null}
+
+          {audioAnalysis.length ? (
+            <div className="cg-admin__audio-grid">
+              {audioAnalysis.map((analysis) => (
+                <article key={analysis.fileName} className="cg-admin__panel cg-admin__audio-card">
+                  <div className="cg-admin__audio-head">
+                    <div>
+                      <h3>{analysis.title ?? analysis.fileName.replace(/\.wav$/i, "")}</h3>
+                      <p>{analysis.relativePath}</p>
+                    </div>
+                    <span className={["cg-admin__status-badge", analysis.error ? "cg-admin__status-badge--pending" : "cg-admin__status-badge--ready"].join(" ")}>
+                      {analysis.error ? "Parse issue" : "Analyzed"}
+                    </span>
                   </div>
+
+                  {analysis.error ? <p className="cg-admin__error">{analysis.error}</p> : null}
+
+                  <dl className="cg-admin__audio-metrics">
+                    <div><dt>Duration</dt><dd>{analysis.durationLabel}</dd></div>
+                    <div><dt>Sample rate</dt><dd>{formatAudioSampleRate(analysis.sampleRate)}</dd></div>
+                    <div><dt>Channels</dt><dd>{formatAudioChannels(analysis.channels)}</dd></div>
+                    <div><dt>Bit depth</dt><dd>{formatAudioBitDepth(analysis.bitDepth)}</dd></div>
+                    <div><dt>Bitrate</dt><dd>{formatAudioBitrate(analysis.bitrateKbps)}</dd></div>
+                    <div><dt>Format</dt><dd>{formatAudioFormat(analysis)}</dd></div>
+                    <div><dt>Lossless</dt><dd>{formatAudioLossless(analysis.lossless)}</dd></div>
+                    <div><dt>File size</dt><dd>{analysis.fileSizeLabel}</dd></div>
+                  </dl>
+
+                  <dl className="cg-admin__audio-tags">
+                    <div><dt>Title</dt><dd>{analysis.title ?? "—"}</dd></div>
+                    <div><dt>Artist</dt><dd>{analysis.artist ?? "—"}</dd></div>
+                    <div><dt>Album artist</dt><dd>{analysis.albumArtist ?? "—"}</dd></div>
+                    <div><dt>Album</dt><dd>{analysis.album ?? "—"}</dd></div>
+                    <div><dt>Track</dt><dd>{formatAudioTrackNumber(analysis.trackNumber)}</dd></div>
+                    <div><dt>Year</dt><dd>{analysis.year ?? "—"}</dd></div>
+                  </dl>
+                </article>
+              ))}
+            </div>
+          ) : null}
+        </section>
+
+        {/* ── Posts tab ── */}
+        <section
+          id="admin-tab-posts"
+          role="tabpanel"
+          aria-labelledby="admin-tabBtn-posts"
+          className="cg-admin__tab-panel cg-admin__section"
+          hidden={activeTab !== "posts"}
+        >
+          <div className="cg-admin__section-head">
+            <div>
+              <h2>Instagram drafts</h2>
+            </div>
+          </div>
+
+          <div className="cg-admin__file-grid">
+            <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--create">
+              <h3>New draft</h3>
+              <form onSubmit={(event) => handleMarkdownCreate(event, "instagram-posts")} className="cg-admin__editor-form">
+                <div className="cg-admin__editor-split">
+                  <label className="cg-admin__editor-field">
+                    <span>Title</span>
+                    <input name="title" type="text" className="cg-admin__editor-input" placeholder="Space Cruiser instrumental" required />
+                  </label>
+                  <label className="cg-admin__editor-field">
+                    <span>Slug</span>
+                    <input name="slug" type="text" className="cg-admin__editor-input" placeholder="space-cruiser-instrumental" spellCheck={false} />
+                  </label>
                 </div>
-                <p>{draft.preview}</p>
-                <form onSubmit={(event) => handleMarkdownSave(event, "instagram-posts", draft.slug)} className="cg-admin__editor-form">
-                  <div className="cg-admin__editor-split">
-                    <label className="cg-admin__editor-field">
-                      <span>Slug</span>
-                      <input name="slug" type="text" defaultValue={draft.slug} className="cg-admin__editor-input" spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
-                    </label>
-                  </div>
-                  <label className="cg-admin__editor-field">
-                    <span>Markdown source</span>
-                    <textarea name="content" defaultValue={draft.content} className="cg-admin__editor-textarea" rows={18} spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
-                  </label>
-                  <div className="cg-admin__editor-actions">
-                    <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || isBusy}>
-                      Save draft
-                    </Button>
-                    <Button type="button" variant="ghost" size="sm" onClick={() => handleMarkdownDelete("instagram-posts", draft.slug)} disabled={!hasStorageBackedContent || isBusy}>
-                      Delete
-                    </Button>
-                    {saveState === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
-                    {saveState === "deleting" ? <p className="cg-admin__save-note">Deleting…</p> : null}
-                    {saveState === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
-                    {saveState === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this draft.</p> : null}
-                  </div>
-                </form>
-              </article>
-            );
-          })}
-
-          {!adminViewData.instagramDrafts.length ? (
-            <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--empty">
-              <h3>No Instagram drafts loaded yet</h3>
-              <p>{isScaffoldMode ? "You are seeing the content-studio scaffold while live Firebase data reconnects." : "Drafts will appear here once the live Firebase Storage layer is initialized."}</p>
+                <label className="cg-admin__editor-field">
+                  <span>Markdown</span>
+                  <textarea
+                    name="content"
+                    className="cg-admin__editor-textarea"
+                    rows={10}
+                    spellCheck={false}
+                    placeholder="# Space Cruiser instrumental&#10;&#10;Start writing the post here."
+                  />
+                </label>
+                <div className="cg-admin__editor-actions">
+                  <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || saveStates[getCreateNoticeKey("instagram-posts")] === "saving"}>
+                    Create draft
+                  </Button>
+                  {saveStates[getCreateNoticeKey("instagram-posts")] === "saving" ? <p className="cg-admin__save-note">Creating…</p> : null}
+                  {saveStates[getCreateNoticeKey("instagram-posts")] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Created.</p> : null}
+                  {saveStates[getCreateNoticeKey("instagram-posts")] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not create this draft.</p> : null}
+                  {!hasStorageBackedContent ? <p className="cg-admin__save-note">Storage sync pending.</p> : null}
+                </div>
+              </form>
             </article>
-          ) : null}
-        </div>
-      </SectionShell>
 
-      <SectionShell id="admin-journals" labelledBy="admin-journals-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-journals-title">Song journals</h2>
-            <p>Public-facing journal entries now support full CRUD in Firebase Storage, so Terry can manage what appears in the live song journal layer.</p>
+            {adminViewData.instagramDrafts.map((draft) => {
+              const saveKey = getSaveNoticeKey("instagram-posts", draft.slug);
+              const saveState = saveStates[saveKey];
+              const isBusy = saveState === "saving" || saveState === "deleting";
+
+              return (
+                <article key={draft.slug} className="cg-admin__panel cg-admin__file-card">
+                  <div className="cg-admin__file-head">
+                    <h3>{draft.title}</h3>
+                    <p className="cg-admin__mode">{draft.slug}</p>
+                  </div>
+                  {draft.preview ? <p>{draft.preview}</p> : null}
+                  <form onSubmit={(event) => handleMarkdownSave(event, "instagram-posts", draft.slug)} className="cg-admin__editor-form">
+                    <div className="cg-admin__editor-split">
+                      <label className="cg-admin__editor-field">
+                        <span>Slug</span>
+                        <input name="slug" type="text" defaultValue={draft.slug} className="cg-admin__editor-input" spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
+                      </label>
+                    </div>
+                    <label className="cg-admin__editor-field">
+                      <span>Markdown</span>
+                      <textarea name="content" defaultValue={draft.content} className="cg-admin__editor-textarea" rows={18} spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
+                    </label>
+                    <div className="cg-admin__editor-actions">
+                      <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || isBusy}>
+                        Save draft
+                      </Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => handleMarkdownDelete("instagram-posts", draft.slug)} disabled={!hasStorageBackedContent || isBusy}>
+                        Delete
+                      </Button>
+                      {saveState === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
+                      {saveState === "deleting" ? <p className="cg-admin__save-note">Deleting…</p> : null}
+                      {saveState === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
+                      {saveState === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this draft.</p> : null}
+                    </div>
+                  </form>
+                </article>
+              );
+            })}
+
+            {!adminViewData.instagramDrafts.length ? (
+              <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--empty">
+                <h3>No drafts yet</h3>
+              </article>
+            ) : null}
           </div>
-          <p className="cg-admin__path-note">Storage path: {firebaseAdminPaths.storageBasePath}/journals</p>
-        </div>
+        </section>
 
-        <div className="cg-admin__file-grid">
-          <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--create">
-            <div className="cg-admin__file-head">
-              <div>
-                <h3>New journal entry</h3>
-                <p>Create a new public-facing journal file. Leave the slug blank to derive it from the title.</p>
-              </div>
+        {/* ── Journals tab ── */}
+        <section
+          id="admin-tab-journals"
+          role="tabpanel"
+          aria-labelledby="admin-tabBtn-journals"
+          className="cg-admin__tab-panel cg-admin__section"
+          hidden={activeTab !== "journals"}
+        >
+          <div className="cg-admin__section-head">
+            <div>
+              <h2>Song journals</h2>
             </div>
-            <form onSubmit={(event) => handleMarkdownCreate(event, "journals")} className="cg-admin__editor-form">
-              <div className="cg-admin__editor-split">
-                <label className="cg-admin__editor-field">
-                  <span>Title</span>
-                  <input name="title" type="text" className="cg-admin__editor-input" placeholder="Gratitude - Studio Journal" required />
-                </label>
-                <label className="cg-admin__editor-field">
-                  <span>Slug</span>
-                  <input name="slug" type="text" className="cg-admin__editor-input" placeholder="gratitude" spellCheck={false} />
-                </label>
-              </div>
-              <label className="cg-admin__editor-field">
-                <span>Initial markdown</span>
-                <textarea
-                  name="content"
-                  className="cg-admin__editor-textarea"
-                  rows={10}
-                  spellCheck={false}
-                  placeholder="# Gratitude - Studio Journal&#10;&#10;Start writing the journal here."
-                />
-              </label>
-              <div className="cg-admin__editor-actions">
-                <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || saveStates[getCreateNoticeKey("journals")] === "saving"}>
-                  Create journal
-                </Button>
-                {saveStates[getCreateNoticeKey("journals")] === "saving" ? <p className="cg-admin__save-note">Creating…</p> : null}
-                {saveStates[getCreateNoticeKey("journals")] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Created.</p> : null}
-                {saveStates[getCreateNoticeKey("journals")] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not create this journal.</p> : null}
-                {!hasStorageBackedContent ? <p className="cg-admin__save-note">Storage must be live before journals can be changed.</p> : null}
-              </div>
-            </form>
-          </article>
+          </div>
 
-          {adminViewData.journalEntries.map((entry) => {
-            const saveKey = getSaveNoticeKey("journals", entry.slug);
-            const saveState = saveStates[saveKey];
-            const isBusy = saveState === "saving" || saveState === "deleting";
-
-            return (
-              <article key={entry.slug} className="cg-admin__panel cg-admin__file-card">
-                <h3>{entry.title}</h3>
-                <p>{entry.filePath}</p>
-                <p>{entry.preview}</p>
-                <form onSubmit={(event) => handleMarkdownSave(event, "journals", entry.slug)} className="cg-admin__editor-form">
-                  <div className="cg-admin__editor-split">
-                    <label className="cg-admin__editor-field">
-                      <span>Slug</span>
-                      <input name="slug" type="text" defaultValue={entry.slug} className="cg-admin__editor-input" spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
-                    </label>
-                  </div>
+          <div className="cg-admin__file-grid">
+            <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--create">
+              <h3>New journal</h3>
+              <form onSubmit={(event) => handleMarkdownCreate(event, "journals")} className="cg-admin__editor-form">
+                <div className="cg-admin__editor-split">
                   <label className="cg-admin__editor-field">
-                    <span>Markdown source</span>
-                    <textarea name="content" defaultValue={entry.content} className="cg-admin__editor-textarea" rows={18} spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
+                    <span>Title</span>
+                    <input name="title" type="text" className="cg-admin__editor-input" placeholder="Gratitude - Studio Journal" required />
                   </label>
-                  <div className="cg-admin__editor-actions">
-                    <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || isBusy}>
-                      Save journal
-                    </Button>
-                    <Button type="button" variant="ghost" size="sm" onClick={() => handleMarkdownDelete("journals", entry.slug)} disabled={!hasStorageBackedContent || isBusy}>
-                      Delete
-                    </Button>
-                    {saveState === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
-                    {saveState === "deleting" ? <p className="cg-admin__save-note">Deleting…</p> : null}
-                    {saveState === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
-                    {saveState === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this journal.</p> : null}
-                  </div>
-                </form>
-              </article>
-            );
-          })}
+                  <label className="cg-admin__editor-field">
+                    <span>Slug</span>
+                    <input name="slug" type="text" className="cg-admin__editor-input" placeholder="gratitude" spellCheck={false} />
+                  </label>
+                </div>
+                <label className="cg-admin__editor-field">
+                  <span>Markdown</span>
+                  <textarea
+                    name="content"
+                    className="cg-admin__editor-textarea"
+                    rows={10}
+                    spellCheck={false}
+                    placeholder="# Gratitude - Studio Journal&#10;&#10;Start writing the journal here."
+                  />
+                </label>
+                <div className="cg-admin__editor-actions">
+                  <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || saveStates[getCreateNoticeKey("journals")] === "saving"}>
+                    Create journal
+                  </Button>
+                  {saveStates[getCreateNoticeKey("journals")] === "saving" ? <p className="cg-admin__save-note">Creating…</p> : null}
+                  {saveStates[getCreateNoticeKey("journals")] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Created.</p> : null}
+                  {saveStates[getCreateNoticeKey("journals")] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not create this journal.</p> : null}
+                  {!hasStorageBackedContent ? <p className="cg-admin__save-note">Storage sync pending.</p> : null}
+                </div>
+              </form>
+            </article>
 
-          {!adminViewData.journalEntries.length ? (
-            <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--empty">
-              <h3>No journals loaded yet</h3>
-              <p>{isScaffoldMode ? "The journal editor is scaffolded and ready once the live content layer reconnects." : "Journal entries will appear here once the Firebase-backed content collection is available."}</p>
+            {adminViewData.journalEntries.map((entry) => {
+              const saveKey = getSaveNoticeKey("journals", entry.slug);
+              const saveState = saveStates[saveKey];
+              const isBusy = saveState === "saving" || saveState === "deleting";
+
+              return (
+                <article key={entry.slug} className="cg-admin__panel cg-admin__file-card">
+                  <div className="cg-admin__file-head">
+                    <h3>{entry.title}</h3>
+                    <p className="cg-admin__mode">{entry.slug}</p>
+                  </div>
+                  {entry.preview ? <p>{entry.preview}</p> : null}
+                  <form onSubmit={(event) => handleMarkdownSave(event, "journals", entry.slug)} className="cg-admin__editor-form">
+                    <div className="cg-admin__editor-split">
+                      <label className="cg-admin__editor-field">
+                        <span>Slug</span>
+                        <input name="slug" type="text" defaultValue={entry.slug} className="cg-admin__editor-input" spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
+                      </label>
+                    </div>
+                    <label className="cg-admin__editor-field">
+                      <span>Markdown</span>
+                      <textarea name="content" defaultValue={entry.content} className="cg-admin__editor-textarea" rows={18} spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
+                    </label>
+                    <div className="cg-admin__editor-actions">
+                      <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || isBusy}>
+                        Save journal
+                      </Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => handleMarkdownDelete("journals", entry.slug)} disabled={!hasStorageBackedContent || isBusy}>
+                        Delete
+                      </Button>
+                      {saveState === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
+                      {saveState === "deleting" ? <p className="cg-admin__save-note">Deleting…</p> : null}
+                      {saveState === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
+                      {saveState === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this journal.</p> : null}
+                    </div>
+                  </form>
+                </article>
+              );
+            })}
+
+            {!adminViewData.journalEntries.length ? (
+              <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--empty">
+                <h3>No journals yet</h3>
+              </article>
+            ) : null}
+          </div>
+        </section>
+
+        {/* ── Health tab ── */}
+        <section
+          id="admin-tab-health"
+          role="tabpanel"
+          aria-labelledby="admin-tabBtn-health"
+          className="cg-admin__tab-panel cg-admin__section"
+          hidden={activeTab !== "health"}
+        >
+          <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized notice={panelError || undefined} />
+          {adminViewData.plan.guidance.length ? (
+            <article className="cg-admin__panel">
+              <h3>Notes</h3>
+              <ul className="cg-admin__bullet-list">
+                {adminViewData.plan.guidance.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </article>
           ) : null}
-        </div>
+        </section>
+
       </SectionShell>
     </main>
   );
