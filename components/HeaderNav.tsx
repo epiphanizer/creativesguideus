@@ -4,10 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { anchors } from "./nav/anchors";
+import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 import { useActiveSection } from "../hooks/useActiveSection";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
-
-const PRIMARY_ROUTE = "/walls-devine";
 
 export function HeaderNav() {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -129,13 +128,31 @@ export function HeaderNav() {
               ))}
             </ul>
           </nav>
-          <button
-            type="button"
-            className="cg-header__cta"
-            onClick={() => handleLinkNavigate(PRIMARY_ROUTE)}
-          >
-            Enter Volume 1
-          </button>
+          <WallsDevineCollectorAccess
+            source="header-nav"
+            interest="Walls Devine collector signal list"
+            cardTitle="Enter The Signal Room"
+            cardDescription="Get the shortest route to first-listen links, journal fragments, hidden-room passwords, and release-night signals."
+            triggerLabel="Enter The Signal Room"
+            benefits={["First-listen links", "Studio-journal fragments", "Hidden-room passwords"]}
+            modalTitle="Enter The Signal Room"
+            modalDescription="Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update."
+            submitLabel="Get collector access"
+            successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector signal."
+            note="High-signal only. Used for first listens, hidden-room access, and artifact drops."
+            renderTrigger={(openSignalRoom) => (
+              <button
+                type="button"
+                className="cg-header__cta"
+                onClick={() => {
+                  closeMenu();
+                  openSignalRoom();
+                }}
+              >
+                Enter The Signal Room
+              </button>
+            )}
+          />
         </div>
       </div>
     </header>

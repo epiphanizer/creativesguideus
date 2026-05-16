@@ -226,6 +226,8 @@ type DashboardModule = {
   status: "ready" | "pending";
 };
 
+const AUTH_SESSION_TIMEOUT_MS = 5000;
+
 const fallbackAdminData: WallsDevineAdminData = {
   plan: {
     title: "Walls/Devine Control Room",
@@ -571,7 +573,28 @@ export function AdminConsole() {
       return;
     }
 
+    let isActive = true;
+    let hasResolvedInitialSession = false;
+    const authTimeoutId = window.setTimeout(() => {
+      if (!isActive || hasResolvedInitialSession) {
+        return;
+      }
+
+      setAuthLoading(false);
+      setPanelError("Firebase Auth took too long to confirm the current session. Sign in manually below and reload if the session check still stalls.");
+    }, AUTH_SESSION_TIMEOUT_MS);
+
+    const resolveInitialSession = () => {
+      hasResolvedInitialSession = true;
+      window.clearTimeout(authTimeoutId);
+    };
+
     const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
+      if (!isActive) {
+        return;
+      }
+
+      resolveInitialSession();
       setAuthLoading(false);
       setAuthError("");
       setPanelError("");
@@ -585,9 +608,26 @@ export function AdminConsole() {
       }
 
       await loadAuthorizedAdmin(user);
+    }, (error) => {
+      if (!isActive) {
+        return;
+      }
+
+      resolveInitialSession();
+      setAuthLoading(false);
+      setAuthUser(null);
+      setAdminData(null);
+      setAdminProfile(null);
+      setContentSource("pending");
+      setAuthError(getFirebaseErrorMessage(error));
+      setPanelError("Firebase Auth could not confirm the current session. Sign in manually below or reload after checking the Firebase project settings.");
     });
 
-    return unsubscribe;
+    return () => {
+      isActive = false;
+      window.clearTimeout(authTimeoutId);
+      unsubscribe();
+    };
   }, [startTransition]);
 
   useEffect(() => {

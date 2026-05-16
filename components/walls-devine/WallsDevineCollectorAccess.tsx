@@ -1,7 +1,7 @@
 "use client";
 
 import { createPortal } from "react-dom";
-import { useEffect, useId, useState } from "react";
+import { type ReactNode, useEffect, useId, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { cx } from "@/lib/cx";
@@ -24,6 +24,7 @@ type WallsDevineCollectorAccessProps = {
   note?: string;
   className?: string;
   variant?: "feature" | "inline";
+  renderTrigger?: (openSignalRoom: () => void) => ReactNode;
 };
 
 export function WallsDevineCollectorAccess({
@@ -41,11 +42,16 @@ export function WallsDevineCollectorAccess({
   successMessage = "You are in. Watch your inbox for the next collector signal.",
   note = "High-signal only. Used for first listens, hidden-room access, and artifact drops.",
   className,
-  variant = "feature"
+  variant = "feature",
+  renderTrigger
 }: WallsDevineCollectorAccessProps) {
   const [hasMounted, setHasMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const titleId = useId();
+
+  const openSignalRoom = () => {
+    setIsOpen(true);
+  };
 
   useEffect(() => {
     setHasMounted(true);
@@ -74,27 +80,31 @@ export function WallsDevineCollectorAccess({
 
   return (
     <>
-      <section className={cx("wd-collector-access", `wd-collector-access--${variant}`, className)} aria-label={cardTitle}>
-        <div className="wd-collector-access__copy">
-          {cardEyebrow ? <p className="wd-collector-access__eyebrow">{cardEyebrow}</p> : null}
-          <h3 className="wd-collector-access__title">{cardTitle}</h3>
-          <p className="wd-collector-access__description">{cardDescription}</p>
-        </div>
-
-        {benefits.length ? (
-          <div className="wd-collector-access__benefits" aria-label="Collector access benefits">
-            {benefits.map((benefit) => (
-              <span key={benefit}>{benefit}</span>
-            ))}
+      {renderTrigger ? (
+        renderTrigger(openSignalRoom)
+      ) : (
+        <section className={cx("wd-collector-access", `wd-collector-access--${variant}`, className)} aria-label={cardTitle}>
+          <div className="wd-collector-access__copy">
+            {cardEyebrow ? <p className="wd-collector-access__eyebrow">{cardEyebrow}</p> : null}
+            <h3 className="wd-collector-access__title">{cardTitle}</h3>
+            <p className="wd-collector-access__description">{cardDescription}</p>
           </div>
-        ) : null}
 
-        <div className="wd-collector-access__actions">
-          <Button type="button" variant="primary" onClick={() => setIsOpen(true)}>
-            {triggerLabel}
-          </Button>
-        </div>
-      </section>
+          {benefits.length ? (
+            <div className="wd-collector-access__benefits" aria-label="Collector access benefits">
+              {benefits.map((benefit) => (
+                <span key={benefit}>{benefit}</span>
+              ))}
+            </div>
+          ) : null}
+
+          <div className="wd-collector-access__actions">
+            <Button type="button" variant="primary" onClick={openSignalRoom}>
+              {triggerLabel}
+            </Button>
+          </div>
+        </section>
+      )}
 
       {hasMounted && isOpen
         ? createPortal(
