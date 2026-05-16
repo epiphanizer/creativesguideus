@@ -1245,24 +1245,6 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
                           </div>
                         </div>
 
-                        <div className="wd-player-modal__transport">
-                          <span className="wd-player-modal__transport-label">Room controls</span>
-                          <div className="wd-player-modal__transport-actions">
-                            <Button type="button" onClick={() => void playCurrentTrack()}>
-                              Play track
-                            </Button>
-                            <Button type="button" variant="ghost" onClick={stopCurrentTrack}>
-                              Restart track
-                            </Button>
-                            <Button type="button" variant="ghost" onClick={showPreviousTrack}>
-                              Previous song
-                            </Button>
-                            <Button type="button" variant="secondary" onClick={showNextTrack}>
-                              Next song
-                            </Button>
-                          </div>
-                        </div>
-
                         <div className="wd-player-modal__notes">
                           <article>
                             <span>Track hook</span>
