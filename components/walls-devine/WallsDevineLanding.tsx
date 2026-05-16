@@ -10,6 +10,8 @@ import { SectionShell } from "@/components/ui/SectionShell";
 import { songPostCards } from "@/components/walls-devine/content";
 import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
+import { getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
+import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
 import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
@@ -202,22 +204,22 @@ type CollectorLetterQuote = {
 
 const collectorLetterQuotes: readonly CollectorLetterQuote[] = [
   {
-    source: "Joint Queen journal",
+    source: "Joint Queen",
     author: "Terry Devine",
     text: "Joint Queen needed to feel like an entrance cue with authority and swagger, not just a groove loop."
   },
   {
-    source: "Poetry journal",
+    source: "Poetry",
     author: "John Walls",
     text: "Poetry is the inward core of Volume 1: language first, ornament second."
   },
   {
-    source: "Home journal",
+    source: "Home",
     author: "John Walls",
     text: "Home is the grounded chapter that lets the project breathe between heavier passages."
   },
   {
-    source: "Decay journal",
+    source: "Decay",
     author: "Terry Devine",
     text: "Decay is meant to sound like memory collapsing and reforming at the same time."
   }
@@ -229,8 +231,23 @@ export function WallsDevineLanding() {
   const [activeQuoteIndex, setActiveQuoteIndex] = useState(0);
   const [isQuotePaused, setIsQuotePaused] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
+  const [collectorHeroNote, setCollectorHeroNote] = useState(defaultWallsDevineCollectorHeroNote);
 
   const activeQuote = collectorLetterQuotes[activeQuoteIndex] ?? collectorLetterQuotes[0];
+
+  useEffect(() => {
+    let isActive = true;
+
+    void getWallsDevineCollectorHeroNote().then((note) => {
+      if (isActive) {
+        setCollectorHeroNote(note);
+      }
+    });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (isQuotePaused) {
@@ -336,8 +353,8 @@ export function WallsDevineLanding() {
                       >
                         <blockquote>{quote.text}</blockquote>
                         <figcaption>
-                          <span className="wd-hero__letter-quote-source">{quote.source}</span>
-                          <span className="wd-hero__letter-quote-author">{quote.author}</span>
+                          <span className="wd-hero__letter-quote-source">from &quot;{quote.source}&quot;</span>
+                          <span className="wd-hero__letter-quote-author">— {quote.author}</span>
                         </figcaption>
                       </figure>
                     ))}
@@ -375,31 +392,30 @@ export function WallsDevineLanding() {
                 </div>
               </div>
 
-              <div className="wd-hero__letter" aria-label="Collector note from John Walls and Terry Devine">
-                <p className="wd-hero__letter-kicker">Dear Collector,</p>
-                <p className="wd-hero__letter-body">
-                  Join the private collector email for first-listen links, studio-journal fragments, artifact drop notes, and release-night signals as each room
-                  opens across Volume 1.
-                </p>
+              <div className="wd-hero__letter" aria-label="Personal collector note for Walls/Devine Volume 1">
+                <p className="wd-hero__letter-kicker">{collectorHeroNote.salutation}</p>
+                <p className="wd-hero__letter-body">{collectorHeroNote.body}</p>
 
                 <div className="wd-hero__letter-actions">
                   <WallsDevineCollectorAccess
                     source="walls-devine-hero"
-                    interest="Walls Devine collector signal list"
-                    cardTitle="Enter The Signal Room"
-                    cardDescription="First-listen links, studio-journal fragments, hidden-room passwords, and artifact drops sent when each room opens."
-                    benefits={["First-listen links", "Studio-journal fragments", "Hidden-room passwords"]}
-                    modalTitle="Enter The Signal Room"
-                    modalDescription="Private collector access for Volume 1. Drop your email to keep the next room out of the feed and in your inbox."
+                    interest="Walls Devine private collector email"
+                    cardTitle="Private collector email"
+                    cardDescription="First-listen links, studio-journal fragments, artifact drop notes, and release-night updates delivered quietly as Volume 1 opens."
+                    benefits={["First-listen links", "Journal fragments", "Artifact drop notes"]}
+                    modalTitle="Private collector email"
+                    modalDescription="Leave your email for first-listen links, studio-journal fragments, artifact drop notes, and release-night updates delivered as Volume 1 opens."
                     signupEyebrow="Collector access includes"
-                    signupTitle="What lands in the Signal Room"
-                    signupDescription="First-listen links, studio-journal fragments, artifact drops, hidden-room passwords, and collector updates sent as each Volume 1 room opens."
-                    submitLabel="Get collector access"
-                    successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector signal."
-                    note="High-signal only. Used for first listens, hidden-room access, artifact drops, and collector updates."
-                    renderTrigger={(openSignalRoom) => (
-                      <Button type="button" variant="primary" className="wd-hero__letter-cta" onClick={openSignalRoom}>
-                        Enter The Signal Room
+                    signupTitle="What arrives first"
+                    signupDescription="First-listen links, studio-journal fragments, artifact drop notes, and release-night updates sent as each Volume 1 room opens."
+                    submitLabel="Join the private collector email"
+                    successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector note."
+                    note="High-signal only. Reserved for first listens, journal fragments, artifact drops, and release-night updates."
+                    roomOverlayScript="Collector Letter"
+                    roomOverlaySubtitle="Private first-listen access"
+                    renderTrigger={(openCollectorLetter) => (
+                      <Button type="button" variant="primary" className="wd-hero__letter-cta" onClick={openCollectorLetter}>
+                        Join the private collector email
                       </Button>
                     )}
                   />

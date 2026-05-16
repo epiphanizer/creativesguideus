@@ -1,3 +1,13 @@
+export type SongPlatformLinks = Partial<{
+  spotify: string;
+  appleMusic: string;
+  youtubeMusic: string;
+  tidal: string;
+  amazonMusic: string;
+  soundcloud: string;
+  bandcamp: string;
+}>;
+
 export type SongPostCard = {
   trackNumber: number;
   title: string;
@@ -11,6 +21,7 @@ export type SongPostCard = {
   journalSlug: string;
   makingNote: string;
   technicalNote: string;
+  platformLinks?: SongPlatformLinks;
   bongTourCueId?: string;
   bongTourContext?: string;
 };

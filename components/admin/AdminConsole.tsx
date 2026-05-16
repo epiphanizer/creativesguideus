@@ -14,6 +14,7 @@ import {
   replaceAdminMarkdownFile,
   seedFirebaseWallsDevineAdminData,
   updateFirebaseAdminMarkdownFile,
+  updateFirebaseCollectorHeroNote,
   updateFirebaseReleasePlanItem,
   type AdminUserProfile
 } from "@/lib/firebase/admin-content";
@@ -21,6 +22,7 @@ import { firebaseAuth } from "@/lib/firebase/client";
 import { firebaseAdminPaths } from "@/lib/firebase/config";
 import { getEcosystemLeads } from "@/lib/firebase/ecosystem-leads";
 import { getListeningRoomVisits } from "@/lib/firebase/listening-room-visits";
+import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
@@ -29,6 +31,8 @@ import { AdminFirebaseStatus } from "./AdminFirebaseStatus";
 
 type SaveState = "saving" | "deleting" | "success" | "error";
 type ContentSource = "pending" | "firebase" | "bootstrap";
+
+const collectorHeroNoteSaveKey = "collectorHeroNote";
 
 function groupChecklistByPhase(items: ReleasePlanChecklistItem[]) {
   const grouped = new Map<string, ReleasePlanChecklistItem[]>();
@@ -273,7 +277,7 @@ function AdminWorkspaceSection({
   children
 }: AdminWorkspaceSectionProps) {
   return (
-    <SectionShell id={id} labelledBy={labelId} innerClassName="cg-admin__section cg-admin__workspace-section">
+    <SectionShell id={id} labelledBy={labelId} className="cg-admin__workspace-shell" innerClassName="cg-admin__section cg-admin__workspace-section">
       <div className="cg-admin__workspace-section-head">
         <div>
           <h2 id={labelId}>{title}</h2>
@@ -360,6 +364,7 @@ const fallbackAdminData: WallsDevineAdminData = {
   },
   instagramDrafts: [],
   journalEntries: [],
+  collectorHeroNote: defaultWallsDevineCollectorHeroNote,
   storageBacked: false,
   contentBackend: "bootstrap",
   markdownInitialized: false
@@ -937,6 +942,40 @@ export function AdminConsole() {
     }
   }
 
+  async function handleCollectorHeroNoteSave(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!adminData) {
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const salutation = String(formData.get("salutation") ?? "").trim();
+    const body = String(formData.get("body") ?? "").trim();
+
+    if (!salutation || !body) {
+      setPanelError("The collector note needs both a salutation and body copy before it can be saved.");
+      setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "error" }));
+      return;
+    }
+
+    setPanelError("");
+    setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "saving" }));
+
+    try {
+      const nextNote = await updateFirebaseCollectorHeroNote({ salutation, body });
+
+      startTransition(() => {
+        setAdminData((current) => (current ? { ...current, collectorHeroNote: nextNote } : current));
+      });
+
+      setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "success" }));
+    } catch (error) {
+      setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "error" }));
+      setPanelError(getFirebaseErrorMessage(error));
+    }
+  }
+
   async function handleMarkdownSave(event: FormEvent<HTMLFormElement>, collection: AdminMarkdownCollection, slug: string) {
     event.preventDefault();
 
@@ -1200,7 +1239,7 @@ export function AdminConsole() {
             id="admin-console-title"
             eyebrow="Admin"
             title="Walls/Devine control room"
-            description={isScaffoldMode ? "Dashboard scaffold for release operations, audience capture, content management, and audio QA while live backend content reconnects." : "Release plan, calendar, and source content for Volume 1."}
+            description={isScaffoldMode ? "Control-room scaffold for releases, journals, analytics, and asset QA while live backend content reconnects." : "Operational workspace for release management, journal publishing, analytics, and asset QA."}
           />
 
           <div className="cg-admin__topbar-actions">
@@ -1236,58 +1275,75 @@ export function AdminConsole() {
           </div>
         ) : !hasLiveMarkdownContent ? (
           <p className="cg-admin__helper">
-            Draft and journal syncing is still waiting on the Firestore markdown layer. The release plan is live now, and a hidden health check is available below.
+            Draft and journal syncing is still waiting on the Firestore markdown layer. The release plan is live now, and the backend health section below will tell you what is still missing.
           </p>
         ) : null}
 
-        <div className="cg-admin__module-grid">
-          {dashboardModules.map((module) => (
-            <article key={module.title} className="cg-admin__panel cg-admin__module-card">
-              <div className="cg-admin__module-head">
-                <h2>{module.title}</h2>
-                <span className={["cg-admin__status-badge", module.status === "ready" ? "cg-admin__status-badge--ready" : "cg-admin__status-badge--pending"].join(" ")}>
-                  {module.status === "ready" ? "Ready" : "Pending"}
-                </span>
-              </div>
-              <strong className="cg-admin__module-stat">{module.summary}</strong>
-              <p>{module.detail}</p>
-            </article>
-          ))}
+        <div className="cg-admin__command-deck">
+          <div className="cg-admin__quick-actions">
+            <Button type="button" onClick={() => handleJumpToSection("admin-journals")}>Write new journal</Button>
+            <Button type="button" variant="secondary" onClick={() => handleJumpToSection("admin-release-desk")}>Open release desk</Button>
+            <Button type="button" variant="ghost" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
+              {leadsLoading || visitsLoading ? "Refreshing analytics…" : "Refresh analytics"}
+            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
+              {audioLoading ? "Refreshing assets…" : "Refresh assets"}
+            </Button>
+            {!hasLiveMarkdownContent ? (
+              <Button type="button" variant="ghost" size="sm" onClick={handleRetryAccess} disabled={dataLoading}>
+                {dataLoading ? "Syncing…" : "Retry content sync"}
+              </Button>
+            ) : null}
+          </div>
+
+          <div className="cg-admin__module-grid cg-admin__module-grid--ops">
+            {dashboardModules.map((module) => (
+              <article key={module.id} className="cg-admin__panel cg-admin__module-card">
+                <div className="cg-admin__module-head">
+                  <h2>{module.title}</h2>
+                  <span className={["cg-admin__status-badge", module.status === "ready" ? "cg-admin__status-badge--ready" : "cg-admin__status-badge--pending"].join(" ")}>
+                    {module.status === "ready" ? "Ready" : "Pending"}
+                  </span>
+                </div>
+                <strong className="cg-admin__module-stat">{module.summary}</strong>
+                <p>{module.detail}</p>
+                <div className="cg-admin__module-actions">
+                  <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection(module.id)}>
+                    {module.actionLabel}
+                  </Button>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <nav className="cg-admin__jump-bar" aria-label="Admin workspace sections">
+            {jumpLinks.map((link) => (
+              <button
+                key={link.id}
+                type="button"
+                className={["cg-admin__jump-chip", openSections[link.id] ? "cg-admin__jump-chip--active" : ""].filter(Boolean).join(" ")}
+                onClick={() => handleJumpToSection(link.id)}
+              >
+                <strong>{link.label}</strong>
+                <span>{link.detail}</span>
+              </button>
+            ))}
+          </nav>
         </div>
+      </SectionShell>
 
-        <div className="cg-admin__grid cg-admin__grid--summary">
+      <AdminWorkspaceSection
+        id="admin-release-desk"
+        labelId="admin-release-desk-title"
+        title="Release desk"
+        description={adminViewData.plan.summary}
+        detail={`Updated ${new Date(adminViewData.plan.updatedAt).toLocaleString()}`}
+        isOpen={openSections["admin-release-desk"]}
+        onToggle={() => toggleWorkspaceSection("admin-release-desk")}
+      >
+        <div className="cg-admin__release-grid">
           <article className="cg-admin__panel">
-            <h2>Data collections</h2>
-            <ul className="cg-admin__list">
-              <li>
-                <strong>Firestore / adminProjects/walls-devine</strong>
-                <span>Release plan is live. Checklist editing is enabled here today.</span>
-              </li>
-              <li>
-                <strong>Firestore / ecosystemLeads</strong>
-                <span>Collector signups are readable in the admin inbox.</span>
-              </li>
-              <li>
-                <strong>Firestore / listeningRoomVisits</strong>
-                <span>Shared song-link arrivals now surface below as analytics.</span>
-              </li>
-              <li>
-                <strong>Firestore / markdownFiles</strong>
-                <span>Instagram drafts and journals now support create, rename, update, and delete from this console.</span>
-              </li>
-              <li>
-                <strong>Legacy Storage / admin-projects/walls-devine</strong>
-                <span>Older markdown files can still be migrated from Storage when the Firestore markdown collection is empty.</span>
-              </li>
-              <li>
-                <strong>Firestore / adminUsers</strong>
-                <span>This collection gates editor access and is not yet editable from the UI.</span>
-              </li>
-            </ul>
-          </article>
-
-          <article className="cg-admin__panel">
-            <h2>Locked dates</h2>
+            <h3>Locked dates</h3>
             <ul className="cg-admin__list">
               {adminViewData.plan.lockedDates.map((item) => (
                 <li key={item.label}>
@@ -1299,50 +1355,71 @@ export function AdminConsole() {
           </article>
 
           <article className="cg-admin__panel">
-            <h2>Metadata standards</h2>
-            <ul className="cg-admin__list">
-              {adminViewData.plan.metadataStandards.map((item) => (
-                <li key={item.label}>
-                  <strong>{item.label}</strong>
-                  <span>{item.value}</span>
-                </li>
+            <h3>Campaign calendar</h3>
+            <div className="cg-admin__calendar">
+              {adminViewData.plan.calendar.map((item) => (
+                <article key={`${item.date}-${item.action}`} className="cg-admin__panel">
+                  <span className="cg-admin__calendar-date">{item.date}</span>
+                  <h4>{item.action}</h4>
+                  <p>{item.purpose}</p>
+                </article>
               ))}
-            </ul>
-          </article>
-
-          <article className="cg-admin__panel">
-            <h2>Recommended setup</h2>
-            <ul className="cg-admin__bullet-list">
-              {adminViewData.plan.recommendedSetup.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </article>
-
-          <article className="cg-admin__panel">
-            <h2>Avoid</h2>
-            <ul className="cg-admin__bullet-list">
-              {adminViewData.plan.avoid.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+            </div>
           </article>
         </div>
 
-        <details className="cg-admin__health-check" open={Boolean(panelError) || isScaffoldMode || !hasLiveMarkdownContent}>
-          <summary>Health check</summary>
-          <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized notice={panelError || undefined} />
-        </details>
-      </SectionShell>
-
-      <SectionShell id="admin-release-plan" labelledBy="admin-release-plan-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-release-plan-title">Release checklist</h2>
-            <p>{adminViewData.plan.summary}</p>
+        <article className="cg-admin__panel cg-admin__release-note-card">
+          <div className="cg-admin__file-head">
+            <div>
+              <h3>Public collector note</h3>
+              <p>This note feeds the personalized collector letter on the public Walls/Devine Volume 1 hero.</p>
+            </div>
+            <p className="cg-admin__path-note">
+              Firestore: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.publicContentCollection}/{firebaseAdminPaths.collectorHeroNoteDocId}
+            </p>
           </div>
-          <p className="cg-admin__updated">Updated {new Date(adminViewData.plan.updatedAt).toLocaleString()}</p>
-        </div>
+
+          <form onSubmit={handleCollectorHeroNoteSave} className="cg-admin__editor-form">
+            <div className="cg-admin__editor-split">
+              <label className="cg-admin__editor-field">
+                <span>Salutation</span>
+                <input
+                  name="salutation"
+                  type="text"
+                  className="cg-admin__editor-input"
+                  defaultValue={adminViewData.collectorHeroNote.salutation}
+                  placeholder="Dear Collector,"
+                  required
+                />
+              </label>
+              <div className="cg-admin__stack">
+                <span className="cg-admin__editor-field-label">Last updated</span>
+                <p className="cg-admin__path-note">{new Date(adminViewData.collectorHeroNote.updatedAt).toLocaleString()}</p>
+              </div>
+            </div>
+
+            <label className="cg-admin__editor-field">
+              <span>Body copy</span>
+              <textarea
+                name="body"
+                className="cg-admin__editor-textarea"
+                rows={6}
+                defaultValue={adminViewData.collectorHeroNote.body}
+                placeholder="Write the note that appears beside the collector signup."
+                required
+              />
+            </label>
+
+            <div className="cg-admin__editor-actions">
+              <Button type="submit" variant="secondary" size="sm" disabled={saveStates[collectorHeroNoteSaveKey] === "saving"}>
+                Save note
+              </Button>
+              {saveStates[collectorHeroNoteSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
+              {saveStates[collectorHeroNoteSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
+              {saveStates[collectorHeroNoteSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this note.</p> : null}
+            </div>
+          </form>
+        </article>
 
         <div className="cg-admin__phases">
           {checklistByPhase.map(([phase, items]) => (
@@ -1368,154 +1445,149 @@ export function AdminConsole() {
             </article>
           ))}
         </div>
-      </SectionShell>
+      </AdminWorkspaceSection>
 
-      <SectionShell id="admin-ecosystem-leads" labelledBy="admin-ecosystem-leads-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-ecosystem-leads-title">Collector leads</h2>
-            <p>Recent email captures from the Walls/Devine hero and each collector-grid takeover room.</p>
-          </div>
-          <div className="cg-admin__section-actions">
-            <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.ecosystemLeadsCollection}</p>
-            <Button type="button" variant="secondary" size="sm" onClick={handleLeadsRefresh} disabled={leadsLoading}>
-              {leadsLoading ? "Refreshing…" : "Refresh leads"}
-            </Button>
-          </div>
-        </div>
-
+      <AdminWorkspaceSection
+        id="admin-analytics"
+        labelId="admin-analytics-title"
+        title="Audience & listening analytics"
+        description="Collector signups and shared listening-room traffic in one working view."
+        detail={`Firestore: ${firebaseAdminPaths.ecosystemLeadsCollection} + ${firebaseAdminPaths.listeningRoomVisitsCollection}`}
+        actions={
+          <Button type="button" variant="secondary" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
+            {leadsLoading || visitsLoading ? "Refreshing analytics…" : "Refresh analytics"}
+          </Button>
+        }
+        isOpen={openSections["admin-analytics"]}
+        onToggle={() => toggleWorkspaceSection("admin-analytics")}
+      >
         {leadsError ? <p className="cg-admin__error">{leadsError}</p> : null}
-        {leadsLoading && !ecosystemLeads.length ? <p className="cg-admin__helper">Loading collector leads…</p> : null}
-
-        <div className="cg-admin__lead-grid">
-          <article className="cg-admin__panel">
-            <h3>Source mix</h3>
-            {leadSources.length ? (
-              <ul className="cg-admin__list">
-                {leadSources.map(([source, count]) => (
-                  <li key={source}>
-                    <strong>{formatLeadSource(source)}</strong>
-                    <span>{count} capture{count === 1 ? "" : "s"}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="cg-admin__helper">No collector leads have landed yet.</p>
-            )}
-          </article>
-
-          <article className="cg-admin__panel">
-            <h3>Recent signups</h3>
-            {ecosystemLeads.length ? (
-              <ul className="cg-admin__lead-list">
-                {ecosystemLeads.map((lead) => (
-                  <li key={lead.id} className="cg-admin__lead-item">
-                    <div>
-                      <strong>{lead.email}</strong>
-                      <span>{lead.fullName || "Name not provided"}</span>
-                    </div>
-                    <div className="cg-admin__lead-meta">
-                      <span>{formatLeadSource(lead.source)}</span>
-                      <span>{lead.interest}</span>
-                      <span>{new Date(lead.createdAt).toLocaleString()}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="cg-admin__helper">Collector signups will appear here once the public CTA is live.</p>
-            )}
-          </article>
-        </div>
-      </SectionShell>
-
-      <SectionShell id="admin-listening-room-visits" labelledBy="admin-listening-room-visits-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-listening-room-visits-title">Listening room visits</h2>
-            <p>Recent arrivals from shared song URLs, grouped by the track listeners landed on and the query key that opened the room.</p>
-          </div>
-          <div className="cg-admin__section-actions">
-            <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.listeningRoomVisitsCollection}</p>
-            <Button type="button" variant="secondary" size="sm" onClick={handleListeningRoomVisitsRefresh} disabled={visitsLoading}>
-              {visitsLoading ? "Refreshing…" : "Refresh visits"}
-            </Button>
-          </div>
-        </div>
-
         {visitsError ? <p className="cg-admin__error">{visitsError}</p> : null}
-        {visitsLoading && !listeningRoomVisits.length ? <p className="cg-admin__helper">Loading listening-room visits…</p> : null}
 
-        <div className="cg-admin__lead-grid">
-          <article className="cg-admin__panel">
-            <h3>Song mix</h3>
-            {visitSongs.length ? (
-              <ul className="cg-admin__list">
-                {visitSongs.map(([songTitle, count]) => (
-                  <li key={songTitle}>
-                    <strong>{songTitle}</strong>
-                    <span>{count} visit{count === 1 ? "" : "s"}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="cg-admin__helper">Shared song-link traffic will appear here once those URLs start circulating.</p>
-            )}
-          </article>
+        <div className="cg-admin__analytics-grid">
+          <div className="cg-admin__stack">
+            <div className="cg-admin__subsection-head">
+              <div>
+                <h3>Collector leads</h3>
+                <p>Recent email captures from the Walls/Devine hero and collector-grid takeover rooms.</p>
+              </div>
+              <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.ecosystemLeadsCollection}</p>
+            </div>
 
-          <article className="cg-admin__panel">
-            <h3>Recent arrivals</h3>
-            {listeningRoomVisits.length ? (
-              <ul className="cg-admin__lead-list">
-                {listeningRoomVisits.map((visit) => (
-                  <li key={visit.id} className="cg-admin__lead-item">
-                    <div>
-                      <strong>{visit.songTitle}</strong>
-                      <span>{visit.songSlug}</span>
-                    </div>
-                    <div className="cg-admin__lead-meta">
-                      <span>{formatListeningRoomQueryKey(visit.queryKey)}</span>
-                      <span>{visit.pagePath}</span>
-                      <span>{visit.referrer || "Direct / unknown referrer"}</span>
-                      <span>{new Date(visit.createdAt).toLocaleString()}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="cg-admin__helper">No shared listening-room arrivals have been tracked yet.</p>
-            )}
-          </article>
-        </div>
-      </SectionShell>
+            {leadsLoading && !ecosystemLeads.length ? <p className="cg-admin__helper">Loading collector leads…</p> : null}
 
-      <SectionShell id="admin-calendar" labelledBy="admin-calendar-title" innerClassName="cg-admin__section">
-        <h2 id="admin-calendar-title">Campaign calendar</h2>
-        <div className="cg-admin__calendar">
-          {adminViewData.plan.calendar.map((item) => (
-            <article key={`${item.date}-${item.action}`} className="cg-admin__panel">
-              <span className="cg-admin__calendar-date">{item.date}</span>
-              <h3>{item.action}</h3>
-              <p>{item.purpose}</p>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
+            <div className="cg-admin__lead-grid">
+              <article className="cg-admin__panel">
+                <h3>Source mix</h3>
+                {leadSources.length ? (
+                  <ul className="cg-admin__list">
+                    {leadSources.map(([source, count]) => (
+                      <li key={source}>
+                        <strong>{formatLeadSource(source)}</strong>
+                        <span>{count} capture{count === 1 ? "" : "s"}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">No collector leads have landed yet.</p>
+                )}
+              </article>
 
-      <SectionShell id="admin-audio-analysis" labelledBy="admin-audio-analysis-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-audio-analysis-title">Backend WAV analysis</h2>
-            <p>Server-inspected technical metadata for the live release WAVs in the Volume 1 folder.</p>
+              <article className="cg-admin__panel">
+                <h3>Recent signups</h3>
+                {ecosystemLeads.length ? (
+                  <ul className="cg-admin__lead-list">
+                    {ecosystemLeads.map((lead) => (
+                      <li key={lead.id} className="cg-admin__lead-item">
+                        <div>
+                          <strong>{lead.email}</strong>
+                          <span>{lead.fullName || "Name not provided"}</span>
+                        </div>
+                        <div className="cg-admin__lead-meta">
+                          <span>{formatLeadSource(lead.source)}</span>
+                          <span>{lead.interest}</span>
+                          <span>{new Date(lead.createdAt).toLocaleString()}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">Collector signups will appear here once the public CTA is live.</p>
+                )}
+              </article>
+            </div>
           </div>
-          <div className="cg-admin__section-actions">
-            <p className="cg-admin__path-note">Source: public/walls-devine/releases/volume1</p>
-            <Button type="button" variant="secondary" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
-              {audioLoading ? "Refreshing…" : "Refresh analysis"}
-            </Button>
+
+          <div className="cg-admin__stack">
+            <div className="cg-admin__subsection-head">
+              <div>
+                <h3>Listening room visits</h3>
+                <p>Recent arrivals from shared song URLs, grouped by track and the query key that opened the room.</p>
+              </div>
+              <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.listeningRoomVisitsCollection}</p>
+            </div>
+
+            {visitsLoading && !listeningRoomVisits.length ? <p className="cg-admin__helper">Loading listening-room visits…</p> : null}
+
+            <div className="cg-admin__lead-grid">
+              <article className="cg-admin__panel">
+                <h3>Song mix</h3>
+                {visitSongs.length ? (
+                  <ul className="cg-admin__list">
+                    {visitSongs.map(([songTitle, count]) => (
+                      <li key={songTitle}>
+                        <strong>{songTitle}</strong>
+                        <span>{count} visit{count === 1 ? "" : "s"}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">Shared song-link traffic will appear here once those URLs start circulating.</p>
+                )}
+              </article>
+
+              <article className="cg-admin__panel">
+                <h3>Recent arrivals</h3>
+                {listeningRoomVisits.length ? (
+                  <ul className="cg-admin__lead-list">
+                    {listeningRoomVisits.map((visit) => (
+                      <li key={visit.id} className="cg-admin__lead-item">
+                        <div>
+                          <strong>{visit.songTitle}</strong>
+                          <span>{visit.songSlug}</span>
+                        </div>
+                        <div className="cg-admin__lead-meta">
+                          <span>{formatListeningRoomQueryKey(visit.queryKey)}</span>
+                          <span>{visit.pagePath}</span>
+                          <span>{visit.referrer || "Direct / unknown referrer"}</span>
+                          <span>{new Date(visit.createdAt).toLocaleString()}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">No shared listening-room arrivals have been tracked yet.</p>
+                )}
+              </article>
+            </div>
           </div>
         </div>
+      </AdminWorkspaceSection>
 
+      <AdminWorkspaceSection
+        id="admin-assets"
+        labelId="admin-assets-title"
+        title="Assets & QA"
+        description="Server-inspected technical metadata for the live release WAVs in the Volume 1 folder."
+        detail="Source: public/walls-devine/releases/volume1"
+        actions={
+          <Button type="button" variant="secondary" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
+            {audioLoading ? "Refreshing assets…" : "Refresh analysis"}
+          </Button>
+        }
+        isOpen={openSections["admin-assets"]}
+        onToggle={() => toggleWorkspaceSection("admin-assets")}
+      >
         {audioError ? <p className="cg-admin__error">{audioError}</p> : null}
         {audioLoading && !audioAnalysis.length ? <p className="cg-admin__helper">Inspecting release WAVs…</p> : null}
 
@@ -1600,18 +1672,20 @@ export function AdminConsole() {
               </article>
             ))}
           </div>
-        ) : null}
-      </SectionShell>
+        ) : (
+          !audioLoading ? <p className="cg-admin__helper">No WAV analysis has been loaded yet. Refresh assets when the release folder is ready.</p> : null
+        )}
+      </AdminWorkspaceSection>
 
-      <SectionShell id="admin-instagram-posts" labelledBy="admin-instagram-posts-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-instagram-posts-title">Instagram drafts</h2>
-            <p>These entries now save to Firestore markdown docs so Terry can create, rename, update, and delete the live draft layer without touching repo files.</p>
-          </div>
-          <p className="cg-admin__path-note">Firestore path: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.markdownCollection}/instagram-posts--&#123;slug&#125;</p>
-        </div>
-
+      <AdminWorkspaceSection
+        id="admin-instagram-posts"
+        labelId="admin-instagram-posts-title"
+        title="Draft studio"
+        description="Create, rename, update, and delete release-copy drafts without touching repo files."
+        detail={`Firestore path: ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/instagram-posts--{slug}`}
+        isOpen={openSections["admin-instagram-posts"]}
+        onToggle={() => toggleWorkspaceSection("admin-instagram-posts")}
+      >
         <div className="cg-admin__file-grid">
           <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--create">
             <div className="cg-admin__file-head">
@@ -1702,17 +1776,17 @@ export function AdminConsole() {
             </article>
           ) : null}
         </div>
-      </SectionShell>
+      </AdminWorkspaceSection>
 
-      <SectionShell id="admin-journals" labelledBy="admin-journals-title" innerClassName="cg-admin__section">
-        <div className="cg-admin__section-head">
-          <div>
-            <h2 id="admin-journals-title">Song journals</h2>
-            <p>Public-facing journal entries now support full CRUD in Firestore markdown docs, so Terry can manage what appears in the live song journal layer.</p>
-          </div>
-          <p className="cg-admin__path-note">Firestore path: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.markdownCollection}/journals--&#123;slug&#125;</p>
-        </div>
-
+      <AdminWorkspaceSection
+        id="admin-journals"
+        labelId="admin-journals-title"
+        title="Journal studio"
+        description="Write, publish, and prune the public-facing song journals from the live Firebase layer."
+        detail={`Firestore path: ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/journals--{slug}`}
+        isOpen={openSections["admin-journals"]}
+        onToggle={() => toggleWorkspaceSection("admin-journals")}
+      >
         <div className="cg-admin__file-grid">
           <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--create">
             <div className="cg-admin__file-head">
@@ -1799,7 +1873,19 @@ export function AdminConsole() {
             </article>
           ) : null}
         </div>
-      </SectionShell>
+      </AdminWorkspaceSection>
+
+      <AdminWorkspaceSection
+        id="admin-health"
+        labelId="admin-health-title"
+        title="Backend health"
+        description="Firebase auth, live content source, and migration readiness for the admin layer."
+        detail={`Content source: ${contentSource === "pending" ? "waiting on Firebase" : contentSource}`}
+        isOpen={openSections["admin-health"]}
+        onToggle={() => toggleWorkspaceSection("admin-health")}
+      >
+        <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized notice={panelError || undefined} />
+      </AdminWorkspaceSection>
     </main>
   );
 }

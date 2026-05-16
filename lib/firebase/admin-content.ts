@@ -1,7 +1,8 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, writeBatch } from "firebase/firestore";
 import { getBytes, listAll, ref } from "firebase/storage";
 
-import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData } from "@/lib/admin/types";
+import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData, WallsDevineCollectorHeroNote } from "@/lib/admin/types";
+import { defaultWallsDevineCollectorHeroNote, normalizeWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 
 import { firebaseDb, firebaseStorage } from "./client";
 import { firebaseAdminPaths } from "./config";
@@ -44,6 +45,14 @@ function getMarkdownCollectionRef() {
   }
 
   return collection(getProjectDoc(), firebaseAdminPaths.markdownCollection);
+}
+
+function getCollectorHeroNoteDocRef() {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.collectorHeroNoteDocId);
 }
 
 function getMarkdownFileId(collectionName: AdminMarkdownCollection, slug: string) {
@@ -265,6 +274,16 @@ async function getReleasePlanFromFirestore() {
   return projectSnapshot.data()?.[firebaseAdminPaths.releasePlanField] as ReleasePlan | undefined;
 }
 
+async function getCollectorHeroNoteFromFirestore() {
+  const snapshot = await getDoc(getCollectorHeroNoteDocRef());
+
+  if (!snapshot.exists()) {
+    return defaultWallsDevineCollectorHeroNote;
+  }
+
+  return normalizeWallsDevineCollectorHeroNote(snapshot.data() as Partial<WallsDevineCollectorHeroNote>);
+}
+
 function updateMarkdownCollection(
   files: AdminMarkdownFile[],
   nextFile: AdminMarkdownFile
@@ -306,6 +325,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
   try {
     let { instagramDrafts, journalEntries } = await readFirestoreMarkdownCollections();
     let markdownInitialized = Boolean(projectData?.[firebaseAdminPaths.markdownInitializedField]);
+    const collectorHeroNote = await getCollectorHeroNoteFromFirestore();
 
     if (!markdownInitialized && !instagramDrafts.length && !journalEntries.length) {
       const migratedContent = await migrateLegacyStorageMarkdownContent();
@@ -321,6 +341,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
       plan: releasePlan,
       instagramDrafts,
       journalEntries,
+      collectorHeroNote,
       storageBacked: true,
       contentBackend: "firestore",
       markdownInitialized: markdownInitialized || instagramDrafts.length > 0 || journalEntries.length > 0
@@ -330,6 +351,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
       plan: releasePlan,
       instagramDrafts: [],
       journalEntries: [],
+      collectorHeroNote: defaultWallsDevineCollectorHeroNote,
       storageBacked: false,
       contentBackend: "bootstrap",
       markdownInitialized: false
@@ -351,6 +373,16 @@ export async function updateFirebaseReleasePlanItem(itemId: string, completed: b
   } satisfies ReleasePlan;
 
   return saveReleasePlan(nextPlan);
+}
+
+export async function updateFirebaseCollectorHeroNote(note: Partial<WallsDevineCollectorHeroNote>) {
+  const nextNote = normalizeWallsDevineCollectorHeroNote({
+    ...note,
+    updatedAt: new Date().toISOString()
+  });
+
+  await setDoc(getCollectorHeroNoteDocRef(), nextNote, { merge: true });
+  return nextNote;
 }
 
 export async function updateFirebaseAdminMarkdownFile(collection: AdminMarkdownCollection, slug: string, content: string) {
@@ -405,6 +437,15 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
       {
         [firebaseAdminPaths.markdownInitializedField]: true
       },
+      { merge: true }
+    );
+
+    batch.set(
+      getCollectorHeroNoteDocRef(),
+      normalizeWallsDevineCollectorHeroNote({
+        ...seedData.collectorHeroNote,
+        updatedAt: new Date().toISOString()
+      }),
       { merge: true }
     );
 

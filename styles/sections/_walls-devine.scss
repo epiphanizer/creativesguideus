@@ -179,21 +179,22 @@
 
 .wd-hero__letter-kicker {
   font-family: "Cormorant Garamond", var(--cg-font-serif);
-  font-size: 1rem;
+  font-size: clamp(1.55rem, 1vw + 1.24rem, 2.15rem);
   font-style: italic;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   text-transform: none;
   color: rgba(108, 5, 8, 0.82);
 }
 
 .wd-hero__letter-body {
   margin: 0;
-  max-width: 34ch;
+  max-width: 38ch;
   font-family: "Cormorant Garamond", var(--cg-font-serif);
-  font-size: clamp(1.4rem, 1.3vw + 1.02rem, 1.82rem);
-  line-height: 1.26;
+  font-size: clamp(1rem, 0.35vw + 0.94rem, 1.16rem);
+  line-height: 1.55;
   letter-spacing: 0.01em;
   color: rgba(27, 21, 21, 0.92);
+  white-space: pre-line;
 }
 
 .wd-hero__letter-actions {
@@ -2666,6 +2667,70 @@
   cursor: default;
 }
 
+.wd-player-dock__share {
+  display: grid;
+  gap: 0.48rem;
+  padding: 0.72rem;
+  border: 1px solid rgba(156, 7, 5, 0.12);
+  border-radius: calc(var(--cg-radius-sm) * 1.35);
+  background: rgba(253, 254, 254, 0.7);
+  cursor: default;
+}
+
+.wd-player-dock__share-head {
+  display: grid;
+  gap: 0.32rem;
+}
+
+.wd-player-dock__share-head span,
+.wd-player-dock__share-note,
+.wd-player-modal__share-label,
+.wd-player-modal__share-note {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(108, 5, 8, 0.76);
+}
+
+.wd-player-dock__share-actions,
+.wd-player-dock__share-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.wd-player-dock__share-platform {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0.45rem 0.72rem;
+  border: 1px solid rgba(156, 7, 5, 0.18);
+  border-radius: 999px;
+  background: rgba(253, 254, 254, 0.82);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(108, 5, 8, 0.84);
+  transition: border-color var(--cg-transition-fade), background var(--cg-transition-fade), transform var(--cg-transition-move);
+}
+
+.wd-player-dock__share-platform:hover,
+.wd-player-dock__share-platform:focus-visible {
+  border-color: rgba(156, 7, 5, 0.36);
+  background: rgba(253, 254, 254, 0.94);
+  transform: translateY(-1px);
+}
+
+.wd-player-dock__share-note,
+.wd-player-modal__share-note {
+  margin: 0;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  color: rgba(27, 21, 21, 0.62);
+}
+
 .wd-player-audio-host,
 .wd-player-audio,
 .wd-player-dock__audio-slot,
@@ -3312,6 +3377,11 @@
 .wd-player-modal__share-platforms {
   display: flex;
   flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.wd-player-modal__share-group {
+  display: grid;
   gap: 0.5rem;
 }
 

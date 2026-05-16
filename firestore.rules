@@ -111,6 +111,11 @@ service cloud.firestore {
       }
     }
 
+    match /adminProjects/walls-devine/publicContent/collectorHeroNote {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /ecosystemLeads/{leadId} {
       allow read: if isAdmin();
       allow create: if isValidLead();

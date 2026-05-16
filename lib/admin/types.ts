@@ -36,6 +36,12 @@ export type ReleasePlan = {
   checklist: ReleasePlanChecklistItem[];
 };
 
+export type WallsDevineCollectorHeroNote = {
+  salutation: string;
+  body: string;
+  updatedAt: string;
+};
+
 export type AdminMarkdownFile = {
   slug: string;
   title: string;
@@ -116,6 +122,7 @@ export type WallsDevineAdminData = {
   plan: ReleasePlan;
   instagramDrafts: AdminMarkdownFile[];
   journalEntries: AdminMarkdownFile[];
+  collectorHeroNote: WallsDevineCollectorHeroNote;
   storageBacked?: boolean;
   contentBackend?: "firestore" | "bootstrap";
   markdownInitialized?: boolean;

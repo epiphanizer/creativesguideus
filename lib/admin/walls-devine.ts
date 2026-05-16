@@ -3,6 +3,8 @@ import path from "node:path";
 
 import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData } from "./types";
 
+import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+
 const releasePlanPath = path.join(process.cwd(), "data", "walls-devine", "release-plan.json");
 const instagramPostsDir = path.join(process.cwd(), "app", "walls-devine", "instagram-posts");
 const journalsDir = path.join(process.cwd(), "public", "walls-devine", "journals");
@@ -113,6 +115,7 @@ export async function getWallsDevineAdminData() {
   return {
     plan,
     instagramDrafts,
-    journalEntries
+    journalEntries,
+    collectorHeroNote: defaultWallsDevineCollectorHeroNote
   } satisfies WallsDevineAdminData;
 }

@@ -18,9 +18,11 @@ export const firebaseProjectInfo = {
 export const firebaseAdminPaths = {
   adminUsersCollection: "adminUsers",
   adminProjectsCollection: "adminProjects",
+  publicContentCollection: "publicContent",
   ecosystemLeadsCollection: "ecosystemLeads",
   listeningRoomVisitsCollection: "listeningRoomVisits",
   wallsDevineProjectId: "walls-devine",
+  collectorHeroNoteDocId: "collectorHeroNote",
   releasePlanField: "releasePlan",
   markdownCollection: "markdownFiles",
   markdownInitializedField: "markdownContentInitialized",
@@ -40,6 +42,7 @@ export const firebaseRoadmapNotes = [
 export const firebaseAdminRecommendations = [
   `Use Firestore ${firebaseAdminPaths.adminUsersCollection}/{uid} documents as the editor allowlist.`,
   `Keep the release plan in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}.`,
+  `Keep public Walls/Devine note copy in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.publicContentCollection}/${firebaseAdminPaths.collectorHeroNoteDocId}.`,
   `Capture public collector leads in ${firebaseAdminPaths.ecosystemLeadsCollection} and review them from the admin console.`,
   `Track shared listening-room visits in ${firebaseAdminPaths.listeningRoomVisitsCollection} for song-level arrival analytics.`,
   `Store markdown docs in Firestore ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/{collection}--{slug}.`,

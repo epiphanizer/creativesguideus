@@ -16,7 +16,7 @@ import spaceCruiserImage from "@/app/walls-devine/assets/instagram/3.space-cruis
 import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
 import { Button } from "@/components/ui/Button";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import type { SongPostCard } from "@/components/walls-devine/content";
+import type { SongPlatformLinks, SongPostCard } from "@/components/walls-devine/content";
 import { createListeningRoomVisit } from "@/lib/firebase/listening-room-visits";
 import {
   dispatchWallsDevinePlayerDismissedChange,
@@ -48,6 +48,15 @@ type VisualizerTheme = VisualizerPalette & {
 };
 
 type VisualizerByteArray = Uint8Array<ArrayBuffer>;
+type StreamingPlatformKey = keyof SongPlatformLinks;
+
+type StreamingPlatformDestination = {
+  key: StreamingPlatformKey;
+  label: string;
+  shortLabel: string;
+  href: string;
+  isDirect: boolean;
+};
 
 const playerQueryKeys = ["player", "song", "track", "slug"] as const;
 
@@ -123,7 +132,7 @@ function buildListeningRoomShareText(track: SongPostCard) {
   return `Listen to "${track.title}" in the Walls/Devine Volume 1 Listening Room. ${track.hook}`;
 }
 
-function buildListeningRoomPlatformShareLinks(title: string, text: string, url: string) {
+function buildListeningRoomSocialShareLinks(title: string, text: string, url: string) {
   const encodedUrl = encodeURIComponent(url);
   const encodedText = encodeURIComponent(text);
   const encodedSubject = encodeURIComponent(title);
@@ -133,8 +142,77 @@ function buildListeningRoomPlatformShareLinks(title: string, text: string, url: 
     x: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
     whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+    telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
+    reddit: `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`,
     email: `mailto:?subject=${encodedSubject}&body=${encodedBody}`
   };
+}
+
+const streamingPlatformCatalog: Array<{
+  key: StreamingPlatformKey;
+  label: string;
+  shortLabel: string;
+  buildSearchUrl: (encodedQuery: string) => string;
+}> = [
+  {
+    key: "spotify",
+    label: "Spotify",
+    shortLabel: "Spotify",
+    buildSearchUrl: (encodedQuery) => `https://open.spotify.com/search/${encodedQuery}`
+  },
+  {
+    key: "appleMusic",
+    label: "Apple Music",
+    shortLabel: "Apple",
+    buildSearchUrl: (encodedQuery) => `https://music.apple.com/us/search?term=${encodedQuery}`
+  },
+  {
+    key: "youtubeMusic",
+    label: "YouTube Music",
+    shortLabel: "YouTube",
+    buildSearchUrl: (encodedQuery) => `https://music.youtube.com/search?q=${encodedQuery}`
+  },
+  {
+    key: "tidal",
+    label: "TIDAL",
+    shortLabel: "TIDAL",
+    buildSearchUrl: (encodedQuery) => `https://listen.tidal.com/search?q=${encodedQuery}`
+  },
+  {
+    key: "amazonMusic",
+    label: "Amazon Music",
+    shortLabel: "Amazon",
+    buildSearchUrl: (encodedQuery) => `https://music.amazon.com/search/${encodedQuery}`
+  },
+  {
+    key: "soundcloud",
+    label: "SoundCloud",
+    shortLabel: "SoundCloud",
+    buildSearchUrl: (encodedQuery) => `https://soundcloud.com/search/sounds?q=${encodedQuery}`
+  },
+  {
+    key: "bandcamp",
+    label: "Bandcamp",
+    shortLabel: "Bandcamp",
+    buildSearchUrl: (encodedQuery) => `https://bandcamp.com/search?q=${encodedQuery}&item_type=t`
+  }
+];
+
+function buildListeningRoomStreamingLinks(track: SongPostCard) {
+  const encodedQuery = encodeURIComponent(`${track.title} Walls Devine Volume 1`);
+
+  return streamingPlatformCatalog.map((platform) => {
+    const directHref = track.platformLinks?.[platform.key]?.trim();
+
+    return {
+      key: platform.key,
+      label: platform.label,
+      shortLabel: platform.shortLabel,
+      href: directHref || platform.buildSearchUrl(encodedQuery),
+      isDirect: Boolean(directHref)
+    } satisfies StreamingPlatformDestination;
+  });
 }
 
 function drawTrackMotif({
@@ -589,7 +667,9 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const activeShareTitle = `${activeTrack.title} · Walls/Devine Volume 1`;
   const activeShareText = buildListeningRoomShareText(activeTrack);
   const activeShareUrl = buildListeningRoomShareUrl(shareOrigin, activeTrack);
-  const activeShareLinks = activeShareUrl ? buildListeningRoomPlatformShareLinks(activeShareTitle, activeShareText, activeShareUrl) : null;
+  const activeSocialShareLinks = activeShareUrl ? buildListeningRoomSocialShareLinks(activeShareTitle, activeShareText, activeShareUrl) : null;
+  const activeStreamingLinks = buildListeningRoomStreamingLinks(activeTrack);
+  const hasDirectStreamingLinks = activeStreamingLinks.some((platform) => platform.isDirect);
   const isDockVisible = isCollapsed && showDockWhenCollapsed && !isDismissed;
 
   if (typeof document !== "undefined" && !audioPortalHostRef.current) {
@@ -1216,6 +1296,32 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
 
                   <div ref={dockAudioSlotRef} className="wd-player-dock__audio-slot" onPointerDown={handleDockActionPointerDown} />
 
+                  <div className="wd-player-dock__share" onPointerDown={handleDockActionPointerDown}>
+                    <div className="wd-player-dock__share-head">
+                      <span>Currently playing</span>
+                      <div className="wd-player-dock__share-actions">
+                        <button type="button" className="wd-player-dock__button" onClick={handleShareTrack} disabled={!activeShareUrl}>
+                          {supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Share track") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
+                        </button>
+                        <button type="button" className="wd-player-dock__button" onClick={handleCopyTrackLink} disabled={!activeShareUrl}>
+                          {shareFeedback === "copied" ? "Link copied" : "Copy link"}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="wd-player-dock__share-platforms" aria-label={`Open ${activeTrack.title} on music platforms`}>
+                      {activeStreamingLinks.map((platform) => (
+                        <a key={platform.key} className="wd-player-dock__share-platform" href={platform.href} target="_blank" rel="noreferrer">
+                          {platform.shortLabel}
+                        </a>
+                      ))}
+                    </div>
+
+                    <p className="wd-player-dock__share-note">
+                      {hasDirectStreamingLinks ? "Direct song links are live where they have already been mapped." : "Platform chips currently open search results. They will switch to direct song pages as platform URLs are added."}
+                    </p>
+                  </div>
+
                   <div className="wd-player-dock__actions" onPointerDown={handleDockActionPointerDown}>
                     <button type="button" className="wd-player-dock__tagline" onClick={reopenPlayer}>
                       Enter the full Listening Room
@@ -1293,8 +1399,8 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                             <span className="wd-player-modal__share-kicker">Share</span>
                             <h4>Send {activeTrack.title} out with the room already open.</h4>
                             <p>
-                              Mobile share opens the native sheet. Platform links drop straight into a post or message. Every link lands back inside the
-                              Listening Room on this track.
+                              Native share and direct room links keep the Listening Room open on this exact track. Music-platform destinations fall back to
+                              search now and automatically switch to direct song pages once those URLs are wired in.
                             </p>
                           </div>
 
@@ -1319,20 +1425,46 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                             </Button>
                           </div>
 
-                          {activeShareLinks ? (
-                            <div className="wd-player-modal__share-platforms" aria-label="Share to platforms">
-                              <a className="wd-player-modal__share-platform" href={activeShareLinks.x} target="_blank" rel="noreferrer">
-                                Share on X
-                              </a>
-                              <a className="wd-player-modal__share-platform" href={activeShareLinks.facebook} target="_blank" rel="noreferrer">
-                                Share on Facebook
-                              </a>
-                              <a className="wd-player-modal__share-platform" href={activeShareLinks.whatsapp} target="_blank" rel="noreferrer">
-                                Share on WhatsApp
-                              </a>
-                              <a className="wd-player-modal__share-platform" href={activeShareLinks.email}>
-                                Share by email
-                              </a>
+                          <div className="wd-player-modal__share-group">
+                            <span className="wd-player-modal__share-label">Music platforms</span>
+                            <div className="wd-player-modal__share-platforms" aria-label="Open current track on music platforms">
+                              {activeStreamingLinks.map((platform) => (
+                                <a key={platform.key} className="wd-player-modal__share-platform" href={platform.href} target="_blank" rel="noreferrer">
+                                  {platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}
+                                </a>
+                              ))}
+                            </div>
+                            <p className="wd-player-modal__share-note">
+                              {hasDirectStreamingLinks ? "Direct song links open wherever those destinations are already mapped." : "These currently open platform search results. They switch to direct song pages as per-track links are added to the data layer."}
+                            </p>
+                          </div>
+
+                          {activeSocialShareLinks ? (
+                            <div className="wd-player-modal__share-group">
+                              <span className="wd-player-modal__share-label">Social and message share</span>
+                              <div className="wd-player-modal__share-platforms" aria-label="Share to social and messaging platforms">
+                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.x} target="_blank" rel="noreferrer">
+                                  Share on X
+                                </a>
+                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.facebook} target="_blank" rel="noreferrer">
+                                  Share on Facebook
+                                </a>
+                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.whatsapp} target="_blank" rel="noreferrer">
+                                  Share on WhatsApp
+                                </a>
+                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.linkedin} target="_blank" rel="noreferrer">
+                                  Share on LinkedIn
+                                </a>
+                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.telegram} target="_blank" rel="noreferrer">
+                                  Share on Telegram
+                                </a>
+                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.reddit} target="_blank" rel="noreferrer">
+                                  Share on Reddit
+                                </a>
+                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.email}>
+                                  Share by email
+                                </a>
+                              </div>
                             </div>
                           ) : null}
 
