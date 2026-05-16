@@ -88,6 +88,24 @@
   color: var(--cg-color-ink-400);
 }
 
+.cg-admin__health-check {
+  display: grid;
+  gap: var(--cg-space-sm);
+}
+
+.cg-admin__health-check summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--cg-type-body-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-400);
+}
+
+.cg-admin__health-check summary::-webkit-details-marker {
+  display: none;
+}
+
 .cg-admin__grid--summary,
 .cg-admin__calendar,
 .cg-admin__file-grid,

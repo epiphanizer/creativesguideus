@@ -4,7 +4,6 @@ import { type FormEvent, useEffect, useMemo, useState, useTransition } from "rea
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 
 import type { AdminMarkdownCollection, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
-import { adminAuthConfig } from "@/lib/admin/auth";
 import {
   getAdminUserProfile,
   getFirebaseWallsDevineAdminData,
@@ -100,6 +99,49 @@ export function AdminConsole() {
   const hasFirebaseRuntime = Boolean(firebaseAuth);
   const isAuthorized = isActiveAdminProfile(adminProfile);
   const checklistByPhase = useMemo(() => groupChecklistByPhase(adminData?.plan.checklist ?? []), [adminData]);
+  const hasStorageBackedContent = adminData?.storageBacked !== false;
+
+  async function loadAuthorizedAdmin(user: User) {
+    setDataLoading(true);
+    setPanelError("");
+
+    try {
+      const profile = await getAdminUserProfile(user.uid);
+      setAdminProfile(profile);
+
+      if (!isActiveAdminProfile(profile)) {
+        setPanelError(`Signed in as ${user.email ?? "an unknown account"}, but no active ${firebaseAdminPaths.adminUsersCollection}/${user.uid} document was found.`);
+        return;
+      }
+
+      let nextData = await getFirebaseWallsDevineAdminData();
+      let nextSource: ContentSource = nextData?.storageBacked === false ? "bootstrap" : "firebase";
+      const needsBootstrap =
+        !nextData ||
+        nextData.storageBacked === false ||
+        nextData.instagramDrafts.length === 0 ||
+        nextData.journalEntries.length === 0;
+
+      if (needsBootstrap) {
+        const bootstrapSeed = await fetchBootstrapData(await user.getIdToken());
+        nextData = await seedFirebaseWallsDevineAdminData(bootstrapSeed);
+        nextSource = nextData.storageBacked === false ? "bootstrap" : "firebase";
+      }
+
+      if (!nextData) {
+        throw new Error("Firebase content is still empty after the bootstrap attempt.");
+      }
+
+      setContentSource(nextSource);
+      startTransition(() => {
+        setAdminData(nextData);
+      });
+    } catch (error) {
+      setPanelError(getFirebaseErrorMessage(error));
+    } finally {
+      setDataLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (!firebaseAuth) {
@@ -121,41 +163,7 @@ export function AdminConsole() {
         return;
       }
 
-      setDataLoading(true);
-
-      try {
-        const profile = await getAdminUserProfile(user.uid);
-        setAdminProfile(profile);
-
-        if (!isActiveAdminProfile(profile)) {
-          setPanelError(
-            `Signed in as ${user.email ?? "an unknown account"}, but no active ${firebaseAdminPaths.adminUsersCollection}/${user.uid} document was found.`
-          );
-          return;
-        }
-
-        let nextData = await getFirebaseWallsDevineAdminData();
-        let nextSource: ContentSource = "firebase";
-
-        if (!nextData) {
-          const bootstrapSeed = await fetchBootstrapData(await user.getIdToken());
-          nextData = await seedFirebaseWallsDevineAdminData(bootstrapSeed);
-          nextSource = "bootstrap";
-        }
-
-        if (!nextData) {
-          throw new Error("Firebase content is still empty after the bootstrap attempt.");
-        }
-
-        setContentSource(nextSource);
-        startTransition(() => {
-          setAdminData(nextData);
-        });
-      } catch (error) {
-        setPanelError(getFirebaseErrorMessage(error));
-      } finally {
-        setDataLoading(false);
-      }
+      await loadAuthorizedAdmin(user);
     });
 
     return unsubscribe;
@@ -189,6 +197,14 @@ export function AdminConsole() {
     setAdminData(null);
     setAdminProfile(null);
     setSaveStates({});
+  }
+
+  async function handleRetryAccess() {
+    if (!authUser) {
+      return;
+    }
+
+    await loadAuthorizedAdmin(authUser);
   }
 
   async function handleChecklistToggle(itemId: string, completed: boolean) {
@@ -247,7 +263,6 @@ export function AdminConsole() {
             description="Checking the current Firebase session before loading the control room."
           />
           <p className="cg-admin__helper">Waiting on Firebase Auth…</p>
-          <AdminFirebaseStatus contentSource={contentSource} />
         </SectionShell>
       </main>
     );
@@ -261,7 +276,7 @@ export function AdminConsole() {
             id="admin-login-title"
             eyebrow="Hidden route"
             title="Admin Console"
-            description="Firebase Auth now gates the Walls Devine admin. Sign in with the email/password account attached to the CGU Firebase project."
+            description="Sign in with the editor account for the Walls Devine backend."
           />
 
           <form onSubmit={handleLogin} className="cg-admin__login-form">
@@ -285,18 +300,12 @@ export function AdminConsole() {
             {authError ? <p className="cg-admin__error">{authError}</p> : null}
             {panelError ? <p className="cg-admin__error">{panelError}</p> : null}
 
-            <p className="cg-admin__helper">
-              Best practice: create a Firebase Auth user first, then add an active document to {`${firebaseAdminPaths.adminUsersCollection}/{uid}`}.
-            </p>
-
             <div className="cg-admin__login-actions">
               <Button type="submit" disabled={!hasFirebaseRuntime}>
                 Enter Admin
               </Button>
             </div>
           </form>
-
-          <AdminFirebaseStatus contentSource={contentSource} />
         </SectionShell>
       </main>
     );
@@ -310,23 +319,21 @@ export function AdminConsole() {
             id="admin-authorization-title"
             eyebrow="Firebase admin"
             title="Authorized editor profile required"
-            description="Firebase Auth succeeded, but this account is not yet registered as an active editor in Firestore."
+            description="This session signed in correctly, but the editor profile was not visible yet."
           />
 
           <div className="cg-admin__stack">
             <p className="cg-admin__error">{panelError || "This account is missing its adminUsers document."}</p>
-            <p className="cg-admin__helper">
-              Recommended Firestore doc: {firebaseAdminPaths.adminUsersCollection}/{authUser.uid} with active: true and your editor metadata.
-            </p>
             <p className="cg-admin__helper">Signed in as: {authUser.email ?? "Unknown email"}</p>
             <div className="cg-admin__login-actions">
+              <Button type="button" variant="secondary" onClick={handleRetryAccess}>
+                Retry access
+              </Button>
               <Button type="button" variant="ghost" onClick={handleLogout}>
                 Log out
               </Button>
             </div>
           </div>
-
-          <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized={false} />
         </SectionShell>
       </main>
     );
@@ -340,11 +347,10 @@ export function AdminConsole() {
             id="admin-bootstrap-title"
             eyebrow="Firebase admin"
             title="Preparing the control room"
-            description="Loading Firestore and Storage content. If the project is still empty, the local Walls Devine files will be seeded into Firebase now."
+            description="Loading the release plan and any available remote content."
           />
           <p className="cg-admin__helper">Signed in as {authUser.email ?? "Unknown email"}</p>
           {panelError ? <p className="cg-admin__error">{panelError}</p> : null}
-          <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized />
         </SectionShell>
       </main>
     );
@@ -356,15 +362,13 @@ export function AdminConsole() {
         <div className="cg-admin__topbar">
           <SectionHeader
             id="admin-console-title"
-            eyebrow="Firebase admin"
+            eyebrow="Admin"
             title="Walls Devine control room"
-            description="This admin now runs on Firebase Auth, Firestore, and Storage. The old local JSON and markdown files are only retained as bootstrap seed data."
+            description="Release plan, calendar, and source content for Volume 1."
           />
 
           <div className="cg-admin__topbar-actions">
-            <p className="cg-admin__mode">
-              Auth mode: {adminAuthConfig.provider} · Editor: {authUser.email ?? "Unknown email"} · Content source: {contentSource}
-            </p>
+            <p className="cg-admin__mode">{authUser.email ?? "Unknown email"}</p>
             <div className="cg-admin__editor-actions">
               <Button type="button" variant="ghost" onClick={handleLogout}>
                 Log out
@@ -374,10 +378,13 @@ export function AdminConsole() {
         </div>
 
         {panelError ? <p className="cg-admin__error">{panelError}</p> : null}
+        {!hasStorageBackedContent ? (
+          <p className="cg-admin__helper">
+            Draft and journal syncing is still waiting on Firebase Storage initialization. The release plan is live now, and a hidden health check is available below.
+          </p>
+        ) : null}
 
         <div className="cg-admin__grid cg-admin__grid--summary">
-          <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized />
-
           <article className="cg-admin__panel">
             <h2>Locked dates</h2>
             <ul className="cg-admin__list">
@@ -420,6 +427,11 @@ export function AdminConsole() {
             </ul>
           </article>
         </div>
+
+        <details className="cg-admin__health-check">
+          <summary>Health check</summary>
+          <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized notice={panelError || undefined} />
+        </details>
       </SectionShell>
 
       <SectionShell id="admin-release-plan" labelledBy="admin-release-plan-title" innerClassName="cg-admin__section">
@@ -470,7 +482,8 @@ export function AdminConsole() {
         </div>
       </SectionShell>
 
-      <SectionShell id="admin-instagram-posts" labelledBy="admin-instagram-posts-title" innerClassName="cg-admin__section">
+      {adminData.instagramDrafts.length ? (
+        <SectionShell id="admin-instagram-posts" labelledBy="admin-instagram-posts-title" innerClassName="cg-admin__section">
         <div className="cg-admin__section-head">
           <div>
             <h2 id="admin-instagram-posts-title">Instagram drafts</h2>
@@ -511,9 +524,11 @@ export function AdminConsole() {
             );
           })}
         </div>
-      </SectionShell>
+        </SectionShell>
+      ) : null}
 
-      <SectionShell id="admin-journals" labelledBy="admin-journals-title" innerClassName="cg-admin__section">
+      {adminData.journalEntries.length ? (
+        <SectionShell id="admin-journals" labelledBy="admin-journals-title" innerClassName="cg-admin__section">
         <div className="cg-admin__section-head">
           <div>
             <h2 id="admin-journals-title">Song journals</h2>
@@ -550,7 +565,8 @@ export function AdminConsole() {
             );
           })}
         </div>
-      </SectionShell>
+        </SectionShell>
+      ) : null}
     </main>
   );
 }

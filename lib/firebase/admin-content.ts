@@ -100,6 +100,11 @@ async function saveReleasePlan(plan: ReleasePlan) {
   return nextPlan;
 }
 
+async function getReleasePlanFromFirestore() {
+  const projectSnapshot = await getDoc(getProjectDoc());
+  return projectSnapshot.data()?.[firebaseAdminPaths.releasePlanField] as ReleasePlan | undefined;
+}
+
 function updateMarkdownCollection(
   files: AdminMarkdownFile[],
   nextFile: AdminMarkdownFile
@@ -125,41 +130,46 @@ export async function getAdminUserProfile(uid: string) {
   return snapshot.data() as AdminUserProfile;
 }
 
-export async function getFirebaseWallsDevineAdminData() {
-  const projectSnapshot = await getDoc(getProjectDoc());
-  const releasePlan = projectSnapshot.data()?.[firebaseAdminPaths.releasePlanField] as ReleasePlan | undefined;
+export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdminData | null> {
+  const releasePlan = await getReleasePlanFromFirestore();
 
   if (!releasePlan) {
     return null;
   }
 
-  const [instagramDrafts, journalEntries] = await Promise.all([
-    readMarkdownCollection("instagram-posts"),
-    readMarkdownCollection("journals")
-  ]);
+  try {
+    const [instagramDrafts, journalEntries] = await Promise.all([
+      readMarkdownCollection("instagram-posts"),
+      readMarkdownCollection("journals")
+    ]);
 
-  if (!instagramDrafts.length || !journalEntries.length) {
-    return null;
+    return {
+      plan: releasePlan,
+      instagramDrafts,
+      journalEntries,
+      storageBacked: true
+    } satisfies WallsDevineAdminData;
+  } catch {
+    return {
+      plan: releasePlan,
+      instagramDrafts: [],
+      journalEntries: [],
+      storageBacked: false
+    } satisfies WallsDevineAdminData;
   }
-
-  return {
-    plan: releasePlan,
-    instagramDrafts,
-    journalEntries
-  } satisfies WallsDevineAdminData;
 }
 
 export async function updateFirebaseReleasePlanItem(itemId: string, completed: boolean) {
-  const currentData = await getFirebaseWallsDevineAdminData();
+  const releasePlan = await getReleasePlanFromFirestore();
 
-  if (!currentData) {
+  if (!releasePlan) {
     throw new Error("Firebase admin content is not initialized yet.");
   }
 
   const nextPlan = {
-    ...currentData.plan,
+    ...releasePlan,
     updatedAt: new Date().toISOString(),
-    checklist: currentData.plan.checklist.map((item) => (item.id === itemId ? { ...item, completed } : item))
+    checklist: releasePlan.checklist.map((item) => (item.id === itemId ? { ...item, completed } : item))
   } satisfies ReleasePlan;
 
   return saveReleasePlan(nextPlan);
@@ -186,18 +196,36 @@ export async function updateFirebaseAdminMarkdownFile(collection: AdminMarkdownC
   } satisfies AdminMarkdownFile;
 }
 
-export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdminData) {
-  await saveReleasePlan({
+export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdminData): Promise<WallsDevineAdminData> {
+  const nextPlan = await saveReleasePlan({
     ...seedData.plan,
     updatedAt: new Date().toISOString()
   });
 
-  await Promise.all([
-    ...seedData.instagramDrafts.map((file) => updateFirebaseAdminMarkdownFile("instagram-posts", file.slug, file.content)),
-    ...seedData.journalEntries.map((file) => updateFirebaseAdminMarkdownFile("journals", file.slug, file.content))
-  ]);
+  try {
+    await Promise.all([
+      ...seedData.instagramDrafts.map((file) => updateFirebaseAdminMarkdownFile("instagram-posts", file.slug, file.content)),
+      ...seedData.journalEntries.map((file) => updateFirebaseAdminMarkdownFile("journals", file.slug, file.content))
+    ]);
 
-  return getFirebaseWallsDevineAdminData();
+    const remoteData = await getFirebaseWallsDevineAdminData();
+
+    if (remoteData) {
+      return remoteData;
+    }
+  } catch {
+    return {
+      ...seedData,
+      plan: nextPlan,
+      storageBacked: false
+    } satisfies WallsDevineAdminData;
+  }
+
+  return {
+    ...seedData,
+    plan: nextPlan,
+    storageBacked: false
+  } satisfies WallsDevineAdminData;
 }
 
 export function replaceAdminMarkdownFile(

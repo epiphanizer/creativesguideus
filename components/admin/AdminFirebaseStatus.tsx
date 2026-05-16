@@ -1,24 +1,24 @@
 "use client";
 
-import { firebaseAdminRecommendations, firebaseAdminPaths, firebaseProjectInfo, firebaseRoadmapNotes, hasFirebaseConfig } from "@/lib/firebase/config";
+import { firebaseAdminPaths, firebaseProjectInfo, hasFirebaseConfig } from "@/lib/firebase/config";
 import { firebaseApp, firebaseAuth, firebaseDb, firebaseStorage } from "@/lib/firebase/client";
 
 type AdminFirebaseStatusProps = {
   signedInEmail?: string | null;
   contentSource?: "pending" | "firebase" | "bootstrap";
   isAuthorized?: boolean;
+  notice?: string;
 };
 
-export function AdminFirebaseStatus({ signedInEmail, contentSource = "pending", isAuthorized }: AdminFirebaseStatusProps) {
+export function AdminFirebaseStatus({ signedInEmail, contentSource = "pending", isAuthorized, notice }: AdminFirebaseStatusProps) {
   const isInitialized = Boolean(firebaseApp);
   const statusLabel = !isInitialized ? "Missing config" : isAuthorized ? "Live" : signedInEmail ? "Signed in" : "Configured";
   const remoteContentLabel =
     contentSource === "firebase"
       ? "Firestore doc + Storage content loaded"
       : contentSource === "bootstrap"
-        ? "Seeded into Firebase from local source files"
+        ? "Using bootstrap fallback"
         : "Waiting for Firebase content";
-  const notes = [...firebaseRoadmapNotes, ...firebaseAdminRecommendations];
 
   return (
     <article className="cg-admin__panel cg-admin__panel--firebase">
@@ -41,12 +41,12 @@ export function AdminFirebaseStatus({ signedInEmail, contentSource = "pending", 
 
       <ul className="cg-admin__list">
         <li>
-          <strong>Auth mode</strong>
-          <span>{signedInEmail ? `Firebase email/password · ${signedInEmail}` : "Firebase email/password"}</span>
+          <strong>Editor</strong>
+          <span>{signedInEmail ?? "Not signed in"}</span>
         </li>
         <li>
-          <strong>Auth domain</strong>
-          <span>{firebaseProjectInfo.authDomain}</span>
+          <strong>Project</strong>
+          <span>{firebaseProjectInfo.projectId}</span>
         </li>
         <li>
           <strong>Admin gate</strong>
@@ -57,8 +57,8 @@ export function AdminFirebaseStatus({ signedInEmail, contentSource = "pending", 
           <span>{firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}</span>
         </li>
         <li>
-          <strong>Storage bucket</strong>
-          <span>{firebaseProjectInfo.storageBucket}</span>
+          <strong>Storage path</strong>
+          <span>{firebaseAdminPaths.storageBasePath}</span>
         </li>
         <li>
           <strong>Client handles</strong>
@@ -72,11 +72,7 @@ export function AdminFirebaseStatus({ signedInEmail, contentSource = "pending", 
         </li>
       </ul>
 
-      <ul className="cg-admin__bullet-list">
-        {notes.map((note) => (
-          <li key={note}>{note}</li>
-        ))}
-      </ul>
+      {notice ? <p className="cg-admin__helper">{notice}</p> : null}
     </article>
   );
 }

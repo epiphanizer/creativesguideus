@@ -11,6 +11,7 @@ import {
   sharedCaptionStarter,
   songPostCards
 } from "@/components/walls-devine/content";
+import { WallsDevinePlayer } from "@/components/walls-devine/WallsDevinePlayer";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
 import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
@@ -65,42 +66,6 @@ const directionNotes = [
   "Design each tile to stand alone while letting smoke, bolts, and symbols visually bridge neighbors."
 ];
 
-const unveilingSignals = [
-  {
-    label: "Edition language",
-    value: "Boutique album reveal",
-    note: "Treat the cover, grid, and copy kit like one premium object instead of separate content blocks."
-  },
-  {
-    label: "Palette lock",
-    value: "Oxblood, paper, charcoal",
-    note: "Lift tone directly from the engraved art so the site feels printed, not generic."
-  },
-  {
-    label: "Companion chamber",
-    value: "Bong Tour score bridge",
-    note: "The first three songs should read like doors into the screenplay world, not unrelated links."
-  }
-];
-
-const experienceModules = [
-  {
-    label: "Artifact first",
-    title: "Unveil the cover like a collector object",
-    copy: "The center artwork should land with the calm and confidence of a limited-edition product reveal before utility copy ever starts speaking."
-  },
-  {
-    label: "Grid as gallery",
-    title: "Let the nine tiles behave like one wall installation",
-    copy: "Every square needs standalone energy, but the typography, smoke language, and pacing should still magnetize back toward the central seal."
-  },
-  {
-    label: "Cross-linking",
-    title: "Keep Bong Tour as the adjoining room",
-    copy: "The companion film world should stay visible through deliberate cue links and restrained bridges, so the mythology expands without turning the album page into a detour."
-  }
-];
-
 export function WallsDevineLanding() {
   return (
     <>
@@ -130,65 +95,13 @@ export function WallsDevineLanding() {
                 Open Bong Tour deck
               </Button>
             </div>
-
-            <ul className="wd-hero__quickfacts" aria-label="Release direction">
-              <li>
-                <span>Core language</span>
-                <strong>Engraved red-and-white poster art</strong>
-              </li>
-              <li>
-                <span>Center mark</span>
-                <strong>Lightning split + Vol. 1 seal zone</strong>
-              </li>
-              <li>
-                <span>Campaign mode</span>
-                <strong>8 songs orbiting one portal cover</strong>
-              </li>
-            </ul>
           </div>
 
           <figure className="wd-hero__cover">
             <div className="wd-hero__cover-frame">
-              <Image src={volOneImage} alt="Walls Devine Vol. 1 album cover concept" priority sizes="(max-width: 900px) 86vw, 38vw" />
+              <Image src={volOneImage} alt="Walls Devine Vol. 1 cover artwork" priority sizes="(max-width: 900px) 86vw, 38vw" />
             </div>
-            <figcaption>Collector cover · edition zero</figcaption>
           </figure>
-        </div>
-
-        <div className="wd-hero__signal-grid" aria-label="Experience signals">
-          {unveilingSignals.map((signal) => (
-            <article key={signal.label} className="wd-hero__signal">
-              <span>{signal.label}</span>
-              <strong>{signal.value}</strong>
-              <p>{signal.note}</p>
-            </article>
-          ))}
-        </div>
-      </SectionShell>
-
-      <SectionShell
-        id="walls-devine-experience"
-        labelledBy="walls-devine-experience-title"
-        className="wd-experience-shell"
-        innerClassName="wd-experience"
-      >
-        <header className="wd-experience__intro">
-          <span className="wd-experience__eyebrow">Release architecture</span>
-          <h2 id="walls-devine-experience-title">Built like a boutique product reveal, not a utility page.</h2>
-          <p>
-            The album world should feel editorial, collectible, and calm under pressure. The grid is the gallery wall, the copy system is the edition note,
-            and Bong Tour is the adjoining chamber where the score keeps the mythology moving.
-          </p>
-        </header>
-
-        <div className="wd-experience__grid">
-          {experienceModules.map((module) => (
-            <article key={module.title} className="wd-experience__card">
-              <span>{module.label}</span>
-              <h3>{module.title}</h3>
-              <p>{module.copy}</p>
-            </article>
-          ))}
         </div>
       </SectionShell>
 
@@ -307,41 +220,7 @@ export function WallsDevineLanding() {
           ))}
         </ol>
 
-        <div className="wd-post__cards" role="list" aria-label="Song post card copy kit">
-          {songPostCards.map((card) => (
-            <article key={card.title} role="listitem" className="wd-post__card">
-              <header>
-                <span>{card.phase}</span>
-                <h3>{card.title}</h3>
-              </header>
-              <p>{card.hook}</p>
-              <p>{card.caption}</p>
-              <p className="wd-post__visual">Visual thread: {card.visualThread}</p>
-
-              <div className="wd-post__links" aria-label={`${card.title} references`}>
-                <a href={`/walls-devine/journals/${card.journalSlug}.md`}>Read journal entry</a>
-
-                {card.bongTourCueId ? <a href={`/bong-tour#${card.bongTourCueId}`}>View cue on Bong Tour</a> : null}
-              </div>
-
-              {card.bongTourCueId ? (
-                <div className="wd-post__bong-link">
-                  {card.bongTourContext ? <p>{card.bongTourContext}</p> : null}
-                </div>
-              ) : null}
-
-              <details className="wd-post__detail">
-                <summary>Making note</summary>
-                <p>{card.makingNote}</p>
-              </details>
-
-              <details className="wd-post__detail">
-                <summary>Technical note</summary>
-                <p>{card.technicalNote}</p>
-              </details>
-            </article>
-          ))}
-        </div>
+        <WallsDevinePlayer tracks={songPostCards} />
       </SectionShell>
     </>
   );

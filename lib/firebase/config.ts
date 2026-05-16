@@ -20,6 +20,8 @@ export const firebaseAdminPaths = {
   adminProjectsCollection: "adminProjects",
   wallsDevineProjectId: "walls-devine",
   releasePlanField: "releasePlan",
+  markdownCollection: "markdownFiles",
+  markdownInitializedField: "markdownContentInitialized",
   storageBasePath: "admin-projects/walls-devine",
   bootstrapRoute: "/api/admin/bootstrap"
 } as const;
@@ -29,12 +31,14 @@ export const hasFirebaseConfig = Object.values(firebaseConfig).every((value) => 
 export const firebaseRoadmapNotes = [
   "Admin auth now expects a Firebase Auth email/password account instead of the local cookie bypass.",
   "Authorize editors by creating Firestore documents in adminUsers/{uid}; the UI checks that document before loading any content.",
-  "Structured release planning now belongs in Firestore, while longform markdown lives in Firebase Storage under the Walls Devine admin path."
+  "Structured release planning and markdown content now belong in Firestore under the Walls Devine project doc.",
+  "Firebase Storage is optional now and only used as a legacy migration source if older markdown files already exist there."
 ] as const;
 
 export const firebaseAdminRecommendations = [
   `Use Firestore ${firebaseAdminPaths.adminUsersCollection}/{uid} documents as the editor allowlist.`,
   `Keep the release plan in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}.`,
-  `Store drafts and journals in Storage under ${firebaseAdminPaths.storageBasePath}/{collection}/{slug}.md.`,
+  `Store markdown docs in Firestore ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/{collection}--{slug}.`,
+  `Use ${firebaseAdminPaths.storageBasePath}/{collection}/{slug}.md only as a migration source when older Storage content already exists.`,
   "Treat the local JSON and markdown files as migration seed data, not the live admin backend."
 ] as const;

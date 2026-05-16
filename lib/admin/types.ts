@@ -42,6 +42,7 @@ export type AdminMarkdownFile = {
   filePath: string;
   content: string;
   preview: string;
+  updatedAt?: string;
 };
 
 export type AdminMarkdownCollection = "instagram-posts" | "journals";
@@ -50,4 +51,6 @@ export type WallsDevineAdminData = {
   plan: ReleasePlan;
   instagramDrafts: AdminMarkdownFile[];
   journalEntries: AdminMarkdownFile[];
+  storageBacked?: boolean;
+  contentBackend?: "firestore" | "bootstrap";
 };
