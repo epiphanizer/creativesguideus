@@ -76,6 +76,10 @@
   gap: clamp(var(--cg-space-md), 2.4vw, var(--cg-space-xl));
 }
 
+.wd-hero__showcase {
+  align-content: start;
+}
+
 .wd-hero__showcase .cg-section-header__eyebrow {
   color: var(--wd-red-800);
 }
@@ -104,8 +108,7 @@
 }
 
 .wd-hero__letter,
-.wd-hero__journal,
-.wd-hero__signature-card {
+.wd-hero__journal {
   position: relative;
   display: grid;
   gap: clamp(0.7rem, 1.8vh, 1rem);
@@ -120,8 +123,7 @@
 }
 
 .wd-hero__letter,
-.wd-hero__journal,
-.wd-hero__signature-card {
+.wd-hero__journal {
   max-width: min(100%, 39rem);
 }
 
@@ -130,14 +132,15 @@
   justify-self: end;
 }
 
-.wd-hero__signature-card {
-  width: min(100%, 460px);
+.wd-hero__cover-signature {
+  width: min(100%, 29rem);
+  display: grid;
   gap: 0.35rem;
+  padding-top: clamp(0.75rem, 1.2vh, 1rem);
 }
 
 .wd-hero__letter::before,
-.wd-hero__journal::before,
-.wd-hero__signature-card::before {
+.wd-hero__journal::before {
   content: "";
   position: absolute;
   inset: 0 auto 0 0;
@@ -146,8 +149,7 @@
 }
 
 .wd-hero__letter::after,
-.wd-hero__journal::after,
-.wd-hero__signature-card::after {
+.wd-hero__journal::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -159,8 +161,7 @@
 }
 
 .wd-hero__letter > *,
-.wd-hero__journal > *,
-.wd-hero__signature-card > * {
+.wd-hero__journal > * {
   position: relative;
   z-index: 1;
 }
@@ -262,17 +263,17 @@
 }
 
 .wd-hero__letter-signoff {
-  padding-top: 0.25rem;
-  justify-self: end;
-  text-align: right;
+  padding-top: 0.1rem;
+  justify-self: start;
+  text-align: left;
 }
 
 .wd-hero__letter-signatures {
   display: grid;
   gap: 0.15rem;
-  justify-self: end;
-  justify-items: end;
-  text-align: right;
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
 }
 
 .wd-hero__letter-signatures span {
@@ -301,7 +302,7 @@
   right: 0;
   bottom: -0.16rem;
   height: 1px;
-  background: linear-gradient(90deg, rgba(95, 63, 66, 0), rgba(95, 63, 66, 0.28));
+  background: linear-gradient(90deg, rgba(95, 63, 66, 0.28), rgba(95, 63, 66, 0));
   opacity: 0.58;
 }
 
@@ -3652,7 +3653,7 @@
   --wd-collector-title-size: clamp(3.05rem, 6.35vw, 5.45rem);
   --wd-collector-title-lh: 0.9;
   --wd-collector-copy-size: clamp(1rem, 0.5vw + 0.86rem, 1.12rem);
-  --wd-collector-visual-max-h: clamp(380px, 58vh, 620px);
+  --wd-collector-visual-max-h: clamp(310px, 45vh, 490px);
 }
 
 .wd-page {
@@ -3692,8 +3693,8 @@
 
 @media (min-width: 1024px) {
   .wd-hero__layout {
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-    column-gap: clamp(2rem, 4.4vw, 4.8rem);
+    grid-template-columns: minmax(0, 1.04fr) minmax(20rem, 0.76fr);
+    column-gap: clamp(1.5rem, 3.8vw, 4rem);
   }
 }
 
@@ -3704,7 +3705,20 @@
 }
 
 .wd-hero__copy {
-  justify-items: start;
+  justify-items: end;
+}
+
+@media (min-width: 1024px) {
+  .wd-hero__showcase {
+    min-height: calc(100vh - var(--cg-header-height) - var(--wd-hero-top-pad) - var(--wd-hero-bottom-pad));
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .wd-hero__copy {
+    width: min(100%, 40vw);
+    justify-self: end;
+    margin-right: clamp(1rem, 8vw, 7rem);
+  }
 }
 
 .wd-hero__showcase .cg-section-header {
@@ -3746,17 +3760,27 @@
 
 .wd-hero__cover {
   align-self: start;
-  margin-top: clamp(0.2rem, 0.75vh, 0.7rem);
+  margin-top: clamp(0.12rem, 0.45vh, 0.38rem);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.8rem, 1.35vh, 1.05rem);
 }
 
 .wd-hero__cover-frame {
-  width: min(100%, 560px);
+  width: min(100%, 440px);
   max-height: var(--wd-collector-visual-max-h);
-  transform: translateY(clamp(-6px, -1.5vh, -18px)) rotate(-1.1deg);
+  transform: translateY(clamp(-4px, -0.8vh, -10px)) rotate(-1deg);
 }
 
-.wd-hero__signature-card {
-  width: min(100%, 560px);
+@media (min-width: 1024px) {
+  .wd-hero__cover {
+    padding-bottom: clamp(3rem, 15vh, 7.5rem);
+  }
+
+  .wd-hero__cover-signature {
+    margin-top: auto;
+  }
 }
 
 @keyframes wd-hero-letter-quote-rotate {

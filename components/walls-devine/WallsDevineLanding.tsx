@@ -228,17 +228,16 @@ export function WallsDevineLanding() {
 
             <figure className="wd-hero__cover">
               <div className="wd-hero__cover-frame">
-                <Image src={volOneImage} alt="Walls/Devine Volume 1 cover artwork" priority sizes="(max-width: 900px) 86vw, 38vw" />
+                <Image src={volOneImage} alt="Walls/Devine Volume 1 cover artwork" priority sizes="(max-width: 900px) 82vw, 30vw" />
               </div>
+              <figcaption className="wd-hero__cover-signature" aria-label="Signed by John Walls and Terry Devine">
+                <p className="wd-hero__letter-signoff">With Love From the Room,</p>
+                <div className="wd-hero__letter-signatures">
+                  <span>John Walls</span>
+                  <span>Terry Devine</span>
+                </div>
+              </figcaption>
             </figure>
-
-            <aside className="wd-hero__signature-card" aria-label="Signed by John Walls and Terry Devine">
-              <p className="wd-hero__letter-signoff">With Love From the Room,</p>
-              <div className="wd-hero__letter-signatures">
-                <span>John Walls</span>
-                <span>Terry Devine</span>
-              </div>
-            </aside>
           </div>
 
           <div className="wd-hero__copy">
