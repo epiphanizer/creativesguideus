@@ -3,7 +3,7 @@
 import { type FormEvent, useEffect, useMemo, useState, useTransition } from "react";
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 
-import type { AdminAudioAnalysis, AdminMarkdownCollection, EcosystemLead, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
+import type { AdminAudioAnalysis, AdminMarkdownCollection, EcosystemLead, ListeningRoomVisit, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
 import {
   deleteFirebaseAdminMarkdownFile,
   getAdminUserProfile,
@@ -20,6 +20,7 @@ import {
 import { firebaseAuth } from "@/lib/firebase/client";
 import { firebaseAdminPaths } from "@/lib/firebase/config";
 import { getEcosystemLeads } from "@/lib/firebase/ecosystem-leads";
+import { getListeningRoomVisits } from "@/lib/firebase/listening-room-visits";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
@@ -203,6 +204,21 @@ function formatLeadSource(source: string) {
   return source.replace(/[-_]/g, " ");
 }
 
+function formatListeningRoomQueryKey(queryKey: string) {
+  switch (queryKey) {
+    case "player":
+      return "player query";
+    case "song":
+      return "song query";
+    case "track":
+      return "track query";
+    case "slug":
+      return "slug query";
+    default:
+      return queryKey || "unknown query";
+  }
+}
+
 type DashboardModule = {
   title: string;
   summary: string;
@@ -289,8 +305,11 @@ function buildDashboardModules({
   contentSource,
   leadsCount,
   leadSources,
+  visitsCount,
+  topVisitSong,
   audioCount,
   hasAudioError,
+  hasVisitsError,
   hasPanelError
 }: {
   adminData: WallsDevineAdminData;
@@ -299,8 +318,11 @@ function buildDashboardModules({
   contentSource: ContentSource;
   leadsCount: number;
   leadSources: Array<[string, number]>;
+  visitsCount: number;
+  topVisitSong: string | null;
   audioCount: number;
   hasAudioError: boolean;
+  hasVisitsError: boolean;
   hasPanelError: boolean;
 }) {
   const completedChecklist = countCompletedChecklist(adminData.plan.checklist);
@@ -325,6 +347,12 @@ function buildDashboardModules({
       summary: `${adminData.instagramDrafts.length} drafts · ${adminData.journalEntries.length} journals`,
       detail: hasStorageBackedContent ? "Live Storage CRUD is enabled." : isScaffoldMode ? "Scaffold only until content hydrates." : "Release plan is live. Storage sync still needs attention.",
       status: hasStorageBackedContent ? "ready" : "pending"
+    },
+    {
+      title: "Listening room traffic",
+      summary: `${visitsCount} shared visit${visitsCount === 1 ? "" : "s"}`,
+      detail: hasVisitsError ? "Listening-room analytics reported an issue. Use refresh to retry." : topVisitSong ? `Top arrival: ${topVisitSong}` : "Shared song-link visits will appear here once listeners land.",
+      status: visitsCount && !hasVisitsError ? "ready" : "pending"
     },
     {
       title: "Audio QA",
@@ -359,6 +387,9 @@ export function AdminConsole() {
   const [ecosystemLeads, setEcosystemLeads] = useState<EcosystemLead[]>([]);
   const [leadsLoading, setLeadsLoading] = useState(false);
   const [leadsError, setLeadsError] = useState("");
+  const [listeningRoomVisits, setListeningRoomVisits] = useState<ListeningRoomVisit[]>([]);
+  const [visitsLoading, setVisitsLoading] = useState(false);
+  const [visitsError, setVisitsError] = useState("");
   const [, startTransition] = useTransition();
 
   const hasFirebaseRuntime = Boolean(firebaseAuth);
@@ -376,6 +407,16 @@ export function AdminConsole() {
 
     return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
   }, [ecosystemLeads]);
+  const visitSongs = useMemo(() => {
+    const counts = new Map<string, number>();
+
+    for (const visit of listeningRoomVisits) {
+      const label = visit.songTitle || visit.songSlug || "Unknown song";
+      counts.set(label, (counts.get(label) ?? 0) + 1);
+    }
+
+    return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
+  }, [listeningRoomVisits]);
   const dashboardModules = useMemo(
     () =>
       buildDashboardModules({
@@ -385,12 +426,30 @@ export function AdminConsole() {
         contentSource,
         leadsCount: ecosystemLeads.length,
         leadSources,
+        visitsCount: listeningRoomVisits.length,
+        topVisitSong: visitSongs[0]?.[0] ?? null,
         audioCount: audioAnalysis.length,
         hasAudioError: Boolean(audioError),
+        hasVisitsError: Boolean(visitsError),
         hasPanelError: Boolean(panelError)
       }),
-    [adminViewData, isScaffoldMode, hasStorageBackedContent, contentSource, ecosystemLeads.length, leadSources, audioAnalysis.length, audioError, panelError]
+    [
+      adminViewData,
+      isScaffoldMode,
+      hasStorageBackedContent,
+      contentSource,
+      ecosystemLeads.length,
+      leadSources,
+      listeningRoomVisits.length,
+      visitSongs,
+      audioAnalysis.length,
+      audioError,
+      visitsError,
+      panelError
+    ]
   );
+  const isResolvingAuthorizedSession = Boolean(authUser) && dataLoading && !isAuthorized && !panelError;
+  const isRefreshingAuthorizedAdmin = Boolean(authUser) && isAuthorized && dataLoading;
 
   function collectionHasDuplicateSlug(collection: AdminMarkdownCollection, slug: string, currentSlug?: string) {
     if (!adminData) {
@@ -489,6 +548,22 @@ export function AdminConsole() {
     }
   }
 
+  async function loadListeningRoomVisitBacklog() {
+    setVisitsLoading(true);
+    setVisitsError("");
+
+    try {
+      const nextVisits = await getListeningRoomVisits();
+      startTransition(() => {
+        setListeningRoomVisits(nextVisits);
+      });
+    } catch (error) {
+      setVisitsError(getFirebaseErrorMessage(error));
+    } finally {
+      setVisitsLoading(false);
+    }
+  }
+
   useEffect(() => {
     if (!firebaseAuth) {
       setAuthLoading(false);
@@ -568,6 +643,17 @@ export function AdminConsole() {
     void loadEcosystemLeadBacklog();
   }, [authUser, isAuthorized, startTransition]);
 
+  useEffect(() => {
+    if (!authUser || !isAuthorized) {
+      setListeningRoomVisits([]);
+      setVisitsError("");
+      setVisitsLoading(false);
+      return;
+    }
+
+    void loadListeningRoomVisitBacklog();
+  }, [authUser, isAuthorized, startTransition]);
+
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -622,6 +708,14 @@ export function AdminConsole() {
     }
 
     await loadEcosystemLeadBacklog();
+  }
+
+  async function handleListeningRoomVisitsRefresh() {
+    if (!authUser || !isAuthorized) {
+      return;
+    }
+
+    await loadListeningRoomVisitBacklog();
   }
 
   async function handleChecklistToggle(itemId: string, completed: boolean) {
@@ -846,6 +940,28 @@ export function AdminConsole() {
     );
   }
 
+  if (isResolvingAuthorizedSession) {
+    return (
+      <main className="cg-page cg-admin-page">
+        <SectionShell id="admin-bootstrap" labelledBy="admin-bootstrap-title" innerClassName="cg-admin cg-admin--login" variant="hero">
+          <SectionHeader
+            id="admin-bootstrap-title"
+            eyebrow="Firebase admin"
+            title="Preparing the control room"
+            description="Verifying the editor profile and loading any available remote content."
+          />
+          <p className="cg-admin__helper">Signed in as {authUser.email ?? "Unknown email"}</p>
+          {panelError ? <p className="cg-admin__error">{panelError}</p> : null}
+          <div className="cg-admin__login-actions">
+            <Button type="button" variant="ghost" onClick={handleLogout}>
+              Log out
+            </Button>
+          </div>
+        </SectionShell>
+      </main>
+    );
+  }
+
   if (!isAuthorized) {
     return (
       <main className="cg-page cg-admin-page">
@@ -874,23 +990,6 @@ export function AdminConsole() {
     );
   }
 
-  if (dataLoading && !adminData) {
-    return (
-      <main className="cg-page cg-admin-page">
-        <SectionShell id="admin-bootstrap" labelledBy="admin-bootstrap-title" innerClassName="cg-admin cg-admin--login" variant="hero">
-          <SectionHeader
-            id="admin-bootstrap-title"
-            eyebrow="Firebase admin"
-            title="Preparing the control room"
-            description="Loading the release plan and any available remote content."
-          />
-          <p className="cg-admin__helper">Signed in as {authUser.email ?? "Unknown email"}</p>
-          {panelError ? <p className="cg-admin__error">{panelError}</p> : null}
-        </SectionShell>
-      </main>
-    );
-  }
-
   return (
     <main className="cg-page cg-admin-page">
       <SectionShell id="admin-console" labelledBy="admin-console-title" innerClassName="cg-admin">
@@ -913,11 +1012,16 @@ export function AdminConsole() {
         </div>
 
         {panelError ? <p className="cg-admin__error">{panelError}</p> : null}
+        {isRefreshingAuthorizedAdmin ? <p className="cg-admin__helper">Refreshing the live Firebase release plan and content while the dashboard stays visible.</p> : null}
         {isScaffoldMode ? (
           <div className="cg-admin__banner">
             <div>
-              <strong>Scaffold mode is active</strong>
-              <p>The full dashboard is visible below, but the live Firebase content layer did not hydrate yet. Use retry to pull the real release-plan and content data back in.</p>
+              <strong>{isRefreshingAuthorizedAdmin ? "Live content is still hydrating" : "Scaffold mode is active"}</strong>
+              <p>
+                {isRefreshingAuthorizedAdmin
+                  ? "The dashboard is visible below while Firebase finishes loading the release plan, markdown content, and any available remote modules."
+                  : "The full dashboard is visible below, but the live Firebase content layer did not hydrate yet. Use retry to pull the real release-plan and content data back in."}
+              </p>
             </div>
             <div className="cg-admin__banner-actions">
               <Button type="button" variant="secondary" size="sm" onClick={handleRetryAccess}>
@@ -950,6 +1054,32 @@ export function AdminConsole() {
         </div>
 
         <div className="cg-admin__grid cg-admin__grid--summary">
+          <article className="cg-admin__panel">
+            <h2>Data collections</h2>
+            <ul className="cg-admin__list">
+              <li>
+                <strong>Firestore / adminProjects/walls-devine</strong>
+                <span>Release plan is live. Checklist editing is enabled here today.</span>
+              </li>
+              <li>
+                <strong>Firestore / ecosystemLeads</strong>
+                <span>Collector signups are readable in the admin inbox.</span>
+              </li>
+              <li>
+                <strong>Firestore / listeningRoomVisits</strong>
+                <span>Shared song-link arrivals now surface below as analytics.</span>
+              </li>
+              <li>
+                <strong>Storage / instagram-posts + journals</strong>
+                <span>These support create, rename, update, and delete from this console.</span>
+              </li>
+              <li>
+                <strong>Firestore / adminUsers</strong>
+                <span>This collection gates editor access and is not yet editable from the UI.</span>
+              </li>
+            </ul>
+          </article>
+
           <article className="cg-admin__panel">
             <h2>Locked dates</h2>
             <ul className="cg-admin__list">
@@ -993,7 +1123,7 @@ export function AdminConsole() {
           </article>
         </div>
 
-        <details className="cg-admin__health-check">
+        <details className="cg-admin__health-check" open={Boolean(panelError) || isScaffoldMode || !hasStorageBackedContent}>
           <summary>Health check</summary>
           <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized notice={panelError || undefined} />
         </details>
@@ -1088,6 +1218,66 @@ export function AdminConsole() {
               </ul>
             ) : (
               <p className="cg-admin__helper">Collector signups will appear here once the public CTA is live.</p>
+            )}
+          </article>
+        </div>
+      </SectionShell>
+
+      <SectionShell id="admin-listening-room-visits" labelledBy="admin-listening-room-visits-title" innerClassName="cg-admin__section">
+        <div className="cg-admin__section-head">
+          <div>
+            <h2 id="admin-listening-room-visits-title">Listening room visits</h2>
+            <p>Recent arrivals from shared song URLs, grouped by the track listeners landed on and the query key that opened the room.</p>
+          </div>
+          <div className="cg-admin__section-actions">
+            <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.listeningRoomVisitsCollection}</p>
+            <Button type="button" variant="secondary" size="sm" onClick={handleListeningRoomVisitsRefresh} disabled={visitsLoading}>
+              {visitsLoading ? "Refreshing…" : "Refresh visits"}
+            </Button>
+          </div>
+        </div>
+
+        {visitsError ? <p className="cg-admin__error">{visitsError}</p> : null}
+        {visitsLoading && !listeningRoomVisits.length ? <p className="cg-admin__helper">Loading listening-room visits…</p> : null}
+
+        <div className="cg-admin__lead-grid">
+          <article className="cg-admin__panel">
+            <h3>Song mix</h3>
+            {visitSongs.length ? (
+              <ul className="cg-admin__list">
+                {visitSongs.map(([songTitle, count]) => (
+                  <li key={songTitle}>
+                    <strong>{songTitle}</strong>
+                    <span>{count} visit{count === 1 ? "" : "s"}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="cg-admin__helper">Shared song-link traffic will appear here once those URLs start circulating.</p>
+            )}
+          </article>
+
+          <article className="cg-admin__panel">
+            <h3>Recent arrivals</h3>
+            {listeningRoomVisits.length ? (
+              <ul className="cg-admin__lead-list">
+                {listeningRoomVisits.map((visit) => (
+                  <li key={visit.id} className="cg-admin__lead-item">
+                    <div>
+                      <strong>{visit.songTitle}</strong>
+                      <span>{visit.songSlug}</span>
+                    </div>
+                    <div className="cg-admin__lead-meta">
+                      <span>{formatListeningRoomQueryKey(visit.queryKey)}</span>
+                      <span>{visit.pagePath}</span>
+                      <span>{visit.referrer || "Direct / unknown referrer"}</span>
+                      <span>{new Date(visit.createdAt).toLocaleString()}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="cg-admin__helper">No shared listening-room arrivals have been tracked yet.</p>
             )}
           </article>
         </div>

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import { createPortal } from "react-dom";
-import { useEffect, useId, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useId, useRef, useState } from "react";
 
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
@@ -29,6 +29,13 @@ type VisualizerPalette = {
   secondary: string;
   glow: string;
   ink: string;
+};
+
+type VisualizerMotif = "crown" | "vault" | "orbit" | "porch" | "decay" | "resolve" | "poetry" | "gratitude";
+
+type VisualizerTheme = VisualizerPalette & {
+  motif: VisualizerMotif;
+  field: string;
 };
 
 type VisualizerByteArray = Uint8Array<ArrayBuffer>;
@@ -69,15 +76,15 @@ const trackPosterImages: Record<number, StaticImageData> = {
   8: gratitudeImage
 };
 
-const trackVisualizerPalettes: Record<number, VisualizerPalette> = {
-  1: { primary: "#d96a1f", secondary: "#b31612", glow: "#ecbbba", ink: "#1a130d" },
-  2: { primary: "#7e0705", secondary: "#29543b", glow: "#f4e7ce", ink: "#1a130d" },
-  3: { primary: "#29543b", secondary: "#d96a1f", glow: "#f4e7ce", ink: "#1a130d" },
-  4: { primary: "#ca3f3b", secondary: "#29543b", glow: "#fafaf9", ink: "#1a130d" },
-  5: { primary: "#7e0705", secondary: "#ca3f3b", glow: "#ecbbba", ink: "#140d0d" },
-  6: { primary: "#d96a1f", secondary: "#7e0705", glow: "#f7e0e0", ink: "#140d0d" },
-  7: { primary: "#29543b", secondary: "#ca3f3b", glow: "#fafaf9", ink: "#1a130d" },
-  8: { primary: "#d66e6c", secondary: "#d96a1f", glow: "#f4e7ce", ink: "#1a130d" }
+const trackVisualizerThemes: Record<number, VisualizerTheme> = {
+  1: { primary: "#d96a1f", secondary: "#b31612", glow: "#ecbbba", ink: "#1a130d", field: "#f4e7ce", motif: "crown" },
+  2: { primary: "#7e0705", secondary: "#29543b", glow: "#f4e7ce", ink: "#1a130d", field: "#ead7b1", motif: "vault" },
+  3: { primary: "#29543b", secondary: "#d96a1f", glow: "#f4e7ce", ink: "#1a130d", field: "#dfe9e2", motif: "orbit" },
+  4: { primary: "#ca3f3b", secondary: "#29543b", glow: "#fafaf9", ink: "#1a130d", field: "#f1ebe0", motif: "porch" },
+  5: { primary: "#7e0705", secondary: "#ca3f3b", glow: "#ecbbba", ink: "#140d0d", field: "#ead4d4", motif: "decay" },
+  6: { primary: "#d96a1f", secondary: "#7e0705", glow: "#f7e0e0", ink: "#140d0d", field: "#f4dfcf", motif: "resolve" },
+  7: { primary: "#29543b", secondary: "#ca3f3b", glow: "#fafaf9", ink: "#1a130d", field: "#eef2ef", motif: "poetry" },
+  8: { primary: "#d66e6c", secondary: "#d96a1f", glow: "#f4e7ce", ink: "#1a130d", field: "#f6ebd7", motif: "gratitude" }
 };
 
 const playerStorageKey = "walls-devine-player-state-v1";
@@ -104,6 +111,213 @@ function getAudioContextConstructor() {
 
   const audioWindow = window as AudioContextWindow;
   return audioWindow.AudioContext ?? audioWindow.webkitAudioContext ?? null;
+}
+
+function drawTrackMotif({
+  context,
+  theme,
+  centerX,
+  centerY,
+  outerRadius,
+  ringRadius,
+  pulseRadius,
+  energy,
+  elapsed,
+  seed
+}: {
+  context: CanvasRenderingContext2D;
+  theme: VisualizerTheme;
+  centerX: number;
+  centerY: number;
+  outerRadius: number;
+  ringRadius: number;
+  pulseRadius: number;
+  energy: number;
+  elapsed: number;
+  seed: number;
+}) {
+  const tau = Math.PI * 2;
+
+  if (theme.motif === "crown") {
+    for (let index = 0; index < 5; index += 1) {
+      const angle = -Math.PI / 2 + (index - 2) * 0.22;
+      const leftAngle = angle - 0.08;
+      const rightAngle = angle + 0.08;
+      const innerRadius = ringRadius * 0.96;
+      const tipRadius = outerRadius * 0.98 + energy * 10 + (index % 2 === 0 ? 6 : 0);
+
+      context.beginPath();
+      context.moveTo(centerX + Math.cos(leftAngle) * innerRadius, centerY + Math.sin(leftAngle) * innerRadius);
+      context.lineTo(centerX + Math.cos(angle) * tipRadius, centerY + Math.sin(angle) * tipRadius);
+      context.lineTo(centerX + Math.cos(rightAngle) * innerRadius, centerY + Math.sin(rightAngle) * innerRadius);
+      context.closePath();
+      context.fillStyle = hexToRgba(index % 2 === 0 ? theme.primary : theme.secondary, 0.22);
+      context.fill();
+      context.strokeStyle = hexToRgba(theme.ink, 0.18);
+      context.lineWidth = 1;
+      context.stroke();
+    }
+
+    return;
+  }
+
+  if (theme.motif === "vault") {
+    context.save();
+    context.translate(centerX, centerY);
+    context.rotate(elapsed * 0.00018);
+
+    for (const scale of [0.92, 0.72]) {
+      const size = pulseRadius * scale;
+      context.beginPath();
+      context.rect(-size, -size, size * 2, size * 2);
+      context.strokeStyle = hexToRgba(scale === 0.92 ? theme.secondary : theme.primary, 0.22);
+      context.lineWidth = scale === 0.92 ? 2 : 1.4;
+      context.stroke();
+      context.rotate(-elapsed * 0.00008 * scale);
+    }
+
+    context.restore();
+    return;
+  }
+
+  if (theme.motif === "orbit") {
+    for (let index = 0; index < 3; index += 1) {
+      const ellipseWidth = ringRadius * (0.78 + index * 0.09);
+      const ellipseHeight = ringRadius * (0.38 + index * 0.06);
+      const rotation = seed * 0.002 + index * 0.54 + elapsed * 0.00008 * (index % 2 === 0 ? 1 : -1);
+
+      context.save();
+      context.translate(centerX, centerY);
+      context.rotate(rotation);
+      context.beginPath();
+      context.ellipse(0, 0, ellipseWidth, ellipseHeight, 0, 0, tau);
+      context.strokeStyle = hexToRgba(index === 1 ? theme.secondary : theme.primary, 0.18);
+      context.lineWidth = 1.25;
+      context.stroke();
+
+      const orbAngle = elapsed * 0.00042 * (index % 2 === 0 ? 1 : -1) + index * 1.4;
+      const x = Math.cos(orbAngle) * ellipseWidth;
+      const y = Math.sin(orbAngle) * ellipseHeight;
+      context.beginPath();
+      context.fillStyle = hexToRgba(index === 1 ? theme.secondary : theme.primary, 0.82);
+      context.arc(x, y, 2.5 + energy * 2.2, 0, tau);
+      context.fill();
+      context.restore();
+    }
+
+    return;
+  }
+
+  if (theme.motif === "porch") {
+    const houseWidth = ringRadius * 1.24;
+    const houseHeight = ringRadius * 0.94;
+    const roofY = centerY - houseHeight * 0.5;
+    const baseY = centerY + houseHeight * 0.32;
+
+    context.beginPath();
+    context.moveTo(centerX - houseWidth * 0.42, roofY + houseHeight * 0.18);
+    context.lineTo(centerX, roofY - houseHeight * 0.18);
+    context.lineTo(centerX + houseWidth * 0.42, roofY + houseHeight * 0.18);
+    context.lineTo(centerX + houseWidth * 0.42, baseY);
+    context.lineTo(centerX - houseWidth * 0.42, baseY);
+    context.closePath();
+    context.strokeStyle = hexToRgba(theme.secondary, 0.22);
+    context.lineWidth = 1.5;
+    context.stroke();
+
+    for (let row = 0; row < 2; row += 1) {
+      for (let column = 0; column < 3; column += 1) {
+        const x = centerX - houseWidth * 0.28 + column * houseWidth * 0.28;
+        const y = centerY - houseHeight * 0.12 + row * houseHeight * 0.28;
+        const glow = 0.22 + Math.max(0, Math.sin(elapsed * 0.002 + row * 0.7 + column * 0.4 + seed * 0.01)) * 0.18;
+
+        context.fillStyle = hexToRgba(theme.glow, glow);
+        context.fillRect(x, y, houseWidth * 0.12, houseHeight * 0.16);
+      }
+    }
+
+    return;
+  }
+
+  if (theme.motif === "decay") {
+    for (let index = 0; index < 6; index += 1) {
+      let angle = index * (tau / 6) + seed * 0.01;
+      let radius = pulseRadius * 0.76;
+
+      context.beginPath();
+      context.moveTo(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+
+      for (let segment = 0; segment < 4; segment += 1) {
+        angle += Math.sin(seed * 0.02 + index * 0.5 + segment * 0.7) * 0.28;
+        radius += outerRadius * 0.09;
+        context.lineTo(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+      }
+
+      context.strokeStyle = hexToRgba(index % 2 === 0 ? theme.primary : theme.secondary, 0.18);
+      context.lineWidth = 1.2;
+      context.stroke();
+    }
+
+    return;
+  }
+
+  if (theme.motif === "resolve") {
+    for (let index = 0; index < 3; index += 1) {
+      context.save();
+      context.translate(centerX, centerY);
+      context.rotate(-0.52 + index * 0.44 + Math.sin(elapsed * 0.0002 + index) * 0.04);
+      context.beginPath();
+      context.moveTo(-pulseRadius * 0.22, -outerRadius * 0.74);
+      context.lineTo(pulseRadius * 0.04, -pulseRadius * 0.18);
+      context.lineTo(-pulseRadius * 0.06, -pulseRadius * 0.18);
+      context.lineTo(pulseRadius * 0.2, outerRadius * 0.58);
+      context.strokeStyle = hexToRgba(index % 2 === 0 ? theme.primary : theme.secondary, 0.2 + energy * 0.1);
+      context.lineWidth = 2.2;
+      context.stroke();
+      context.restore();
+    }
+
+    return;
+  }
+
+  if (theme.motif === "poetry") {
+    for (let index = 0; index < 5; index += 1) {
+      const y = centerY - ringRadius * 0.44 + index * ringRadius * 0.24;
+      context.beginPath();
+      context.moveTo(centerX - ringRadius * 0.92, y);
+      context.lineTo(centerX + ringRadius * 0.92, y + Math.sin(seed * 0.02 + index) * 3);
+      context.strokeStyle = hexToRgba(theme.secondary, 0.16);
+      context.lineWidth = 1;
+      context.stroke();
+    }
+
+    context.beginPath();
+    context.moveTo(centerX - ringRadius * 0.6, centerY + ringRadius * 0.08);
+    context.bezierCurveTo(
+      centerX - ringRadius * 0.18,
+      centerY - ringRadius * 0.26,
+      centerX + ringRadius * 0.12,
+      centerY + ringRadius * 0.3,
+      centerX + ringRadius * 0.52,
+      centerY - ringRadius * 0.04
+    );
+    context.strokeStyle = hexToRgba(theme.primary, 0.22);
+    context.lineWidth = 2;
+    context.stroke();
+    return;
+  }
+
+  for (let index = 0; index < 8; index += 1) {
+    const angle = index * (tau / 8) + elapsed * 0.0001;
+    context.save();
+    context.translate(centerX, centerY);
+    context.rotate(angle);
+    context.beginPath();
+    context.ellipse(0, -outerRadius * 0.18, outerRadius * 0.12, outerRadius * 0.3, 0, 0, tau);
+    context.fillStyle = hexToRgba(index % 2 === 0 ? theme.primary : theme.secondary, 0.14 + energy * 0.04);
+    context.fill();
+    context.restore();
+  }
 }
 
 function drawRadialVisualizer({
@@ -144,7 +358,7 @@ function drawRadialVisualizer({
     return;
   }
 
-  const palette = trackVisualizerPalettes[track.trackNumber] ?? trackVisualizerPalettes[1];
+  const theme = trackVisualizerThemes[track.trackNumber] ?? trackVisualizerThemes[1];
   const seed = getTrackVisualizerSeed(track);
   const tau = Math.PI * 2;
   const drawWidth = rect.width;
@@ -160,8 +374,8 @@ function drawRadialVisualizer({
   context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
   const backdrop = context.createRadialGradient(centerX, centerY, outerRadius * 0.1, centerX, centerY, outerRadius);
-  backdrop.addColorStop(0, hexToRgba(palette.glow, 0.08));
-  backdrop.addColorStop(0.55, hexToRgba(palette.primary, 0.12));
+  backdrop.addColorStop(0, hexToRgba(theme.glow, 0.08));
+  backdrop.addColorStop(0.55, hexToRgba(theme.primary, 0.12));
   backdrop.addColorStop(1, "rgba(255, 255, 255, 0)");
   context.fillStyle = backdrop;
   context.beginPath();
@@ -171,7 +385,7 @@ function drawRadialVisualizer({
   for (const multiplier of [0.56, 0.72, 0.9]) {
     context.beginPath();
     context.lineWidth = multiplier === 0.72 ? 1.25 : 1;
-    context.strokeStyle = hexToRgba(palette.ink, multiplier === 0.72 ? 0.12 : 0.08);
+    context.strokeStyle = hexToRgba(theme.ink, multiplier === 0.72 ? 0.12 : 0.08);
     context.arc(centerX, centerY, outerRadius * multiplier, 0, tau);
     context.stroke();
   }
@@ -203,6 +417,19 @@ function drawRadialVisualizer({
     energy = 0.32;
   }
 
+  drawTrackMotif({
+    context,
+    theme,
+    centerX,
+    centerY,
+    outerRadius,
+    ringRadius,
+    pulseRadius,
+    energy,
+    elapsed,
+    seed
+  });
+
   context.lineCap = "round";
 
   dynamicValues.forEach((value, index) => {
@@ -216,7 +443,7 @@ function drawRadialVisualizer({
 
     context.beginPath();
     context.lineWidth = 1.25 + value * 2.5;
-    context.strokeStyle = index % 3 === 0 ? hexToRgba(palette.primary, 0.82) : hexToRgba(palette.secondary, 0.74);
+    context.strokeStyle = index % 3 === 0 ? hexToRgba(theme.primary, 0.82) : hexToRgba(theme.secondary, 0.74);
     context.moveTo(startX, startY);
     context.lineTo(endX, endY);
     context.stroke();
@@ -243,13 +470,13 @@ function drawRadialVisualizer({
 
   context.closePath();
   context.lineWidth = 2;
-  context.strokeStyle = hexToRgba(palette.glow, 0.9);
+  context.strokeStyle = hexToRgba(theme.glow, 0.9);
   context.stroke();
 
   context.beginPath();
   context.arc(centerX, centerY, pulseRadius + energy * 10, 0, tau);
   context.lineWidth = 2.5;
-  context.strokeStyle = hexToRgba(palette.primary, 0.26 + energy * 0.22);
+  context.strokeStyle = hexToRgba(theme.primary, 0.26 + energy * 0.22);
   context.stroke();
 
   for (let index = 0; index < 4; index += 1) {
@@ -259,7 +486,7 @@ function drawRadialVisualizer({
     const y = centerY + Math.sin(angle) * radius;
 
     context.beginPath();
-    context.fillStyle = hexToRgba(index % 2 === 0 ? palette.primary : palette.secondary, 0.74);
+    context.fillStyle = hexToRgba(index % 2 === 0 ? theme.primary : theme.secondary, 0.74);
     context.arc(x, y, 2.4 + energy * 2.6, 0, tau);
     context.fill();
   }
@@ -326,6 +553,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const activePosterImage = trackPosterImages[activeTrack.trackNumber] ?? volOneImage;
   const activePosterAlt = `${activeTrack.title} cover artwork`;
   const activeTrackMeta = `Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase} · ${activeTrack.duration}`;
+  const activeVisualizerTheme = trackVisualizerThemes[activeTrack.trackNumber] ?? trackVisualizerThemes[1];
 
   function normalizePlayerTarget(value: string | null | undefined) {
     return (value ?? "")
@@ -843,7 +1071,17 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
                     <div className="wd-player-modal__layout">
                       <section className="wd-player-modal__current" aria-label="Current track player">
                         <div className="wd-player-modal__art">
-                          <div className="wd-player-modal__visualizer">
+                          <div
+                            className={cx("wd-player-modal__visualizer", `wd-player-modal__visualizer--${activeVisualizerTheme.motif}`)}
+                            style={
+                              {
+                                "--wd-visualizer-primary": activeVisualizerTheme.primary,
+                                "--wd-visualizer-secondary": activeVisualizerTheme.secondary,
+                                "--wd-visualizer-glow": activeVisualizerTheme.glow,
+                                "--wd-visualizer-field": activeVisualizerTheme.field
+                              } as CSSProperties
+                            }
+                          >
                             <canvas ref={visualizerCanvasRef} className="wd-player-modal__visualizer-canvas" aria-hidden="true" />
                             <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--top">
                               Track {formatTrackNumber(activeTrack.trackNumber)}
@@ -851,25 +1089,40 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
                             <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--bottom">{activeTrack.duration} · WAV</span>
                             <div className="wd-player-modal__visualizer-core">
                               <div className="wd-player-modal__art-frame">
-                                <Image src={activePosterImage} alt={activePosterAlt} sizes="(max-width: 960px) 72vw, 360px" />
+                                <Image src={activePosterImage} alt={activePosterAlt} sizes="(max-width: 960px) 78vw, 420px" />
                               </div>
                             </div>
+                          </div>
+
+                          <div className="wd-player-modal__audio-wrap">
+                            <span className="wd-player-modal__audio-label">WAV player</span>
+                            <audio
+                              ref={audioRef}
+                              preload="metadata"
+                              src={activeSrc}
+                              className="wd-player-modal__audio"
+                              controls
+                              controlsList="nodownload noplaybackrate"
+                            >
+                              Your browser does not support audio playback.
+                            </audio>
                           </div>
                         </div>
 
                         <div className="wd-player-modal__transport">
+                          <span className="wd-player-modal__transport-label">Room controls</span>
                           <div className="wd-player-modal__transport-actions">
                             <Button type="button" onClick={() => void playCurrentTrack()}>
-                              Play
+                              Play track
                             </Button>
                             <Button type="button" variant="ghost" onClick={stopCurrentTrack}>
-                              Stop
+                              Restart track
                             </Button>
                             <Button type="button" variant="ghost" onClick={showPreviousTrack}>
-                              Previous
+                              Previous song
                             </Button>
                             <Button type="button" variant="secondary" onClick={showNextTrack}>
-                              Next
+                              Next song
                             </Button>
                           </div>
                         </div>

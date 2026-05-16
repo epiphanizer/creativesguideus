@@ -1,4 +1,4 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 
 import type { ListeningRoomVisit, ListeningRoomVisitInput } from "@/lib/admin/types";
 
@@ -60,4 +60,11 @@ export async function createListeningRoomVisit(input: ListeningRoomVisitInput) {
   const docRef = await addDoc(getListeningRoomVisitsCollection(), payload);
 
   return mapVisitDocument(docRef.id, payload);
+}
+
+export async function getListeningRoomVisits(limitCount = 24) {
+  const visitsQuery = query(getListeningRoomVisitsCollection(), orderBy("createdAt", "desc"), limit(limitCount));
+  const snapshot = await getDocs(visitsQuery);
+
+  return snapshot.docs.map((docSnapshot) => mapVisitDocument(docSnapshot.id, docSnapshot.data() as Partial<Omit<ListeningRoomVisit, "id">>));
 }
