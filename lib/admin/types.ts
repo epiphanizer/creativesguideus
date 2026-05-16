@@ -118,4 +118,5 @@ export type WallsDevineAdminData = {
   journalEntries: AdminMarkdownFile[];
   storageBacked?: boolean;
   contentBackend?: "firestore" | "bootstrap";
+  markdownInitialized?: boolean;
 };

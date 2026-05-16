@@ -13,9 +13,10 @@ type AdminFirebaseStatusProps = {
 export function AdminFirebaseStatus({ signedInEmail, contentSource = "pending", isAuthorized, notice }: AdminFirebaseStatusProps) {
   const isInitialized = Boolean(firebaseApp);
   const statusLabel = !isInitialized ? "Missing config" : isAuthorized ? "Live" : signedInEmail ? "Signed in" : "Configured";
+  const markdownDocPath = `${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/{collection}--{slug}`;
   const remoteContentLabel =
     contentSource === "firebase"
-      ? "Firestore doc + Storage content loaded"
+      ? "Firestore project doc + markdown collection loaded"
       : contentSource === "bootstrap"
         ? "Using bootstrap fallback"
         : "Waiting for Firebase content";
@@ -57,13 +58,17 @@ export function AdminFirebaseStatus({ signedInEmail, contentSource = "pending", 
           <span>{firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}</span>
         </li>
         <li>
-          <strong>Storage path</strong>
-          <span>{firebaseAdminPaths.storageBasePath}</span>
+          <strong>Markdown docs</strong>
+          <span>{markdownDocPath}</span>
+        </li>
+        <li>
+          <strong>Legacy Storage</strong>
+          <span>{firebaseAdminPaths.storageBasePath} (migration only)</span>
         </li>
         <li>
           <strong>Client handles</strong>
           <span>
-            Auth: {firebaseAuth ? "ready" : "pending"} · Firestore: {firebaseDb ? "ready" : "pending"} · Storage: {firebaseStorage ? "ready" : "pending"}
+            Auth: {firebaseAuth ? "ready" : "pending"} · Firestore: {firebaseDb ? "ready" : "pending"} · Storage (legacy migration): {firebaseStorage ? "ready" : "pending"}
           </span>
         </li>
         <li>

@@ -1,5 +1,5 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { deleteObject, getBytes, listAll, ref, uploadString } from "firebase/storage";
+import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, writeBatch } from "firebase/firestore";
+import { getBytes, listAll, ref } from "firebase/storage";
 
 import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData } from "@/lib/admin/types";
 
@@ -11,6 +11,15 @@ export type AdminUserProfile = {
   email?: string;
   displayName?: string;
   roles?: string[];
+};
+
+type FirebaseMarkdownDoc = {
+  collection: AdminMarkdownCollection;
+  slug: string;
+  title: string;
+  content: string;
+  preview: string;
+  updatedAt: string;
 };
 
 function getProjectDoc() {
@@ -27,6 +36,30 @@ function getAdminUserDoc(uid: string) {
   }
 
   return doc(firebaseDb, firebaseAdminPaths.adminUsersCollection, uid);
+}
+
+function getMarkdownCollectionRef() {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return collection(getProjectDoc(), firebaseAdminPaths.markdownCollection);
+}
+
+function getMarkdownFileId(collectionName: AdminMarkdownCollection, slug: string) {
+  return `${collectionName}--${slug}`;
+}
+
+function getFirestoreMarkdownPath(collectionName: AdminMarkdownCollection, slug: string) {
+  return `${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/${getMarkdownFileId(collectionName, slug)}`;
+}
+
+function getMarkdownDocRef(collectionName: AdminMarkdownCollection, slug: string) {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return doc(getProjectDoc(), firebaseAdminPaths.markdownCollection, getMarkdownFileId(collectionName, slug));
 }
 
 function getStoragePath(collection: AdminMarkdownCollection, slug?: string) {
@@ -55,6 +88,24 @@ function normalizeMarkdown(content: string) {
   return content.trimEnd() ? `${content.trimEnd()}\n` : "";
 }
 
+function createFirestoreMarkdownPayload(
+  collectionName: AdminMarkdownCollection,
+  slug: string,
+  content: string,
+  updatedAt = new Date().toISOString()
+) {
+  const normalizedContent = normalizeMarkdown(content);
+
+  return {
+    collection: collectionName,
+    slug,
+    title: getMarkdownTitle(normalizedContent, `${slug}.md`),
+    content: normalizedContent,
+    preview: getMarkdownPreview(normalizedContent),
+    updatedAt
+  } satisfies FirebaseMarkdownDoc;
+}
+
 function createMarkdownFileRecord(collection: AdminMarkdownCollection, slug: string, content: string) {
   return {
     slug,
@@ -65,30 +116,129 @@ function createMarkdownFileRecord(collection: AdminMarkdownCollection, slug: str
   } satisfies AdminMarkdownFile;
 }
 
-async function readMarkdownCollection(collection: AdminMarkdownCollection) {
+function createFirestoreMarkdownFileRecord(data: FirebaseMarkdownDoc) {
+  return {
+    slug: data.slug,
+    title: data.title || getMarkdownTitle(data.content, `${data.slug}.md`),
+    filePath: getFirestoreMarkdownPath(data.collection, data.slug),
+    content: data.content,
+    preview: data.preview || getMarkdownPreview(data.content),
+    updatedAt: data.updatedAt
+  } satisfies AdminMarkdownFile;
+}
+
+async function readLegacyStorageMarkdownCollection(collection: AdminMarkdownCollection) {
   if (!firebaseStorage) {
-    throw new Error("Firebase Storage is not initialized for this Firebase project.");
+    return [];
   }
 
-  const collectionRef = ref(firebaseStorage, getStoragePath(collection));
-  const result = await listAll(collectionRef);
-  const decoder = new TextDecoder();
-  const sortedItems = [...result.items].sort((left, right) => left.name.localeCompare(right.name));
+  try {
+    const collectionRef = ref(firebaseStorage, getStoragePath(collection));
+    const result = await listAll(collectionRef);
+    const decoder = new TextDecoder();
+    const sortedItems = [...result.items].sort((left, right) => left.name.localeCompare(right.name));
 
-  return Promise.all(
-    sortedItems.map(async (item) => {
-      const slug = item.name.replace(/\.md$/, "");
-      const content = decoder.decode(await getBytes(item));
+    return Promise.all(
+      sortedItems.map(async (item) => {
+        const slug = item.name.replace(/\.md$/, "");
+        const content = decoder.decode(await getBytes(item));
 
-      return {
-        slug,
-        title: getMarkdownTitle(content, item.name),
-        filePath: getStoragePath(collection, slug),
-        content,
-        preview: getMarkdownPreview(content)
-      } satisfies AdminMarkdownFile;
-    })
+        return {
+          slug,
+          title: getMarkdownTitle(content, item.name),
+          filePath: getStoragePath(collection, slug),
+          content,
+          preview: getMarkdownPreview(content)
+        } satisfies AdminMarkdownFile;
+      })
+    );
+  } catch {
+    return [];
+  }
+}
+
+async function readFirestoreMarkdownCollections() {
+  const snapshot = await getDocs(getMarkdownCollectionRef());
+  const instagramDrafts: AdminMarkdownFile[] = [];
+  const journalEntries: AdminMarkdownFile[] = [];
+
+  snapshot.forEach((markdownSnapshot) => {
+    const data = markdownSnapshot.data() as Partial<FirebaseMarkdownDoc>;
+
+    if ((data.collection !== "instagram-posts" && data.collection !== "journals") || typeof data.slug !== "string" || typeof data.content !== "string") {
+      return;
+    }
+
+    const record = createFirestoreMarkdownFileRecord({
+      collection: data.collection,
+      slug: data.slug,
+      title: typeof data.title === "string" ? data.title : getMarkdownTitle(data.content, `${data.slug}.md`),
+      content: data.content,
+      preview: typeof data.preview === "string" ? data.preview : getMarkdownPreview(data.content),
+      updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : ""
+    });
+
+    if (data.collection === "instagram-posts") {
+      instagramDrafts.push(record);
+      return;
+    }
+
+    journalEntries.push(record);
+  });
+
+  instagramDrafts.sort((left, right) => left.slug.localeCompare(right.slug));
+  journalEntries.sort((left, right) => left.slug.localeCompare(right.slug));
+
+  return {
+    instagramDrafts,
+    journalEntries
+  };
+}
+
+async function migrateLegacyStorageMarkdownContent() {
+  const [instagramDrafts, journalEntries] = await Promise.all([
+    readLegacyStorageMarkdownCollection("instagram-posts"),
+    readLegacyStorageMarkdownCollection("journals")
+  ]);
+
+  if (!instagramDrafts.length && !journalEntries.length) {
+    return null;
+  }
+
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  const batch = writeBatch(firebaseDb);
+
+  for (const file of instagramDrafts) {
+    batch.set(getMarkdownDocRef("instagram-posts", file.slug), createFirestoreMarkdownPayload("instagram-posts", file.slug, file.content));
+  }
+
+  for (const file of journalEntries) {
+    batch.set(getMarkdownDocRef("journals", file.slug), createFirestoreMarkdownPayload("journals", file.slug, file.content));
+  }
+
+  batch.set(
+    getProjectDoc(),
+    {
+      [firebaseAdminPaths.markdownInitializedField]: true
+    },
+    { merge: true }
   );
+
+  await batch.commit();
+
+  return {
+    instagramDrafts,
+    journalEntries
+  };
+}
+
+async function readMarkdownCollection(collection: AdminMarkdownCollection) {
+  const allMarkdown = await readFirestoreMarkdownCollections();
+
+  return collection === "instagram-posts" ? allMarkdown.instagramDrafts : allMarkdown.journalEntries;
 }
 
 async function saveReleasePlan(plan: ReleasePlan) {
@@ -145,30 +295,44 @@ export async function getAdminUserProfile(uid: string) {
 }
 
 export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdminData | null> {
-  const releasePlan = await getReleasePlanFromFirestore();
+  const projectSnapshot = await getDoc(getProjectDoc());
+  const projectData = projectSnapshot.data() ?? null;
+  const releasePlan = projectData?.[firebaseAdminPaths.releasePlanField] as ReleasePlan | undefined;
 
   if (!releasePlan) {
     return null;
   }
 
   try {
-    const [instagramDrafts, journalEntries] = await Promise.all([
-      readMarkdownCollection("instagram-posts"),
-      readMarkdownCollection("journals")
-    ]);
+    let { instagramDrafts, journalEntries } = await readFirestoreMarkdownCollections();
+    let markdownInitialized = Boolean(projectData?.[firebaseAdminPaths.markdownInitializedField]);
+
+    if (!markdownInitialized && !instagramDrafts.length && !journalEntries.length) {
+      const migratedContent = await migrateLegacyStorageMarkdownContent();
+
+      if (migratedContent) {
+        instagramDrafts = migratedContent.instagramDrafts;
+        journalEntries = migratedContent.journalEntries;
+        markdownInitialized = true;
+      }
+    }
 
     return {
       plan: releasePlan,
       instagramDrafts,
       journalEntries,
-      storageBacked: true
+      storageBacked: true,
+      contentBackend: "firestore",
+      markdownInitialized: markdownInitialized || instagramDrafts.length > 0 || journalEntries.length > 0
     } satisfies WallsDevineAdminData;
   } catch {
     return {
       plan: releasePlan,
       instagramDrafts: [],
       journalEntries: [],
-      storageBacked: false
+      storageBacked: false,
+      contentBackend: "bootstrap",
+      markdownInitialized: false
     } satisfies WallsDevineAdminData;
   }
 }
@@ -190,18 +354,18 @@ export async function updateFirebaseReleasePlanItem(itemId: string, completed: b
 }
 
 export async function updateFirebaseAdminMarkdownFile(collection: AdminMarkdownCollection, slug: string, content: string) {
-  if (!firebaseStorage) {
-    throw new Error("Firebase Storage is not initialized for this Firebase project.");
-  }
+  const nextPayload = createFirestoreMarkdownPayload(collection, slug, content);
 
-  const normalizedContent = normalizeMarkdown(content);
-  const fileRef = ref(firebaseStorage, getStoragePath(collection, slug));
+  await setDoc(getMarkdownDocRef(collection, slug), nextPayload, { merge: true });
+  await setDoc(
+    getProjectDoc(),
+    {
+      [firebaseAdminPaths.markdownInitializedField]: true
+    },
+    { merge: true }
+  );
 
-  await uploadString(fileRef, normalizedContent, "raw", {
-    contentType: "text/markdown; charset=utf-8"
-  });
-
-  return createMarkdownFileRecord(collection, slug, normalizedContent);
+  return createFirestoreMarkdownFileRecord(nextPayload);
 }
 
 export async function renameFirebaseAdminMarkdownFile(
@@ -220,11 +384,7 @@ export async function renameFirebaseAdminMarkdownFile(
 }
 
 export async function deleteFirebaseAdminMarkdownFile(collection: AdminMarkdownCollection, slug: string) {
-  if (!firebaseStorage) {
-    throw new Error("Firebase Storage is not initialized for this Firebase project.");
-  }
-
-  await deleteObject(ref(firebaseStorage, getStoragePath(collection, slug)));
+  await deleteDoc(getMarkdownDocRef(collection, slug));
 }
 
 export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdminData): Promise<WallsDevineAdminData> {
@@ -234,10 +394,29 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
   });
 
   try {
-    await Promise.all([
-      ...seedData.instagramDrafts.map((file) => updateFirebaseAdminMarkdownFile("instagram-posts", file.slug, file.content)),
-      ...seedData.journalEntries.map((file) => updateFirebaseAdminMarkdownFile("journals", file.slug, file.content))
-    ]);
+    if (!firebaseDb) {
+      throw new Error("Firestore is not initialized for this Firebase project.");
+    }
+
+    const batch = writeBatch(firebaseDb);
+
+    batch.set(
+      getProjectDoc(),
+      {
+        [firebaseAdminPaths.markdownInitializedField]: true
+      },
+      { merge: true }
+    );
+
+    for (const file of seedData.instagramDrafts) {
+      batch.set(getMarkdownDocRef("instagram-posts", file.slug), createFirestoreMarkdownPayload("instagram-posts", file.slug, file.content));
+    }
+
+    for (const file of seedData.journalEntries) {
+      batch.set(getMarkdownDocRef("journals", file.slug), createFirestoreMarkdownPayload("journals", file.slug, file.content));
+    }
+
+    await batch.commit();
 
     const remoteData = await getFirebaseWallsDevineAdminData();
 
@@ -248,14 +427,18 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
     return {
       ...seedData,
       plan: nextPlan,
-      storageBacked: false
+      storageBacked: false,
+      contentBackend: "bootstrap",
+      markdownInitialized: false
     } satisfies WallsDevineAdminData;
   }
 
   return {
     ...seedData,
     plan: nextPlan,
-    storageBacked: false
+    storageBacked: false,
+    contentBackend: "bootstrap",
+    markdownInitialized: false
   } satisfies WallsDevineAdminData;
 }
 

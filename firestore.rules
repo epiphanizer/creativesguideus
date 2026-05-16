@@ -105,6 +105,10 @@ service cloud.firestore {
 
     match /adminProjects/{projectId} {
       allow read, write: if isAdmin();
+
+      match /markdownFiles/{fileId} {
+        allow read, write: if isAdmin();
+      }
     }
 
     match /ecosystemLeads/{leadId} {

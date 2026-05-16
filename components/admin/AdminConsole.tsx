@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useEffect, useMemo, useState, useTransition } from "react";
+import { type FormEvent, type ReactNode, useEffect, useMemo, useState, useTransition } from "react";
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 
 import type { AdminAudioAnalysis, AdminMarkdownCollection, EcosystemLead, ListeningRoomVisit, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
@@ -97,7 +97,7 @@ function getFirebaseErrorMessage(error: unknown) {
         return "That email address is not formatted correctly for Firebase Auth.";
       case "storage/unauthorized":
       case "permission-denied":
-        return "Firebase denied access. Check the adminUsers collection and Firestore or Storage rules.";
+        return "Firebase denied access. Check the adminUsers collection, Firestore rules, and legacy Storage rules if you are migrating older markdown.";
       default:
         break;
     }
@@ -219,12 +219,80 @@ function formatListeningRoomQueryKey(queryKey: string) {
   }
 }
 
+type AdminWorkspaceSectionId = "admin-release-desk" | "admin-journals" | "admin-instagram-posts" | "admin-analytics" | "admin-assets" | "admin-health";
+
 type DashboardModule = {
+  id: AdminWorkspaceSectionId;
   title: string;
   summary: string;
   detail: string;
+  actionLabel: string;
   status: "ready" | "pending";
 };
+
+type AdminJumpLink = {
+  id: AdminWorkspaceSectionId;
+  label: string;
+  detail: string;
+};
+
+type AdminWorkspaceSectionProps = {
+  id: AdminWorkspaceSectionId;
+  labelId: string;
+  title: string;
+  description: string;
+  detail?: string;
+  actions?: ReactNode;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+};
+
+const defaultOpenSections: Record<AdminWorkspaceSectionId, boolean> = {
+  "admin-release-desk": true,
+  "admin-journals": true,
+  "admin-instagram-posts": false,
+  "admin-analytics": false,
+  "admin-assets": false,
+  "admin-health": false
+};
+
+function isWorkspaceSectionId(value: string): value is AdminWorkspaceSectionId {
+  return value in defaultOpenSections;
+}
+
+function AdminWorkspaceSection({
+  id,
+  labelId,
+  title,
+  description,
+  detail,
+  actions,
+  isOpen,
+  onToggle,
+  children
+}: AdminWorkspaceSectionProps) {
+  return (
+    <SectionShell id={id} labelledBy={labelId} innerClassName="cg-admin__section cg-admin__workspace-section">
+      <div className="cg-admin__workspace-section-head">
+        <div>
+          <h2 id={labelId}>{title}</h2>
+          <p>{description}</p>
+        </div>
+
+        <div className="cg-admin__workspace-section-controls">
+          {detail ? <p className="cg-admin__path-note">{detail}</p> : null}
+          {actions ? <div className="cg-admin__section-actions">{actions}</div> : null}
+          <Button type="button" variant="ghost" size="sm" onClick={onToggle} aria-expanded={isOpen} aria-controls={`${id}-body`}>
+            {isOpen ? "Collapse section" : "Expand section"}
+          </Button>
+        </div>
+      </div>
+
+      {isOpen ? <div id={`${id}-body`} className="cg-admin__workspace-section-body">{children}</div> : <p className="cg-admin__helper">Collapsed. Use the jump rail above to reopen this workspace.</p>}
+    </SectionShell>
+  );
+}
 
 const AUTH_SESSION_TIMEOUT_MS = 5000;
 
@@ -256,7 +324,7 @@ const fallbackAdminData: WallsDevineAdminData = {
     avoid: [
       "Do not block the full console on one missing data source.",
       "Do not hide already-wired modules just because Firebase seed content is late.",
-      "Do not assume Storage is live until the health check confirms it."
+      "Do not assume the Firestore markdown layer is live until the health check confirms it."
     ],
     calendar: [
       { date: "Now", action: "Reconnect Firebase content", purpose: "Hydrate the release plan and markdown layers" },
@@ -286,14 +354,15 @@ const fallbackAdminData: WallsDevineAdminData = {
         title: "Content studio scaffold visible",
         dueDate: "Now",
         completed: true,
-        notes: "Instagram draft and journal editors stay in view even while Storage-backed content is still reconnecting."
+        notes: "Instagram draft and journal editors stay in view even while the Firebase markdown layer is still reconnecting."
       }
     ]
   },
   instagramDrafts: [],
   journalEntries: [],
   storageBacked: false,
-  contentBackend: "bootstrap"
+  contentBackend: "bootstrap",
+  markdownInitialized: false
 };
 
 function countCompletedChecklist(items: ReleasePlanChecklistItem[]) {
@@ -301,72 +370,81 @@ function countCompletedChecklist(items: ReleasePlanChecklistItem[]) {
 }
 
 function buildDashboardModules({
+  completedChecklist,
   adminData,
   isScaffoldMode,
-  hasStorageBackedContent,
-  contentSource,
+  hasLiveMarkdownContent,
   leadsCount,
+  hasLeadsError,
   leadSources,
   visitsCount,
   topVisitSong,
   audioCount,
   hasAudioError,
-  hasVisitsError,
-  hasPanelError
+  hasVisitsError
 }: {
+  completedChecklist: number;
   adminData: WallsDevineAdminData;
   isScaffoldMode: boolean;
-  hasStorageBackedContent: boolean;
-  contentSource: ContentSource;
+  hasLiveMarkdownContent: boolean;
   leadsCount: number;
+  hasLeadsError: boolean;
   leadSources: Array<[string, number]>;
   visitsCount: number;
   topVisitSong: string | null;
   audioCount: number;
   hasAudioError: boolean;
   hasVisitsError: boolean;
-  hasPanelError: boolean;
 }) {
-  const completedChecklist = countCompletedChecklist(adminData.plan.checklist);
   const topLeadSource = leadSources[0]?.[0];
-  const sourceLabel = isScaffoldMode ? "scaffold" : contentSource;
 
   return [
     {
-      title: "Release operations",
-      summary: `${completedChecklist}/${adminData.plan.checklist.length} checklist items tracked`,
-      detail: isScaffoldMode ? "Dashboard scaffold is visible while live plan data reconnects." : `Content source: ${sourceLabel}`,
+      id: "admin-release-desk",
+      title: "Release desk",
+      summary: `${completedChecklist}/${adminData.plan.checklist.length} tasks complete`,
+      detail: isScaffoldMode ? "Scaffold mode is holding the release desk visible while live content reconnects." : `Last release update ${new Date(adminData.plan.updatedAt).toLocaleString()}.`,
+      actionLabel: "Open release desk",
       status: isScaffoldMode ? "pending" : "ready"
     },
     {
-      title: "Collector leads",
-      summary: `${leadsCount} captured email${leadsCount === 1 ? "" : "s"}`,
-      detail: topLeadSource ? `Top source: ${formatLeadSource(topLeadSource)}` : "Audience capture path is wired and waiting on traffic.",
-      status: hasPanelError ? "pending" : "ready"
+      id: "admin-journals",
+      title: "Journal studio",
+      summary: `${adminData.journalEntries.length} journal${adminData.journalEntries.length === 1 ? "" : "s"}`,
+      detail: hasLiveMarkdownContent ? "Write, rename, publish, and prune song journals from one place." : "Waiting on Firestore markdown sync before journal CRUD is live.",
+      actionLabel: "Open journals",
+      status: hasLiveMarkdownContent ? "ready" : "pending"
     },
     {
-      title: "Content studio",
-      summary: `${adminData.instagramDrafts.length} drafts · ${adminData.journalEntries.length} journals`,
-      detail: hasStorageBackedContent ? "Live Storage CRUD is enabled." : isScaffoldMode ? "Scaffold only until content hydrates." : "Release plan is live. Storage sync still needs attention.",
-      status: hasStorageBackedContent ? "ready" : "pending"
+      id: "admin-instagram-posts",
+      title: "Draft studio",
+      summary: `${adminData.instagramDrafts.length} draft${adminData.instagramDrafts.length === 1 ? "" : "s"}`,
+      detail: hasLiveMarkdownContent ? "Keep release copy editable without touching repo files." : "Draft CRUD will unlock once the markdown collection finishes hydrating.",
+      actionLabel: "Open drafts",
+      status: hasLiveMarkdownContent ? "ready" : "pending"
     },
     {
-      title: "Listening room traffic",
-      summary: `${visitsCount} shared visit${visitsCount === 1 ? "" : "s"}`,
-      detail: hasVisitsError ? "Listening-room analytics reported an issue. Use refresh to retry." : topVisitSong ? `Top arrival: ${topVisitSong}` : "Shared song-link visits will appear here once listeners land.",
-      status: visitsCount && !hasVisitsError ? "ready" : "pending"
+      id: "admin-analytics",
+      title: "Analytics",
+      summary: `${leadsCount} leads · ${visitsCount} visits`,
+      detail:
+        hasLeadsError || hasVisitsError
+          ? "One or more analytics collections need a refresh."
+          : topLeadSource
+            ? `Top lead source: ${formatLeadSource(topLeadSource)}.`
+            : topVisitSong
+              ? `Top listening-room arrival: ${topVisitSong}.`
+              : "Collector and listening-room activity will land here.",
+      actionLabel: "Open analytics",
+      status: hasLeadsError || hasVisitsError ? "pending" : "ready"
     },
     {
-      title: "Audio QA",
+      id: "admin-assets",
+      title: "Assets & QA",
       summary: `${audioCount} WAV file${audioCount === 1 ? "" : "s"} inspected`,
       detail: hasAudioError ? "Audio inspection reported an issue. Use refresh to retry." : audioCount ? "Server-side file inspection is returning metadata." : "Run refresh to inspect the live release WAVs.",
-      status: audioCount && !hasAudioError ? "ready" : "pending"
-    },
-    {
-      title: "Backend health",
-      summary: `Auth + Firestore + Storage status at a glance`,
-      detail: hasPanelError ? "One or more backend steps still need attention." : isScaffoldMode ? "Logged in, but showing fallback scaffold data." : `Primary content source: ${sourceLabel}`,
-      status: !hasPanelError && !isScaffoldMode ? "ready" : "pending"
+      actionLabel: "Open assets",
+      status: hasAudioError ? "pending" : "ready"
     }
   ] satisfies DashboardModule[];
 }
@@ -392,14 +470,16 @@ export function AdminConsole() {
   const [listeningRoomVisits, setListeningRoomVisits] = useState<ListeningRoomVisit[]>([]);
   const [visitsLoading, setVisitsLoading] = useState(false);
   const [visitsError, setVisitsError] = useState("");
+  const [openSections, setOpenSections] = useState<Record<AdminWorkspaceSectionId, boolean>>(() => ({ ...defaultOpenSections }));
   const [, startTransition] = useTransition();
 
   const hasFirebaseRuntime = Boolean(firebaseAuth);
   const isAuthorized = isActiveAdminProfile(adminProfile);
   const adminViewData = adminData ?? fallbackAdminData;
   const isScaffoldMode = !adminData;
+  const completedChecklist = useMemo(() => countCompletedChecklist(adminViewData.plan.checklist), [adminViewData.plan.checklist]);
   const checklistByPhase = useMemo(() => groupChecklistByPhase(adminViewData.plan.checklist), [adminViewData.plan.checklist]);
-  const hasStorageBackedContent = adminData ? adminData.storageBacked !== false : false;
+  const hasLiveMarkdownContent = adminData ? adminData.contentBackend === "firestore" && adminData.markdownInitialized !== false : false;
   const leadSources = useMemo(() => {
     const counts = new Map<string, number>();
 
@@ -422,25 +502,26 @@ export function AdminConsole() {
   const dashboardModules = useMemo(
     () =>
       buildDashboardModules({
+        completedChecklist,
         adminData: adminViewData,
         isScaffoldMode,
-        hasStorageBackedContent,
-        contentSource,
+        hasLiveMarkdownContent,
         leadsCount: ecosystemLeads.length,
+        hasLeadsError: Boolean(leadsError),
         leadSources,
         visitsCount: listeningRoomVisits.length,
         topVisitSong: visitSongs[0]?.[0] ?? null,
         audioCount: audioAnalysis.length,
         hasAudioError: Boolean(audioError),
-        hasVisitsError: Boolean(visitsError),
-        hasPanelError: Boolean(panelError)
+        hasVisitsError: Boolean(visitsError)
       }),
     [
+      completedChecklist,
       adminViewData,
       isScaffoldMode,
-      hasStorageBackedContent,
-      contentSource,
+      hasLiveMarkdownContent,
       ecosystemLeads.length,
+      leadsError,
       leadSources,
       listeningRoomVisits.length,
       visitSongs,
@@ -450,8 +531,75 @@ export function AdminConsole() {
       panelError
     ]
   );
+  const jumpLinks = useMemo(
+    () => [
+      {
+        id: "admin-release-desk",
+        label: "Release desk",
+        detail: `${completedChecklist}/${adminViewData.plan.checklist.length} complete`
+      },
+      {
+        id: "admin-journals",
+        label: "Journals",
+        detail: `${adminViewData.journalEntries.length} live`
+      },
+      {
+        id: "admin-instagram-posts",
+        label: "Drafts",
+        detail: `${adminViewData.instagramDrafts.length} live`
+      },
+      {
+        id: "admin-analytics",
+        label: "Analytics",
+        detail: `${ecosystemLeads.length} leads · ${listeningRoomVisits.length} visits`
+      },
+      {
+        id: "admin-assets",
+        label: "Assets",
+        detail: `${audioAnalysis.length} WAV${audioAnalysis.length === 1 ? "" : "s"}`
+      },
+      {
+        id: "admin-health",
+        label: "Health",
+        detail: panelError ? "Needs attention" : contentSource === "bootstrap" ? "Fallback mode" : "Backend ready"
+      }
+    ] satisfies AdminJumpLink[],
+    [
+      audioAnalysis.length,
+      adminViewData.instagramDrafts.length,
+      adminViewData.journalEntries.length,
+      adminViewData.plan.checklist.length,
+      completedChecklist,
+      contentSource,
+      ecosystemLeads.length,
+      listeningRoomVisits.length,
+      panelError
+    ]
+  );
   const isResolvingAuthorizedSession = Boolean(authUser) && dataLoading && !isAuthorized && !panelError;
   const isRefreshingAuthorizedAdmin = Boolean(authUser) && isAuthorized && dataLoading;
+
+  function setWorkspaceSectionOpen(sectionId: AdminWorkspaceSectionId, nextOpen: boolean) {
+    setOpenSections((current) => (current[sectionId] === nextOpen ? current : { ...current, [sectionId]: nextOpen }));
+  }
+
+  function toggleWorkspaceSection(sectionId: AdminWorkspaceSectionId) {
+    setOpenSections((current) => ({ ...current, [sectionId]: !current[sectionId] }));
+  }
+
+  function scrollToWorkspaceSection(sectionId: AdminWorkspaceSectionId, behavior: ScrollBehavior = "smooth") {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior, block: "start" });
+      });
+    });
+  }
+
+  function handleJumpToSection(sectionId: AdminWorkspaceSectionId) {
+    setWorkspaceSectionOpen(sectionId, true);
+    window.history.replaceState(null, "", `#${sectionId}`);
+    scrollToWorkspaceSection(sectionId);
+  }
 
   function collectionHasDuplicateSlug(collection: AdminMarkdownCollection, slug: string, currentSlug?: string) {
     if (!adminData) {
@@ -475,17 +623,16 @@ export function AdminConsole() {
       }
 
       let nextData = await getFirebaseWallsDevineAdminData();
-      let nextSource: ContentSource = nextData?.storageBacked === false ? "bootstrap" : "firebase";
+      let nextSource: ContentSource = nextData?.contentBackend === "bootstrap" ? "bootstrap" : "firebase";
       const needsBootstrap =
         !nextData ||
-        nextData.storageBacked === false ||
-        nextData.instagramDrafts.length === 0 ||
-        nextData.journalEntries.length === 0;
+        nextData.contentBackend === "bootstrap" ||
+        nextData.markdownInitialized === false;
 
       if (needsBootstrap) {
         const bootstrapSeed = await fetchBootstrapData(await user.getIdToken());
         nextData = await seedFirebaseWallsDevineAdminData(bootstrapSeed);
-        nextSource = nextData.storageBacked === false ? "bootstrap" : "firebase";
+        nextSource = nextData.contentBackend === "bootstrap" ? "bootstrap" : "firebase";
       }
 
       if (!nextData) {
@@ -507,7 +654,8 @@ export function AdminConsole() {
           setAdminData({
             ...bootstrapSeed,
             storageBacked: false,
-            contentBackend: "bootstrap"
+            contentBackend: "bootstrap",
+            markdownInitialized: false
           });
         });
       } catch {
@@ -694,6 +842,27 @@ export function AdminConsole() {
     void loadListeningRoomVisitBacklog();
   }, [authUser, isAuthorized, startTransition]);
 
+  useEffect(() => {
+    if (!isAuthorized) {
+      return;
+    }
+
+    const sectionId = window.location.hash.replace(/^#/, "");
+
+    if (!isWorkspaceSectionId(sectionId)) {
+      return;
+    }
+
+    setWorkspaceSectionOpen(sectionId, true);
+    scrollToWorkspaceSection(sectionId, "auto");
+  }, [isAuthorized]);
+
+  useEffect(() => {
+    if (panelError || isScaffoldMode || !hasLiveMarkdownContent) {
+      setWorkspaceSectionOpen("admin-health", true);
+    }
+  }, [panelError, isScaffoldMode, hasLiveMarkdownContent]);
+
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -724,6 +893,7 @@ export function AdminConsole() {
     setEcosystemLeads([]);
     setLeadsError("");
     setSaveStates({});
+    setOpenSections({ ...defaultOpenSections });
   }
 
   async function handleRetryAccess() {
@@ -742,20 +912,12 @@ export function AdminConsole() {
     await loadAudioAnalysis(authUser);
   }
 
-  async function handleLeadsRefresh() {
+  async function handleAnalyticsRefresh() {
     if (!authUser || !isAuthorized) {
       return;
     }
 
-    await loadEcosystemLeadBacklog();
-  }
-
-  async function handleListeningRoomVisitsRefresh() {
-    if (!authUser || !isAuthorized) {
-      return;
-    }
-
-    await loadListeningRoomVisitBacklog();
+    await Promise.all([loadEcosystemLeadBacklog(), loadListeningRoomVisitBacklog()]);
   }
 
   async function handleChecklistToggle(itemId: string, completed: boolean) {
@@ -778,7 +940,7 @@ export function AdminConsole() {
   async function handleMarkdownSave(event: FormEvent<HTMLFormElement>, collection: AdminMarkdownCollection, slug: string) {
     event.preventDefault();
 
-    if (!adminData || !hasStorageBackedContent) {
+    if (!adminData || !hasLiveMarkdownContent) {
       return;
     }
 
@@ -840,7 +1002,7 @@ export function AdminConsole() {
   async function handleMarkdownCreate(event: FormEvent<HTMLFormElement>, collection: AdminMarkdownCollection) {
     event.preventDefault();
 
-    if (!adminData || !hasStorageBackedContent) {
+    if (!adminData || !hasLiveMarkdownContent) {
       return;
     }
 
@@ -888,12 +1050,12 @@ export function AdminConsole() {
   }
 
   async function handleMarkdownDelete(collection: AdminMarkdownCollection, slug: string) {
-    if (!adminData || !hasStorageBackedContent) {
+    if (!adminData || !hasLiveMarkdownContent) {
       return;
     }
 
     const fileLabel = getCollectionLabel(collection);
-    const confirmed = window.confirm(`Delete this ${fileLabel}? This removes the live markdown file from Firebase Storage.`);
+    const confirmed = window.confirm(`Delete this ${fileLabel}? This removes the live markdown document from Firestore.`);
 
     if (!confirmed) {
       return;
@@ -1072,9 +1234,9 @@ export function AdminConsole() {
               </Button>
             </div>
           </div>
-        ) : !hasStorageBackedContent ? (
+        ) : !hasLiveMarkdownContent ? (
           <p className="cg-admin__helper">
-            Draft and journal syncing is still waiting on Firebase Storage initialization. The release plan is live now, and a hidden health check is available below.
+            Draft and journal syncing is still waiting on the Firestore markdown layer. The release plan is live now, and a hidden health check is available below.
           </p>
         ) : null}
 
@@ -1110,8 +1272,12 @@ export function AdminConsole() {
                 <span>Shared song-link arrivals now surface below as analytics.</span>
               </li>
               <li>
-                <strong>Storage / instagram-posts + journals</strong>
-                <span>These support create, rename, update, and delete from this console.</span>
+                <strong>Firestore / markdownFiles</strong>
+                <span>Instagram drafts and journals now support create, rename, update, and delete from this console.</span>
+              </li>
+              <li>
+                <strong>Legacy Storage / admin-projects/walls-devine</strong>
+                <span>Older markdown files can still be migrated from Storage when the Firestore markdown collection is empty.</span>
               </li>
               <li>
                 <strong>Firestore / adminUsers</strong>
@@ -1163,7 +1329,7 @@ export function AdminConsole() {
           </article>
         </div>
 
-        <details className="cg-admin__health-check" open={Boolean(panelError) || isScaffoldMode || !hasStorageBackedContent}>
+        <details className="cg-admin__health-check" open={Boolean(panelError) || isScaffoldMode || !hasLiveMarkdownContent}>
           <summary>Health check</summary>
           <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized notice={panelError || undefined} />
         </details>
@@ -1441,9 +1607,9 @@ export function AdminConsole() {
         <div className="cg-admin__section-head">
           <div>
             <h2 id="admin-instagram-posts-title">Instagram drafts</h2>
-            <p>These entries now save to Firebase Storage so Terry can create, rename, update, and delete the live draft layer without touching repo files.</p>
+            <p>These entries now save to Firestore markdown docs so Terry can create, rename, update, and delete the live draft layer without touching repo files.</p>
           </div>
-          <p className="cg-admin__path-note">Storage path: {firebaseAdminPaths.storageBasePath}/instagram-posts</p>
+          <p className="cg-admin__path-note">Firestore path: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.markdownCollection}/instagram-posts--&#123;slug&#125;</p>
         </div>
 
         <div className="cg-admin__file-grid">
@@ -1476,13 +1642,13 @@ export function AdminConsole() {
                 />
               </label>
               <div className="cg-admin__editor-actions">
-                <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || saveStates[getCreateNoticeKey("instagram-posts")] === "saving"}>
+                <Button type="submit" variant="secondary" size="sm" disabled={!hasLiveMarkdownContent || saveStates[getCreateNoticeKey("instagram-posts")] === "saving"}>
                   Create draft
                 </Button>
                 {saveStates[getCreateNoticeKey("instagram-posts")] === "saving" ? <p className="cg-admin__save-note">Creating…</p> : null}
                 {saveStates[getCreateNoticeKey("instagram-posts")] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Created.</p> : null}
                 {saveStates[getCreateNoticeKey("instagram-posts")] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not create this draft.</p> : null}
-                {!hasStorageBackedContent ? <p className="cg-admin__save-note">Storage must be live before drafts can be changed.</p> : null}
+                {!hasLiveMarkdownContent ? <p className="cg-admin__save-note">Live Firebase markdown content must be ready before drafts can be changed.</p> : null}
               </div>
             </form>
           </article>
@@ -1505,18 +1671,18 @@ export function AdminConsole() {
                   <div className="cg-admin__editor-split">
                     <label className="cg-admin__editor-field">
                       <span>Slug</span>
-                      <input name="slug" type="text" defaultValue={draft.slug} className="cg-admin__editor-input" spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
+                      <input name="slug" type="text" defaultValue={draft.slug} className="cg-admin__editor-input" spellCheck={false} disabled={!hasLiveMarkdownContent || isBusy} />
                     </label>
                   </div>
                   <label className="cg-admin__editor-field">
                     <span>Markdown source</span>
-                    <textarea name="content" defaultValue={draft.content} className="cg-admin__editor-textarea" rows={18} spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
+                    <textarea name="content" defaultValue={draft.content} className="cg-admin__editor-textarea" rows={18} spellCheck={false} disabled={!hasLiveMarkdownContent || isBusy} />
                   </label>
                   <div className="cg-admin__editor-actions">
-                    <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || isBusy}>
+                    <Button type="submit" variant="secondary" size="sm" disabled={!hasLiveMarkdownContent || isBusy}>
                       Save draft
                     </Button>
-                    <Button type="button" variant="ghost" size="sm" onClick={() => handleMarkdownDelete("instagram-posts", draft.slug)} disabled={!hasStorageBackedContent || isBusy}>
+                    <Button type="button" variant="ghost" size="sm" onClick={() => handleMarkdownDelete("instagram-posts", draft.slug)} disabled={!hasLiveMarkdownContent || isBusy}>
                       Delete
                     </Button>
                     {saveState === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
@@ -1532,7 +1698,7 @@ export function AdminConsole() {
           {!adminViewData.instagramDrafts.length ? (
             <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--empty">
               <h3>No Instagram drafts loaded yet</h3>
-              <p>{isScaffoldMode ? "You are seeing the content-studio scaffold while live Firebase data reconnects." : "Drafts will appear here once the live Firebase Storage layer is initialized."}</p>
+              <p>{isScaffoldMode ? "You are seeing the content-studio scaffold while live Firebase data reconnects." : "Drafts will appear here once the live Firestore markdown collection is available."}</p>
             </article>
           ) : null}
         </div>
@@ -1542,9 +1708,9 @@ export function AdminConsole() {
         <div className="cg-admin__section-head">
           <div>
             <h2 id="admin-journals-title">Song journals</h2>
-            <p>Public-facing journal entries now support full CRUD in Firebase Storage, so Terry can manage what appears in the live song journal layer.</p>
+            <p>Public-facing journal entries now support full CRUD in Firestore markdown docs, so Terry can manage what appears in the live song journal layer.</p>
           </div>
-          <p className="cg-admin__path-note">Storage path: {firebaseAdminPaths.storageBasePath}/journals</p>
+          <p className="cg-admin__path-note">Firestore path: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.markdownCollection}/journals--&#123;slug&#125;</p>
         </div>
 
         <div className="cg-admin__file-grid">
@@ -1577,13 +1743,13 @@ export function AdminConsole() {
                 />
               </label>
               <div className="cg-admin__editor-actions">
-                <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || saveStates[getCreateNoticeKey("journals")] === "saving"}>
+                <Button type="submit" variant="secondary" size="sm" disabled={!hasLiveMarkdownContent || saveStates[getCreateNoticeKey("journals")] === "saving"}>
                   Create journal
                 </Button>
                 {saveStates[getCreateNoticeKey("journals")] === "saving" ? <p className="cg-admin__save-note">Creating…</p> : null}
                 {saveStates[getCreateNoticeKey("journals")] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Created.</p> : null}
                 {saveStates[getCreateNoticeKey("journals")] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not create this journal.</p> : null}
-                {!hasStorageBackedContent ? <p className="cg-admin__save-note">Storage must be live before journals can be changed.</p> : null}
+                {!hasLiveMarkdownContent ? <p className="cg-admin__save-note">Live Firebase markdown content must be ready before journals can be changed.</p> : null}
               </div>
             </form>
           </article>
@@ -1602,18 +1768,18 @@ export function AdminConsole() {
                   <div className="cg-admin__editor-split">
                     <label className="cg-admin__editor-field">
                       <span>Slug</span>
-                      <input name="slug" type="text" defaultValue={entry.slug} className="cg-admin__editor-input" spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
+                      <input name="slug" type="text" defaultValue={entry.slug} className="cg-admin__editor-input" spellCheck={false} disabled={!hasLiveMarkdownContent || isBusy} />
                     </label>
                   </div>
                   <label className="cg-admin__editor-field">
                     <span>Markdown source</span>
-                    <textarea name="content" defaultValue={entry.content} className="cg-admin__editor-textarea" rows={18} spellCheck={false} disabled={!hasStorageBackedContent || isBusy} />
+                    <textarea name="content" defaultValue={entry.content} className="cg-admin__editor-textarea" rows={18} spellCheck={false} disabled={!hasLiveMarkdownContent || isBusy} />
                   </label>
                   <div className="cg-admin__editor-actions">
-                    <Button type="submit" variant="secondary" size="sm" disabled={!hasStorageBackedContent || isBusy}>
+                    <Button type="submit" variant="secondary" size="sm" disabled={!hasLiveMarkdownContent || isBusy}>
                       Save journal
                     </Button>
-                    <Button type="button" variant="ghost" size="sm" onClick={() => handleMarkdownDelete("journals", entry.slug)} disabled={!hasStorageBackedContent || isBusy}>
+                    <Button type="button" variant="ghost" size="sm" onClick={() => handleMarkdownDelete("journals", entry.slug)} disabled={!hasLiveMarkdownContent || isBusy}>
                       Delete
                     </Button>
                     {saveState === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
@@ -1629,7 +1795,7 @@ export function AdminConsole() {
           {!adminViewData.journalEntries.length ? (
             <article className="cg-admin__panel cg-admin__file-card cg-admin__file-card--empty">
               <h3>No journals loaded yet</h3>
-              <p>{isScaffoldMode ? "The journal editor is scaffolded and ready once the live content layer reconnects." : "Journal entries will appear here once the Firebase-backed content collection is available."}</p>
+              <p>{isScaffoldMode ? "The journal editor is scaffolded and ready once the live content layer reconnects." : "Journal entries will appear here once the Firestore markdown collection is available."}</p>
             </article>
           ) : null}
         </div>
