@@ -123,6 +123,20 @@ export function HeaderNav() {
     [closeMenu, router]
   );
 
+  const handleHomeNavigate = useCallback(() => {
+    if (pathname !== "/") {
+      router.push("/");
+      closeMenu();
+      return;
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: prefersReducedMotion ? "auto" : "smooth"
+    });
+    closeMenu();
+  }, [closeMenu, pathname, prefersReducedMotion, router]);
+
   const handleListeningRoomShortcut = useCallback(() => {
     const listeningRoomAnchorId = "walls-devine-listening-room";
 
@@ -184,7 +198,7 @@ export function HeaderNav() {
           href="/"
           onClick={(event) => {
             event.preventDefault();
-            handleNavigate("hero");
+            handleHomeNavigate();
           }}
         >
           <span className="cg-header__copy">

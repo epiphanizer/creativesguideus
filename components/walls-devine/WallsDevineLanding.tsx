@@ -383,9 +383,26 @@ export function WallsDevineLanding() {
                 </p>
 
                 <div className="wd-hero__letter-actions">
-                  <Button as="a" href="#walls-devine-signal-room" variant="primary" className="wd-hero__letter-cta">
-                    Jump to the Signal Room
-                  </Button>
+                  <WallsDevineCollectorAccess
+                    source="walls-devine-hero"
+                    interest="Walls Devine collector signal list"
+                    cardTitle="Enter The Signal Room"
+                    cardDescription="First-listen links, studio-journal fragments, hidden-room passwords, and artifact drops sent when each room opens."
+                    benefits={["First-listen links", "Studio-journal fragments", "Hidden-room passwords"]}
+                    modalTitle="Enter The Signal Room"
+                    modalDescription="Private collector access for Volume 1. Drop your email to keep the next room out of the feed and in your inbox."
+                    signupEyebrow="Collector access includes"
+                    signupTitle="What lands in the Signal Room"
+                    signupDescription="First-listen links, studio-journal fragments, artifact drops, hidden-room passwords, and collector updates sent as each Volume 1 room opens."
+                    submitLabel="Get collector access"
+                    successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector signal."
+                    note="High-signal only. Used for first listens, hidden-room access, artifact drops, and collector updates."
+                    renderTrigger={(openSignalRoom) => (
+                      <Button type="button" variant="primary" className="wd-hero__letter-cta" onClick={openSignalRoom}>
+                        Enter The Signal Room
+                      </Button>
+                    )}
+                  />
                 </div>
               </div>
             </div>
@@ -400,25 +417,23 @@ export function WallsDevineLanding() {
 
         <WallsDevineCollectorGrid tiles={instagramGrid} />
 
-        <div id="walls-devine-signal-room" className="wd-grid-section__collector-access">
-          <WallsDevineCollectorAccess
-            source="walls-devine-grid"
-            interest="Walls Devine collector signal list"
-            cardEyebrow="Collector access"
-            cardTitle="Enter The Signal Room"
-            cardDescription="First-listen links, studio-journal fragments, hidden-room passwords, and artifact drops sent when each room opens."
-            triggerLabel="Enter The Signal Room"
-            actionNote="Private collector access / Volume 1 updates / No recap cycle"
-            modalTitle="Enter The Signal Room"
-            modalDescription="Private collector access for Volume 1. Drop your email to keep the next room out of the feed and in your inbox."
-            signupEyebrow="Collector access includes"
-            signupTitle="What lands in the Signal Room"
-            signupDescription="First-listen links, studio-journal fragments, artifact drops, hidden-room passwords, and collector updates sent as each Volume 1 room opens."
-            submitLabel="Get collector access"
-            successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector signal."
-            note="High-signal only. Used for first listens, hidden-room access, artifact drops, and collector updates."
-            className="wd-grid-section__collector-banner"
-          />
+        <div id="walls-devine-booking" className="wd-grid-section__collector-access">
+          <section className="wd-collector-access wd-collector-access--inline wd-grid-section__collector-banner" aria-label="Book Walls/Devine">
+            <div className="wd-collector-access__copy">
+              <p className="wd-collector-access__eyebrow">Live booking</p>
+              <h3 className="wd-collector-access__title">Book Walls/Devine</h3>
+              <p className="wd-collector-access__description">
+                Bring Volume 1 into the room for listening sessions, screenings, live bookings, and partnership conversations built around the record.
+              </p>
+            </div>
+
+            <div className="wd-collector-access__actions">
+              <Button as="a" href="mailto:hello@creativesguide.us?subject=Book%20Walls%2FDevine">
+                Book Walls/Devine
+              </Button>
+              <p className="wd-collector-access__action-note">Direct studio uplink / Listening events / Performance and partnership inquiries</p>
+            </div>
+          </section>
         </div>
       </SectionShell>
 

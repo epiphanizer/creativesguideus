@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../sh_hub"
+		},
+		{
+			"path": "../clients"
 		}
 	],
 	"settings": {

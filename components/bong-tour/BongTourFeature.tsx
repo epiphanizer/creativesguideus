@@ -55,6 +55,14 @@ type ExperienceRoom = {
   challenge?: RoomChallenge;
 };
 
+type CueRoomVideo = {
+  embedUrl?: string;
+  sourceUrl?: string;
+  posterImage?: StaticImageData;
+  label?: string;
+  note?: string;
+};
+
 type CuePoster = {
   id: string;
   title: string;
@@ -64,6 +72,7 @@ type CuePoster = {
   tagline: string;
   description: string;
   highlights: string[];
+  video?: CueRoomVideo;
   room: ExperienceRoom;
 };
 
@@ -598,6 +607,10 @@ const musicPosters: CuePoster[] = [
     description:
       "The first cue room proves the film can feel already scored: smoke, confidence, and a slightly dangerous sense of arrival.",
     highlights: ["Psych-funk built for a cult entrance", "Anchors the first true takeover beat"],
+    video: {
+      label: "Cue video deck",
+      note: "Hook the Joint Queen cue video here when the scene cut is ready."
+    },
     room: {
       slug: "cue-room-joint-queen",
       eyebrow: "Cue room",
@@ -625,6 +638,10 @@ const musicPosters: CuePoster[] = [
     description:
       "A low-end crawl for handshakes, side deals, and the specific Hollywood feeling that every invitation carries a trap door.",
     highlights: ["Backstage pressure without losing humor", "Turns packaging and power into a groove"],
+    video: {
+      label: "Cue video deck",
+      note: "Hook the Stash Daddy cue video here when the pressure-chamber cut is ready."
+    },
     room: {
       slug: "cue-room-stash-daddy",
       eyebrow: "Cue room",
@@ -652,6 +669,10 @@ const musicPosters: CuePoster[] = [
     description:
       "The cue that lets the myth breathe: river memory, processed tanpura, and lift that feels earned rather than ornamental.",
     highlights: ["Connects Hollywood excess to India with grace", "Feels like the relic remembering where it came from"],
+    video: {
+      label: "Cue video deck",
+      note: "Hook the Space Cruiser cue video here when the final-act reveal cut is ready."
+    },
     room: {
       slug: "cue-room-space-cruiser",
       eyebrow: "Cue room",
@@ -836,6 +857,8 @@ export function BongTourFeature() {
   const [challengeUnlocked, setChallengeUnlocked] = useState(false);
   const titleId = useId();
   const isCollectorRoom = activeRoom?.slug === portalRooms.collector.slug;
+  const activeCuePoster = activeRoom ? musicPosters.find((poster) => poster.room.slug === activeRoom.slug) ?? null : null;
+  const isCueRoom = Boolean(activeCuePoster);
 
   useEffect(() => {
     setHasMounted(true);
@@ -1023,7 +1046,7 @@ export function BongTourFeature() {
       {hasMounted && activeRoom
         ? createPortal(
             <div
-              className={`bt-room-modal${isCollectorRoom ? " bt-room-modal--collector" : ""}`}
+              className={`bt-room-modal${isCollectorRoom ? " bt-room-modal--collector" : isCueRoom ? " bt-room-modal--cue" : ""}`}
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
@@ -1164,6 +1187,130 @@ export function BongTourFeature() {
                           </div>
                         ) : null}
                       </div>
+                    </div>
+                  ) : isCueRoom && activeCuePoster ? (
+                    <div className="bt-room-modal__cue-shell">
+                      <section className="bt-room-modal__cue-current" aria-label="Current cue room player">
+                        <div className="bt-room-modal__cue-stage">
+                          <div className="bt-room-modal__cue-video-shell">
+                            <div className="bt-room-modal__cue-video-frame">
+                              {activeCuePoster.video?.embedUrl ? (
+                                <iframe
+                                  src={activeCuePoster.video.embedUrl}
+                                  title={`${activeCuePoster.title} cue video`}
+                                  className="bt-room-modal__cue-embed"
+                                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                                  allowFullScreen
+                                />
+                              ) : activeCuePoster.video?.sourceUrl ? (
+                                <video
+                                  className="bt-room-modal__cue-video"
+                                  controls
+                                  preload="metadata"
+                                  poster={activeCuePoster.video.posterImage?.src ?? activeCuePoster.image.src}
+                                >
+                                  <source src={activeCuePoster.video.sourceUrl} />
+                                  Your browser does not support video playback.
+                                </video>
+                              ) : (
+                                <div className="bt-room-modal__cue-video-placeholder">
+                                  <div className="bt-room-modal__cue-video-placeholder-frame">
+                                    <Image
+                                      src={activeCuePoster.video?.posterImage ?? activeCuePoster.image}
+                                      alt={`${activeCuePoster.title} cue poster`}
+                                      sizes="(max-width: 960px) 78vw, 420px"
+                                    />
+                                  </div>
+                                  <span>{activeCuePoster.video?.label ?? "Cue video deck"}</span>
+                                  <p>{activeCuePoster.video?.note ?? "Hook a cue video link into this room to swap the poster hold for a live player."}</p>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="bt-room-modal__cue-player-wrap">
+                              <span className="bt-room-modal__cue-player-label">Video player</span>
+                              <div className="bt-room-modal__cue-player-meta">
+                                <span>{activeCuePoster.badge}</span>
+                                <span>{activeCuePoster.tagline}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="bt-room-modal__cue-notes">
+                          <article>
+                            <span>Cue hook</span>
+                            <p>{activeCuePoster.tagline}</p>
+                          </article>
+                          <article>
+                            <span>Scene fit</span>
+                            <p>{activeCuePoster.description}</p>
+                          </article>
+                          <article>
+                            <span>Room thesis</span>
+                            <p>{activeRoom.kicker}</p>
+                          </article>
+                          <article>
+                            <span>Campaign use</span>
+                            <p>{activeRoom.description}</p>
+                          </article>
+                          <article>
+                            <span>Highlight stack</span>
+                            <p>{activeCuePoster.highlights.join(" · ")}</p>
+                          </article>
+                        </div>
+
+                        <div className="bt-room-modal__links bt-room-modal__cue-links">
+                          <a href={`?player=${activeCuePoster.playerTarget}#walls-devine-listening-room`}>Play in listening room</a>
+                          <a href={`#${activeCuePoster.id}`}>Jump to cue poster</a>
+                        </div>
+
+                        <div className="bt-room-modal__actions">
+                          {activeRoom.actions.map((action) => (
+                            action.roomKey ? (
+                              <Button
+                                key={action.label}
+                                type="button"
+                                className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
+                                onClick={() => setActiveRoom(portalRooms[action.roomKey ?? "collector"])}
+                              >
+                                {action.label}
+                              </Button>
+                            ) : (
+                              <Button
+                                key={action.label}
+                                as="a"
+                                href={action.href ?? "/"}
+                                className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
+                              >
+                                {action.label}
+                              </Button>
+                            )
+                          ))}
+                        </div>
+                      </section>
+
+                      <section className="bt-room-modal__cue-queue" aria-label="Cue room list">
+                        <ol>
+                          {musicPosters.map((poster) => (
+                            <li key={poster.title}>
+                              <button
+                                type="button"
+                                className={`bt-room-modal__cue-queue-item${poster.room.slug === activeRoom.slug ? " bt-room-modal__cue-queue-item--active" : ""}`}
+                                onClick={() => setActiveRoom(poster.room)}
+                                aria-current={poster.room.slug === activeRoom.slug ? "true" : undefined}
+                              >
+                                <span>{poster.badge}</span>
+                                <div>
+                                  <strong>{poster.title}</strong>
+                                  <p>{poster.tagline}</p>
+                                </div>
+                                <em>{poster.room.ambientSubtitle}</em>
+                              </button>
+                            </li>
+                          ))}
+                        </ol>
+                      </section>
                     </div>
                   ) : (
                     <>
