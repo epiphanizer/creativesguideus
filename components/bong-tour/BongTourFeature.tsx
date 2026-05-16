@@ -16,7 +16,8 @@ import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevin
 
 type RoomAction = {
   label: string;
-  href: string;
+  href?: string;
+  roomKey?: "producer" | "collector";
   outline?: boolean;
 };
 
@@ -628,7 +629,7 @@ const musicPosters: CuePoster[] = [
       beats: ["Supports late-night deal scenes.", "Bridges satire and threat cleanly.", "Keeps the collectible rollout grounded in attitude."],
       actions: [
         { label: "Play in listening room", href: "?player=stash-daddy#walls-devine-listening-room" },
-        { label: "Enter the producer room", href: "/#contact", outline: true }
+        { label: "Enter the producer room", roomKey: "producer", outline: true }
       ]
     }
   },
@@ -655,7 +656,7 @@ const musicPosters: CuePoster[] = [
       beats: ["Lets the river imagery open up.", "Supports the India return with dignity.", "Creates the cleanest bridge into the companion album world."],
       actions: [
         { label: "Play in listening room", href: "?player=space-cruiser#walls-devine-listening-room" },
-        { label: "Open the signal room", href: "/walls-devine", outline: true }
+        { label: "Open the signal room", roomKey: "collector", outline: true }
       ]
     }
   }
@@ -721,7 +722,7 @@ const collectibleTiles: CollectibleTile[] = [
       beats: ["Lets CTAs become hidden entries.", "Pairs naturally with Joint Queen.", "Keeps the satire stylish instead of flat."],
       actions: [
         { label: "Open Joint Queen", href: "/walls-devine?player=joint-queen#walls-devine-listening-room" },
-        { label: "Enter the smoke room", href: "/#contact", outline: true }
+        { label: "Enter the smoke room", roomKey: "producer", outline: true }
       ],
       signup: {
         source: "bong-tour-comedy-store-pass",
@@ -760,7 +761,7 @@ const collectibleTiles: CollectibleTile[] = [
       beats: ["Pairs cleanly with Stash Daddy.", "Adds return-value to the page.", "Turns exposition into a collectible clue."],
       actions: [
         { label: "Open Stash Daddy", href: "/walls-devine?player=stash-daddy#walls-devine-listening-room" },
-        { label: "Open the signal room", href: "#collector-grid", outline: true }
+        { label: "Open the signal room", roomKey: "collector", outline: true }
       ],
       signup: {
         source: "bong-tour-lollipop-guild-key",
@@ -1081,14 +1082,25 @@ export function BongTourFeature() {
 
                   <div className="bt-room-modal__actions">
                     {activeRoom.actions.map((action) => (
-                      <Button
-                        key={action.label}
-                        as="a"
-                        href={action.href}
-                        className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
-                      >
-                        {action.label}
-                      </Button>
+                      action.roomKey ? (
+                        <Button
+                          key={action.label}
+                          type="button"
+                          className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
+                          onClick={() => setActiveRoom(portalRooms[action.roomKey ?? "collector"])}
+                        >
+                          {action.label}
+                        </Button>
+                      ) : (
+                        <Button
+                          key={action.label}
+                          as="a"
+                          href={action.href ?? "/"}
+                          className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
+                        >
+                          {action.label}
+                        </Button>
+                      )
                     ))}
                   </div>
 

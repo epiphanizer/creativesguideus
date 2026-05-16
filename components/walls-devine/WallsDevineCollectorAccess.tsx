@@ -20,9 +20,14 @@ type WallsDevineCollectorAccessProps = {
   modalEyebrow?: string;
   modalTitle?: string;
   modalDescription?: string;
+  signupEyebrow?: string;
+  signupTitle?: string;
+  signupDescription?: string;
   submitLabel?: string;
   successMessage?: string;
   note?: string;
+  roomOverlayScript?: string;
+  roomOverlaySubtitle?: string;
   className?: string;
   variant?: "feature" | "inline";
   renderTrigger?: (openSignalRoom: () => void) => ReactNode;
@@ -40,9 +45,14 @@ export function WallsDevineCollectorAccess({
   modalEyebrow = "Collector access",
   modalTitle = "Enter The Signal Room",
   modalDescription = "Drop your email for first-listen links, hidden-room returns, journal fragments, and artifact-drop signals.",
+  signupEyebrow,
+  signupTitle,
+  signupDescription,
   submitLabel = "Get first access",
   successMessage = "You are in. Watch your inbox for the next collector signal.",
   note = "High-signal only. Used for first listens, hidden-room access, and artifact drops.",
+  roomOverlayScript = "The Signal Room",
+  roomOverlaySubtitle = "Private collector access",
   className,
   variant = "feature",
   renderTrigger
@@ -114,8 +124,8 @@ export function WallsDevineCollectorAccess({
             <div className="wd-collector-access-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={() => setIsOpen(false)}>
               <div className="wd-collector-access-modal__panel" onClick={(event) => event.stopPropagation()}>
                 <div className="wd-collector-access-modal__room-overlay" aria-hidden="true">
-                  <span className="wd-collector-access-modal__room-overlay-script">The Signal Room</span>
-                  <span className="wd-collector-access-modal__room-overlay-subtitle">Private collector access</span>
+                  <span className="wd-collector-access-modal__room-overlay-script">{roomOverlayScript}</span>
+                  <span className="wd-collector-access-modal__room-overlay-subtitle">{roomOverlaySubtitle}</span>
                 </div>
 
                 <div className="wd-collector-access-modal__header">
@@ -142,6 +152,9 @@ export function WallsDevineCollectorAccess({
                     className="wd-collector-access-modal__signup"
                     source={source}
                     interest={interest}
+                    eyebrow={signupEyebrow}
+                    title={signupTitle}
+                    description={signupDescription}
                     submitLabel={submitLabel}
                     successMessage={successMessage}
                     note={note}

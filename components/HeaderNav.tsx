@@ -17,12 +17,70 @@ export function HeaderNav() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const pathname = usePathname();
   const isWallsDevineRoute = pathname?.startsWith("/walls-devine") ?? false;
+  const isBongTourRoute = pathname?.startsWith("/bong-tour") ?? false;
   const router = useRouter();
   const activeAnchors = useMemo(() => anchors, []);
   const anchorIds = useMemo(() => activeAnchors.flatMap((anchor) => (anchor.id ? [anchor.id] : [])), [activeAnchors]);
   const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showPlayerRestore, setShowPlayerRestore] = useState(false);
+
+  const headerRoom = useMemo(() => {
+    if (isBongTourRoute) {
+      return {
+        buttonLabel: "Smoke Room",
+        source: "header-nav-bong-tour",
+        interest: "Bong Tour producer portal",
+        cardTitle: "Enter The Smoke Room",
+        cardDescription: "Get the shortest route to deck access, cue-world alignment, soundtrack conversations, and private Bong Tour updates.",
+        benefits: ["Deck access", "Soundtrack alignment", "Packaging conversation"],
+        modalEyebrow: "Producer portal",
+        modalTitle: "Enter The Smoke Room",
+        modalDescription: "Drop your email for the cleanest route to the Bong Tour deck, soundtrack-fit conversations, and private portal updates.",
+        submitLabel: "Request the room key",
+        successMessage: "You are in. Watch for the private deck route and next Bong Tour signal.",
+        note: "Used for deck access, soundtrack conversations, and partner follow-up only.",
+        roomOverlayScript: "The Smoke Room",
+        roomOverlaySubtitle: "Deck, tone, and score in one move"
+      };
+    }
+
+    if (isWallsDevineRoute) {
+      return {
+        buttonLabel: "Signal Room",
+        source: "header-nav-walls-devine",
+        interest: "Walls Devine collector signal list",
+        cardTitle: "Enter The Signal Room",
+        cardDescription: "Get the shortest route to first-listen links, journal fragments, hidden-room passwords, and release-night signals.",
+        benefits: ["First-listen links", "Studio-journal fragments", "Hidden-room passwords"],
+        modalEyebrow: "Collector access",
+        modalTitle: "Enter The Signal Room",
+        modalDescription: "Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update.",
+        submitLabel: "Get collector access",
+        successMessage: "You are in. Watch your inbox for the next room opening, journal fragment, and collector signal.",
+        note: "High-signal only. Used for first listens, hidden-room access, and artifact drops.",
+        roomOverlayScript: "The Signal Room",
+        roomOverlaySubtitle: "Private collector access"
+      };
+    }
+
+    return {
+      buttonLabel: "Signal Room",
+      source: "header-nav-cgu",
+      interest: "Creatives Guide Us private room",
+      cardTitle: "Enter The Signal Room",
+      cardDescription: "Get the shortest route to project openings, private room notes, and first-access signals across the current release worlds.",
+      benefits: ["Project openings", "Private room notes", "First-access signals"],
+      modalEyebrow: "Project access",
+      modalTitle: "Enter The Signal Room",
+      modalDescription: "Drop your email for the cleanest route to the next project room opening, private note, or first-access signal.",
+      submitLabel: "Get room access",
+      successMessage: "You are in. Watch for the next room opening and private project signal.",
+      note: "High-signal only. Used for project openings, first-access notes, and private updates.",
+      roomOverlayScript: "The Signal Room",
+      roomOverlaySubtitle: "Project openings and private access"
+    };
+  }, [isBongTourRoute, isWallsDevineRoute]);
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
@@ -157,17 +215,20 @@ export function HeaderNav() {
           </nav>
           <div className="cg-header__actions">
             <WallsDevineCollectorAccess
-              source="header-nav"
-              interest="Walls Devine collector signal list"
-              cardTitle="Enter The Signal Room"
-              cardDescription="Get the shortest route to first-listen links, journal fragments, hidden-room passwords, and release-night signals."
-              triggerLabel="Enter The Signal Room"
-              benefits={["First-listen links", "Studio-journal fragments", "Hidden-room passwords"]}
-              modalTitle="Enter The Signal Room"
-              modalDescription="Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update."
-              submitLabel="Get collector access"
-              successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector signal."
-              note="High-signal only. Used for first listens, hidden-room access, and artifact drops."
+              source={headerRoom.source}
+              interest={headerRoom.interest}
+              cardTitle={headerRoom.cardTitle}
+              cardDescription={headerRoom.cardDescription}
+              triggerLabel={headerRoom.cardTitle}
+              benefits={headerRoom.benefits}
+              modalEyebrow={headerRoom.modalEyebrow}
+              modalTitle={headerRoom.modalTitle}
+              modalDescription={headerRoom.modalDescription}
+              submitLabel={headerRoom.submitLabel}
+              successMessage={headerRoom.successMessage}
+              note={headerRoom.note}
+              roomOverlayScript={headerRoom.roomOverlayScript}
+              roomOverlaySubtitle={headerRoom.roomOverlaySubtitle}
               renderTrigger={(openSignalRoom) => (
                 <button
                   type="button"
@@ -177,7 +238,7 @@ export function HeaderNav() {
                     openSignalRoom();
                   }}
                 >
-                  Signal Room
+                  {headerRoom.buttonLabel}
                 </button>
               )}
             />

@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import type { CSSProperties } from "react";
 
+import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { songPostCards } from "@/components/walls-devine/content";
@@ -215,6 +216,12 @@ export function WallsDevineLanding() {
     <>
       <SectionShell id="hero" labelledBy="walls-devine-title" variant="hero" className="wd-hero-shell" innerClassName="wd-hero">
         <div className="wd-hero__layout">
+          <figure className="wd-hero__cover">
+            <div className="wd-hero__cover-frame">
+              <Image src={volOneImage} alt="Walls/Devine Volume 1 cover artwork" priority sizes="(max-width: 900px) 86vw, 38vw" />
+            </div>
+          </figure>
+
           <div className="wd-hero__copy">
             <SectionHeader
               id="walls-devine-title"
@@ -223,42 +230,46 @@ export function WallsDevineLanding() {
               headingLevel="h1"
             />
 
-            <div className="wd-hero__letter" aria-label="Collector letter from John Walls and Terry Devine">
-              <p className="wd-hero__letter-kicker">Dear collector,</p>
-              <p className="wd-hero__letter-body">
-                Join the private collector email for first-listen links, studio-journal fragments, artifact drop notes, and release-night signals as each room
-                opens across Volume 1.
-              </p>
+            <div className="wd-hero__note-stack">
+              <div className="wd-hero__letter" aria-label="Collector note from John Walls and Terry Devine">
+                <p className="wd-hero__letter-kicker">Dear Collector,</p>
+                <p className="wd-hero__letter-body">
+                  Join the private collector email for first-listen links, studio-journal fragments, artifact drop notes, and release-night signals as each room
+                  opens across Volume 1.
+                </p>
 
-              <div className="wd-hero__letter-postscript">
-                <span className="wd-hero__letter-postscript-label">From the journals</span>
-                <div className="wd-hero__letter-quote-rotator" aria-live="polite">
-                  {collectorLetterQuotes.map((quote, index) => (
-                    <figure
-                      key={quote.source}
-                      className="wd-hero__letter-quote"
-                      style={{ "--wd-letter-quote-delay": `${index * 5}s` } as CSSProperties}
-                    >
-                      <blockquote>{quote.text}</blockquote>
-                      <figcaption>{quote.source}</figcaption>
-                    </figure>
-                  ))}
+                <div className="wd-hero__letter-actions">
+                  <Button as="a" href="#walls-devine-signal-room" variant="primary" className="wd-hero__letter-cta">
+                    Jump to the Signal Room
+                  </Button>
+                </div>
+
+                <p className="wd-hero__letter-signoff">With Love From the Room,</p>
+                <div className="wd-hero__letter-signatures" aria-label="Signed by John Walls and Terry Devine">
+                  <span>John Walls</span>
+                  <span>Terry Devine</span>
                 </div>
               </div>
 
-              <p className="wd-hero__letter-signoff">With love from the room,</p>
-              <div className="wd-hero__letter-signatures" aria-label="Signed by John Walls and Terry Devine">
-                <span>John Walls</span>
-                <span>Terry Devine</span>
+              <div className="wd-hero__journal" aria-label="Rotating journal entries from Volume 1">
+                <div className="wd-hero__letter-postscript">
+                  <span className="wd-hero__letter-postscript-label">From the journals</span>
+                  <div className="wd-hero__letter-quote-rotator" aria-live="polite">
+                    {collectorLetterQuotes.map((quote, index) => (
+                      <figure
+                        key={quote.source}
+                        className="wd-hero__letter-quote"
+                        style={{ "--wd-letter-quote-delay": `${index * 5}s` } as CSSProperties}
+                      >
+                        <blockquote>{quote.text}</blockquote>
+                        <figcaption>{quote.source}</figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-
-          <figure className="wd-hero__cover">
-            <div className="wd-hero__cover-frame">
-              <Image src={volOneImage} alt="Walls/Devine Volume 1 cover artwork" priority sizes="(max-width: 900px) 86vw, 38vw" />
-            </div>
-          </figure>
         </div>
       </SectionShell>
 
@@ -269,21 +280,23 @@ export function WallsDevineLanding() {
 
         <WallsDevineCollectorGrid tiles={instagramGrid} />
 
-        <div className="wd-grid-section__collector-access">
+        <div id="walls-devine-signal-room" className="wd-grid-section__collector-access">
           <WallsDevineCollectorAccess
             source="walls-devine-grid"
             interest="Walls Devine collector signal list"
             cardEyebrow="Collector access"
-            cardTitle="Keep the next room out of the feed and in your inbox"
-            cardDescription="Skip the recap cycle. Get the shortest path to first-listen links, studio-journal fragments, hidden-room passwords, and artifact-drop signals as Volume 1 keeps opening."
+            cardTitle="Enter The Signal Room"
+            cardDescription="First-listen links, studio-journal fragments, hidden-room passwords, and artifact drops sent when each room opens."
             triggerLabel="Enter The Signal Room"
-            benefits={["First-listen links", "Studio-journal fragments", "Artifact and password drops"]}
-            actionNote="Private collector access for first listens, hidden-room returns, and artifact drops."
+            actionNote="Private collector access / Volume 1 updates / No recap cycle"
             modalTitle="Enter The Signal Room"
-            modalDescription="Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update."
+            modalDescription="Private collector access for Volume 1. Drop your email to keep the next room out of the feed and in your inbox."
+            signupEyebrow="Collector access includes"
+            signupTitle="What lands in the Signal Room"
+            signupDescription="First-listen links, studio-journal fragments, artifact drops, hidden-room passwords, and collector updates sent as each Volume 1 room opens."
             submitLabel="Get collector access"
             successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector signal."
-            note="High-signal only. Used for first listens, hidden-room access, and artifact drops."
+            note="High-signal only. Used for first listens, hidden-room access, artifact drops, and collector updates."
             className="wd-grid-section__collector-banner"
           />
         </div>
