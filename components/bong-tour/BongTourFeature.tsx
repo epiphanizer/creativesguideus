@@ -331,8 +331,8 @@ export function BongTourFeature() {
             <p>Walls/Devine cues built to anchor the pitch deck and hold the invitation open.</p>
           </div>
           <div className="bt-section-header__actions">
-            <Button as="a" href="/walls-devine#walls-devine-post-kit" className="bt-button bt-button--outline">
-              See campaign copy system
+            <Button as="a" href="/walls-devine#walls-devine-listening-room" className="bt-button bt-button--outline">
+              Open album listening room
             </Button>
           </div>
         </header>

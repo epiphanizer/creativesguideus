@@ -45,8 +45,8 @@ export function MusicSection() {
           <Button as="a" href="/walls-devine">
             Enter Volume 1
           </Button>
-          <Button as="a" href="/walls-devine#walls-devine-post-kit" variant="ghost">
-            Song Posts + Journals
+          <Button as="a" href="/walls-devine#walls-devine-listening-room" variant="ghost">
+            Listening Room + Journals
           </Button>
         </div>
       </div>

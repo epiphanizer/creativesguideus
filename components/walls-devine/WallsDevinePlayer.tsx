@@ -1,15 +1,35 @@
 "use client";
 
 import Image from "next/image";
+import type { StaticImageData } from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
+import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
+import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
+import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
+import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
+import poetryImage from "@/app/walls-devine/assets/instagram/7.poetry.png";
+import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
+import spaceCruiserImage from "@/app/walls-devine/assets/instagram/3.space-cruiser.png";
+import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
 import type { SongPostCard } from "@/components/walls-devine/content";
 import { Button } from "@/components/ui/Button";
 import { cx } from "@/lib/cx";
 
 type WallsDevinePlayerProps = {
   tracks: SongPostCard[];
+};
+
+const trackPosterImages: Record<number, StaticImageData> = {
+  1: jointQueenImage,
+  2: stashDaddyImage,
+  3: spaceCruiserImage,
+  4: homeImage,
+  5: decayImage,
+  6: resolveImage,
+  7: poetryImage,
+  8: gratitudeImage
 };
 
 function formatTrackNumber(trackNumber: number) {
@@ -27,6 +47,8 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const titleId = useId();
   const activeTrack = tracks[activeIndex] ?? tracks[0];
   const activeSrc = getTrackAudioSrc(activeTrack.audioFileName);
+  const activePosterImage = trackPosterImages[activeTrack.trackNumber] ?? volOneImage;
+  const activePosterAlt = `${activeTrack.title} cover artwork`;
 
   useEffect(() => {
     if (!isOpen) {
@@ -88,7 +110,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
         <div className="wd-player__card">
           <figure className="wd-player__cover">
             <div className="wd-player__cover-frame">
-              <Image src={volOneImage} alt="Volume 1 album cover" sizes="(max-width: 720px) 42vw, 220px" />
+              <Image src={activePosterImage} alt={activePosterAlt} sizes="(max-width: 720px) 42vw, 220px" />
             </div>
           </figure>
 
@@ -191,7 +213,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
               <section className="wd-player-modal__current" aria-label="Current track player">
                 <div className="wd-player-modal__art">
                   <div className="wd-player-modal__art-frame">
-                    <Image src={volOneImage} alt="Volume 1 album cover" sizes="(max-width: 960px) 72vw, 360px" />
+                    <Image src={activePosterImage} alt={activePosterAlt} sizes="(max-width: 960px) 72vw, 360px" />
                   </div>
                   <p>
                     Track {formatTrackNumber(activeTrack.trackNumber)} · {activeTrack.duration}

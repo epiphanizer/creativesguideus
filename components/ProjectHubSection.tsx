@@ -20,17 +20,17 @@ const projectHubs: ProjectHub[] = [
   {
     eyebrow: "Release world",
     title: "Walls & Devine",
-    summary: "Volume 1 now lives in a dedicated release hub with song journals, artwork strategy, and rollout notes.",
+    summary: "Volume 1 now lives in a dedicated release hub with the collector grid, listening room, and song journals.",
     description:
-      "This is the clearest entry point into the record: one place for the 9-grid cover system, per-song notes, release planning, and the album's relationship to Bong Tour.",
+      "This is the clearest entry point into the record: one place for the 9-grid cover system, per-song notes, the modular player, and the album's relationship to Bong Tour.",
     bullets: [
-      "Volume 1 rollout, cover strategy, and release standards",
+      "Collector grid and cover system for Volume 1",
       "Journal entries and technical notes for every song",
       "Direct links from the first three songs into Bong Tour cue moments"
     ],
     actions: [
       { label: "Open Walls & Devine", href: "/walls-devine" },
-      { label: "Read post kit", href: "/walls-devine#walls-devine-post-kit", variant: "ghost" }
+      { label: "Open listening room", href: "/walls-devine#walls-devine-listening-room", variant: "ghost" }
     ],
     open: true
   },

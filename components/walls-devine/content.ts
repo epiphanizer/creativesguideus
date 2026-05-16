@@ -15,43 +15,6 @@ export type SongPostCard = {
   bongTourContext?: string;
 };
 
-export type RoadmapStep = {
-  date: string;
-  milestone: string;
-  detail: string;
-};
-
-export const releaseIdentity = {
-  spotifyTitle: "Volume 1",
-  spotifyArtistLine: "by Walls & Devine",
-  marketingLine: "Walls & Devine: Volume 1",
-  marketingDate: "Out 06/04/26"
-};
-
-export const cadenceGuidance =
-  "Spotify does not enforce a strict every-30-days rule, but each release creates a new discovery moment. Keep Resolve as ignition, Volume 1 as launch, and instrumentals as the second wave roughly four to five weeks later.";
-
-export const roadmapSteps: RoadmapStep[] = [
-  {
-    date: "May 24, 2026",
-    milestone: "Resolve single",
-    detail: "Lead with Resolve as a pre-album ignition and preserve metadata for album carryover."
-  },
-  {
-    date: "June 4, 2026",
-    milestone: "Volume 1 album",
-    detail: "Use Volume 1 by Walls & Devine as the clean platform title and run the full campaign phrase in captions."
-  },
-  {
-    date: "July 10, 2026",
-    milestone: "Volume 1: Instrumentals",
-    detail: "Launch as a separate release with new ISRCs for instrumental recordings and a fresh post cycle."
-  }
-];
-
-export const sharedCaptionStarter =
-  "Walls & Devine: Volume 1. Out 06/04/26. Eight chapters, one lightning seam.";
-
 export const songPostCards: SongPostCard[] = [
   {
     trackNumber: 1,
