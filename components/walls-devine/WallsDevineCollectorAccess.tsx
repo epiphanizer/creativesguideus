@@ -1,0 +1,148 @@
+"use client";
+
+import { createPortal } from "react-dom";
+import { useEffect, useId, useState } from "react";
+
+import { Button } from "@/components/ui/Button";
+import { cx } from "@/lib/cx";
+
+import { EcosystemSignupForm } from "./EcosystemSignupForm";
+
+type WallsDevineCollectorAccessProps = {
+  source: string;
+  interest: string;
+  cardEyebrow?: string;
+  cardTitle: string;
+  cardDescription: string;
+  triggerLabel?: string;
+  benefits?: string[];
+  modalEyebrow?: string;
+  modalTitle?: string;
+  modalDescription?: string;
+  submitLabel?: string;
+  successMessage?: string;
+  note?: string;
+  className?: string;
+  variant?: "feature" | "inline";
+};
+
+export function WallsDevineCollectorAccess({
+  source,
+  interest,
+  cardEyebrow,
+  cardTitle,
+  cardDescription,
+  triggerLabel = "Enter The Signal Room",
+  benefits = [],
+  modalEyebrow = "Collector access",
+  modalTitle = "Enter The Signal Room",
+  modalDescription = "Drop your email for first-listen links, hidden-room returns, journal fragments, and artifact-drop signals.",
+  submitLabel = "Get first access",
+  successMessage = "You are in. Watch your inbox for the next collector signal.",
+  note = "High-signal only. Used for first listens, hidden-room access, and artifact drops.",
+  className,
+  variant = "feature"
+}: WallsDevineCollectorAccessProps) {
+  const [hasMounted, setHasMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const titleId = useId();
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [isOpen]);
+
+  return (
+    <>
+      <section className={cx("wd-collector-access", `wd-collector-access--${variant}`, className)} aria-label={cardTitle}>
+        <div className="wd-collector-access__copy">
+          {cardEyebrow ? <p className="wd-collector-access__eyebrow">{cardEyebrow}</p> : null}
+          <h3 className="wd-collector-access__title">{cardTitle}</h3>
+          <p className="wd-collector-access__description">{cardDescription}</p>
+        </div>
+
+        {benefits.length ? (
+          <div className="wd-collector-access__benefits" aria-label="Collector access benefits">
+            {benefits.map((benefit) => (
+              <span key={benefit}>{benefit}</span>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="wd-collector-access__actions">
+          <Button type="button" variant="primary" onClick={() => setIsOpen(true)}>
+            {triggerLabel}
+          </Button>
+        </div>
+      </section>
+
+      {hasMounted && isOpen
+        ? createPortal(
+            <div className="wd-collector-access-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={() => setIsOpen(false)}>
+              <div className="wd-collector-access-modal__panel" onClick={(event) => event.stopPropagation()}>
+                <div className="wd-collector-access-modal__room-overlay" aria-hidden="true">
+                  <span className="wd-collector-access-modal__room-overlay-script">The Signal Room</span>
+                  <span className="wd-collector-access-modal__room-overlay-subtitle">Private collector access</span>
+                </div>
+
+                <div className="wd-collector-access-modal__header">
+                  <div>
+                    <p className="wd-collector-access-modal__eyebrow">{modalEyebrow}</p>
+                    <h2 id={titleId}>{modalTitle}</h2>
+                    <p>{modalDescription}</p>
+                  </div>
+                  <Button type="button" variant="ghost" size="sm" onClick={() => setIsOpen(false)}>
+                    Close
+                  </Button>
+                </div>
+
+                <div className="wd-collector-access-modal__body">
+                  {benefits.length ? (
+                    <div className="wd-collector-access-modal__benefits" aria-label="Collector access includes">
+                      {benefits.map((benefit) => (
+                        <span key={benefit}>{benefit}</span>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  <EcosystemSignupForm
+                    className="wd-collector-access-modal__signup"
+                    source={source}
+                    interest={interest}
+                    submitLabel={submitLabel}
+                    successMessage={successMessage}
+                    note={note}
+                    compact
+                    emailOnly
+                  />
+                </div>
+              </div>
+            </div>,
+            document.body
+          )
+        : null}
+    </>
+  );
+}
+
+export default WallsDevineCollectorAccess;

@@ -4,7 +4,7 @@ import type { StaticImageData } from "next/image";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { songPostCards } from "@/components/walls-devine/content";
-import { EcosystemSignupForm } from "@/components/walls-devine/EcosystemSignupForm";
+import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
 import { WallsDevinePlayer } from "@/components/walls-devine/WallsDevinePlayer";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
@@ -210,27 +210,6 @@ export function WallsDevineLanding() {
               description="Join the private collector email for first-listen links, studio-journal fragments, artifact drop notes, and release-night signals as each room opens across Volume 1."
               headingLevel="h1"
             />
-
-            <div className="wd-hero__collector">
-              <p className="wd-hero__collector-lead">Get the next room, journal fragment, and collector drop before the recap hits Instagram.</p>
-              <div className="wd-hero__collector-points" aria-label="Collector access highlights">
-                <span>First-listen links</span>
-                <span>Studio-journal fragments</span>
-                <span>Artifact drops</span>
-              </div>
-              <EcosystemSignupForm
-                source="walls-devine-hero"
-                interest="Walls Devine hero collector circle"
-                eyebrow="Private access"
-                title="Get the next room before it goes public"
-                description="Built for listeners who want the private signal before the next post, password, journal fragment, or launch-night move lands in the feed."
-                submitLabel="Get collector access"
-                successMessage="You are on the collector list. Watch your inbox for the next room opening, journal fragment, and first-listen signal."
-                note="Low-frequency, high-signal. Used for first listens, hidden-room access, and artifact drops only."
-                compact
-                className="wd-hero__signup"
-              />
-            </div>
           </div>
 
           <figure className="wd-hero__cover">
@@ -250,6 +229,25 @@ export function WallsDevineLanding() {
         </header>
 
         <WallsDevineCollectorGrid tiles={instagramGrid} />
+
+        <div className="wd-grid-section__collector-access">
+          <WallsDevineCollectorAccess
+            source="walls-devine-grid"
+            interest="Walls Devine collector signal list"
+            cardEyebrow="Collector access"
+            cardTitle="Keep the next room out of the feed and in your inbox"
+            cardDescription="Skip the recap cycle. Get the shortest path to first-listen links, studio-journal fragments, hidden-room passwords, and artifact-drop signals as Volume 1 keeps opening."
+            benefits={["First-listen links", "Studio-journal fragments", "Artifact and password drops"]}
+            triggerLabel="Enter The Signal Room"
+            modalTitle="Enter The Signal Room"
+            modalDescription="Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update."
+            submitLabel="Get collector access"
+            successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector signal."
+            note="High-signal only. Used for first listens, hidden-room access, and artifact drops."
+            className="wd-grid-section__collector-access-card"
+            variant="feature"
+          />
+        </div>
       </SectionShell>
 
       <div id="walls-devine-listening-room" className="wd-player-anchor" aria-hidden="true" />

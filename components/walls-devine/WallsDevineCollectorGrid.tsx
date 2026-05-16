@@ -8,7 +8,7 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import { cx } from "@/lib/cx";
 
-import { EcosystemSignupForm } from "./EcosystemSignupForm";
+import { WallsDevineCollectorAccess } from "./WallsDevineCollectorAccess";
 
 type CollectorChallengeMode =
   | "crown-chase"
@@ -1174,6 +1174,11 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
         ? createPortal(
             <div className="wd-grid-modal" role="dialog" aria-modal="true" aria-labelledby="wd-grid-modal-title" onClick={() => setActiveSlug(null)}>
               <div className="wd-grid-modal__panel" onClick={(event) => event.stopPropagation()}>
+                <div className="wd-grid-modal__room-overlay" aria-hidden="true">
+                  <span className="wd-grid-modal__room-overlay-script">The Collector&apos;s Cabinet</span>
+                  <span className="wd-grid-modal__room-overlay-subtitle">Entering {activeTile.title}</span>
+                </div>
+
                 <div className="wd-grid-modal__header">
                   <div>
                     <p className="wd-grid-modal__eyebrow">{activeTile.role} · {activeTile.challengeLabel}</p>
@@ -1217,16 +1222,21 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
                       <p>{easterEggUnlocked ? activeTile.easterEggBody : "Beat the game to reveal the hidden note for this chapter."}</p>
                     </section>
 
-                    <EcosystemSignupForm
+                    <WallsDevineCollectorAccess
                       className="wd-grid-modal__signup"
                       source={`collector-grid:${activeTile.slug}`}
                       interest={activeTile.interest}
-                      eyebrow="Collector circle"
-                      title="Stay inside the rollout"
-                      description="Get first notice when this chapter opens again."
+                      cardEyebrow="Collector access"
+                      cardTitle={`Keep ${activeTile.title} open`}
+                      cardDescription="Get the next hidden note, return entry, and collector signal for this chapter without waiting for the public recap."
+                      benefits={["Hidden-room returns", "Chapter-specific signals"]}
+                      triggerLabel="Enter The Signal Room"
+                      modalTitle="Enter The Signal Room"
+                      modalDescription={`Drop your email for ${activeTile.title} updates, return signals, journal fragments, and collector-only access.`}
                       submitLabel="Join this chapter"
-                      successMessage={`You are in for ${activeTile.title}. Expect first-access notes and hidden-room signals in your inbox.`}
-                      compact
+                      successMessage={`You are in for ${activeTile.title}. Watch your inbox for the next signal, hidden note, and room opening.`}
+                      note="Used for hidden-room returns, first-listen signals, and collector drops."
+                      variant="inline"
                     />
                   </div>
                 </div>
