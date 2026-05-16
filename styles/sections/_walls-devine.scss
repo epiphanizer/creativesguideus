@@ -555,6 +555,40 @@
   display: block;
 }
 
+.wd-grid__tile--stash-daddy .wd-grid__image-wrap img {
+  animation: wd-stash-daddy-psychedelic 14s linear infinite;
+  will-change: filter;
+}
+
+@keyframes wd-stash-daddy-psychedelic {
+  0% {
+    filter: hue-rotate(0deg) saturate(1.08) contrast(1.02);
+  }
+
+  25% {
+    filter: hue-rotate(90deg) saturate(1.18) contrast(1.05);
+  }
+
+  50% {
+    filter: hue-rotate(180deg) saturate(1.28) contrast(1.08);
+  }
+
+  75% {
+    filter: hue-rotate(270deg) saturate(1.18) contrast(1.05);
+  }
+
+  100% {
+    filter: hue-rotate(360deg) saturate(1.08) contrast(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wd-grid__tile--stash-daddy .wd-grid__image-wrap img {
+    animation: none;
+    filter: saturate(1.08) contrast(1.02);
+  }
+}
+
 .wd-grid__badge {
   position: absolute;
   top: clamp(0.45rem, 1.1vw, 0.7rem);
@@ -2228,13 +2262,43 @@
 }
 
 .wd-player-modal__header {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--cg-space-sm);
   align-items: start;
-  justify-content: space-between;
   padding: clamp(var(--cg-space-lg), 3vw, var(--cg-space-xl)) clamp(var(--cg-space-md), 2.4vw, var(--cg-space-xl)) clamp(var(--cg-space-md), 2.4vw, var(--cg-space-xl));
   border-bottom: 1px solid rgba(156, 7, 5, 0.14);
+}
+
+.wd-player-modal__header-main {
+  display: grid;
+  grid-template-columns: clamp(5.25rem, 10vw, 7rem) minmax(0, 1fr);
+  gap: clamp(var(--cg-space-sm), 2vw, var(--cg-space-md));
+  align-items: start;
+}
+
+.wd-player-modal__album-cover {
+  margin: 0;
+}
+
+.wd-player-modal__album-cover-frame {
+  width: 100%;
+  padding: clamp(0.24rem, 0.8vw, 0.4rem);
+  border-radius: calc(var(--cg-radius-md) * 0.96);
+  border: 1px solid rgba(156, 7, 5, 0.18);
+  background: rgba(253, 254, 254, 0.82);
+  box-shadow: 0 14px 28px rgba(45, 8, 8, 0.12);
+}
+
+.wd-player-modal__album-cover-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--cg-radius-sm) * 1.08);
+}
+
+.wd-player-modal__header-copy {
+  min-width: 0;
 }
 
 .wd-player-modal__header h3 {

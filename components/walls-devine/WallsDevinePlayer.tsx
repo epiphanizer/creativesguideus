@@ -1087,11 +1087,19 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                     </div>
 
                     <header className="wd-player-modal__header">
-                      <div>
-                        <span className="wd-player-modal__eyebrow">Walls/Devine Volume 1 listening room</span>
-                        <h3 id={titleId}>{activeTrack.title}</h3>
-                        <p className="wd-player-modal__meta">{activeTrackMeta}</p>
-                        <p>{activeTrack.caption}</p>
+                      <div className="wd-player-modal__header-main">
+                        <div className="wd-player-modal__album-cover" aria-hidden="true">
+                          <div className="wd-player-modal__album-cover-frame">
+                            <Image src={volOneImage} alt="Walls/Devine Volume 1 album cover artwork" sizes="112px" />
+                          </div>
+                        </div>
+
+                        <div className="wd-player-modal__header-copy">
+                          <span className="wd-player-modal__eyebrow">Walls/Devine Volume 1 listening room</span>
+                          <h3 id={titleId}>{activeTrack.title}</h3>
+                          <p className="wd-player-modal__meta">{activeTrackMeta}</p>
+                          <p>{activeTrack.caption}</p>
+                        </div>
                       </div>
 
                       <button type="button" className="wd-player-modal__close" onClick={collapsePlayer} aria-label="Collapse player">

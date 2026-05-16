@@ -1157,7 +1157,7 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
     <>
       <ol className="wd-grid" aria-label="Walls/Devine release grid">
         {tiles.map((tile) => (
-          <li key={tile.title} className={cx("wd-grid__tile", tile.center && "wd-grid__tile--center")}>
+          <li key={tile.title} className={cx("wd-grid__tile", `wd-grid__tile--${tile.slug}`, tile.center && "wd-grid__tile--center")}>
             <button type="button" className="wd-grid__trigger" aria-label={`Open ${tile.title}`} onClick={() => setActiveSlug(tile.slug)}>
               <figure className="wd-grid__figure">
                 <div className="wd-grid__image-wrap">
