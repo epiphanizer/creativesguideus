@@ -70,6 +70,27 @@ export type AdminAudioAnalysis = {
   error?: string;
 };
 
+export type EcosystemLeadStatus = "new";
+
+export type EcosystemLead = {
+  id: string;
+  email: string;
+  fullName: string;
+  source: string;
+  interest: string;
+  createdAt: string;
+  updatedAt: string;
+  status: EcosystemLeadStatus;
+  consent: boolean;
+};
+
+export type EcosystemLeadInput = {
+  email: string;
+  fullName?: string;
+  source: string;
+  interest: string;
+};
+
 export type WallsDevineAdminData = {
   plan: ReleasePlan;
   instagramDrafts: AdminMarkdownFile[];

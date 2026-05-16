@@ -3,7 +3,7 @@
 import { type FormEvent, useEffect, useMemo, useState, useTransition } from "react";
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 
-import type { AdminAudioAnalysis, AdminMarkdownCollection, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
+import type { AdminAudioAnalysis, AdminMarkdownCollection, EcosystemLead, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
 import {
   deleteFirebaseAdminMarkdownFile,
   getAdminUserProfile,
@@ -19,6 +19,7 @@ import {
 } from "@/lib/firebase/admin-content";
 import { firebaseAuth } from "@/lib/firebase/client";
 import { firebaseAdminPaths } from "@/lib/firebase/config";
+import { getEcosystemLeads } from "@/lib/firebase/ecosystem-leads";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
@@ -190,6 +191,18 @@ function formatAudioLossless(lossless: boolean | null) {
   return lossless ? "Yes" : "No";
 }
 
+function formatLeadSource(source: string) {
+  if (source === "walls-devine-hero") {
+    return "Walls/Devine hero";
+  }
+
+  if (source.startsWith("collector-grid:")) {
+    return `Collector grid / ${source.replace("collector-grid:", "").replace(/-/g, " ")}`;
+  }
+
+  return source.replace(/[-_]/g, " ");
+}
+
 export function AdminConsole() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -205,12 +218,24 @@ export function AdminConsole() {
   const [audioAnalysis, setAudioAnalysis] = useState<AdminAudioAnalysis[]>([]);
   const [audioLoading, setAudioLoading] = useState(false);
   const [audioError, setAudioError] = useState("");
+  const [ecosystemLeads, setEcosystemLeads] = useState<EcosystemLead[]>([]);
+  const [leadsLoading, setLeadsLoading] = useState(false);
+  const [leadsError, setLeadsError] = useState("");
   const [, startTransition] = useTransition();
 
   const hasFirebaseRuntime = Boolean(firebaseAuth);
   const isAuthorized = isActiveAdminProfile(adminProfile);
   const checklistByPhase = useMemo(() => groupChecklistByPhase(adminData?.plan.checklist ?? []), [adminData]);
   const hasStorageBackedContent = adminData?.storageBacked !== false;
+  const leadSources = useMemo(() => {
+    const counts = new Map<string, number>();
+
+    for (const lead of ecosystemLeads) {
+      counts.set(lead.source, (counts.get(lead.source) ?? 0) + 1);
+    }
+
+    return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
+  }, [ecosystemLeads]);
 
   function collectionHasDuplicateSlug(collection: AdminMarkdownCollection, slug: string, currentSlug?: string) {
     if (!adminData) {
@@ -275,6 +300,22 @@ export function AdminConsole() {
       setAudioError(getFirebaseErrorMessage(error));
     } finally {
       setAudioLoading(false);
+    }
+  }
+
+  async function loadEcosystemLeadBacklog() {
+    setLeadsLoading(true);
+    setLeadsError("");
+
+    try {
+      const nextLeads = await getEcosystemLeads();
+      startTransition(() => {
+        setEcosystemLeads(nextLeads);
+      });
+    } catch (error) {
+      setLeadsError(getFirebaseErrorMessage(error));
+    } finally {
+      setLeadsLoading(false);
     }
   }
 
@@ -346,6 +387,17 @@ export function AdminConsole() {
     };
   }, [authUser, isAuthorized, startTransition]);
 
+  useEffect(() => {
+    if (!authUser || !isAuthorized) {
+      setEcosystemLeads([]);
+      setLeadsError("");
+      setLeadsLoading(false);
+      return;
+    }
+
+    void loadEcosystemLeadBacklog();
+  }, [authUser, isAuthorized, startTransition]);
+
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -373,6 +425,8 @@ export function AdminConsole() {
     await signOut(firebaseAuth);
     setAdminData(null);
     setAdminProfile(null);
+    setEcosystemLeads([]);
+    setLeadsError("");
     setSaveStates({});
   }
 
@@ -390,6 +444,14 @@ export function AdminConsole() {
     }
 
     await loadAudioAnalysis(authUser);
+  }
+
+  async function handleLeadsRefresh() {
+    if (!authUser || !isAuthorized) {
+      return;
+    }
+
+    await loadEcosystemLeadBacklog();
   }
 
   async function handleChecklistToggle(itemId: string, completed: boolean) {
@@ -769,6 +831,65 @@ export function AdminConsole() {
               </div>
             </article>
           ))}
+        </div>
+      </SectionShell>
+
+      <SectionShell id="admin-ecosystem-leads" labelledBy="admin-ecosystem-leads-title" innerClassName="cg-admin__section">
+        <div className="cg-admin__section-head">
+          <div>
+            <h2 id="admin-ecosystem-leads-title">Collector leads</h2>
+            <p>Recent email captures from the Walls/Devine hero and each collector-grid takeover room.</p>
+          </div>
+          <div className="cg-admin__section-actions">
+            <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.ecosystemLeadsCollection}</p>
+            <Button type="button" variant="secondary" size="sm" onClick={handleLeadsRefresh} disabled={leadsLoading}>
+              {leadsLoading ? "Refreshing…" : "Refresh leads"}
+            </Button>
+          </div>
+        </div>
+
+        {leadsError ? <p className="cg-admin__error">{leadsError}</p> : null}
+        {leadsLoading && !ecosystemLeads.length ? <p className="cg-admin__helper">Loading collector leads…</p> : null}
+
+        <div className="cg-admin__lead-grid">
+          <article className="cg-admin__panel">
+            <h3>Source mix</h3>
+            {leadSources.length ? (
+              <ul className="cg-admin__list">
+                {leadSources.map(([source, count]) => (
+                  <li key={source}>
+                    <strong>{formatLeadSource(source)}</strong>
+                    <span>{count} capture{count === 1 ? "" : "s"}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="cg-admin__helper">No collector leads have landed yet.</p>
+            )}
+          </article>
+
+          <article className="cg-admin__panel">
+            <h3>Recent signups</h3>
+            {ecosystemLeads.length ? (
+              <ul className="cg-admin__lead-list">
+                {ecosystemLeads.map((lead) => (
+                  <li key={lead.id} className="cg-admin__lead-item">
+                    <div>
+                      <strong>{lead.email}</strong>
+                      <span>{lead.fullName || "Name not provided"}</span>
+                    </div>
+                    <div className="cg-admin__lead-meta">
+                      <span>{formatLeadSource(lead.source)}</span>
+                      <span>{lead.interest}</span>
+                      <span>{new Date(lead.createdAt).toLocaleString()}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="cg-admin__helper">Collector signups will appear here once the public CTA is live.</p>
+            )}
+          </article>
         </div>
       </SectionShell>
 

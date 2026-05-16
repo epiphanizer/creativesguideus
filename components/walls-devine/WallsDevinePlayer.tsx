@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
+import { createPortal } from "react-dom";
 import { useEffect, useId, useRef, useState } from "react";
 
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
@@ -266,6 +267,28 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+function getPlayerViewportTopInset() {
+  if (typeof window === "undefined") {
+    return 0;
+  }
+
+  const rawInset = window.getComputedStyle(document.documentElement).getPropertyValue("--cg-header-height");
+  const parsedInset = Number.parseFloat(rawInset);
+  return Number.isFinite(parsedInset) ? parsedInset : 0;
+}
+
+function isDockInteractiveTarget(target: EventTarget | null) {
+  if (target instanceof HTMLElement) {
+    return Boolean(target.closest("button, a, input, textarea, select, summary, [role='button']"));
+  }
+
+  if (target instanceof Node && target.parentElement) {
+    return Boolean(target.parentElement.closest("button, a, input, textarea, select, summary, [role='button']"));
+  }
+
+  return false;
+}
+
 export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
@@ -381,12 +404,13 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
         return;
       }
 
+      const minY = getPlayerViewportTopInset() + 12;
       const maxX = Math.max(12, window.innerWidth - dockElement.offsetWidth - 12);
-      const maxY = Math.max(12, window.innerHeight - dockElement.offsetHeight - 12);
+      const maxY = Math.max(minY, window.innerHeight - dockElement.offsetHeight - 12);
 
       setDockPosition({
         x: clamp(event.clientX - pointerOffset.x, 12, maxX),
-        y: clamp(event.clientY - pointerOffset.y, 12, maxY)
+        y: clamp(event.clientY - pointerOffset.y, minY, maxY)
       });
     };
 
@@ -513,18 +537,10 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
     audioRef.current?.load();
-  }, [activeSrc, isOpen]);
+  }, [activeSrc]);
 
   useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
     const audioElement = audioRef.current;
 
     if (!audioElement) {
@@ -533,7 +549,10 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
     const handlePlay = async () => {
       setIsPlaying(true);
-      await ensureAudioVisualizer();
+
+      if (isOpen) {
+        await ensureAudioVisualizer();
+      }
     };
 
     const handlePause = () => {
@@ -555,7 +574,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
       audioElement.removeEventListener("pause", handlePause);
       audioElement.removeEventListener("ended", handlePause);
     };
-  }, [activeSrc, isOpen]);
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen || !visualizerCanvasRef.current) {
@@ -613,6 +632,32 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
     setIsOpen(true);
   }
 
+  async function playCurrentTrack() {
+    const audioElement = audioRef.current;
+
+    if (!audioElement) {
+      return;
+    }
+
+    try {
+      await audioElement.play();
+    } catch {
+      setIsPlaying(false);
+    }
+  }
+
+  function stopCurrentTrack() {
+    const audioElement = audioRef.current;
+
+    if (!audioElement) {
+      return;
+    }
+
+    audioElement.pause();
+    audioElement.currentTime = 0;
+    setIsPlaying(false);
+  }
+
   function collapsePlayer() {
     audioRef.current?.pause();
     setIsPlaying(false);
@@ -621,8 +666,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   }
 
   function dismissDock() {
-    audioRef.current?.pause();
-    setIsPlaying(false);
+    stopCurrentTrack();
     setIsCollapsed(false);
     setIsOpen(false);
   }
@@ -641,8 +685,12 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
     }
   }
 
-  function handleDockDragStart(event: React.PointerEvent<HTMLButtonElement>) {
-    if (event.button !== 0) {
+  function handleDockActionPointerDown(event: React.PointerEvent<HTMLElement>) {
+    event.stopPropagation();
+  }
+
+  function handleDockPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.button !== 0 || isDockInteractiveTarget(event.target)) {
       return;
     }
 
@@ -659,8 +707,11 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
     };
     setDockPosition({ x: rect.left, y: rect.top });
     setIsDraggingDock(true);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
     event.preventDefault();
   }
+
+  const floatingUiRoot = typeof document !== "undefined" ? document.body : null;
 
   return (
     <>
@@ -711,141 +762,173 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
         </div>
       </section>
 
-      {isCollapsed && !isOpen ? (
-        <div
-          ref={dockRef}
-          className={cx("wd-player-dock", isDraggingDock && "wd-player-dock--dragging")}
-          style={dockPosition ? { left: `${dockPosition.x}px`, top: `${dockPosition.y}px`, right: "auto", bottom: "auto" } : undefined}
-        >
-          <button type="button" className="wd-player-dock__handle" onPointerDown={handleDockDragStart} aria-label="Drag listening room mini player">
-            Drag
-          </button>
+      <audio ref={audioRef} preload="metadata" src={activeSrc} className="wd-player__audio-host">
+        Your browser does not support audio playback.
+      </audio>
 
-          <div className="wd-player-dock__summary">
-            <span>Listening room</span>
-            <strong>{activeTrack.title}</strong>
-            <p>{activeTrackMeta}</p>
-          </div>
+      {floatingUiRoot
+        ? createPortal(
+            <>
+              {isCollapsed && !isOpen ? (
+                <div
+                  ref={dockRef}
+                  className={cx("wd-player-dock", isDraggingDock && "wd-player-dock--dragging")}
+                  style={dockPosition ? { left: `${dockPosition.x}px`, top: `${dockPosition.y}px`, right: "auto", bottom: "auto" } : undefined}
+                  onPointerDown={handleDockPointerDown}
+                >
+                  <div className="wd-player-dock__grabber" aria-hidden="true">
+                    <span className="wd-player-dock__grabber-pill" />
+                    <span className="wd-player-dock__grabber-label">Drag player</span>
+                  </div>
 
-          <div className="wd-player-dock__actions">
-            <button type="button" className="wd-player-dock__button" onClick={reopenPlayer}>
-              Reopen
-            </button>
-            <button type="button" className="wd-player-dock__button wd-player-dock__button--close" onClick={dismissDock} aria-label="Hide listening room mini player">
-              X
-            </button>
-          </div>
-        </div>
-      ) : null}
+                  <div className="wd-player-dock__summary">
+                    <span>Listening room</span>
+                    <strong>{activeTrack.title}</strong>
+                    <p>{activeTrackMeta}</p>
+                  </div>
 
-      {isOpen ? (
-        <div className="wd-player-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={handleBackdropClick}>
-          <div className="wd-player-modal__panel">
-            <header className="wd-player-modal__header">
-              <div>
-                <span className="wd-player-modal__eyebrow">Walls/Devine Volume 1 listening room</span>
-                <h3 id={titleId}>{activeTrack.title}</h3>
-                <p className="wd-player-modal__meta">{activeTrackMeta}</p>
-                <p>{activeTrack.caption}</p>
-              </div>
+                  <div className="wd-player-dock__actions" onPointerDown={handleDockActionPointerDown}>
+                    <button type="button" className="wd-player-dock__button" onPointerDown={handleDockActionPointerDown} onClick={() => void playCurrentTrack()}>
+                      Play
+                    </button>
+                    <button type="button" className="wd-player-dock__button" onPointerDown={handleDockActionPointerDown} onClick={stopCurrentTrack}>
+                      Stop
+                    </button>
+                    <button type="button" className="wd-player-dock__button" onPointerDown={handleDockActionPointerDown} onClick={reopenPlayer}>
+                      Open
+                    </button>
+                    <button
+                      type="button"
+                      className="wd-player-dock__button wd-player-dock__button--close"
+                      onPointerDown={handleDockActionPointerDown}
+                      onClick={dismissDock}
+                      aria-label="Hide listening room mini player"
+                    >
+                      X
+                    </button>
+                  </div>
+                </div>
+              ) : null}
 
-              <button type="button" className="wd-player-modal__close" onClick={collapsePlayer} aria-label="Collapse player">
-                X
-              </button>
-            </header>
+              {isOpen ? (
+                <div className="wd-player-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={handleBackdropClick}>
+                  <div className="wd-player-modal__panel">
+                    <div className="wd-player-modal__room-overlay" aria-hidden="true">
+                      <span className="wd-player-modal__room-overlay-script">The Listening Room</span>
+                      <span className="wd-player-modal__room-overlay-subtitle">Entering Volume 1</span>
+                    </div>
 
-            <div className="wd-player-modal__layout">
-              <section className="wd-player-modal__current" aria-label="Current track player">
-                <div className="wd-player-modal__art">
-                  <div className="wd-player-modal__visualizer">
-                    <canvas ref={visualizerCanvasRef} className="wd-player-modal__visualizer-canvas" aria-hidden="true" />
-                    <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--top">
-                      Track {formatTrackNumber(activeTrack.trackNumber)}
-                    </span>
-                    <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--bottom">{activeTrack.duration} · WAV</span>
-                    <div className="wd-player-modal__visualizer-core">
-                      <div className="wd-player-modal__art-frame">
-                        <Image src={activePosterImage} alt={activePosterAlt} sizes="(max-width: 960px) 72vw, 360px" />
+                    <header className="wd-player-modal__header">
+                      <div>
+                        <span className="wd-player-modal__eyebrow">Walls/Devine Volume 1 listening room</span>
+                        <h3 id={titleId}>{activeTrack.title}</h3>
+                        <p className="wd-player-modal__meta">{activeTrackMeta}</p>
+                        <p>{activeTrack.caption}</p>
                       </div>
+
+                      <button type="button" className="wd-player-modal__close" onClick={collapsePlayer} aria-label="Collapse player">
+                        X
+                      </button>
+                    </header>
+
+                    <div className="wd-player-modal__layout">
+                      <section className="wd-player-modal__current" aria-label="Current track player">
+                        <div className="wd-player-modal__art">
+                          <div className="wd-player-modal__visualizer">
+                            <canvas ref={visualizerCanvasRef} className="wd-player-modal__visualizer-canvas" aria-hidden="true" />
+                            <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--top">
+                              Track {formatTrackNumber(activeTrack.trackNumber)}
+                            </span>
+                            <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--bottom">{activeTrack.duration} · WAV</span>
+                            <div className="wd-player-modal__visualizer-core">
+                              <div className="wd-player-modal__art-frame">
+                                <Image src={activePosterImage} alt={activePosterAlt} sizes="(max-width: 960px) 72vw, 360px" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="wd-player-modal__transport">
+                          <div className="wd-player-modal__transport-actions">
+                            <Button type="button" onClick={() => void playCurrentTrack()}>
+                              Play
+                            </Button>
+                            <Button type="button" variant="ghost" onClick={stopCurrentTrack}>
+                              Stop
+                            </Button>
+                            <Button type="button" variant="ghost" onClick={showPreviousTrack}>
+                              Previous
+                            </Button>
+                            <Button type="button" variant="secondary" onClick={showNextTrack}>
+                              Next
+                            </Button>
+                          </div>
+                        </div>
+
+                        <div className="wd-player-modal__notes">
+                          <article>
+                            <span>Track hook</span>
+                            <p>{activeTrack.hook}</p>
+                          </article>
+                          <article>
+                            <span>Instagram synthesis</span>
+                            <p>{activeTrack.storySummary}</p>
+                          </article>
+                          <article>
+                            <span>Visual thread</span>
+                            <p>{activeTrack.visualThread}</p>
+                          </article>
+                          <article>
+                            <span>Making note</span>
+                            <p>{activeTrack.makingNote}</p>
+                          </article>
+                          <article>
+                            <span>Technical note</span>
+                            <p>{activeTrack.technicalNote}</p>
+                          </article>
+                          {activeTrack.bongTourContext ? (
+                            <article>
+                              <span>Bong Tour bridge</span>
+                              <p>{activeTrack.bongTourContext}</p>
+                            </article>
+                          ) : null}
+                        </div>
+
+                        <div className="wd-player-modal__links">
+                          <a href={`/walls-devine/journals/${activeTrack.journalSlug}.md`}>Read journal entry</a>
+                          {activeTrack.bongTourCueId ? <a href={`/bong-tour#${activeTrack.bongTourCueId}`}>View cue on Bong Tour</a> : null}
+                        </div>
+                      </section>
+
+                      <section className="wd-player-modal__queue" aria-label="Album track list">
+                        <ol>
+                          {tracks.map((track, index) => (
+                            <li key={track.title}>
+                              <button
+                                type="button"
+                                className={cx("wd-player-modal__queue-item", index === activeIndex && "wd-player-modal__queue-item--active")}
+                                onClick={() => setActiveIndex(index)}
+                                aria-current={index === activeIndex ? "true" : undefined}
+                              >
+                                <span>{formatTrackNumber(track.trackNumber)}</span>
+                                <div>
+                                  <strong>{track.title}</strong>
+                                  <p>{track.hook}</p>
+                                </div>
+                                <em>{track.duration}</em>
+                              </button>
+                            </li>
+                          ))}
+                        </ol>
+                      </section>
                     </div>
                   </div>
                 </div>
-
-                <div className="wd-player-modal__transport">
-                  <audio ref={audioRef} controls preload="metadata" src={activeSrc} className="wd-player-modal__audio">
-                    Your browser does not support audio playback.
-                  </audio>
-
-                  <div className="wd-player-modal__transport-actions">
-                    <Button type="button" variant="ghost" onClick={showPreviousTrack}>
-                      Previous
-                    </Button>
-                    <Button type="button" variant="secondary" onClick={showNextTrack}>
-                      Next
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="wd-player-modal__notes">
-                  <article>
-                    <span>Track hook</span>
-                    <p>{activeTrack.hook}</p>
-                  </article>
-                  <article>
-                    <span>Instagram synthesis</span>
-                    <p>{activeTrack.storySummary}</p>
-                  </article>
-                  <article>
-                    <span>Visual thread</span>
-                    <p>{activeTrack.visualThread}</p>
-                  </article>
-                  <article>
-                    <span>Making note</span>
-                    <p>{activeTrack.makingNote}</p>
-                  </article>
-                  <article>
-                    <span>Technical note</span>
-                    <p>{activeTrack.technicalNote}</p>
-                  </article>
-                  {activeTrack.bongTourContext ? (
-                    <article>
-                      <span>Bong Tour bridge</span>
-                      <p>{activeTrack.bongTourContext}</p>
-                    </article>
-                  ) : null}
-                </div>
-
-                <div className="wd-player-modal__links">
-                  <a href={`/walls-devine/journals/${activeTrack.journalSlug}.md`}>Read journal entry</a>
-                  {activeTrack.bongTourCueId ? <a href={`/bong-tour#${activeTrack.bongTourCueId}`}>View cue on Bong Tour</a> : null}
-                </div>
-              </section>
-
-              <section className="wd-player-modal__queue" aria-label="Album track list">
-                <ol>
-                  {tracks.map((track, index) => (
-                    <li key={track.title}>
-                      <button
-                        type="button"
-                        className={cx("wd-player-modal__queue-item", index === activeIndex && "wd-player-modal__queue-item--active")}
-                        onClick={() => setActiveIndex(index)}
-                        aria-current={index === activeIndex ? "true" : undefined}
-                      >
-                        <span>{formatTrackNumber(track.trackNumber)}</span>
-                        <div>
-                          <strong>{track.title}</strong>
-                          <p>{track.hook}</p>
-                        </div>
-                        <em>{track.duration}</em>
-                      </button>
-                    </li>
-                  ))}
-                </ol>
-              </section>
-            </div>
-          </div>
-        </div>
-      ) : null}
+              ) : null}
+            </>,
+            floatingUiRoot
+          )
+        : null}
     </>
   );
 }

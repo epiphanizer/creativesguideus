@@ -1,10 +1,11 @@
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
 
-import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { songPostCards } from "@/components/walls-devine/content";
+import { EcosystemSignupForm } from "@/components/walls-devine/EcosystemSignupForm";
+import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
 import { WallsDevinePlayer } from "@/components/walls-devine/WallsDevinePlayer";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
@@ -17,22 +18,177 @@ import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.p
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 
 type GridTile = {
+  slug: string;
   title: string;
   role: string;
   image: StaticImageData;
+  playerTarget?: string;
   center?: boolean;
+  teaser: string;
+  challengeLabel: string;
+  challengePrompt: string;
+  easterEggTitle: string;
+  easterEggBody: string;
+  interest: string;
+  gameMode: CollectorGridTile["gameMode"];
+  tokenLabel: string;
+  storySummary: string;
+  visualThread: string;
+  makingNote: string;
 };
 
+const songStoryMap = new Map(songPostCards.map((card) => [card.title, card]));
+
+function withSongStory(tile: Omit<GridTile, "storySummary" | "visualThread" | "makingNote">): GridTile {
+  const story = songStoryMap.get(tile.title);
+
+  return {
+    ...tile,
+    storySummary: story?.storySummary ?? "A collector-side chapter from the larger Walls/Devine world.",
+    visualThread: story?.visualThread ?? "Artifact geometry, bold type, and red-thread iconography.",
+    makingNote: story?.makingNote ?? "Built to extend the physical world of the rollout beyond the listening room."
+  } satisfies GridTile;
+}
+
 const instagramGrid: GridTile[] = [
-  { title: "Joint Queen", role: "Song 01", image: jointQueenImage },
-  { title: "Stash Daddy", role: "Song 02", image: stashDaddyImage },
-  { title: "Space Cruiser", role: "Song 03", image: spaceCruiserImage },
-  { title: "Home", role: "Song 04", image: homeImage },
-  { title: "Walls/Devine Volume 1", role: "Collector's item", image: volOneImage, center: true },
-  { title: "Decay", role: "Song 05", image: decayImage },
-  { title: "Resolve", role: "Song 06", image: resolveImage },
-  { title: "Poetry", role: "Song 07", image: poetryImage },
-  { title: "Gratitude", role: "Song 08", image: gratitudeImage }
+  withSongStory({
+    slug: "joint-queen",
+    title: "Joint Queen",
+    role: "Song 01",
+    image: jointQueenImage,
+    playerTarget: "joint-queen",
+    teaser: "Smoke-crowned swagger and the first true door into the record.",
+    challengeLabel: "Crown run",
+    challengePrompt: "Collect six ember crowns before the room cools to unlock the hidden note.",
+    easterEggTitle: "The first crown",
+    easterEggBody: "Joint Queen marks the moment the project stopped feeling split and finally sounded unified. That sense of arrival is the hidden engine behind the whole rollout.",
+    interest: "Joint Queen collector list",
+    gameMode: "collect",
+    tokenLabel: "crown"
+  }),
+  withSongStory({
+    slug: "stash-daddy",
+    title: "Stash Daddy",
+    role: "Song 02",
+    image: stashDaddyImage,
+    playerTarget: "stash-daddy",
+    teaser: "Backroom pressure, analog swagger, and low-end authority.",
+    challengeLabel: "Vault pulse",
+    challengePrompt: "Lock three clean pulses to hold the stash-room signal long enough for the note to surface.",
+    easterEggTitle: "Kitchen-table origin",
+    easterEggBody: "Stash Daddy carries the sound of creation without rehearsal panic. The hidden note is that its attitude comes from spontaneity, not calculation.",
+    interest: "Stash Daddy collector list",
+    gameMode: "timing",
+    tokenLabel: "vault"
+  }),
+  withSongStory({
+    slug: "space-cruiser",
+    title: "Space Cruiser",
+    role: "Song 03",
+    image: spaceCruiserImage,
+    playerTarget: "space-cruiser",
+    teaser: "Cosmic lift, ritual propulsion, and the third portal out of the room.",
+    challengeLabel: "Orbital lock",
+    challengePrompt: "Catch three clean locks while the cruiser beam crosses the zone.",
+    easterEggTitle: "Third door opened",
+    easterEggBody: "Space Cruiser became the cosmic third door for both the record and Bong Tour, turning a brutal live-show comedown into mythic lift.",
+    interest: "Space Cruiser collector list",
+    gameMode: "timing",
+    tokenLabel: "orbit"
+  }),
+  withSongStory({
+    slug: "home",
+    title: "Home",
+    role: "Song 04",
+    image: homeImage,
+    playerTarget: "home",
+    teaser: "The quiet middle chapter where the myth comes back to earth.",
+    challengeLabel: "Porch pattern",
+    challengePrompt: "Watch the porch-light sequence once, then repeat it cleanly to reveal the hidden room note.",
+    easterEggTitle: "Landing signal",
+    easterEggBody: "Home holds the nervous-system reset of finally landing somewhere honest. The hidden note is that its power comes from keeping the first truthful take intact.",
+    interest: "Home collector list",
+    gameMode: "sequence",
+    tokenLabel: "glow"
+  }),
+  {
+    slug: "volume-1",
+    title: "Walls/Devine Volume 1",
+    role: "Collector's item",
+    image: volOneImage,
+    center: true,
+    teaser: "The central object: one release world for music, film, score, and private access.",
+    challengeLabel: "Seal sequence",
+    challengePrompt: "Repeat the seal pattern and unlock the collector note behind the central object.",
+    easterEggTitle: "Volume 1 is the artifact",
+    easterEggBody: "The center tile is not a poster. It is the invitation layer: album object, score world, and private collector channel bundled into one deliberate experience.",
+    interest: "Walls Devine Volume 1 collector list",
+    gameMode: "sequence",
+    tokenLabel: "seal",
+    storySummary: "The centerpiece holds the brand logic of the entire experience: make the album feel collectible, cinematic, and alive before anyone hears a note in sequence.",
+    visualThread: "Central seal geometry, engraved borders, and the nine-tile wall as a single artifact instead of nine isolated posts.",
+    makingNote: "Built as the campaign anchor so every surrounding chapter can ladder back into one premium collector experience."
+  },
+  withSongStory({
+    slug: "decay",
+    title: "Decay",
+    role: "Song 05",
+    image: decayImage,
+    playerTarget: "decay",
+    teaser: "Beautiful ruin, stubborn pulse, and collapse turned into testimony.",
+    challengeLabel: "Rust line",
+    challengePrompt: "Hold three clean hits on the decay line before the signal corrodes out.",
+    easterEggTitle: "Collapse as design",
+    easterEggBody: "Decay works because it treats collapse as style and witness at the same time. The hidden note is that its heaviness was a permission slip, not a detour.",
+    interest: "Decay collector list",
+    gameMode: "timing",
+    tokenLabel: "rust"
+  }),
+  withSongStory({
+    slug: "resolve",
+    title: "Resolve",
+    role: "Song 06",
+    image: resolveImage,
+    playerTarget: "resolve",
+    teaser: "The ignition track that sets campaign pressure and forward motion.",
+    challengeLabel: "Spark run",
+    challengePrompt: "Collect six sparks to force the campaign fuse all the way open.",
+    easterEggTitle: "Campaign fuse",
+    easterEggBody: "Resolve exists to move first. The hidden note is that its chorus lands early on purpose, because hesitation would undercut the whole campaign thesis.",
+    interest: "Resolve collector list",
+    gameMode: "collect",
+    tokenLabel: "spark"
+  }),
+  withSongStory({
+    slug: "poetry",
+    title: "Poetry",
+    role: "Song 07",
+    image: poetryImage,
+    playerTarget: "poetry",
+    teaser: "Writerly nerve, heartbreak residue, and the record's heart chamber.",
+    challengeLabel: "Notebook memory",
+    challengePrompt: "Learn the notebook pattern once, then replay it without breaking the thread.",
+    easterEggTitle: "Notebook reconstruction",
+    easterEggBody: "Poetry widened from private confession into a shared statement. The hidden note is that its language was rebuilt line by line from notebook fragments.",
+    interest: "Poetry collector list",
+    gameMode: "sequence",
+    tokenLabel: "line"
+  }),
+  withSongStory({
+    slug: "gratitude",
+    title: "Gratitude",
+    role: "Song 08",
+    image: gratitudeImage,
+    playerTarget: "gratitude",
+    teaser: "The closing lift: peace, glow, and open-ended arrival.",
+    challengeLabel: "Bloom run",
+    challengePrompt: "Collect six blooms before the final light fades out of the room.",
+    easterEggTitle: "Final-scene glow",
+    easterEggBody: "Gratitude was finished last so it could feel like emotional release, not simple closure. The hidden note is that its calm was engineered as the final image.",
+    interest: "Gratitude collector list",
+    gameMode: "collect",
+    tokenLabel: "bloom"
+  })
 ];
 
 export function WallsDevineLanding() {
@@ -49,20 +205,24 @@ export function WallsDevineLanding() {
           <div className="wd-hero__copy">
             <SectionHeader
               id="walls-devine-title"
-              eyebrow="Album release world"
+              eyebrow="Collector experience"
               title="Walls/Devine Volume 1"
-              subtitle="A boutique landing experience for a split-world album object"
-              description="Walls is the inward ritual. Devine is the public voltage. The page should feel like unveiling the artifact, the rollout system, and the companion score world in one motion."
+              subtitle="A premium rollout for the album object, the score world, and the private collector layer around them"
+              description="Walls is the inward ritual. Devine is the outward voltage. Enter the list for first access to artifacts, hidden rooms, and launch-night signals across Volume 1 and Bong Tour."
               headingLevel="h1"
             />
 
-            <div className="wd-hero__actions">
-              <Button as="a" href="#walls-devine-grid">
-                View 9-tile grid
-              </Button>
-              <Button as="a" href="/bong-tour" variant="secondary">
-                Open Bong Tour deck
-              </Button>
+            <div className="wd-hero__collector">
+              <p className="wd-hero__collector-lead">Join the collector circle for early drops, hidden-room access, and rollout notes that do not appear on the public page.</p>
+              <EcosystemSignupForm
+                source="walls-devine-hero"
+                interest="Walls Devine hero collector circle"
+                eyebrow="Private access"
+                title="Get first notice when the next room opens"
+                description="Designed for private drops, passwords, and premium release-world touchpoints."
+                submitLabel="Join the first wave"
+                compact
+              />
             </div>
           </div>
 
@@ -78,25 +238,11 @@ export function WallsDevineLanding() {
         <header className="wd-grid-section__header">
           <h2 id="walls-devine-grid-title">The collector grid</h2>
           <p>
-            The center tile anchors the narrative while the surrounding songs read like connected chapters when viewed as a full-profile wall installation.
+            Each tile now opens its own takeover room with a microgame, a hidden note, and a collector-circle capture designed to keep the rollout feeling premium rather than promotional.
           </p>
         </header>
 
-        <ol className="wd-grid" aria-label="Walls/Devine release grid">
-          {instagramGrid.map((tile) => (
-            <li key={tile.title} className={["wd-grid__tile", tile.center ? "wd-grid__tile--center" : ""].filter(Boolean).join(" ")}>
-              <figure className="wd-grid__figure">
-                <div className="wd-grid__image-wrap">
-                  <Image src={tile.image} alt={`${tile.title} cover artwork`} sizes="(max-width: 680px) 88vw, (max-width: 1040px) 45vw, 30vw" />
-                </div>
-                <figcaption>
-                  <span>{tile.role}</span>
-                  <strong>{tile.title}</strong>
-                </figcaption>
-              </figure>
-            </li>
-          ))}
-        </ol>
+        <WallsDevineCollectorGrid tiles={instagramGrid} />
       </SectionShell>
 
       <SectionShell id="walls-devine-listening-room" labelledBy="wd-player-title" className="wd-post-shell" innerClassName="wd-post">

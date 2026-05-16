@@ -6,21 +6,21 @@ import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 
 const gateways = [
   {
-    eyebrow: "Album object",
-    meta: "Listening room + journals",
+    eyebrow: "Album release",
+    meta: "Listening room, journals, collector access",
     title: "Walls/Devine",
-    description: "Walls/Devine Volume 1, the modular player, and the score bridges into Bong Tour.",
+    description: "Enter Volume 1 through the player, the journals, and the private collector layer around the release.",
     href: "/walls-devine",
-    cta: "Open Volume 1",
+    cta: "Enter Walls/Devine",
     image: volOneImage,
     alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls"
   },
   {
-    eyebrow: "Feature deck",
-    meta: "Poster world + score sketches",
+    eyebrow: "Feature rollout",
+    meta: "Poster world, screenplay, cue deck",
     title: "Bong Tour",
-    description: "The screenplay portal, cue posters, and the adjacent chamber for the record.",
+    description: "Step into the screenplay portal, cue posters, and the film world orbiting the record and score.",
     href: "/bong-tour",
     cta: "Enter Bong Tour",
     image: posterImage,
@@ -36,8 +36,8 @@ export default function HomePage() {
         {gateways.map((gateway) => (
           <Link key={gateway.title} href={gateway.href} className={`cg-home-gate__portal cg-home-gate__portal--${gateway.tone}`}>
             <div className="cg-home-gate__portal-meta">
-              <span>{gateway.eyebrow}</span>
-              <span>{gateway.meta}</span>
+              <span className="cg-home-gate__portal-eyebrow">{gateway.eyebrow}</span>
+              <span className="cg-home-gate__portal-kicker">{gateway.meta}</span>
             </div>
 
             <div className="cg-home-gate__portal-copy">

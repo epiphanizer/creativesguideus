@@ -7,6 +7,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - Auth: Firebase Auth email/password signs the editor into the browser session.
 - Authorization: Firestore `adminUsers/{uid}` decides whether a signed-in user is an active editor.
 - Structured content: Firestore `adminProjects/walls-devine` stores the release plan object.
+- Lead capture: Firestore `ecosystemLeads/{leadId}` stores public collector-list signups from the site experience.
 - Longform content: Firebase Storage stores markdown at `admin-projects/walls-devine/{collection}/{slug}.md`.
 - Bootstrap source: The local JSON and markdown files remain in the repo only so `/api/admin/bootstrap` can seed Firebase the first time the remote layer is empty.
 
@@ -37,6 +38,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 
 - `adminUsers/{uid}`
 - `adminProjects/walls-devine`
+- `ecosystemLeads/{leadId}`
 
 ### Storage
 
@@ -69,5 +71,6 @@ firebase deploy --only firestore:rules,storage
 1. Visit `/admin` and sign in with the Firebase editor account.
 2. Confirm the status panel shows the signed-in email and the `adminUsers` gate.
 3. Toggle a release checklist item and verify `adminProjects/walls-devine` updates.
-4. Save one Instagram draft and one journal entry, then verify the files appear in Storage under `admin-projects/walls-devine/...`.
-5. Refresh `/admin` and confirm the remote content loads without re-bootstrap.
+4. Submit one collector signup from the public site and verify a document appears in `ecosystemLeads`.
+5. Save one Instagram draft and one journal entry, then verify the files appear in Storage under `admin-projects/walls-devine/...`.
+6. Refresh `/admin` and confirm the remote content loads without re-bootstrap.

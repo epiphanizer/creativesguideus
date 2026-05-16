@@ -54,6 +54,7 @@
 
 .cg-home-gate__portal {
   display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   align-content: space-between;
   gap: clamp(var(--cg-space-md), 2vw, var(--cg-space-xl));
   min-height: clamp(24rem, 52svh, 40rem);
@@ -99,17 +100,28 @@
 }
 
 .cg-home-gate__portal-meta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--cg-space-xs) var(--cg-space-sm);
+  display: grid;
+  gap: 0.35rem;
+  min-height: 3.25rem;
+  align-content: start;
   color: rgba(26, 19, 13, 0.72);
+}
+
+.cg-home-gate__portal-eyebrow,
+.cg-home-gate__portal-kicker {
+  display: block;
+}
+
+.cg-home-gate__portal-kicker {
+  letter-spacing: 0.12em;
+  color: rgba(26, 19, 13, 0.6);
 }
 
 .cg-home-gate__portal-copy {
   display: grid;
   gap: var(--cg-space-sm);
   align-content: start;
+  min-height: 8.4rem;
 }
 
 .cg-home-gate__portal-copy h2 {
@@ -131,7 +143,7 @@
 
 .cg-home-gate__portal-copy p {
   margin: 0;
-  max-width: 24ch;
+  max-width: 26ch;
   color: rgba(26, 19, 13, 0.74);
 }
 
@@ -195,7 +207,7 @@
 }
 
 .cg-home-gate__portal-meta {
-  justify-content: center;
+  justify-items: center;
 }
 
 .cg-home-gate__portal-copy {
@@ -227,6 +239,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas:
       "walls bong";
+  }
+
+  .cg-home-gate__portal {
+    grid-template-rows: minmax(3.25rem, auto) minmax(8.5rem, auto) minmax(0, 1fr) auto;
   }
 
   .cg-home-gate__portal--walls {

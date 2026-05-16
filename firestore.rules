@@ -12,6 +12,49 @@ service cloud.firestore {
         get(/databases/$(database)/documents/adminUsers/$(request.auth.uid)).data.active == true;
     }
 
+    function isValidLead() {
+      return request.resource.data.keys().hasOnly([
+          'email',
+          'fullName',
+          'source',
+          'interest',
+          'createdAt',
+          'updatedAt',
+          'status',
+          'consent'
+        ]) &&
+        request.resource.data.keys().hasAll([
+          'email',
+          'fullName',
+          'source',
+          'interest',
+          'createdAt',
+          'updatedAt',
+          'status',
+          'consent'
+        ]) &&
+        request.resource.data.email is string &&
+        request.resource.data.email.size() >= 3 &&
+        request.resource.data.email.size() <= 160 &&
+        request.resource.data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$') &&
+        request.resource.data.fullName is string &&
+        request.resource.data.fullName.size() <= 80 &&
+        request.resource.data.source is string &&
+        request.resource.data.source.size() >= 3 &&
+        request.resource.data.source.size() <= 80 &&
+        request.resource.data.interest is string &&
+        request.resource.data.interest.size() >= 3 &&
+        request.resource.data.interest.size() <= 120 &&
+        request.resource.data.createdAt is string &&
+        request.resource.data.createdAt.size() >= 20 &&
+        request.resource.data.createdAt.size() <= 40 &&
+        request.resource.data.updatedAt is string &&
+        request.resource.data.updatedAt.size() >= 20 &&
+        request.resource.data.updatedAt.size() <= 40 &&
+        request.resource.data.status == 'new' &&
+        request.resource.data.consent == true;
+    }
+
     match /adminUsers/{userId} {
       allow read: if signedIn() && request.auth.uid == userId;
       allow write: if false;
@@ -19,6 +62,11 @@ service cloud.firestore {
 
     match /adminProjects/{projectId} {
       allow read, write: if isAdmin();
+    }
+
+    match /ecosystemLeads/{leadId} {
+      allow read: if isAdmin();
+      allow create: if isValidLead();
     }
   }
 }
