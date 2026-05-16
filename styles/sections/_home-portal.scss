@@ -1,6 +1,16 @@
 .cg-home-page {
+  --cg-home-header-height: var(--cg-header-height);
+  --cg-home-panel-top-pad: clamp(1rem, 2.2vh, 1.75rem);
+  --cg-home-panel-side-pad: clamp(1.6rem, 4.2vw, 4rem);
+  --cg-home-panel-divider-pad: clamp(0.95rem, 1.8vw, 2rem);
+  --cg-home-panel-content-gap: clamp(0.65rem, 1.3vh, 1rem);
+  --cg-home-eyebrow-gap: 0.34rem;
+  --cg-home-title-walls: clamp(3.5rem, 5.1vw, 5.75rem);
+  --cg-home-title-bong: clamp(3.7rem, 5.7vw, 6rem);
+  --cg-home-body-max: 32ch;
+  --cg-home-visual-max-h: clamp(250px, 38vh, 430px);
   position: relative;
-  min-height: calc(100svh - var(--cg-header-height));
+  min-height: calc(100vh - var(--cg-home-header-height));
   padding: 0;
   gap: 0;
   background: transparent;
@@ -14,7 +24,7 @@
   grid-template-areas:
     "walls"
     "bong";
-  min-height: calc(100svh - var(--cg-header-height));
+  min-height: calc(100vh - var(--cg-home-header-height));
   isolation: isolate;
 }
 
@@ -28,16 +38,16 @@
 
 .cg-home-gate::before {
   background:
-    linear-gradient(90deg, rgba(244, 231, 206, 0.9) 0 49.65%, rgba(26, 19, 13, 0.82) 49.65% 50.35%, rgba(250, 250, 249, 0.9) 50.35% 100%),
+    linear-gradient(90deg, rgba(244, 231, 206, 0.92) 0 49.72%, rgba(26, 19, 13, 0.86) 49.72% 50.28%, rgba(250, 250, 249, 0.92) 50.28% 100%),
     linear-gradient(0deg, transparent 0 18%, rgba(26, 19, 13, 0.12) 18% 18.35%, transparent 18.35% 70%, rgba(26, 19, 13, 0.14) 70% 70.35%, transparent 70.35% 100%),
     linear-gradient(90deg, transparent 0 12%, rgba(26, 19, 13, 0.14) 12% 12.35%, transparent 12.35% 35%, rgba(217, 106, 31, 0.24) 35% 35.35%, transparent 35.35% 64%, rgba(179, 22, 18, 0.2) 64% 64.35%, transparent 64.35% 89%, rgba(26, 19, 13, 0.14) 89% 89.35%, transparent 89.35% 100%);
 }
 
 .cg-home-gate::after {
   background:
-    linear-gradient(90deg, transparent 0 6%, rgba(217, 106, 31, 0.16) 6% 17%, transparent 17% 100%),
-    linear-gradient(90deg, transparent 0 78%, rgba(179, 22, 18, 0.14) 78% 94%, transparent 94% 100%),
-    linear-gradient(180deg, transparent 0 82%, rgba(41, 84, 59, 0.12) 82% 100%);
+    linear-gradient(90deg, transparent 0 7%, rgba(217, 106, 31, 0.13) 7% 16%, transparent 16% 100%),
+    linear-gradient(90deg, transparent 0 80%, rgba(179, 22, 18, 0.12) 80% 93%, transparent 93% 100%),
+    linear-gradient(180deg, rgba(41, 84, 59, 0.12) 0 28%, transparent 28% 100%);
 }
 
 .cg-home-gate__portal {
@@ -55,14 +65,15 @@
 .cg-home-gate__portal {
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
-  align-content: space-between;
-  gap: clamp(var(--cg-space-md), 2vw, var(--cg-space-xl));
-  min-height: clamp(24rem, 52svh, 40rem);
-  padding: clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
+  align-items: start;
+  justify-items: center;
+  gap: var(--cg-home-panel-content-gap);
+  min-height: calc(100vh - var(--cg-home-header-height));
+  padding: var(--cg-home-panel-top-pad) var(--cg-home-panel-side-pad) clamp(0.9rem, 2vh, 1.6rem);
   color: inherit;
   text-decoration: none;
   overflow: hidden;
-  border-top: 1px solid var(--cg-color-grid-line);
+  border-top: 1px solid transparent;
 }
 
 .cg-home-gate__portal::before {
@@ -78,8 +89,8 @@
 
 .cg-home-gate__portal--walls::before {
   background:
-    linear-gradient(145deg, rgba(250, 250, 249, 0.95) 0 44%, rgba(247, 224, 224, 0.92) 44% 72%, rgba(236, 187, 186, 0.78) 72% 100%),
-    linear-gradient(0deg, transparent 0 76%, rgba(126, 7, 5, 0.12) 76% 100%),
+    linear-gradient(145deg, rgba(250, 250, 249, 0.95) 0 38%, rgba(247, 224, 224, 0.92) 38% 68%, rgba(236, 187, 186, 0.8) 68% 100%),
+    linear-gradient(0deg, transparent 0 68%, rgba(126, 7, 5, 0.12) 68% 100%),
     linear-gradient(90deg, transparent 0 74%, rgba(179, 22, 18, 0.12) 74% 100%);
 }
 
@@ -89,8 +100,8 @@
 
 .cg-home-gate__portal--bong::before {
   background:
-    linear-gradient(145deg, rgba(244, 231, 206, 0.95) 0 46%, rgba(236, 218, 177, 0.94) 46% 74%, rgba(217, 106, 31, 0.18) 74% 100%),
-    linear-gradient(0deg, transparent 0 74%, rgba(41, 84, 59, 0.14) 74% 100%),
+    linear-gradient(145deg, rgba(244, 231, 206, 0.95) 0 40%, rgba(236, 218, 177, 0.94) 40% 70%, rgba(217, 106, 31, 0.2) 70% 100%),
+    linear-gradient(0deg, transparent 0 66%, rgba(41, 84, 59, 0.15) 66% 100%),
     linear-gradient(90deg, transparent 0 72%, rgba(217, 106, 31, 0.16) 72% 100%);
 }
 
@@ -101,9 +112,11 @@
 
 .cg-home-gate__portal-meta {
   display: grid;
-  gap: 0.35rem;
-  min-height: 3.25rem;
+  gap: var(--cg-home-eyebrow-gap);
+  min-height: 0;
   align-content: start;
+  justify-items: center;
+  text-align: center;
   color: rgba(26, 19, 13, 0.72);
 }
 
@@ -119,52 +132,61 @@
 
 .cg-home-gate__portal-copy {
   display: grid;
-  gap: var(--cg-space-sm);
+  gap: clamp(0.45rem, 0.9vh, 0.85rem);
   align-content: start;
-  min-height: 8.4rem;
+  justify-items: center;
+  text-align: center;
+  min-height: 0;
 }
 
 .cg-home-gate__portal-copy h2 {
   margin: 0;
-  max-width: 8ch;
-  font-size: clamp(2.8rem, 8vw, 6rem);
-  line-height: 0.9;
-  letter-spacing: -0.05em;
+  max-width: 100%;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
   text-transform: uppercase;
 }
 
 .cg-home-gate__portal--walls .cg-home-gate__portal-copy h2 {
+  font-size: var(--cg-home-title-walls);
+  white-space: nowrap;
   color: var(--cg-color-walls-red-deep);
 }
 
 .cg-home-gate__portal--bong .cg-home-gate__portal-copy h2 {
+  font-size: var(--cg-home-title-bong);
+  white-space: nowrap;
   color: var(--cg-color-bong-ink);
 }
 
 .cg-home-gate__portal-copy p {
   margin: 0;
-  max-width: 26ch;
+  max-width: var(--cg-home-body-max);
   color: rgba(26, 19, 13, 0.74);
 }
 
 .cg-home-gate__portal-art {
-  width: min(72%, 28rem);
-  align-self: end;
+  width: min(72%, 430px);
+  align-self: start;
+  margin-top: clamp(0.75rem, 1.8vh, 1.3rem);
+  max-height: var(--cg-home-visual-max-h);
 }
 
 .cg-home-gate__portal--walls .cg-home-gate__portal-art {
-  justify-self: end;
+  justify-self: center;
 }
 
 .cg-home-gate__portal--bong .cg-home-gate__portal-art {
-  justify-self: start;
-  width: min(58%, 24rem);
+  justify-self: center;
+  width: min(68%, 430px);
 }
 
 .cg-home-gate__portal-image {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  max-height: var(--cg-home-visual-max-h);
+  object-fit: cover;
   border: 1px solid rgba(26, 19, 13, 0.18);
   background: rgba(255, 255, 255, 0.72);
 }
@@ -173,6 +195,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
+  justify-self: center;
+  align-self: end;
   color: rgba(26, 19, 13, 0.86);
 }
 
@@ -201,39 +225,6 @@
   transition: transform var(--cg-transition-move), border-color var(--cg-transition-fade);
 }
 
-.cg-home-gate__portal {
-  justify-items: center;
-  text-align: center;
-}
-
-.cg-home-gate__portal-meta {
-  justify-items: center;
-}
-
-.cg-home-gate__portal-copy {
-  justify-items: center;
-}
-
-.cg-home-gate__portal-copy h2 {
-  max-width: none;
-  font-size: clamp(2.55rem, 6.2vw, 5.4rem);
-}
-
-.cg-home-gate__portal-copy p {
-  max-width: 28ch;
-}
-
-.cg-home-gate__portal-art,
-.cg-home-gate__portal--walls .cg-home-gate__portal-art,
-.cg-home-gate__portal--bong .cg-home-gate__portal-art {
-  justify-self: center;
-  width: min(68%, 25rem);
-}
-
-.cg-home-gate__portal-cta {
-  justify-self: center;
-}
-
 @media (min-width: 960px) {
   .cg-home-gate {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -242,15 +233,29 @@
   }
 
   .cg-home-gate__portal {
-    grid-template-rows: minmax(3.25rem, auto) minmax(8.5rem, auto) minmax(0, 1fr) auto;
+    border-top: 0;
   }
 
   .cg-home-gate__portal--walls {
+    padding-right: calc(var(--cg-home-panel-side-pad) + var(--cg-home-panel-divider-pad));
     border-right: 1px solid var(--cg-color-grid-line);
+  }
+
+  .cg-home-gate__portal--bong {
+    padding-left: calc(var(--cg-home-panel-side-pad) + var(--cg-home-panel-divider-pad));
   }
 }
 
 @media (max-width: 959px) {
+  .cg-home-gate {
+    min-height: auto;
+  }
+
+  .cg-home-gate__portal {
+    min-height: clamp(23rem, 52svh, 34rem);
+    border-top-color: var(--cg-color-grid-line);
+  }
+
   .cg-home-gate__portal-art,
   .cg-home-gate__portal--bong .cg-home-gate__portal-art {
     justify-self: center;
@@ -264,8 +269,9 @@
     padding-inline: clamp(var(--cg-space-md), 5vw, var(--cg-space-lg));
   }
 
-  .cg-home-gate__portal-copy h2 {
-    max-width: none;
+  .cg-home-gate__portal--walls .cg-home-gate__portal-copy h2,
+  .cg-home-gate__portal--bong .cg-home-gate__portal-copy h2 {
+    white-space: normal;
   }
 
   .cg-home-gate__portal-meta {

@@ -640,13 +640,9 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
       setIsCollapsed(true);
 
-      if (
-        storedState.dockPosition &&
-        Number.isFinite(storedState.dockPosition.x) &&
-        Number.isFinite(storedState.dockPosition.y)
-      ) {
-        setDockPosition(storedState.dockPosition);
-      }
+      // Always boot the listening-room dock at the default top-right anchor.
+      // Persisted drag coordinates can place it off-screen between sessions.
+      setDockPosition(null);
     } catch {
       window.localStorage.removeItem(playerStorageKey);
     }
@@ -662,11 +658,10 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
       JSON.stringify({
         activeIndex,
         isOpen,
-        isCollapsed,
-        dockPosition
+        isCollapsed
       } satisfies PersistedPlayerState)
     );
-  }, [activeIndex, dockPosition, isCollapsed, isOpen]);
+  }, [activeIndex, isCollapsed, isOpen]);
 
   useEffect(() => {
     if (!isDraggingDock) {

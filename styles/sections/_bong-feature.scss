@@ -902,6 +902,45 @@
   padding: 0;
 }
 
+.bt-collectibles__collector-access {
+  width: min(100%, 1260px);
+  margin-inline: auto;
+  margin-top: clamp(var(--cg-space-lg), 3vw, var(--cg-space-2xl));
+}
+
+.bt-collectibles__collector-access-card {
+  border: 1px solid var(--bt-border-strong);
+  border-radius: calc(var(--cg-radius-lg) * 0.96);
+  background:
+    radial-gradient(140% 120% at 0% 0%, rgba(255, 253, 247, 0.96), rgba(255, 253, 247, 0) 60%),
+    linear-gradient(152deg, rgba(255, 252, 246, 0.96), rgba(233, 218, 186, 0.9));
+  box-shadow: 0 22px 40px rgba(45, 28, 8, 0.12);
+}
+
+.bt-collectibles__collector-access-card .wd-collector-access__eyebrow {
+  color: rgba(49, 83, 62, 0.82);
+}
+
+.bt-collectibles__collector-access-card .wd-collector-access__title {
+  color: var(--bt-text);
+}
+
+.bt-collectibles__collector-access-card .wd-collector-access__description {
+  color: var(--bt-text-soft);
+}
+
+.bt-collectibles__collector-access-card .wd-collector-access__benefits span {
+  border-color: rgba(77, 56, 31, 0.16);
+  background: rgba(255, 250, 242, 0.82);
+  color: rgba(49, 83, 62, 0.88);
+}
+
+.bt-collectibles__collector-access-card .cg-button--primary {
+  background: linear-gradient(135deg, var(--bt-ember), var(--bt-ember-bright));
+  border-color: rgba(104, 61, 19, 0.32);
+  color: #fff7ef;
+}
+
 .bt-collectibles__tile {
   display: grid;
   gap: var(--cg-space-sm);
@@ -1150,6 +1189,185 @@
   padding: 0;
 }
 
+.bt-room-modal__challenge-shell {
+  display: grid;
+  gap: var(--cg-space-sm);
+}
+
+.bt-room-modal__challenge-card,
+.bt-room-modal__game-shell,
+.bt-room-modal__hidden-note {
+  display: grid;
+  gap: var(--cg-space-sm);
+  padding: clamp(var(--cg-space-md), 2.8vw, var(--cg-space-lg));
+  border: 1px solid rgba(225, 210, 183, 0.16);
+  border-radius: calc(var(--cg-radius-lg) * 1.02);
+  background: linear-gradient(160deg, rgba(48, 37, 28, 0.84), rgba(28, 22, 18, 0.92));
+}
+
+.bt-room-modal__hidden-note {
+  background: linear-gradient(160deg, rgba(39, 31, 24, 0.9), rgba(24, 20, 17, 0.96));
+}
+
+.bt-room-modal__hidden-note--unlocked {
+  border-color: rgba(225, 138, 47, 0.24);
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(225, 138, 47, 0.16), rgba(225, 138, 47, 0) 56%),
+    linear-gradient(160deg, rgba(44, 34, 26, 0.92), rgba(24, 20, 17, 0.98));
+}
+
+.bt-room-modal__challenge-label {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(214, 229, 219, 0.78);
+}
+
+.bt-room-modal__challenge-card h3,
+.bt-room-modal__hidden-note h3 {
+  color: #fff5e8;
+  font-size: clamp(1.1rem, 1vw + 0.9rem, 1.5rem);
+  line-height: 1.1;
+}
+
+.bt-room-modal__challenge-card p:last-child,
+.bt-room-modal__hidden-note p:last-child,
+.bt-room-modal__game-footer p,
+.bt-room-modal__choice-prompt span {
+  margin: 0;
+  color: rgba(243, 233, 218, 0.82);
+  line-height: 1.72;
+}
+
+.bt-room-modal__game-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.bt-room-modal__game-status span,
+.bt-room-modal__vault-display span,
+.bt-room-modal__seal-target span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.2rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(225, 210, 183, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 246, 231, 0.08);
+  color: rgba(255, 239, 218, 0.88);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.bt-room-modal__vault-display,
+.bt-room-modal__seal-target,
+.bt-room-modal__choice-grid,
+.bt-room-modal__ladder {
+  display: grid;
+  gap: var(--cg-space-sm);
+}
+
+.bt-room-modal__vault-display {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.bt-room-modal__seal-target,
+.bt-room-modal__seal-rings {
+  display: grid;
+  gap: var(--cg-space-sm);
+}
+
+.bt-room-modal__seal-target {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.bt-room-modal__seal-ring,
+.bt-room-modal__choice-button,
+.bt-room-modal__ladder-step,
+.bt-room-modal__game-button--pad {
+  display: grid;
+  gap: 0.25rem;
+  align-items: center;
+  justify-items: center;
+  min-height: 3.2rem;
+  padding: 0.8rem;
+  border: 1px solid rgba(225, 210, 183, 0.16);
+  border-radius: calc(var(--cg-radius-md) * 0.9);
+  background: rgba(255, 246, 231, 0.08);
+  color: #fff5e8;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.bt-room-modal__seal-ring:hover,
+.bt-room-modal__choice-button:hover,
+.bt-room-modal__ladder-step:hover,
+.bt-room-modal__game-button--pad:hover,
+.bt-room-modal__seal-ring:focus-visible,
+.bt-room-modal__choice-button:focus-visible,
+.bt-room-modal__ladder-step:focus-visible,
+.bt-room-modal__game-button--pad:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(225, 138, 47, 0.3);
+  background: rgba(225, 138, 47, 0.14);
+}
+
+.bt-room-modal__seal-ring span,
+.bt-room-modal__ladder-step span {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(214, 229, 219, 0.76);
+}
+
+.bt-room-modal__seal-ring strong,
+.bt-room-modal__ladder-step strong {
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bt-room-modal__keypad {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--cg-space-sm);
+}
+
+.bt-room-modal__choice-prompt {
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(225, 210, 183, 0.14);
+  border-radius: calc(var(--cg-radius-md) * 0.9);
+  background: rgba(255, 246, 231, 0.06);
+}
+
+.bt-room-modal__choice-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.bt-room-modal__ladder {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.bt-room-modal__ladder-step--current {
+  border-color: rgba(225, 138, 47, 0.32);
+  background: rgba(225, 138, 47, 0.16);
+}
+
+.bt-room-modal__ladder-step--complete {
+  border-color: rgba(214, 229, 219, 0.28);
+  background: rgba(214, 229, 219, 0.14);
+}
+
+.bt-room-modal__game-footer {
+  display: grid;
+  gap: var(--cg-space-sm);
+}
+
 .bt-room-modal__actions .cg-button.bt-button {
   background: linear-gradient(135deg, rgba(225, 138, 47, 0.22), rgba(255, 243, 225, 0.94));
 }
@@ -1231,6 +1449,11 @@
 @media (max-width: 720px) {
   .bt-stage > section {
     padding: clamp(var(--cg-space-xl), 8vw, var(--cg-space-3xl)) clamp(var(--cg-space-md), 6vw, var(--cg-space-2xl));
+  }
+
+  .bt-room-modal__choice-grid,
+  .bt-room-modal__ladder {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cg-button.bt-button,

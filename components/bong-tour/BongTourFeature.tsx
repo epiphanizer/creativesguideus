@@ -8,6 +8,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import { EcosystemSignupForm } from "@/components/walls-devine/EcosystemSignupForm";
+import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 
 type RoomAction = {
   label: string;
@@ -23,6 +24,17 @@ type RoomSignup = {
   note: string;
 };
 
+type RoomChallengeMode = "seal-alignment" | "vault-code" | "corridor-choice" | "token-spin";
+
+type RoomChallenge = {
+  label: string;
+  prompt: string;
+  mode: RoomChallengeMode;
+  tokenLabel: string;
+  noteTitle: string;
+  noteBody: string;
+};
+
 type ExperienceRoom = {
   slug: string;
   eyebrow: string;
@@ -35,6 +47,7 @@ type ExperienceRoom = {
   beats?: string[];
   actions: RoomAction[];
   signup?: RoomSignup;
+  challenge?: RoomChallenge;
 };
 
 type CuePoster = {
@@ -58,76 +71,449 @@ type CollectibleTile = {
   room: ExperienceRoom;
 };
 
+type RoomChallengeProps = {
+  challenge: RoomChallenge;
+  roomSlug: string;
+  onUnlock: () => void;
+};
+
+type CorridorRound = {
+  lead: string;
+  options: string[];
+  correct: string;
+};
+
+function buildVaultCode(length: number) {
+  return Array.from({ length }, () => Math.floor(Math.random() * 9) + 1);
+}
+
+function buildSealPattern(length: number, symbolCount: number) {
+  return Array.from({ length }, () => Math.floor(Math.random() * symbolCount));
+}
+
+const corridorRounds: CorridorRound[] = [
+  {
+    lead: "Take the first hallway",
+    options: ["Ticket booth", "Green room", "Motel neon"],
+    correct: "Green room"
+  },
+  {
+    lead: "Follow the whisper",
+    options: ["Service tunnel", "VIP stairs", "Loading dock"],
+    correct: "Service tunnel"
+  },
+  {
+    lead: "Pick the last turn",
+    options: ["Projection booth", "Back office", "Side stage"],
+    correct: "Projection booth"
+  }
+];
+
+function RoomVaultCodeGame({ challenge, roomSlug, onUnlock }: RoomChallengeProps) {
+  const [code, setCode] = useState<number[]>(() => buildVaultCode(4));
+  const [input, setInput] = useState<number[]>([]);
+  const [secondsLeft, setSecondsLeft] = useState(16);
+  const [status, setStatus] = useState<"showing" | "active" | "won" | "lost">("showing");
+
+  useEffect(() => {
+    setCode(buildVaultCode(4));
+    setInput([]);
+    setSecondsLeft(16);
+    setStatus("showing");
+  }, [roomSlug]);
+
+  useEffect(() => {
+    if (status !== "showing") {
+      return;
+    }
+
+    const revealTimer = window.setTimeout(() => setStatus("active"), 1800);
+    return () => window.clearTimeout(revealTimer);
+  }, [status]);
+
+  useEffect(() => {
+    if (status !== "active") {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          window.clearInterval(timer);
+          setStatus("lost");
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [status, roomSlug]);
+
+  function handleDigitPress(value: number) {
+    if (status !== "active") {
+      return;
+    }
+
+    const nextIndex = input.length;
+    if (code[nextIndex] !== value) {
+      setStatus("lost");
+      return;
+    }
+
+    const nextInput = [...input, value];
+    setInput(nextInput);
+
+    if (nextInput.length === code.length) {
+      setStatus("won");
+      onUnlock();
+    }
+  }
+
+  function handleReset() {
+    setCode(buildVaultCode(4));
+    setInput([]);
+    setSecondsLeft(16);
+    setStatus("showing");
+  }
+
+  return (
+    <div className="bt-room-modal__game-shell">
+      <div className="bt-room-modal__game-status">
+        <span>Vault code</span>
+        <span>{input.length}/{code.length}</span>
+        <span>{secondsLeft}s</span>
+      </div>
+
+      <div className="bt-room-modal__vault-display" aria-label="Vault code display">
+        {code.map((digit, index) => (
+          <span key={`${roomSlug}-digit-${index}`}>{status === "showing" ? digit : input[index] ?? "•"}</span>
+        ))}
+      </div>
+
+      <div className="bt-room-modal__keypad">
+        {Array.from({ length: 9 }, (_, index) => index + 1).map((digit) => (
+          <button
+            key={`${roomSlug}-key-${digit}`}
+            type="button"
+            className="bt-room-modal__game-button bt-room-modal__game-button--pad"
+            onClick={() => handleDigitPress(digit)}
+            disabled={status !== "active"}
+          >
+            {digit}
+          </button>
+        ))}
+      </div>
+
+      <div className="bt-room-modal__game-footer">
+        <p>
+          {status === "won"
+            ? "Vault cracked. The hidden note is live below."
+            : status === "lost"
+              ? "Wrong digit. Spin a new combo."
+              : status === "showing"
+                ? "Read the four digits before the pass shutters down."
+                : challenge.prompt}
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
+          New combo
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function RoomSealAlignmentGame({ challenge, roomSlug, onUnlock }: RoomChallengeProps) {
+  const symbols = [challenge.tokenLabel, "smoke", "river", "ember"];
+  const [targetPattern, setTargetPattern] = useState<number[]>(() => buildSealPattern(3, symbols.length));
+  const [currentPattern, setCurrentPattern] = useState<number[]>(() => buildSealPattern(3, symbols.length));
+  const [movesLeft, setMovesLeft] = useState(8);
+  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
+
+  useEffect(() => {
+    setTargetPattern(buildSealPattern(3, symbols.length));
+    setCurrentPattern(buildSealPattern(3, symbols.length));
+    setMovesLeft(8);
+    setStatus("active");
+  }, [roomSlug, symbols.length]);
+
+  function handleRingCycle(index: number) {
+    if (status !== "active") {
+      return;
+    }
+
+    const nextPattern = currentPattern.map((value, valueIndex) => (valueIndex === index ? (value + 1) % symbols.length : value));
+    const nextMovesLeft = movesLeft - 1;
+
+    setCurrentPattern(nextPattern);
+    setMovesLeft(nextMovesLeft);
+
+    if (nextPattern.every((value, valueIndex) => value === targetPattern[valueIndex])) {
+      setStatus("won");
+      onUnlock();
+      return;
+    }
+
+    if (nextMovesLeft <= 0) {
+      setStatus("lost");
+    }
+  }
+
+  function handleReset() {
+    setTargetPattern(buildSealPattern(3, symbols.length));
+    setCurrentPattern(buildSealPattern(3, symbols.length));
+    setMovesLeft(8);
+    setStatus("active");
+  }
+
+  return (
+    <div className="bt-room-modal__game-shell">
+      <div className="bt-room-modal__game-status">
+        <span>Seal alignment</span>
+        <span>{movesLeft} moves</span>
+        <span>3 rings</span>
+      </div>
+
+      <div className="bt-room-modal__seal-target" aria-label="Seal target">
+        {targetPattern.map((value, index) => (
+          <span key={`${roomSlug}-target-${index}`}>{symbols[value]}</span>
+        ))}
+      </div>
+
+      <div className="bt-room-modal__seal-rings">
+        {currentPattern.map((value, index) => (
+          <button key={`${roomSlug}-ring-${index}`} type="button" className="bt-room-modal__seal-ring" onClick={() => handleRingCycle(index)}>
+            <span>Ring {index + 1}</span>
+            <strong>{symbols[value]}</strong>
+          </button>
+        ))}
+      </div>
+
+      <div className="bt-room-modal__game-footer">
+        <p>
+          {status === "won"
+            ? "Seal aligned. The hidden note is open below."
+            : status === "lost"
+              ? "The rings slipped out of lock. Start a fresh pass."
+              : challenge.prompt}
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
+          Recast seal
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function RoomCorridorChoiceGame({ challenge, roomSlug, onUnlock }: RoomChallengeProps) {
+  const [roundIndex, setRoundIndex] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(18);
+  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
+  const round = corridorRounds[roundIndex];
+
+  useEffect(() => {
+    setRoundIndex(0);
+    setSecondsLeft(18);
+    setStatus("active");
+  }, [roomSlug]);
+
+  useEffect(() => {
+    if (status !== "active") {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          window.clearInterval(timer);
+          setStatus("lost");
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [status, roomSlug]);
+
+  function handleChoice(option: string) {
+    if (status !== "active") {
+      return;
+    }
+
+    if (option !== round.correct) {
+      setStatus("lost");
+      return;
+    }
+
+    if (roundIndex === corridorRounds.length - 1) {
+      setStatus("won");
+      onUnlock();
+      return;
+    }
+
+    setRoundIndex((current) => current + 1);
+  }
+
+  function handleReset() {
+    setRoundIndex(0);
+    setSecondsLeft(18);
+    setStatus("active");
+  }
+
+  return (
+    <div className="bt-room-modal__game-shell">
+      <div className="bt-room-modal__game-status">
+        <span>Corridor key</span>
+        <span>{roundIndex + (status === "won" ? 1 : 0)}/{corridorRounds.length}</span>
+        <span>{secondsLeft}s</span>
+      </div>
+
+      <div className="bt-room-modal__choice-prompt">
+        <span>{round.lead}</span>
+      </div>
+
+      <div className="bt-room-modal__choice-grid">
+        {round.options.map((option) => (
+          <button key={`${roomSlug}-${option}`} type="button" className="bt-room-modal__choice-button" onClick={() => handleChoice(option)}>
+            {option}
+          </button>
+        ))}
+      </div>
+
+      <div className="bt-room-modal__game-footer">
+        <p>
+          {status === "won"
+            ? "Shadow corridor found. The hidden note is live below."
+            : status === "lost"
+              ? "Wrong door. Start the key run again."
+              : challenge.prompt}
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
+          Reset corridor
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function RoomTokenSpinGame({ challenge, roomSlug, onUnlock }: RoomChallengeProps) {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [secondsLeft, setSecondsLeft] = useState(14);
+  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
+
+  useEffect(() => {
+    setCurrentStep(1);
+    setSecondsLeft(14);
+    setStatus("active");
+  }, [roomSlug]);
+
+  useEffect(() => {
+    if (status !== "active") {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          window.clearInterval(timer);
+          setStatus("lost");
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [status, roomSlug]);
+
+  function handleStep(step: number) {
+    if (status !== "active") {
+      return;
+    }
+
+    if (step !== currentStep) {
+      setStatus("lost");
+      return;
+    }
+
+    if (step === 5) {
+      setStatus("won");
+      onUnlock();
+      return;
+    }
+
+    setCurrentStep((current) => current + 1);
+  }
+
+  function handleReset() {
+    setCurrentStep(1);
+    setSecondsLeft(14);
+    setStatus("active");
+  }
+
+  return (
+    <div className="bt-room-modal__game-shell">
+      <div className="bt-room-modal__game-status">
+        <span>Token spin</span>
+        <span>Step {currentStep}/5</span>
+        <span>{secondsLeft}s</span>
+      </div>
+
+      <div className="bt-room-modal__ladder" aria-label="Token spin sequence">
+        {Array.from({ length: 5 }, (_, index) => index + 1).map((step) => (
+          <button
+            key={`${roomSlug}-step-${step}`}
+            type="button"
+            className={`bt-room-modal__ladder-step${step < currentStep ? " bt-room-modal__ladder-step--complete" : ""}${step === currentStep && status === "active" ? " bt-room-modal__ladder-step--current" : ""}`}
+            onClick={() => handleStep(step)}
+          >
+            <span>Spin</span>
+            <strong>{String(step).padStart(2, "0")}</strong>
+          </button>
+        ))}
+      </div>
+
+      <div className="bt-room-modal__game-footer">
+        <p>
+          {status === "won"
+            ? "Sequence held. The hidden note is live below."
+            : status === "lost"
+              ? "The token slipped the pattern. Start again."
+              : challenge.prompt}
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
+          Reset spin
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function RoomChallengeExperience({ challenge, roomSlug, onUnlock }: RoomChallengeProps) {
+  if (challenge.mode === "seal-alignment") {
+    return <RoomSealAlignmentGame challenge={challenge} roomSlug={roomSlug} onUnlock={onUnlock} />;
+  }
+
+  if (challenge.mode === "vault-code") {
+    return <RoomVaultCodeGame challenge={challenge} roomSlug={roomSlug} onUnlock={onUnlock} />;
+  }
+
+  if (challenge.mode === "corridor-choice") {
+    return <RoomCorridorChoiceGame challenge={challenge} roomSlug={roomSlug} onUnlock={onUnlock} />;
+  }
+
+  return <RoomTokenSpinGame challenge={challenge} roomSlug={roomSlug} onUnlock={onUnlock} />;
+}
+
 const keyDetails = [
   { label: "Format", detail: "Feature screenplay" },
   { label: "Mood", detail: "Sacred comedy meets Sunset noir" },
-  { label: "Rollout", detail: "Collector portal with soundtrack exits" }
+  { label: "Rollout", detail: "Collector grid with soundtrack exits" }
 ];
-
-const pitchSignals = [
-  {
-    label: "Poster first",
-    value: "Lead with the artifact",
-    note: "The page opens like a premium invitation object before it behaves like a pitch."
-  },
-  {
-    label: "Cue world",
-    value: "Music sells the tone",
-    note: "Walls/Devine score posters keep the project feeling alive instead of theoretical."
-  },
-  {
-    label: "Collector layer",
-    value: "Games and objects",
-    note: "Microgame prompts and collectible drops turn the screenplay world into a release experience."
-  }
-];
-
-const bridgeModules = [
-  {
-    label: "Portal logic",
-    title: "Shorten the path from atmosphere to belief",
-    copy: "Poster, quick myth, and cue cards do most of the work before story architecture arrives."
-  },
-  {
-    label: "Collectible spine",
-    title: "Treat the world like an object people can enter",
-    copy: "Games, relics, and takeover rooms make Bong Tour feel like a launch world rather than a PDF."
-  },
-  {
-    label: "Companion exit",
-    title: "Keep Walls/Devine visibly attached",
-    copy: "Every cue room should offer a clear handoff into the listening experience without breaking the spell."
-  }
-];
-
-const storyMoments = [
-  {
-    label: "Act I",
-    title: "The artifact enters the machine",
-    copy: "A sacred bong leaves the Ganges and turns up on Sunset Boulevard, binding two writers to a myth they do not control."
-  },
-  {
-    label: "Act II",
-    title: "Comedy Store initiation",
-    copy: "Backroom mentors, backstage chemicals, and A-list power plays turn a pitch into a ritual test."
-  },
-  {
-    label: "Act III",
-    title: "Return to source code",
-    copy: "India reframes the whole story, forcing heritage, sacrifice, and the rules of the relic back into focus."
-  }
-];
-
-const themes = [
-  "Diaspora identity without flattening the source",
-  "Industry power as a controlled intoxication",
-  "Myth, comedy, and satire in the same room",
-  "Montu as the moral center, not the prop"
-];
-
-const globalComps = ["The Big Lebowski", "Tropic Thunder", "Fear and Loathing in Las Vegas", "The Player"];
-
-const indiaComps = ["Go Goa Gone", "Delhi Belly", "Luck By Chance"];
 
 const portalRooms: Record<string, ExperienceRoom> = {
   producer: {
@@ -296,6 +682,14 @@ const collectibleTiles: CollectibleTile[] = [
         submitLabel: "Claim relic access",
         successMessage: "You are in. Watch for the next relic note and collector-room update.",
         note: "Collector access only. Used for artifact notes and hidden-room openings."
+      },
+      challenge: {
+        label: "River sigil",
+        prompt: "Align the river sigil before the smoke clears.",
+        mode: "seal-alignment",
+        tokenLabel: "relic",
+        noteTitle: "Origin lock opened",
+        noteBody: "The relic works best when the page treats the object as sacred first and explanatory second. That is the actual campaign engine."
       }
     }
   },
@@ -327,6 +721,14 @@ const collectibleTiles: CollectibleTile[] = [
         submitLabel: "Get the backstage pass",
         successMessage: "You are in. Watch for backstage notes and the next room code.",
         note: "Used for collector-room codes, cue notes, and backstage-style rollout updates."
+      },
+      challenge: {
+        label: "Room code",
+        prompt: "Memorize the room code before the card dissolves.",
+        mode: "vault-code",
+        tokenLabel: "pass",
+        noteTitle: "Backroom access granted",
+        noteBody: "This chapter works when the page behaves like private access instead of plot summary. The pass is permission to keep the initiation stylish."
       }
     }
   },
@@ -358,6 +760,14 @@ const collectibleTiles: CollectibleTile[] = [
         submitLabel: "Hold the keycard",
         successMessage: "You are in. Watch for noir-room drops and the next key signal.",
         note: "Used for clue drops, collector access, and private room notes."
+      },
+      challenge: {
+        label: "Corridor key",
+        prompt: "Pick the right corridor before the keycard deactivates.",
+        mode: "corridor-choice",
+        tokenLabel: "key",
+        noteTitle: "Shadow corridor found",
+        noteBody: "The noir layer only works when it sharpens the comedy instead of smothering it. The hidden route is pressure, not gloom for its own sake."
       }
     }
   },
@@ -389,6 +799,14 @@ const collectibleTiles: CollectibleTile[] = [
         submitLabel: "Hold the token",
         successMessage: "You are in. Watch for sequel-machine notes and collector updates.",
         note: "Used for collector drops, finale signals, and partner-facing updates."
+      },
+      challenge: {
+        label: "Token spin",
+        prompt: "Keep the token spinning until the sequel offer appears.",
+        mode: "token-spin",
+        tokenLabel: "token",
+        noteTitle: "Sequel machine exposed",
+        noteBody: "The ending lands harder when the token feels seductive and predatory at the same time. The object should sell appetite while revealing the trap."
       }
     }
   }
@@ -397,6 +815,7 @@ const collectibleTiles: CollectibleTile[] = [
 export function BongTourFeature() {
   const [hasMounted, setHasMounted] = useState(false);
   const [activeRoom, setActiveRoom] = useState<ExperienceRoom | null>(null);
+  const [challengeUnlocked, setChallengeUnlocked] = useState(false);
   const titleId = useId();
 
   useEffect(() => {
@@ -416,6 +835,7 @@ export function BongTourFeature() {
     };
 
     document.body.style.overflow = "hidden";
+    setChallengeUnlocked(false);
     window.addEventListener("keydown", handleEscape);
 
     return () => {
@@ -442,7 +862,7 @@ export function BongTourFeature() {
             <div className="bt-hero__content">
               <span className="bt-hero__eyebrow">Feature screenplay</span>
               <h1>Bong Tour</h1>
-              <p className="bt-hero__descriptor">A collector-first film portal where sacred comedy, soundtrack mythology, and industry noir all hit at once.</p>
+              <p className="bt-hero__descriptor">A collector-first film portal built like a premium pitch object: poster first, games second, soundtrack bridge always visible.</p>
 
               <div className="bt-hero__logline">
                 <h2>Logline</h2>
@@ -471,55 +891,72 @@ export function BongTourFeature() {
               </article>
             ))}
           </div>
-
-          <div className="bt-hero__signal-strip" aria-label="Pitch signals">
-            {pitchSignals.map((signal) => (
-              <article key={signal.label} className="bt-hero__signal-card">
-                <span>{signal.label}</span>
-                <strong>{signal.value}</strong>
-                <p>{signal.note}</p>
-              </article>
-            ))}
-          </div>
         </section>
 
-        <section className="bt-bridge" aria-labelledby="bt-bridge-title">
-          <div className="bt-section-header bt-section-header--split">
+        <section className="bt-collectibles" id="collector-grid" aria-labelledby="bt-collectibles-title">
+          <header className="bt-section-header">
             <div>
-              <p className="bt-section-header__eyebrow">Experience system</p>
-              <h2 id="bt-bridge-title">Streamlined like a campaign landing page, not a screenplay wiki.</h2>
+              <p className="bt-section-header__eyebrow">Collector grid</p>
+              <h2 id="bt-collectibles-title">Games, relics, and private doors instead of a long screenplay rundown.</h2>
+              <p>Each tile opens a takeover room with a microgame prompt, collector framing, and a clear route back into the Bong Tour world.</p>
             </div>
-            <div className="bt-section-header__actions">
-              <Button type="button" className="bt-button" onClick={() => setActiveRoom(portalRooms.collector)}>
-                Collector access
-              </Button>
-              <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(portalRooms.producer)}>
-                Producer route
-              </Button>
-            </div>
-          </div>
+          </header>
 
-          <div className="bt-bridge__grid">
-            {bridgeModules.map((module) => (
-              <article key={module.title} className="bt-bridge__card">
-                <span>{module.label}</span>
-                <h3>{module.title}</h3>
-                <p>{module.copy}</p>
-              </article>
+          <ul className="bt-collectibles__grid">
+            {collectibleTiles.map((tile) => (
+              <li key={tile.slug} className="bt-collectibles__tile">
+                <div className="bt-collectibles__tile-head">
+                  <span>{tile.badge}</span>
+                  <h3>{tile.title}</h3>
+                </div>
+                <p className="bt-collectibles__teaser">{tile.teaser}</p>
+                <dl className="bt-collectibles__meta">
+                  <div>
+                    <dt>Challenge</dt>
+                    <dd>{tile.challenge}</dd>
+                  </div>
+                  <div>
+                    <dt>Reward</dt>
+                    <dd>{tile.reward}</dd>
+                  </div>
+                </dl>
+                <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(tile.room)}>
+                  Open collector room
+                </Button>
+              </li>
             ))}
+          </ul>
+
+          <div className="bt-collectibles__collector-access">
+            <WallsDevineCollectorAccess
+              source="bong-tour-collector-grid"
+              interest="Bong Tour collector signal room"
+              cardEyebrow="Collector access"
+              cardTitle="Keep the next Bong Tour room out of the feed and in your inbox"
+              cardDescription="Get the shortest route to hidden-room passwords, cue poster drops, producer-facing notes, and collector updates as Bong Tour keeps opening."
+              benefits={["Hidden-room passwords", "Cue poster drops", "Collector and partner notes"]}
+              triggerLabel="Enter the signal room"
+              modalTitle="Enter the Bong Tour signal room"
+              modalDescription="Drop your email for the cleanest route to the next room opening, collector clue, and soundtrack-linked Bong Tour update."
+              submitLabel="Get signal-room access"
+              successMessage="You are in. Watch your inbox for the next room opening, clue drop, and Bong Tour signal."
+              note="High-signal only. Used for collector access, soundtrack-linked updates, and private room notes."
+              className="bt-collectibles__collector-access-card"
+              variant="feature"
+            />
           </div>
         </section>
 
         <section className="bt-music" id="score-sketches" aria-labelledby="bt-music-title">
           <header className="bt-section-header bt-section-header--split">
             <div>
-              <p className="bt-section-header__eyebrow">Cue world</p>
-              <h2 id="bt-music-title">Score rooms that keep the soundtrack visibly attached.</h2>
-              <p>Each poster works like proof-of-tone first, then hands off directly into the Walls/Devine listening world.</p>
+              <p className="bt-section-header__eyebrow">Companion listening room</p>
+              <h2 id="bt-music-title">Three cue rooms keep the score visibly attached to the page.</h2>
+              <p>The soundtrack bridge stays compact and obvious: proof-of-tone here, then a direct handoff into the live Walls/Devine listening world.</p>
             </div>
             <div className="bt-section-header__actions">
               <Button as="a" href="/walls-devine#walls-devine-listening-room" className="bt-button bt-button--outline">
-                Open companion listening room
+                Open Walls/Devine listening room
               </Button>
             </div>
           </header>
@@ -554,111 +991,6 @@ export function BongTourFeature() {
               </li>
             ))}
           </ul>
-        </section>
-
-        <section className="bt-collectibles" id="collector-grid" aria-labelledby="bt-collectibles-title">
-          <header className="bt-section-header bt-section-header--split">
-            <div>
-              <p className="bt-section-header__eyebrow">Games / collectibles</p>
-              <h2 id="bt-collectibles-title">Four objects that make the page feel entered, not merely read.</h2>
-              <p>Each tile opens a takeover room with a microgame prompt, collector framing, and a cleaner reason to come back.</p>
-            </div>
-            <div className="bt-section-header__actions">
-              <Button type="button" className="bt-button" onClick={() => setActiveRoom(portalRooms.collector)}>
-                Join the collector layer
-              </Button>
-            </div>
-          </header>
-
-          <ul className="bt-collectibles__grid">
-            {collectibleTiles.map((tile) => (
-              <li key={tile.slug} className="bt-collectibles__tile">
-                <div className="bt-collectibles__tile-head">
-                  <span>{tile.badge}</span>
-                  <h3>{tile.title}</h3>
-                </div>
-                <p className="bt-collectibles__teaser">{tile.teaser}</p>
-                <dl className="bt-collectibles__meta">
-                  <div>
-                    <dt>Challenge</dt>
-                    <dd>{tile.challenge}</dd>
-                  </div>
-                  <div>
-                    <dt>Reward</dt>
-                    <dd>{tile.reward}</dd>
-                  </div>
-                </dl>
-                <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(tile.room)}>
-                  Open collector room
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="bt-world" aria-labelledby="bt-world-title">
-          <div className="bt-world__grid">
-            <article className="bt-world__panel">
-              <p className="bt-section-header__eyebrow">Story architecture</p>
-              <h2 id="bt-world-title">The narrative still lands in three clean turns.</h2>
-              <ul className="bt-world__story-grid">
-                {storyMoments.map((moment) => (
-                  <li key={moment.title} className="bt-world__story-card">
-                    <span>{moment.label}</span>
-                    <h3>{moment.title}</h3>
-                    <p>{moment.copy}</p>
-                  </li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="bt-world__panel">
-              <p className="bt-section-header__eyebrow">Tone / market</p>
-              <h2>Myth, satire, and diaspora texture without the bloat.</h2>
-              <div className="bt-world__split">
-                <div className="bt-world__list-block">
-                  <h3>Global comps</h3>
-                  <ul>
-                    {globalComps.map((comp) => (
-                      <li key={comp}>{comp}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="bt-world__list-block">
-                  <h3>India comps</h3>
-                  <ul>
-                    {indiaComps.map((comp) => (
-                      <li key={comp}>{comp}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              <div className="bt-world__theme-row" aria-label="Core themes">
-                {themes.map((theme) => (
-                  <span key={theme}>{theme}</span>
-                ))}
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section className="bt-finale" aria-labelledby="bt-finale-title">
-          <div className="bt-finale__body">
-            <p className="bt-section-header__eyebrow">Final invitation</p>
-            <h2 id="bt-finale-title">A streamlined portal with a premium handoff.</h2>
-            <p>
-              Bong Tour now reads like a film-world launch page: poster first, cue rooms second, collectibles third, and the actual partner conversations tucked
-              behind immersive entry points instead of sitting flat on the surface.
-            </p>
-            <div className="bt-finale__actions">
-              <Button type="button" className="bt-button" onClick={() => setActiveRoom(portalRooms.producer)}>
-                Enter producer portal
-              </Button>
-              <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(portalRooms.collector)}>
-                Open signal room
-              </Button>
-            </div>
-          </div>
         </section>
       </div>
 
@@ -696,6 +1028,35 @@ export function BongTourFeature() {
                         <li key={beat}>{beat}</li>
                       ))}
                     </ul>
+                  ) : null}
+
+                  {activeRoom.challenge ? (
+                    <div className="bt-room-modal__challenge-shell">
+                      <section className="bt-room-modal__challenge-card">
+                        <p className="bt-room-modal__challenge-label">Challenge</p>
+                        <h3>{activeRoom.challenge.label}</h3>
+                        <p>{activeRoom.challenge.prompt}</p>
+                      </section>
+
+                      <RoomChallengeExperience
+                        challenge={activeRoom.challenge}
+                        roomSlug={activeRoom.slug}
+                        onUnlock={() => setChallengeUnlocked(true)}
+                      />
+
+                      <section
+                        className={`bt-room-modal__hidden-note${challengeUnlocked ? " bt-room-modal__hidden-note--unlocked" : ""}`}
+                        aria-live="polite"
+                      >
+                        <p className="bt-room-modal__challenge-label">Hidden note</p>
+                        <h3>{challengeUnlocked ? activeRoom.challenge.noteTitle : "Locked until the challenge lands"}</h3>
+                        <p>
+                          {challengeUnlocked
+                            ? activeRoom.challenge.noteBody
+                            : "Beat the game to reveal the hidden note for this collectible chapter."}
+                        </p>
+                      </section>
+                    </div>
                   ) : null}
 
                   <div className="bt-room-modal__actions">
