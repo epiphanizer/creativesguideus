@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
+import type { CSSProperties } from "react";
 
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
@@ -190,25 +191,67 @@ const instagramGrid: GridTile[] = [
   })
 ];
 
+const collectorLetterQuotes = [
+  {
+    source: "Joint Queen journal",
+    text: "Joint Queen needed to feel like an entrance cue with authority and swagger, not just a groove loop."
+  },
+  {
+    source: "Poetry journal",
+    text: "Poetry is the inward core of Volume 1: language first, ornament second."
+  },
+  {
+    source: "Home journal",
+    text: "Home is the grounded chapter that lets the project breathe between heavier passages."
+  },
+  {
+    source: "Decay journal",
+    text: "Decay is meant to sound like memory collapsing and reforming at the same time."
+  }
+] as const;
+
 export function WallsDevineLanding() {
   return (
     <>
       <SectionShell id="hero" labelledBy="walls-devine-title" variant="hero" className="wd-hero-shell" innerClassName="wd-hero">
-        <div className="wd-hero__marquee" aria-label="Experience mode">
-          <span>Boutique unveiling</span>
-          <span>Album object</span>
-          <span>Companion score world</span>
-        </div>
-
         <div className="wd-hero__layout">
           <div className="wd-hero__copy">
             <SectionHeader
               id="walls-devine-title"
               eyebrow="Collector experience"
               title="Walls/Devine Volume 1"
-              description="Join the private collector email for first-listen links, studio-journal fragments, artifact drop notes, and release-night signals as each room opens across Volume 1."
               headingLevel="h1"
             />
+
+            <div className="wd-hero__letter" aria-label="Collector letter from John Walls and Terry Devine">
+              <p className="wd-hero__letter-kicker">Dear collector,</p>
+              <p className="wd-hero__letter-body">
+                Join the private collector email for first-listen links, studio-journal fragments, artifact drop notes, and release-night signals as each room
+                opens across Volume 1.
+              </p>
+
+              <div className="wd-hero__letter-postscript">
+                <span className="wd-hero__letter-postscript-label">From the journals</span>
+                <div className="wd-hero__letter-quote-rotator" aria-live="polite">
+                  {collectorLetterQuotes.map((quote, index) => (
+                    <figure
+                      key={quote.source}
+                      className="wd-hero__letter-quote"
+                      style={{ "--wd-letter-quote-delay": `${index * 5}s` } as CSSProperties}
+                    >
+                      <blockquote>{quote.text}</blockquote>
+                      <figcaption>{quote.source}</figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </div>
+
+              <p className="wd-hero__letter-signoff">With love from the room,</p>
+              <div className="wd-hero__letter-signatures" aria-label="Signed by John Walls and Terry Devine">
+                <span>John Walls</span>
+                <span>Terry Devine</span>
+              </div>
+            </div>
           </div>
 
           <figure className="wd-hero__cover">
@@ -222,9 +265,6 @@ export function WallsDevineLanding() {
       <SectionShell id="walls-devine-grid" labelledBy="walls-devine-grid-title" className="wd-grid-shell" innerClassName="wd-grid-section">
         <header className="wd-grid-section__header">
           <h2 id="walls-devine-grid-title">The collector grid</h2>
-          <p>
-            Each tile now opens its own takeover room with a microgame, a hidden note, and a collector-circle capture designed to keep the rollout feeling premium rather than promotional.
-          </p>
         </header>
 
         <WallsDevineCollectorGrid tiles={instagramGrid} />
@@ -236,15 +276,15 @@ export function WallsDevineLanding() {
             cardEyebrow="Collector access"
             cardTitle="Keep the next room out of the feed and in your inbox"
             cardDescription="Skip the recap cycle. Get the shortest path to first-listen links, studio-journal fragments, hidden-room passwords, and artifact-drop signals as Volume 1 keeps opening."
-            benefits={["First-listen links", "Studio-journal fragments", "Artifact and password drops"]}
             triggerLabel="Enter The Signal Room"
+            benefits={["First-listen links", "Studio-journal fragments", "Artifact and password drops"]}
+            actionNote="Private collector access for first listens, hidden-room returns, and artifact drops."
             modalTitle="Enter The Signal Room"
             modalDescription="Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update."
             submitLabel="Get collector access"
             successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector signal."
             note="High-signal only. Used for first listens, hidden-room access, and artifact drops."
-            className="wd-grid-section__collector-access-card"
-            variant="feature"
+            className="wd-grid-section__collector-banner"
           />
         </div>
       </SectionShell>

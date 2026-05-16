@@ -16,6 +16,7 @@ type WallsDevineCollectorAccessProps = {
   cardDescription: string;
   triggerLabel?: string;
   benefits?: string[];
+  actionNote?: string;
   modalEyebrow?: string;
   modalTitle?: string;
   modalDescription?: string;
@@ -35,6 +36,7 @@ export function WallsDevineCollectorAccess({
   cardDescription,
   triggerLabel = "Enter The Signal Room",
   benefits = [],
+  actionNote,
   modalEyebrow = "Collector access",
   modalTitle = "Enter The Signal Room",
   modalDescription = "Drop your email for first-listen links, hidden-room returns, journal fragments, and artifact-drop signals.",
@@ -102,6 +104,7 @@ export function WallsDevineCollectorAccess({
             <Button type="button" variant="primary" onClick={openSignalRoom}>
               {triggerLabel}
             </Button>
+            {actionNote ? <p className="wd-collector-access__action-note">{actionNote}</p> : null}
           </div>
         </section>
       )}

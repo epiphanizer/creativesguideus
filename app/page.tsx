@@ -50,15 +50,13 @@ export default function HomePage() {
             </div>
 
             <div className="cg-home-gate__portal-stage">
-              <div className="cg-home-gate__portal-art">
-                <Image
-                  src={gateway.image}
-                  alt={gateway.alt}
-                  priority
-                  sizes="(max-width: 959px) 86vw, 34vw"
-                  className="cg-home-gate__portal-image"
-                />
-              </div>
+              <Image
+                src={gateway.image}
+                alt={gateway.alt}
+                priority
+                sizes="(max-width: 959px) 86vw, 34vw"
+                className="cg-home-gate__portal-image"
+              />
             </div>
 
             <Link href={gateway.href} className="cg-home-gate__portal-entry">
