@@ -1787,7 +1787,7 @@
   top: calc(var(--cg-header-height) + clamp(0.6rem, 1.8vw, 1rem));
   right: clamp(var(--cg-space-sm), 2vw, var(--cg-space-lg));
   bottom: auto;
-  z-index: 49;
+  z-index: 72;
   display: grid;
   gap: var(--cg-space-sm);
   width: min(92vw, 24rem);
