@@ -88,6 +88,7 @@
   color: var(--wd-ink);
   text-transform: uppercase;
   letter-spacing: 0.02em;
+  margin: 1rem 0;
 }
 
 .wd-hero__showcase .cg-section-header__subtitle {
@@ -102,9 +103,8 @@
 
 .wd-hero__note-stack {
   display: grid;
-  gap: clamp(0.85rem, 2vh, 1.18rem);
+  gap: var(--cg-space-sm);
   width: 100%;
-  max-width: 41rem;
 }
 
 .wd-hero__letter,
@@ -3765,6 +3765,7 @@
 .wd-hero__showcase .cg-section-header__title {
   font-size: clamp(3.4rem, 8vw, 6.2rem);
   line-height: 0.94;
+  margin: 1rem 0;
 }
 
 .wd-hero__showcase .cg-section-header__subtitle {
@@ -4142,10 +4143,10 @@
   }
 
   .wd-hero__copy {
-    width: min(100%, 42vw);
-    max-width: 43rem;
+    width: 100%;
+    max-width: none;
     justify-self: end;
-    margin-right: clamp(1rem, 8vw, 7rem);
+    margin-right: 0;
   }
 }
 
@@ -4163,6 +4164,7 @@
   font-size: var(--wd-collector-title-size);
   line-height: var(--wd-collector-title-lh);
   letter-spacing: 0.015em;
+  margin: 1rem 0;
 }
 
 .wd-hero__showcase .cg-section-header__description {

@@ -80,6 +80,7 @@ type CollectibleTile = {
   slug: string;
   badge: string;
   title: string;
+  image: StaticImageData;
   teaser: string;
   challenge: string;
   reward: string;
@@ -691,6 +692,7 @@ const collectibleTiles: CollectibleTile[] = [
     slug: "ganges-relic",
     badge: "Collectible 01",
     title: "Ganges Relic",
+    image: posterImage,
     teaser: "The origin object: sacred river memory trapped inside a pitch-world artifact.",
     challenge: "Align the river sigil before the smoke clears.",
     reward: "Unlock the mythology-first framing for the whole campaign.",
@@ -730,6 +732,7 @@ const collectibleTiles: CollectibleTile[] = [
     slug: "comedy-store-pass",
     badge: "Collectible 02",
     title: "Comedy Store Pass",
+    image: jointQueenImage,
     teaser: "A backstage credential that turns the midsection of the page into a takeover instead of a summary.",
     challenge: "Memorize the room code before the card dissolves.",
     reward: "Unlock the swagger-heavy campaign language for the initiation chapter.",
@@ -769,6 +772,7 @@ const collectibleTiles: CollectibleTile[] = [
     slug: "lollipop-guild-key",
     badge: "Collectible 03",
     title: "Lollipop Guild Key",
+    image: stashDaddyImage,
     teaser: "A motel-night object for the industry shadow system everybody references and nobody explains.",
     challenge: "Pick the right corridor before the keycard deactivates.",
     reward: "Unlock the noir layer without burying the comedy.",
@@ -808,6 +812,7 @@ const collectibleTiles: CollectibleTile[] = [
     slug: "upper-management-token",
     badge: "Collectible 04",
     title: "Upper Management Token",
+    image: spaceCruiserImage,
     teaser: "The sequel machine rendered as a polished object that feels seductive and ominous at the same time.",
     challenge: "Keep the token spinning until the sequel offer appears.",
     reward: "Unlock the ending's franchise bait without flattening the emotional close.",
@@ -918,32 +923,23 @@ export function BongTourFeature() {
           <header className="bt-section-header">
             <div>
               <p className="bt-section-header__eyebrow">Collector grid</p>
-              <h2 id="bt-collectibles-title">Games, relics, and hidden doors built straight into the Bong Tour world.</h2>
-              <p>Each tile opens a full takeover room with a microgame, collector reward, and a clear route back into the cue-world.</p>
+              <h2 id="bt-collectibles-title">Collector chapters</h2>
             </div>
           </header>
 
           <ul className="bt-collectibles__grid">
             {collectibleTiles.map((tile) => (
               <li key={tile.slug} className="bt-collectibles__tile">
-                <div className="bt-collectibles__tile-head">
-                  <span>{tile.badge}</span>
-                  <h3>{tile.title}</h3>
-                </div>
-                <p className="bt-collectibles__teaser">{tile.teaser}</p>
-                <dl className="bt-collectibles__meta">
-                  <div>
-                    <dt>Challenge</dt>
-                    <dd>{tile.challenge}</dd>
-                  </div>
-                  <div>
-                    <dt>Reward</dt>
-                    <dd>{tile.reward}</dd>
-                  </div>
-                </dl>
-                <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(tile.room)}>
-                  Open collector room
-                </Button>
+                <button type="button" className="bt-collectibles__trigger" aria-label={`Open ${tile.title} collector room`} onClick={() => setActiveRoom(tile.room)}>
+                  <figure className="bt-collectibles__visual">
+                    <Image src={tile.image} alt="" className="bt-collectibles__image" sizes="(max-width: 920px) 80vw, 26vw" />
+                    <span className="bt-collectibles__badge">{tile.badge}</span>
+                    <figcaption className="bt-collectibles__marquee">
+                      <h3>{tile.title}</h3>
+                      <p>{tile.challenge}</p>
+                    </figcaption>
+                  </figure>
+                </button>
               </li>
             ))}
           </ul>
