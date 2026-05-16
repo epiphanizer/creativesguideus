@@ -2,7 +2,7 @@ import type { WallsDevineCollectorHeroNote } from "@/lib/admin/types";
 
 export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote = {
   salutation: "Dear Collector,",
-  body: "Join the private collector email for first-listen links, studio-journal fragments, artifact drop notes, and release-night signals as each room opens across Volume 1.",
+  body: "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine",
   updatedAt: "2026-05-16T00:00:00.000Z"
 };
 

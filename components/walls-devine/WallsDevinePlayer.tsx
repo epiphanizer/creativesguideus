@@ -4,6 +4,9 @@ import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import { createPortal } from "react-dom";
 import { type CSSProperties, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { FiMusic } from "react-icons/fi";
+import type { IconType } from "react-icons";
+import { SiApplemusic, SiBandcamp, SiSoundcloud, SiSpotify, SiTidal, SiYoutubemusic } from "react-icons/si";
 
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
@@ -54,6 +57,7 @@ type StreamingPlatformDestination = {
   key: StreamingPlatformKey;
   label: string;
   shortLabel: string;
+  Icon: IconType;
   href: string;
   isDirect: boolean;
 };
@@ -153,48 +157,56 @@ const streamingPlatformCatalog: Array<{
   key: StreamingPlatformKey;
   label: string;
   shortLabel: string;
+  Icon: IconType;
   buildSearchUrl: (encodedQuery: string) => string;
 }> = [
   {
     key: "spotify",
     label: "Spotify",
     shortLabel: "Spotify",
+    Icon: SiSpotify,
     buildSearchUrl: (encodedQuery) => `https://open.spotify.com/search/${encodedQuery}`
   },
   {
     key: "appleMusic",
     label: "Apple Music",
     shortLabel: "Apple",
+    Icon: SiApplemusic,
     buildSearchUrl: (encodedQuery) => `https://music.apple.com/us/search?term=${encodedQuery}`
   },
   {
     key: "youtubeMusic",
     label: "YouTube Music",
     shortLabel: "YouTube",
+    Icon: SiYoutubemusic,
     buildSearchUrl: (encodedQuery) => `https://music.youtube.com/search?q=${encodedQuery}`
   },
   {
     key: "tidal",
     label: "TIDAL",
     shortLabel: "TIDAL",
+    Icon: SiTidal,
     buildSearchUrl: (encodedQuery) => `https://listen.tidal.com/search?q=${encodedQuery}`
   },
   {
     key: "amazonMusic",
     label: "Amazon Music",
     shortLabel: "Amazon",
+    Icon: FiMusic,
     buildSearchUrl: (encodedQuery) => `https://music.amazon.com/search/${encodedQuery}`
   },
   {
     key: "soundcloud",
     label: "SoundCloud",
     shortLabel: "SoundCloud",
+    Icon: SiSoundcloud,
     buildSearchUrl: (encodedQuery) => `https://soundcloud.com/search/sounds?q=${encodedQuery}`
   },
   {
     key: "bandcamp",
     label: "Bandcamp",
     shortLabel: "Bandcamp",
+    Icon: SiBandcamp,
     buildSearchUrl: (encodedQuery) => `https://bandcamp.com/search?q=${encodedQuery}&item_type=t`
   }
 ];
@@ -209,6 +221,7 @@ function buildListeningRoomStreamingLinks(track: SongPostCard) {
       key: platform.key,
       label: platform.label,
       shortLabel: platform.shortLabel,
+      Icon: platform.Icon ?? FiMusic,
       href: directHref || platform.buildSearchUrl(encodedQuery),
       isDirect: Boolean(directHref)
     } satisfies StreamingPlatformDestination;
@@ -638,6 +651,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const [shareOrigin, setShareOrigin] = useState("");
   const [supportsNativeShare, setSupportsNativeShare] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
+  const [isDockShareExpanded, setIsDockShareExpanded] = useState(false);
   const [dockPosition, setDockPosition] = useState<PlayerDockPosition | null>(null);
   const [isDraggingDock, setIsDraggingDock] = useState(false);
   const deepLinkHandledRef = useRef(false);
@@ -738,6 +752,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
 
   useEffect(() => {
     setShareFeedback("idle");
+    setIsDockShareExpanded(false);
   }, [activeTrack.journalSlug]);
 
   useEffect(() => {
@@ -1330,20 +1345,42 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6.5 9.5a3.5 3.5 0 005 0l2-2a3.5 3.5 0 00-5-5L7 4" /><path d="M9.5 6.5a3.5 3.5 0 00-5 0L2.5 8.5a3.5 3.5 0 005 5L9 12" /></svg>
                           )}
                         </button>
+                        <button
+                          type="button"
+                          className="wd-player-dock__button wd-player-dock__button--toggle"
+                          onClick={() => setIsDockShareExpanded((current) => !current)}
+                          aria-expanded={isDockShareExpanded}
+                          aria-controls="wd-player-dock-share-platforms"
+                        >
+                          {isDockShareExpanded ? "Hide apps" : "Apps"}
+                        </button>
                       </div>
                     </div>
 
-                    <div className="wd-player-dock__share-platforms" aria-label={`Open ${activeTrack.title} on music platforms`}>
-                      {activeStreamingLinks.map((platform) => (
-                        <a key={platform.key} className="wd-player-dock__share-platform" href={platform.href} target="_blank" rel="noreferrer">
-                          {platform.shortLabel}
-                        </a>
-                      ))}
-                    </div>
+                    {isDockShareExpanded ? (
+                      <>
+                        <div id="wd-player-dock-share-platforms" className="wd-player-dock__share-platforms" aria-label={`Open ${activeTrack.title} on music platforms`}>
+                          {activeStreamingLinks.map((platform) => (
+                            <a
+                              key={platform.key}
+                              className="wd-player-dock__share-platform"
+                              href={platform.href}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}
+                              title={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}
+                            >
+                              <platform.Icon aria-hidden="true" focusable="false" />
+                              <span className="wd-visually-hidden">{platform.shortLabel}</span>
+                            </a>
+                          ))}
+                        </div>
 
-                    <p className="wd-player-dock__share-note">
-                      {hasDirectStreamingLinks ? "Direct song links are live where they have already been mapped." : "Platform chips currently open search results. They will switch to direct song pages as platform URLs are added."}
-                    </p>
+                        <p className="wd-player-dock__share-note">
+                          {hasDirectStreamingLinks ? "Direct song links are live where they have already been mapped." : "Platform chips currently open search results. They will switch to direct song pages as platform URLs are added."}
+                        </p>
+                      </>
+                    ) : null}
                   </div>
 
                   <div className="wd-player-dock__actions" onPointerDown={handleDockActionPointerDown}>
@@ -1458,7 +1495,8 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                           <div className="wd-player-modal__share-platforms" aria-label="Open current track on music platforms">
                             {activeStreamingLinks.map((platform) => (
                               <a key={platform.key} className="wd-player-modal__share-platform" href={platform.href} target="_blank" rel="noreferrer" aria-label={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`} title={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}>
-                                {platform.shortLabel}
+                                <platform.Icon aria-hidden="true" focusable="false" />
+                                <span className="wd-visually-hidden">{platform.shortLabel}</span>
                               </a>
                             ))}
                           </div>

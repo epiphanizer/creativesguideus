@@ -226,6 +226,10 @@ const collectorLetterQuotes: readonly CollectorLetterQuote[] = [
 ];
 
 const collectorQuoteIntervalSeconds = 15;
+const legacyCollectorHeroBody =
+  "Join the private collector email for first-listen links, studio-journal fragments, artifact drop notes, and release-night signals as each room opens across Volume 1.";
+const heartfeltCollectorHeroBody =
+  "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine";
 const wallsDevineBookingIntakeHref = `/contact?${new URLSearchParams({
   context: "walls-devine-booking",
   project: "Walls/Devine",
@@ -237,6 +241,7 @@ export function WallsDevineLanding() {
   const [isQuotePaused, setIsQuotePaused] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
   const [collectorHeroNote, setCollectorHeroNote] = useState(defaultWallsDevineCollectorHeroNote);
+  const collectorHeroBody = collectorHeroNote.body.trim() === legacyCollectorHeroBody ? heartfeltCollectorHeroBody : collectorHeroNote.body;
 
   const activeQuote = collectorLetterQuotes[activeQuoteIndex] ?? collectorLetterQuotes[0];
 
@@ -347,28 +352,28 @@ export function WallsDevineLanding() {
             <div className="wd-hero__note-stack">
               <div className="wd-hero__letter" aria-label="Personal collector note for Walls/Devine Volume 1">
                 <p className="wd-hero__letter-kicker">{collectorHeroNote.salutation}</p>
-                <p className="wd-hero__letter-body">{collectorHeroNote.body}</p>
+                <p className="wd-hero__letter-body">{collectorHeroBody}</p>
 
                 <div className="wd-hero__letter-actions">
                   <WallsDevineCollectorAccess
                     source="walls-devine-hero"
                     interest="Walls Devine private collector email"
-                    cardTitle="Private collector email"
-                    cardDescription="First-listen links, studio-journal fragments, artifact drop notes, and release-night updates delivered quietly as Volume 1 opens."
+                    cardTitle="A private note from Terry"
+                    cardDescription="If the record meets you where you are, come into the Signal Room and listen with us chapter by chapter."
                     benefits={["First-listen links", "Journal fragments", "Artifact drop notes"]}
-                    modalTitle="Private collector email"
-                    modalDescription="Leave your email for first-listen links, studio-journal fragments, artifact drop notes, and release-night updates delivered as Volume 1 opens."
+                    modalTitle="Enter the Signal Room"
+                    modalDescription={legacyCollectorHeroBody}
                     signupEyebrow="Collector access includes"
                     signupTitle="What arrives first"
-                    signupDescription="First-listen links, studio-journal fragments, artifact drop notes, and release-night updates sent as each Volume 1 room opens."
-                    submitLabel="Join the private collector email"
+                    signupDescription={legacyCollectorHeroBody}
+                    submitLabel="Request Signal Room access"
                     successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector note."
                     note="High-signal only. Reserved for first listens, journal fragments, artifact drops, and release-night updates."
                     roomOverlayScript="Collector Letter"
                     roomOverlaySubtitle="Private first-listen access"
                     renderTrigger={(openCollectorLetter) => (
                       <Button type="button" variant="primary" className="wd-hero__letter-cta" onClick={openCollectorLetter}>
-                        Join the private collector email
+                        Enter the listening room
                       </Button>
                     )}
                   />
