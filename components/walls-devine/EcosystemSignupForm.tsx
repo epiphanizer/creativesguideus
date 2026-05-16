@@ -73,7 +73,7 @@ export function EcosystemSignupForm({
       {title ? <h2 className="wd-signup__title">{title}</h2> : null}
       {description ? <p className="wd-signup__description">{description}</p> : null}
 
-      <form className="wd-signup__form" onSubmit={handleSubmit}>
+      <form className="wd-signup__form" onSubmit={handleSubmit} aria-busy={submissionState === "submitting"}>
         {emailOnly ? (
           <>
             <div className="wd-signup__minimal-row">
@@ -86,12 +86,16 @@ export function EcosystemSignupForm({
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="you@example.com"
                   autoComplete="email"
+                  inputMode="email"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  enterKeyHint="send"
                   required
                   disabled={submissionState === "submitting"}
                 />
               </label>
 
-              <Button type="submit" variant="primary" size={compact ? "sm" : "md"} disabled={submissionState === "submitting"}>
+              <Button className="wd-signup__submit" type="submit" variant="primary" size={compact ? "sm" : "md"} disabled={submissionState === "submitting"}>
                 {submissionState === "submitting" ? "Joining..." : submitLabel}
               </Button>
             </div>
@@ -109,6 +113,7 @@ export function EcosystemSignupForm({
                   onChange={(event) => setFullName(event.target.value)}
                   placeholder="Optional"
                   autoComplete="name"
+                  autoCapitalize="words"
                   disabled={submissionState === "submitting"}
                 />
               </label>
@@ -122,6 +127,10 @@ export function EcosystemSignupForm({
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="you@example.com"
                   autoComplete="email"
+                  inputMode="email"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  enterKeyHint="send"
                   required
                   disabled={submissionState === "submitting"}
                 />
@@ -129,7 +138,7 @@ export function EcosystemSignupForm({
             </div>
 
             <div className="wd-signup__actions">
-              <Button type="submit" variant="primary" size={compact ? "sm" : "md"} disabled={submissionState === "submitting"}>
+              <Button className="wd-signup__submit" type="submit" variant="primary" size={compact ? "sm" : "md"} disabled={submissionState === "submitting"}>
                 {submissionState === "submitting" ? "Joining..." : submitLabel}
               </Button>
               {note ? <p className="wd-signup__note">{note}</p> : null}

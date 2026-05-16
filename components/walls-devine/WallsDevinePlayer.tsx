@@ -14,6 +14,7 @@ import poetryImage from "@/app/walls-devine/assets/instagram/7.poetry.png";
 import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
 import spaceCruiserImage from "@/app/walls-devine/assets/instagram/3.space-cruiser.png";
 import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
+import { Button } from "@/components/ui/Button";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { SongPostCard } from "@/components/walls-devine/content";
 import { createListeningRoomVisit } from "@/lib/firebase/listening-room-visits";
@@ -21,6 +22,7 @@ import {
   dispatchWallsDevinePlayerDismissedChange,
   type PlayerDockPosition,
   type PersistedWallsDevinePlayerState,
+  wallsDevinePlayerOpenRequestEventName,
   wallsDevinePlayerRestoreRequestEventName,
   wallsDevinePlayerStorageKey
 } from "@/lib/wallsDevinePlayerBridge";
@@ -104,6 +106,35 @@ function getAudioContextConstructor() {
 
   const audioWindow = window as AudioContextWindow;
   return audioWindow.AudioContext ?? audioWindow.webkitAudioContext ?? null;
+}
+
+function buildListeningRoomShareUrl(origin: string, track: SongPostCard) {
+  if (!origin) {
+    return "";
+  }
+
+  const nextUrl = new URL("/walls-devine", origin);
+  nextUrl.searchParams.set("player", track.journalSlug);
+  nextUrl.hash = "walls-devine-listening-room";
+  return nextUrl.toString();
+}
+
+function buildListeningRoomShareText(track: SongPostCard) {
+  return `Listen to "${track.title}" in the Walls/Devine Volume 1 Listening Room. ${track.hook}`;
+}
+
+function buildListeningRoomPlatformShareLinks(title: string, text: string, url: string) {
+  const encodedUrl = encodeURIComponent(url);
+  const encodedText = encodeURIComponent(text);
+  const encodedSubject = encodeURIComponent(title);
+  const encodedBody = encodeURIComponent(`${text}\n\n${url}`);
+
+  return {
+    x: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+    email: `mailto:?subject=${encodedSubject}&body=${encodedBody}`
+  };
 }
 
 function drawTrackMotif({
@@ -526,6 +557,9 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const [isDismissed, setIsDismissed] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [shareOrigin, setShareOrigin] = useState("");
+  const [supportsNativeShare, setSupportsNativeShare] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
   const [dockPosition, setDockPosition] = useState<PlayerDockPosition | null>(null);
   const [isDraggingDock, setIsDraggingDock] = useState(false);
   const deepLinkHandledRef = useRef(false);
@@ -552,6 +586,10 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const activePosterAlt = `${activeTrack.title} cover artwork`;
   const activeTrackMeta = `Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase} · ${activeTrack.duration}`;
   const activeVisualizerTheme = trackVisualizerThemes[activeTrack.trackNumber] ?? trackVisualizerThemes[1];
+  const activeShareTitle = `${activeTrack.title} · Walls/Devine Volume 1`;
+  const activeShareText = buildListeningRoomShareText(activeTrack);
+  const activeShareUrl = buildListeningRoomShareUrl(shareOrigin, activeTrack);
+  const activeShareLinks = activeShareUrl ? buildListeningRoomPlatformShareLinks(activeShareTitle, activeShareText, activeShareUrl) : null;
   const isDockVisible = isCollapsed && showDockWhenCollapsed && !isDismissed;
 
   if (typeof document !== "undefined" && !audioPortalHostRef.current) {
@@ -608,6 +646,31 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
 
     window.history.replaceState(window.history.state, "", `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`);
   }
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    setShareOrigin(window.location.origin);
+    setSupportsNativeShare(typeof window.navigator.share === "function");
+  }, []);
+
+  useEffect(() => {
+    setShareFeedback("idle");
+  }, [activeTrack.journalSlug]);
+
+  useEffect(() => {
+    if (shareFeedback === "idle") {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setShareFeedback("idle");
+    }, 1800);
+
+    return () => window.clearTimeout(timer);
+  }, [shareFeedback]);
 
   useEffect(() => {
     if (typeof window === "undefined" || playerStateRestoredRef.current) {
@@ -965,10 +1028,19 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
       setDockPosition(null);
     };
 
+    const handleOpenRequest = () => {
+      setIsDismissed(false);
+      setIsCollapsed(false);
+      setIsOpen(true);
+      setDockPosition(null);
+    };
+
     window.addEventListener(wallsDevinePlayerRestoreRequestEventName, handleRestoreRequest);
+    window.addEventListener(wallsDevinePlayerOpenRequestEventName, handleOpenRequest);
 
     return () => {
       window.removeEventListener(wallsDevinePlayerRestoreRequestEventName, handleRestoreRequest);
+      window.removeEventListener(wallsDevinePlayerOpenRequestEventName, handleOpenRequest);
     };
   }, []);
 
@@ -1024,6 +1096,48 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   function collapsePlayer() {
     setIsCollapsed(true);
     setIsOpen(false);
+  }
+
+  async function handleCopyTrackLink() {
+    if (typeof window === "undefined" || !activeShareUrl) {
+      return;
+    }
+
+    if (!window.navigator.clipboard?.writeText) {
+      return;
+    }
+
+    try {
+      await window.navigator.clipboard.writeText(activeShareUrl);
+      setShareFeedback("copied");
+    } catch {
+      setShareFeedback("idle");
+    }
+  }
+
+  async function handleShareTrack() {
+    if (typeof window === "undefined" || !activeShareUrl) {
+      return;
+    }
+
+    const browserNavigator = window.navigator;
+
+    if (typeof browserNavigator.share === "function") {
+      try {
+        await browserNavigator.share({
+          title: activeShareTitle,
+          text: activeShareText,
+          url: activeShareUrl
+        });
+        setShareFeedback("shared");
+      } catch {
+        return;
+      }
+
+      return;
+    }
+
+    await handleCopyTrackLink();
   }
 
   function showPreviousTrack() {
@@ -1174,34 +1288,65 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                           </div>
                         </div>
 
-                        <div className="wd-player-modal__notes">
-                          <article>
-                            <span>Track hook</span>
-                            <p>{activeTrack.hook}</p>
-                          </article>
-                          <article>
-                            <span>Instagram synthesis</span>
-                            <p>{activeTrack.storySummary}</p>
-                          </article>
-                          <article>
-                            <span>Visual thread</span>
-                            <p>{activeTrack.visualThread}</p>
-                          </article>
-                          <article>
-                            <span>Making note</span>
-                            <p>{activeTrack.makingNote}</p>
-                          </article>
-                          <article>
-                            <span>Technical note</span>
-                            <p>{activeTrack.technicalNote}</p>
-                          </article>
-                          {activeTrack.bongTourContext ? (
-                            <article>
-                              <span>Bong Tour bridge</span>
-                              <p>{activeTrack.bongTourContext}</p>
-                            </article>
+                        <section className="wd-player-modal__share" aria-label={`Share ${activeTrack.title}`}>
+                          <div className="wd-player-modal__share-intro">
+                            <span className="wd-player-modal__share-kicker">Share</span>
+                            <h4>Send {activeTrack.title} out with the room already open.</h4>
+                            <p>
+                              Mobile share opens the native sheet. Platform links drop straight into a post or message. Every link lands back inside the
+                              Listening Room on this track.
+                            </p>
+                          </div>
+
+                          <div className="wd-player-modal__share-actions">
+                            <Button
+                              type="button"
+                              variant="primary"
+                              className="wd-player-modal__share-button wd-player-modal__share-button--primary"
+                              onClick={handleShareTrack}
+                              disabled={!activeShareUrl}
+                            >
+                              {supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Mobile share") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              className="wd-player-modal__share-button"
+                              onClick={handleCopyTrackLink}
+                              disabled={!activeShareUrl}
+                            >
+                              {shareFeedback === "copied" ? "Link copied" : "Copy direct link"}
+                            </Button>
+                          </div>
+
+                          {activeShareLinks ? (
+                            <div className="wd-player-modal__share-platforms" aria-label="Share to platforms">
+                              <a className="wd-player-modal__share-platform" href={activeShareLinks.x} target="_blank" rel="noreferrer">
+                                Share on X
+                              </a>
+                              <a className="wd-player-modal__share-platform" href={activeShareLinks.facebook} target="_blank" rel="noreferrer">
+                                Share on Facebook
+                              </a>
+                              <a className="wd-player-modal__share-platform" href={activeShareLinks.whatsapp} target="_blank" rel="noreferrer">
+                                Share on WhatsApp
+                              </a>
+                              <a className="wd-player-modal__share-platform" href={activeShareLinks.email}>
+                                Share by email
+                              </a>
+                            </div>
                           ) : null}
-                        </div>
+
+                          <div className="wd-player-modal__share-preview">
+                            <article>
+                              <span>Share line</span>
+                              <p>{activeTrack.hook}</p>
+                            </article>
+                            <article>
+                              <span>Landing note</span>
+                              <p>The link reopens the Listening Room directly on {activeTrack.title}.</p>
+                            </article>
+                          </div>
+                        </section>
 
                         <div className="wd-player-modal__links">
                           <a href={`/walls-devine/journals/${activeTrack.journalSlug}.md`}>Read journal entry</a>

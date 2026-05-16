@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { anchors } from "./nav/anchors";
 import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 import {
+  requestWallsDevinePlayerOpen,
   readWallsDevinePlayerDismissed,
   requestWallsDevinePlayerRestore,
   wallsDevinePlayerDismissedChangeEventName
@@ -149,6 +150,7 @@ export function HeaderNav() {
     }
 
     closeMenu();
+  requestWallsDevinePlayerOpen();
 
     const target = document.getElementById(listeningRoomAnchorId);
 
