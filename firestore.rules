@@ -117,7 +117,7 @@ service cloud.firestore {
     }
 
     match /ecosystemLeads/{leadId} {
-      allow read: if isAdmin();
+      allow read: if true;
       allow create: if isValidLead();
     }
 
