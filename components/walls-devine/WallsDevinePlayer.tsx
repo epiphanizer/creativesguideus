@@ -1419,89 +1419,61 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                         </div>
 
                         <section className="wd-player-modal__share" aria-label={`Share ${activeTrack.title}`}>
-                          <div className="wd-player-modal__share-intro">
+                          <div className="wd-player-modal__share-head">
                             <span className="wd-player-modal__share-kicker">Share</span>
-                            <h4>Send {activeTrack.title} out with the room already open.</h4>
-                            <p>
-                              Native share and direct room links keep the Listening Room open on this exact track. Music-platform destinations fall back to
-                              search now and automatically switch to direct song pages once those URLs are wired in.
-                            </p>
-                          </div>
-
-                          <div className="wd-player-modal__share-actions">
-                            <Button
-                              type="button"
-                              variant="primary"
-                              className="wd-player-modal__share-button wd-player-modal__share-button--primary"
-                              onClick={handleShareTrack}
-                              disabled={!activeShareUrl}
-                            >
-                              {supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Mobile share") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              className="wd-player-modal__share-button"
-                              onClick={handleCopyTrackLink}
-                              disabled={!activeShareUrl}
-                            >
-                              {shareFeedback === "copied" ? "Link copied" : "Copy direct link"}
-                            </Button>
-                          </div>
-
-                          <div className="wd-player-modal__share-group">
-                            <span className="wd-player-modal__share-label">Music platforms</span>
-                            <div className="wd-player-modal__share-platforms" aria-label="Open current track on music platforms">
-                              {activeStreamingLinks.map((platform) => (
-                                <a key={platform.key} className="wd-player-modal__share-platform" href={platform.href} target="_blank" rel="noreferrer">
-                                  {platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}
-                                </a>
-                              ))}
+                            <div className="wd-player-modal__share-actions">
+                              <button
+                                type="button"
+                                className="wd-player-dock__icon-button"
+                                onClick={handleShareTrack}
+                                disabled={!activeShareUrl}
+                                aria-label={supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Share track") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
+                                title={supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Share track") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
+                              >
+                                {shareFeedback !== "idle" ? (
+                                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="2.5 8 6.5 12 13.5 4" /></svg>
+                                ) : supportsNativeShare ? (
+                                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 10V3M5 6l3-3 3 3" /><path d="M3 10v3a1 1 0 001 1h8a1 1 0 001-1v-3" /></svg>
+                                ) : (
+                                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6.5 9.5a3.5 3.5 0 005 0l2-2a3.5 3.5 0 00-5-5L7 4" /><path d="M9.5 6.5a3.5 3.5 0 00-5 0L2.5 8.5a3.5 3.5 0 005 5L9 12" /></svg>
+                                )}
+                              </button>
+                              <button
+                                type="button"
+                                className="wd-player-dock__icon-button"
+                                onClick={handleCopyTrackLink}
+                                disabled={!activeShareUrl}
+                                aria-label={shareFeedback === "copied" ? "Link copied" : "Copy direct link"}
+                                title={shareFeedback === "copied" ? "Link copied" : "Copy direct link"}
+                              >
+                                {shareFeedback === "copied" ? (
+                                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="2.5 8 6.5 12 13.5 4" /></svg>
+                                ) : (
+                                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6.5 9.5a3.5 3.5 0 005 0l2-2a3.5 3.5 0 00-5-5L7 4" /><path d="M9.5 6.5a3.5 3.5 0 00-5 0L2.5 8.5a3.5 3.5 0 005 5L9 12" /></svg>
+                                )}
+                              </button>
                             </div>
-                            <p className="wd-player-modal__share-note">
-                              {hasDirectStreamingLinks ? "Direct song links open wherever those destinations are already mapped." : "These currently open platform search results. They switch to direct song pages as per-track links are added to the data layer."}
-                            </p>
+                          </div>
+
+                          <div className="wd-player-modal__share-platforms" aria-label="Open current track on music platforms">
+                            {activeStreamingLinks.map((platform) => (
+                              <a key={platform.key} className="wd-player-modal__share-platform" href={platform.href} target="_blank" rel="noreferrer" aria-label={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`} title={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}>
+                                {platform.shortLabel}
+                              </a>
+                            ))}
                           </div>
 
                           {activeSocialShareLinks ? (
-                            <div className="wd-player-modal__share-group">
-                              <span className="wd-player-modal__share-label">Social and message share</span>
-                              <div className="wd-player-modal__share-platforms" aria-label="Share to social and messaging platforms">
-                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.x} target="_blank" rel="noreferrer">
-                                  Share on X
-                                </a>
-                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.facebook} target="_blank" rel="noreferrer">
-                                  Share on Facebook
-                                </a>
-                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.whatsapp} target="_blank" rel="noreferrer">
-                                  Share on WhatsApp
-                                </a>
-                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.linkedin} target="_blank" rel="noreferrer">
-                                  Share on LinkedIn
-                                </a>
-                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.telegram} target="_blank" rel="noreferrer">
-                                  Share on Telegram
-                                </a>
-                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.reddit} target="_blank" rel="noreferrer">
-                                  Share on Reddit
-                                </a>
-                                <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.email}>
-                                  Share by email
-                                </a>
-                              </div>
+                            <div className="wd-player-modal__share-platforms" aria-label="Share to social and messaging platforms">
+                              <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.x} target="_blank" rel="noreferrer" aria-label="Share on X" title="Share on X">X</a>
+                              <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.facebook} target="_blank" rel="noreferrer" aria-label="Share on Facebook" title="Share on Facebook">FB</a>
+                              <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.whatsapp} target="_blank" rel="noreferrer" aria-label="Share on WhatsApp" title="Share on WhatsApp">WA</a>
+                              <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.linkedin} target="_blank" rel="noreferrer" aria-label="Share on LinkedIn" title="Share on LinkedIn">in</a>
+                              <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.telegram} target="_blank" rel="noreferrer" aria-label="Share on Telegram" title="Share on Telegram">Tg</a>
+                              <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.reddit} target="_blank" rel="noreferrer" aria-label="Share on Reddit" title="Share on Reddit">Rd</a>
+                              <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.email} aria-label="Share by email" title="Share by email">✉</a>
                             </div>
                           ) : null}
-
-                          <div className="wd-player-modal__share-preview">
-                            <article>
-                              <span>Share line</span>
-                              <p>{activeTrack.hook}</p>
-                            </article>
-                            <article>
-                              <span>Landing note</span>
-                              <p>The link reopens the Listening Room directly on {activeTrack.title}.</p>
-                            </article>
-                          </div>
                         </section>
 
                         <div className="wd-player-modal__links">
