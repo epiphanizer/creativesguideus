@@ -117,7 +117,7 @@ async function fetchBootstrapData(idToken: string) {
   });
 
   if (!response.ok) {
-    throw new Error("The bootstrap route could not load the local Walls Devine seed data.");
+    throw new Error("The bootstrap route could not load the local Walls/Devine seed data.");
   }
 
   return (await response.json()) as WallsDevineAdminData;
@@ -579,7 +579,7 @@ export function AdminConsole() {
             id="admin-login-title"
             eyebrow="Hidden route"
             title="Admin Console"
-            description="Sign in with the editor account for the Walls Devine backend."
+            description="Sign in with the editor account for the Walls/Devine backend."
           />
 
           <form onSubmit={handleLogin} className="cg-admin__login-form">
@@ -666,7 +666,7 @@ export function AdminConsole() {
           <SectionHeader
             id="admin-console-title"
             eyebrow="Admin"
-            title="Walls Devine control room"
+            title="Walls/Devine control room"
             description="Release plan, calendar, and source content for Volume 1."
           />
 

@@ -189,6 +189,39 @@
   transition: transform var(--cg-transition-move), border-color var(--cg-transition-fade);
 }
 
+.cg-home-gate__portal {
+  justify-items: center;
+  text-align: center;
+}
+
+.cg-home-gate__portal-meta {
+  justify-content: center;
+}
+
+.cg-home-gate__portal-copy {
+  justify-items: center;
+}
+
+.cg-home-gate__portal-copy h2 {
+  max-width: none;
+  font-size: clamp(2.55rem, 6.2vw, 5.4rem);
+}
+
+.cg-home-gate__portal-copy p {
+  max-width: 28ch;
+}
+
+.cg-home-gate__portal-art,
+.cg-home-gate__portal--walls .cg-home-gate__portal-art,
+.cg-home-gate__portal--bong .cg-home-gate__portal-art {
+  justify-self: center;
+  width: min(68%, 25rem);
+}
+
+.cg-home-gate__portal-cta {
+  justify-self: center;
+}
+
 @media (min-width: 960px) {
   .cg-home-gate {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -205,7 +238,7 @@
   .cg-home-gate__portal-art,
   .cg-home-gate__portal--bong .cg-home-gate__portal-art {
     justify-self: center;
-    width: min(72vw, 22rem);
+    width: min(76vw, 22rem);
   }
 }
 

@@ -5,16 +5,16 @@ import { SectionShell } from "@/components/ui/SectionShell";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 
-const heroTitle = "Walls / Devine Vol. 1 + Bong Tour";
+const heroTitle = "Walls/Devine Volume 1 + Bong Tour";
 
 const featuredProjects = [
   {
     label: "Album release",
-    title: "Walls / Devine Vol. 1",
+    title: "Walls/Devine Volume 1",
     href: "/walls-devine",
     ctaLabel: "Open Volume 1",
     image: volOneImage,
-    alt: "Walls Devine Vol. 1 album cover artwork"
+    alt: "Walls/Devine Volume 1 album cover artwork"
   },
   {
     label: "Feature deck",

@@ -4,13 +4,13 @@ import { SectionShell } from "@/components/ui/SectionShell";
 
 const gratitudeMeta = {
   instrumentation: "Expanded piano, analog synthesis, guitar collage, percussive design",
-  project: "Walls & Devine: Volume 1"
+  project: "Walls/Devine: Volume 1"
 };
 
 const gratitudeEmbedSrc = "https://open.spotify.com/embed/track/62hskoBw5Vl1LLZeR1oiBi?utm_source=generator";
 
 const releaseHighlights = [
-  "Walls & Devine now has a dedicated release hub with rollout logic, cover strategy, and song-by-song journals",
+  "Walls/Devine now has a dedicated release hub with rollout logic, cover strategy, and song-by-song journals",
   "The first three songs cross into Bong Tour, making the music section a live bridge between record and screenplay",
   "Each song entry can keep growing through technical notes and journal logs without cluttering the front page"
 ];
@@ -22,7 +22,7 @@ export function MusicSection() {
         <SectionHeader
           id="music-title"
           eyebrow="Album release"
-          title="Walls & Devine is the front door"
+          title="Walls/Devine is the front door"
           description="Volume 1 now carries the music story: release system, song journals, technical notes, and direct crossover into Bong Tour."
           icon={
             <svg viewBox="0 0 24 24">
@@ -55,7 +55,7 @@ export function MusicSection() {
         <div className="cg-music__card">
           <div className="cg-music__card-header">
             <span className="cg-music__badge">Featured release</span>
-            <h3 className="cg-music__title">Walls &amp; Devine: Volume 1</h3>
+            <h3 className="cg-music__title">Walls/Devine: Volume 1</h3>
           </div>
           <dl className="cg-music__meta">
             <div>

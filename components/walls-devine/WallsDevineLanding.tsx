@@ -28,7 +28,7 @@ const instagramGrid: GridTile[] = [
   { title: "Stash Daddy", role: "Song 02", image: stashDaddyImage },
   { title: "Space Cruiser", role: "Song 03", image: spaceCruiserImage },
   { title: "Home", role: "Song 04", image: homeImage },
-  { title: "Walls / Devine Vol. 1", role: "Collector's item", image: volOneImage, center: true },
+  { title: "Walls/Devine Volume 1", role: "Collector's item", image: volOneImage, center: true },
   { title: "Decay", role: "Song 05", image: decayImage },
   { title: "Resolve", role: "Song 06", image: resolveImage },
   { title: "Poetry", role: "Song 07", image: poetryImage },
@@ -50,7 +50,7 @@ export function WallsDevineLanding() {
             <SectionHeader
               id="walls-devine-title"
               eyebrow="Album release world"
-              title="Walls Devine Vol. 1"
+              title="Walls/Devine Volume 1"
               subtitle="A boutique landing experience for a split-world album object"
               description="Walls is the inward ritual. Devine is the public voltage. The page should feel like unveiling the artifact, the rollout system, and the companion score world in one motion."
               headingLevel="h1"
@@ -68,7 +68,7 @@ export function WallsDevineLanding() {
 
           <figure className="wd-hero__cover">
             <div className="wd-hero__cover-frame">
-              <Image src={volOneImage} alt="Walls Devine Vol. 1 cover artwork" priority sizes="(max-width: 900px) 86vw, 38vw" />
+              <Image src={volOneImage} alt="Walls/Devine Volume 1 cover artwork" priority sizes="(max-width: 900px) 86vw, 38vw" />
             </div>
           </figure>
         </div>
@@ -82,7 +82,7 @@ export function WallsDevineLanding() {
           </p>
         </header>
 
-        <ol className="wd-grid" aria-label="Walls Devine release grid">
+        <ol className="wd-grid" aria-label="Walls/Devine release grid">
           {instagramGrid.map((tile) => (
             <li key={tile.title} className={["wd-grid__tile", tile.center ? "wd-grid__tile--center" : ""].filter(Boolean).join(" ")}>
               <figure className="wd-grid__figure">

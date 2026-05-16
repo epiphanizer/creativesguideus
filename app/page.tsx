@@ -8,12 +8,12 @@ const gateways = [
   {
     eyebrow: "Album object",
     meta: "Listening room + journals",
-    title: "Walls / Devine",
-    description: "Volume 1, the modular player, and the score bridges into Bong Tour.",
+    title: "Walls/Devine",
+    description: "Walls/Devine Volume 1, the modular player, and the score bridges into Bong Tour.",
     href: "/walls-devine",
     cta: "Open Volume 1",
     image: volOneImage,
-    alt: "Walls Devine Volume 1 album cover artwork",
+    alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls"
   },
   {

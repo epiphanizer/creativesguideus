@@ -28,7 +28,7 @@ const pitchSignals = [
   },
   {
     label: "Sound bridge",
-    value: "Walls / Devine cue posters",
+    value: "Walls/Devine cue posters",
     note: "The score cards should keep pulling people toward the companion album world instead of living as isolated references."
   }
 ];
@@ -239,7 +239,7 @@ const bridgeModules = [
   },
   {
     label: "Cross-link",
-    title: "Keep Walls / Devine visibly in the loop",
+    title: "Keep Walls/Devine visibly in the loop",
     copy: "The landing page should always offer a clean exit into the companion album experience so both pages strengthen each other."
   }
 ];
@@ -292,7 +292,7 @@ export function BongTourFeature() {
             Producer invitation
           </Button>
           <Button as="a" href="/walls-devine" className="bt-button bt-button--outline">
-            Open Walls / Devine
+            Open Walls/Devine
           </Button>
         </div>
       </section>
@@ -322,7 +322,7 @@ export function BongTourFeature() {
             Enter score posters
           </Button>
           <Button as="a" href="/walls-devine" className="bt-button bt-button--outline">
-            Open album world
+              Open Walls/Devine
           </Button>
         </div>
       </section>
@@ -512,7 +512,7 @@ export function BongTourFeature() {
               Connect about Bong Tour
             </Button>
             <Button as="a" href="/walls-devine" className="bt-button bt-button--outline">
-              Open Walls / Devine
+              Open Walls/Devine
             </Button>
           </div>
         </div>

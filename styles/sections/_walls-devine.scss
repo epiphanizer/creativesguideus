@@ -1465,3 +1465,75 @@
     transform: none;
   }
 }
+
+.wd-page {
+  overflow-x: clip;
+  background:
+    linear-gradient(90deg, rgba(253, 254, 254, 0.92) 0 48.9%, rgba(126, 7, 5, 0.82) 48.9% 49.55%, rgba(247, 224, 224, 0.94) 49.55% 100%),
+    linear-gradient(0deg, transparent 0 14%, rgba(126, 7, 5, 0.16) 14% 14.35%, transparent 14.35% 68%, rgba(202, 63, 59, 0.18) 68% 68.35%, transparent 68.35% 100%),
+    linear-gradient(90deg, transparent 0 10%, rgba(126, 7, 5, 0.12) 10% 10.35%, transparent 10.35% 34%, rgba(179, 22, 18, 0.2) 34% 34.35%, transparent 34.35% 62%, rgba(236, 187, 186, 0.42) 62% 62.35%, transparent 62.35% 86%, rgba(126, 7, 5, 0.12) 86% 86.35%, transparent 86.35% 100%),
+    linear-gradient(180deg, #fffdfd 0%, #f7e0e0 100%);
+}
+
+.wd-page .cg-section {
+  padding-block: clamp(var(--cg-space-xl), 7vw, var(--cg-space-4xl));
+}
+
+.wd-page .cg-section:not(:first-of-type)::before {
+  left: 0;
+  right: 0;
+  background: linear-gradient(90deg, rgba(126, 7, 5, 0) 0%, rgba(126, 7, 5, 0.24) 14%, rgba(126, 7, 5, 0.24) 86%, rgba(126, 7, 5, 0) 100%);
+}
+
+.wd-page .cg-section__inner {
+  max-width: 1380px;
+  padding-inline: clamp(1rem, 4vw, 4rem);
+}
+
+.wd-hero-shell,
+.wd-grid-shell,
+.wd-post-shell {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.wd-hero-shell::before {
+  display: none;
+}
+
+.wd-hero-shell::after {
+  background:
+    linear-gradient(145deg, rgba(253, 254, 254, 0.8) 0 42%, rgba(247, 224, 224, 0.76) 42% 70%, rgba(179, 22, 18, 0.14) 70% 100%),
+    linear-gradient(90deg, transparent 0 72%, rgba(126, 7, 5, 0.16) 72% 72.35%, transparent 72.35% 100%),
+    linear-gradient(0deg, transparent 0 78%, rgba(126, 7, 5, 0.12) 78% 78.35%, transparent 78.35% 100%);
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+.wd-grid-shell {
+  background:
+    linear-gradient(140deg, rgba(253, 254, 254, 0.68) 0 40%, rgba(247, 224, 224, 0.78) 40% 72%, rgba(236, 187, 186, 0.34) 72% 100%),
+    linear-gradient(90deg, transparent 0 18%, rgba(126, 7, 5, 0.12) 18% 18.35%, transparent 18.35% 58%, rgba(202, 63, 59, 0.12) 58% 58.35%, transparent 58.35% 100%);
+}
+
+.wd-post-shell {
+  background:
+    linear-gradient(136deg, rgba(253, 254, 254, 0.74) 0 46%, rgba(247, 224, 224, 0.72) 46% 74%, rgba(179, 22, 18, 0.12) 74% 100%),
+    linear-gradient(0deg, transparent 0 22%, rgba(126, 7, 5, 0.12) 22% 22.35%, transparent 22.35% 100%);
+}
+
+.wd-hero,
+.wd-grid-section,
+.wd-post {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 720px) {
+  .wd-page .cg-section__inner {
+    padding-inline: clamp(0.9rem, 4vw, 1.25rem);
+  }
+}

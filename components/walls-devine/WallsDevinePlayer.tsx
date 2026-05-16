@@ -674,7 +674,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
           <div className="wd-player__summary">
             <span className="wd-player__eyebrow">Listening room</span>
-            <h3 id="wd-player-title">Volume 1 modular player</h3>
+            <h3 id="wd-player-title">Walls/Devine Volume 1 modular player</h3>
             <p>
               Open the album object, move song to song, and keep each track&apos;s journal access, making notes, and Bong Tour bridge inside the player
               instead of repeating them in page cards.
@@ -743,7 +743,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
           <div className="wd-player-modal__panel">
             <header className="wd-player-modal__header">
               <div>
-                <span className="wd-player-modal__eyebrow">Volume 1 listening room</span>
+                <span className="wd-player-modal__eyebrow">Walls/Devine Volume 1 listening room</span>
                 <h3 id={titleId}>{activeTrack.title}</h3>
                 <p className="wd-player-modal__meta">{activeTrackMeta}</p>
                 <p>{activeTrack.caption}</p>
