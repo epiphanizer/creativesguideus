@@ -31,6 +31,18 @@ type VisualizerPalette = {
 
 type VisualizerByteArray = Uint8Array<ArrayBuffer>;
 
+type PlayerDockPosition = {
+  x: number;
+  y: number;
+};
+
+type PersistedPlayerState = {
+  activeIndex?: number;
+  isOpen?: boolean;
+  isCollapsed?: boolean;
+  dockPosition?: PlayerDockPosition | null;
+};
+
 type AudioContextWindow = Window & typeof globalThis & {
   webkitAudioContext?: typeof AudioContext;
 };
@@ -56,6 +68,8 @@ const trackVisualizerPalettes: Record<number, VisualizerPalette> = {
   7: { primary: "#29543b", secondary: "#ca3f3b", glow: "#fafaf9", ink: "#1a130d" },
   8: { primary: "#d66e6c", secondary: "#d96a1f", glow: "#f4e7ce", ink: "#1a130d" }
 };
+
+const playerStorageKey = "walls-devine-player-state-v1";
 
 function hexToRgba(hex: string, alpha: number) {
   const sanitized = hex.replace("#", "");
@@ -248,13 +262,23 @@ function getTrackAudioSrc(fileName: string) {
   return `/walls-devine/releases/volume1/${encodeURIComponent(fileName)}`;
 }
 
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
 export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [dockPosition, setDockPosition] = useState<PlayerDockPosition | null>(null);
+  const [isDraggingDock, setIsDraggingDock] = useState(false);
   const deepLinkHandledRef = useRef(false);
+  const playerStateRestoredRef = useRef(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const dockRef = useRef<HTMLDivElement | null>(null);
+  const dockPointerOffsetRef = useRef<PlayerDockPosition | null>(null);
   const visualizerCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -267,6 +291,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const activeSrc = getTrackAudioSrc(activeTrack.audioFileName);
   const activePosterImage = trackPosterImages[activeTrack.trackNumber] ?? volOneImage;
   const activePosterAlt = `${activeTrack.title} cover artwork`;
+  const activeTrackMeta = `Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase} · ${activeTrack.duration}`;
 
   function normalizePlayerTarget(value: string | null | undefined) {
     return (value ?? "")
@@ -283,6 +308,101 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
         .includes(value)
     );
   }
+
+  useEffect(() => {
+    if (typeof window === "undefined" || playerStateRestoredRef.current) {
+      return;
+    }
+
+    playerStateRestoredRef.current = true;
+
+    if (new URLSearchParams(window.location.search).get("player")) {
+      return;
+    }
+
+    const rawState = window.localStorage.getItem(playerStorageKey);
+
+    if (!rawState) {
+      return;
+    }
+
+    try {
+      const storedState = JSON.parse(rawState) as PersistedPlayerState;
+
+      if (Number.isInteger(storedState.activeIndex)) {
+        setActiveIndex(clamp(storedState.activeIndex ?? 0, 0, Math.max(0, tracks.length - 1)));
+      }
+
+      if (storedState.isOpen) {
+        setIsOpen(true);
+        setIsCollapsed(false);
+      } else if (storedState.isCollapsed) {
+        setIsCollapsed(true);
+      }
+
+      if (
+        storedState.dockPosition &&
+        Number.isFinite(storedState.dockPosition.x) &&
+        Number.isFinite(storedState.dockPosition.y)
+      ) {
+        setDockPosition(storedState.dockPosition);
+      }
+    } catch {
+      window.localStorage.removeItem(playerStorageKey);
+    }
+  }, [tracks.length]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !playerStateRestoredRef.current) {
+      return;
+    }
+
+    window.localStorage.setItem(
+      playerStorageKey,
+      JSON.stringify({
+        activeIndex,
+        isOpen,
+        isCollapsed,
+        dockPosition
+      } satisfies PersistedPlayerState)
+    );
+  }, [activeIndex, dockPosition, isCollapsed, isOpen]);
+
+  useEffect(() => {
+    if (!isDraggingDock) {
+      return;
+    }
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const dockElement = dockRef.current;
+      const pointerOffset = dockPointerOffsetRef.current;
+
+      if (!dockElement || !pointerOffset) {
+        return;
+      }
+
+      const maxX = Math.max(12, window.innerWidth - dockElement.offsetWidth - 12);
+      const maxY = Math.max(12, window.innerHeight - dockElement.offsetHeight - 12);
+
+      setDockPosition({
+        x: clamp(event.clientX - pointerOffset.x, 12, maxX),
+        y: clamp(event.clientY - pointerOffset.y, 12, maxY)
+      });
+    };
+
+    const handlePointerUp = () => {
+      dockPointerOffsetRef.current = null;
+      setIsDraggingDock(false);
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, [isDraggingDock]);
 
   async function ensureAudioVisualizer() {
     const audioElement = audioRef.current;
@@ -361,6 +481,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
     deepLinkHandledRef.current = true;
     setActiveIndex(nextIndex);
+    setIsCollapsed(false);
     setIsOpen(true);
 
     const hash = window.location.hash || "#walls-devine-listening-room";
@@ -378,7 +499,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsOpen(false);
+        collapsePlayer();
       }
     };
 
@@ -483,11 +604,26 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
   function openPlayer(index: number) {
     setActiveIndex(index);
+    setIsCollapsed(false);
     setIsOpen(true);
   }
 
-  function closePlayer() {
+  function reopenPlayer() {
+    setIsCollapsed(false);
+    setIsOpen(true);
+  }
+
+  function collapsePlayer() {
     audioRef.current?.pause();
+    setIsPlaying(false);
+    setIsCollapsed(true);
+    setIsOpen(false);
+  }
+
+  function dismissDock() {
+    audioRef.current?.pause();
+    setIsPlaying(false);
+    setIsCollapsed(false);
     setIsOpen(false);
   }
 
@@ -501,8 +637,29 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
   function handleBackdropClick(event: React.MouseEvent<HTMLDivElement>) {
     if (event.target === event.currentTarget) {
-      closePlayer();
+      collapsePlayer();
     }
+  }
+
+  function handleDockDragStart(event: React.PointerEvent<HTMLButtonElement>) {
+    if (event.button !== 0) {
+      return;
+    }
+
+    const dockElement = dockRef.current;
+
+    if (!dockElement) {
+      return;
+    }
+
+    const rect = dockElement.getBoundingClientRect();
+    dockPointerOffsetRef.current = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
+    };
+    setDockPosition({ x: rect.left, y: rect.top });
+    setIsDraggingDock(true);
+    event.preventDefault();
   }
 
   return (
@@ -519,8 +676,8 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
             <span className="wd-player__eyebrow">Listening room</span>
             <h3 id="wd-player-title">Volume 1 modular player</h3>
             <p>
-              Open the album object, move song to song, and keep each track&apos;s distilled Instagram story, making note, and Bong Tour bridge in one
-              mobile-friendly popup.
+              Open the album object, move song to song, and keep each track&apos;s journal access, making notes, and Bong Tour bridge inside the player
+              instead of repeating them in page cards.
             </p>
 
             <div className="wd-player__actions">
@@ -552,48 +709,34 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
             </button>
           ))}
         </div>
-
-        <div className="wd-post__cards" role="list" aria-label="Song post card copy kit">
-          {tracks.map((track, index) => (
-            <article key={track.title} role="listitem" className="wd-post__card">
-              <header>
-                <span>
-                  Track {formatTrackNumber(track.trackNumber)} · {track.phase}
-                </span>
-                <h3>{track.title}</h3>
-              </header>
-              <p>{track.hook}</p>
-              <p>{track.caption}</p>
-              <p className="wd-post__story">{track.storySummary}</p>
-              <p className="wd-post__visual">Visual thread: {track.visualThread}</p>
-
-              <div className="wd-post__links" aria-label={`${track.title} references`}>
-                <a href={`/walls-devine/journals/${track.journalSlug}.md`}>Read journal entry</a>
-                {track.bongTourCueId ? <a href={`/bong-tour#${track.bongTourCueId}`}>View cue on Bong Tour</a> : null}
-                <button type="button" onClick={() => openPlayer(index)}>
-                  Open in player
-                </button>
-              </div>
-
-              {track.bongTourCueId ? (
-                <div className="wd-post__bong-link">
-                  {track.bongTourContext ? <p>{track.bongTourContext}</p> : null}
-                </div>
-              ) : null}
-
-              <details className="wd-post__detail">
-                <summary>Making note</summary>
-                <p>{track.makingNote}</p>
-              </details>
-
-              <details className="wd-post__detail">
-                <summary>Technical note</summary>
-                <p>{track.technicalNote}</p>
-              </details>
-            </article>
-          ))}
-        </div>
       </section>
+
+      {isCollapsed && !isOpen ? (
+        <div
+          ref={dockRef}
+          className={cx("wd-player-dock", isDraggingDock && "wd-player-dock--dragging")}
+          style={dockPosition ? { left: `${dockPosition.x}px`, top: `${dockPosition.y}px`, right: "auto", bottom: "auto" } : undefined}
+        >
+          <button type="button" className="wd-player-dock__handle" onPointerDown={handleDockDragStart} aria-label="Drag listening room mini player">
+            Drag
+          </button>
+
+          <div className="wd-player-dock__summary">
+            <span>Listening room</span>
+            <strong>{activeTrack.title}</strong>
+            <p>{activeTrackMeta}</p>
+          </div>
+
+          <div className="wd-player-dock__actions">
+            <button type="button" className="wd-player-dock__button" onClick={reopenPlayer}>
+              Reopen
+            </button>
+            <button type="button" className="wd-player-dock__button wd-player-dock__button--close" onClick={dismissDock} aria-label="Hide listening room mini player">
+              X
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       {isOpen ? (
         <div className="wd-player-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={handleBackdropClick}>
@@ -602,11 +745,12 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
               <div>
                 <span className="wd-player-modal__eyebrow">Volume 1 listening room</span>
                 <h3 id={titleId}>{activeTrack.title}</h3>
+                <p className="wd-player-modal__meta">{activeTrackMeta}</p>
                 <p>{activeTrack.caption}</p>
               </div>
 
-              <button type="button" className="wd-player-modal__close" onClick={closePlayer} aria-label="Close player">
-                Close
+              <button type="button" className="wd-player-modal__close" onClick={collapsePlayer} aria-label="Collapse player">
+                X
               </button>
             </header>
 
@@ -618,10 +762,6 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
                     <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--top">
                       Track {formatTrackNumber(activeTrack.trackNumber)}
                     </span>
-                    <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--left">{activeTrack.phase}</span>
-                    <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--right">
-                      {isPlaying ? "Live dynamics" : "Idle orbit"}
-                    </span>
                     <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--bottom">{activeTrack.duration} · WAV</span>
                     <div className="wd-player-modal__visualizer-core">
                       <div className="wd-player-modal__art-frame">
@@ -629,9 +769,6 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
                       </div>
                     </div>
                   </div>
-                  <p>
-                    Track {formatTrackNumber(activeTrack.trackNumber)} · {activeTrack.duration}
-                  </p>
                 </div>
 
                 <div className="wd-player-modal__transport">
@@ -651,8 +788,16 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
                 <div className="wd-player-modal__notes">
                   <article>
+                    <span>Track hook</span>
+                    <p>{activeTrack.hook}</p>
+                  </article>
+                  <article>
                     <span>Instagram synthesis</span>
                     <p>{activeTrack.storySummary}</p>
+                  </article>
+                  <article>
+                    <span>Visual thread</span>
+                    <p>{activeTrack.visualThread}</p>
                   </article>
                   <article>
                     <span>Making note</span>
