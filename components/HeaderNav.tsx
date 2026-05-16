@@ -149,7 +149,7 @@ export function HeaderNav() {
                   openSignalRoom();
                 }}
               >
-                Enter The Signal Room
+                Signal Room
               </button>
             )}
           />

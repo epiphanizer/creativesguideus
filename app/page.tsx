@@ -7,22 +7,24 @@ import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 const gateways = [
   {
     eyebrow: "Album release",
-    meta: "Listening room, journals, collector access",
+    descriptor: "Collector room · player · journals",
     title: "Walls/Devine",
-    description: "Enter Volume 1 through the player, the journals, and the private collector layer around the release.",
+    description: "Enter Volume 1 through the listening room, release journals, and the private collector layer around the record.",
     href: "/walls-devine",
-    cta: "Enter Walls/Devine",
+    entryLabel: "Enter Volume 1",
+    entryMeta: "Player · Journals · Collector Access",
     image: volOneImage,
     alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls"
   },
   {
-    eyebrow: "Feature rollout",
-    meta: "Poster world, screenplay, cue deck",
+    eyebrow: "Screenplay portal",
+    descriptor: "Poster world · cue deck · screenplay",
     title: "Bong Tour",
-    description: "Step into the screenplay portal, cue posters, and the film world orbiting the record and score.",
+    description: "Step into the poster world, screenplay portal, and cue deck orbiting the record and score.",
     href: "/bong-tour",
-    cta: "Enter Bong Tour",
+    entryLabel: "Enter Bong Tour",
+    entryMeta: "Poster World · Screenplay · Cue Deck",
     image: posterImage,
     alt: "Bong Tour poster artwork",
     tone: "bong"
@@ -34,29 +36,36 @@ export default function HomePage() {
     <main className="cg-page cg-home-page" id="hero">
       <section className="cg-home-gate" aria-label="Featured project gateways">
         {gateways.map((gateway) => (
-          <Link key={gateway.title} href={gateway.href} className={`cg-home-gate__portal cg-home-gate__portal--${gateway.tone}`}>
-            <div className="cg-home-gate__portal-meta">
-              <span className="cg-home-gate__portal-eyebrow">{gateway.eyebrow}</span>
-              <span className="cg-home-gate__portal-kicker">{gateway.meta}</span>
+          <article key={gateway.title} className={`cg-home-gate__portal cg-home-gate__portal--${gateway.tone}`}>
+            <div className="cg-home-gate__portal-head">
+              <div className="cg-home-gate__portal-meta">
+                <span className="cg-home-gate__portal-eyebrow">{gateway.eyebrow}</span>
+                <span className="cg-home-gate__portal-descriptor">{gateway.descriptor}</span>
+              </div>
+
+              <div className="cg-home-gate__portal-copy">
+                <h2>{gateway.title}</h2>
+                <p>{gateway.description}</p>
+              </div>
             </div>
 
-            <div className="cg-home-gate__portal-copy">
-              <h2>{gateway.title}</h2>
-              <p>{gateway.description}</p>
+            <div className="cg-home-gate__portal-stage">
+              <div className="cg-home-gate__portal-art">
+                <Image
+                  src={gateway.image}
+                  alt={gateway.alt}
+                  priority
+                  sizes="(max-width: 959px) 86vw, 34vw"
+                  className="cg-home-gate__portal-image"
+                />
+              </div>
             </div>
 
-            <div className="cg-home-gate__portal-art">
-              <Image
-                src={gateway.image}
-                alt={gateway.alt}
-                priority
-                sizes="(max-width: 959px) 82vw, 40vw"
-                className="cg-home-gate__portal-image"
-              />
-            </div>
-
-            <span className="cg-home-gate__portal-cta">{gateway.cta}</span>
-          </Link>
+            <Link href={gateway.href} className="cg-home-gate__portal-entry">
+              <span className="cg-home-gate__portal-entry-label">{gateway.entryLabel}</span>
+              <small className="cg-home-gate__portal-entry-meta">{gateway.entryMeta}</small>
+            </Link>
+          </article>
         ))}
       </section>
     </main>
