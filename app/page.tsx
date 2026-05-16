@@ -32,13 +32,7 @@ const gateways = [
 export default function HomePage() {
   return (
     <main className="cg-page cg-home-page" id="hero">
-      <section className="cg-home-gate" aria-labelledby="home-gate-title">
-        <header className="cg-home-gate__intro">
-          <span className="cg-home-gate__eyebrow">Creatives Guide Us</span>
-          <h1 id="home-gate-title">Choose the object or the film.</h1>
-          <p>Walls / Devine holds Volume 1. Bong Tour holds the feature-world deck.</p>
-        </header>
-
+      <section className="cg-home-gate" aria-label="Featured project gateways">
         {gateways.map((gateway) => (
           <Link key={gateway.title} href={gateway.href} className={`cg-home-gate__portal cg-home-gate__portal--${gateway.tone}`}>
             <div className="cg-home-gate__portal-meta">

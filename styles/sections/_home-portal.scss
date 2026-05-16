@@ -12,7 +12,6 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "intro"
     "walls"
     "bong";
   min-height: calc(100svh - var(--cg-header-height));
@@ -41,46 +40,16 @@
     linear-gradient(180deg, transparent 0 82%, rgba(41, 84, 59, 0.12) 82% 100%);
 }
 
-.cg-home-gate__intro,
 .cg-home-gate__portal {
   position: relative;
   z-index: 1;
 }
 
-.cg-home-gate__intro {
-  grid-area: intro;
-  display: grid;
-  gap: 0.3rem;
-  padding: clamp(1.2rem, 2vw, 1.75rem) clamp(var(--cg-space-lg), 4vw, var(--cg-space-2xl));
-  border-bottom: 1px solid var(--cg-color-grid-line);
-}
-
-.cg-home-gate__eyebrow,
 .cg-home-gate__portal-meta span,
 .cg-home-gate__portal-cta {
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-}
-
-.cg-home-gate__eyebrow {
-  color: rgba(26, 19, 13, 0.68);
-}
-
-.cg-home-gate__intro h1 {
-  margin: 0;
-  max-width: 12ch;
-  font-size: clamp(2.4rem, 7vw, 6rem);
-  line-height: 0.92;
-  letter-spacing: -0.04em;
-  color: var(--cg-color-bong-ink);
-  text-transform: uppercase;
-}
-
-.cg-home-gate__intro p {
-  margin: 0;
-  max-width: 34ch;
-  color: rgba(26, 19, 13, 0.72);
 }
 
 .cg-home-gate__portal {
@@ -223,22 +192,8 @@
 @media (min-width: 960px) {
   .cg-home-gate {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas:
-      "intro intro"
       "walls bong";
-  }
-
-  .cg-home-gate__intro {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-    align-items: end;
-    column-gap: clamp(var(--cg-space-xl), 4vw, var(--cg-space-3xl));
-  }
-
-  .cg-home-gate__intro p {
-    justify-self: end;
-    align-self: end;
-    text-align: right;
   }
 
   .cg-home-gate__portal--walls {
@@ -247,10 +202,6 @@
 }
 
 @media (max-width: 959px) {
-  .cg-home-gate__intro {
-    padding-top: clamp(var(--cg-space-lg), 8vw, var(--cg-space-2xl));
-  }
-
   .cg-home-gate__portal-art,
   .cg-home-gate__portal--bong .cg-home-gate__portal-art {
     justify-self: center;
@@ -259,19 +210,6 @@
 }
 
 @media (max-width: 640px) {
-  .cg-home-gate__intro {
-    gap: var(--cg-space-xs);
-    padding-inline: clamp(var(--cg-space-md), 5vw, var(--cg-space-lg));
-  }
-
-  .cg-home-gate__intro h1 {
-    max-width: 8ch;
-  }
-
-  .cg-home-gate__intro p {
-    max-width: 28ch;
-  }
-
   .cg-home-gate__portal {
     min-height: clamp(21rem, 48svh, 30rem);
     padding-inline: clamp(var(--cg-space-md), 5vw, var(--cg-space-lg));
