@@ -2,7 +2,7 @@ export function Footer() {
   return (
     <footer className="cg-footer">
       <div className="cg-footer__inner">
-        <p className="cg-footer__manifesto">Build more momentum. Command higher resonance.</p>
+        <p className="cg-footer__manifesto">Release the world. Keep the signal alive.</p>
         <a className="cg-footer__email" href="mailto:hello@creativesguide.us">
           hello@creativesguide.us
         </a>

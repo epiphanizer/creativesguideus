@@ -49,22 +49,6 @@ const projectHubs: ProjectHub[] = [
       { label: "Open Bong Tour", href: "/bong-tour" },
       { label: "Jump to score sketches", href: "/bong-tour#score-sketches", variant: "ghost" }
     ]
-  },
-  {
-    eyebrow: "Client builds",
-    title: "Selected Work",
-    summary: "Product and narrative systems with published case studies instead of broad capability claims.",
-    description:
-      "Rather than leading with abstract service language, the homepage now points to actual builds where product, score, and story moved together in the market.",
-    bullets: [
-      "Appreesh: gratitude-led product and launch system",
-      "Lead Me Guide Me: scripture companion shaped around rehearsal flow",
-      "World Cup Dreams: athlete-first fundraising platform and donor path"
-    ],
-    actions: [
-      { label: "View case studies", href: "/work" },
-      { label: "Open Appreesh", href: "/work/appreesh", variant: "ghost" }
-    ]
   }
 ];
 
@@ -74,9 +58,9 @@ export function ProjectHubSection() {
       <div className="cg-project-hub__lead">
         <SectionHeader
           id="projects-title"
-          eyebrow="Project map"
-          title="Jump into the live work"
-          description="The homepage now opens through active projects instead of splitting software, music, and writing into separate claims. Expand the lane you want and go straight in."
+          eyebrow="World map"
+          title="Jump into the live worlds"
+          description="The homepage now opens through the active release worlds instead of splitting disciplines into generic claims. Pick the chamber you want and go straight in."
         />
       </div>
 

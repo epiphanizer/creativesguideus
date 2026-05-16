@@ -1,30 +1,10 @@
 import Link from "next/link";
 
+import workModule from "@/data/work/module.json";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
-
-const CASE_STUDIES = [
-  {
-    title: "Appreesh",
-    description: "Gratitude cooperative launch with smart contracts, analytics, and a ritual-first brand kit.",
-    href: "/work/appreesh",
-    proof: ["18-week build", "Next.js + Solidity", "Invite-only launch"]
-  },
-  {
-    title: "Lead Me Guide Me",
-    description: "SwiftUI scripture companion aligning daily meditations with choir rehearsal flows.",
-    href: "/work/lead-me-guide-me",
-    proof: ["12-week beta", "SwiftUI iOS", "Product · UX · Score"]
-  },
-  {
-    title: "World Cup Dreams",
-    description: "Athlete-led WordPress system clarifying grant pathways and fueling donor momentum.",
-    href: "/work/world-cup-dreams",
-    proof: ["14-week sprint", "WordPress", "$7M+ grants"]
-  }
-];
 
 export default function WorkIndexPage() {
   return (
@@ -49,14 +29,14 @@ export default function WorkIndexPage() {
           <p>Three proofs where strategy, build, and sound moved as one release.</p>
         </div>
         <div className="cg-work-index__cards" role="list">
-          {CASE_STUDIES.map((study) => (
+          {workModule.studies.map((study) => (
             <div key={study.title} role="listitem">
               <Card
                 title={study.title}
-                description={study.description}
+                description={study.workIndexDescription ?? study.description}
                 className="cg-work-index__card"
                 footer={
-                  <Link href={study.href} className="cg-work-index__link">
+                  <Link href={study.caseStudyPath} className="cg-work-index__link">
                     Read case study <span aria-hidden="true">→</span>
                   </Link>
                 }
@@ -81,8 +61,8 @@ export default function WorkIndexPage() {
           <Button as="a" href="/#contact">
             Start a project
           </Button>
-          <Button as="a" href="/#process" variant="ghost">
-            See our process
+          <Button as="a" href={workModule.sourceSiteUrl} variant="ghost">
+            Open source site
           </Button>
         </div>
       </SectionShell>

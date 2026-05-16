@@ -1,0 +1,40 @@
+export const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? "AIzaSyANXVhqCnUXPlMrKPOVsFsbYYjbYqp-drA",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? "creatives-guide-us.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? "creatives-guide-us",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ?? "creatives-guide-us.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? "915803625394",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? "1:915803625394:web:261af2d7d2080251dbb6ab"
+} as const;
+
+export const firebaseProjectInfo = {
+  projectId: firebaseConfig.projectId,
+  authDomain: firebaseConfig.authDomain,
+  storageBucket: firebaseConfig.storageBucket,
+  messagingSenderId: firebaseConfig.messagingSenderId,
+  appId: firebaseConfig.appId
+} as const;
+
+export const firebaseAdminPaths = {
+  adminUsersCollection: "adminUsers",
+  adminProjectsCollection: "adminProjects",
+  wallsDevineProjectId: "walls-devine",
+  releasePlanField: "releasePlan",
+  storageBasePath: "admin-projects/walls-devine",
+  bootstrapRoute: "/api/admin/bootstrap"
+} as const;
+
+export const hasFirebaseConfig = Object.values(firebaseConfig).every((value) => Boolean(value));
+
+export const firebaseRoadmapNotes = [
+  "Admin auth now expects a Firebase Auth email/password account instead of the local cookie bypass.",
+  "Authorize editors by creating Firestore documents in adminUsers/{uid}; the UI checks that document before loading any content.",
+  "Structured release planning now belongs in Firestore, while longform markdown lives in Firebase Storage under the Walls Devine admin path."
+] as const;
+
+export const firebaseAdminRecommendations = [
+  `Use Firestore ${firebaseAdminPaths.adminUsersCollection}/{uid} documents as the editor allowlist.`,
+  `Keep the release plan in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}.`,
+  `Store drafts and journals in Storage under ${firebaseAdminPaths.storageBasePath}/{collection}/{slug}.md.`,
+  "Treat the local JSON and markdown files as migration seed data, not the live admin backend."
+] as const;

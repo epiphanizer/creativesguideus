@@ -1,0 +1,48 @@
+{
+  "moduleId": "cgu-work-module",
+  "sourceRepo": "cgu_master",
+  "sourceSiteName": "Creatives Guide Us",
+  "sourceSiteUrl": "https://creativesguide.us",
+  "description": "Case-study summaries and outbound links maintained in cgu_master and syndicated into other properties.",
+  "studies": [
+    {
+      "slug": "world-cup-dreams",
+      "title": "World Cup Dreams Foundation",
+      "eyebrow": "Ski fundraising platform",
+      "description": "World Cup Dreams Foundation is an athlete-first WordPress experience tailored to guide athletes and donors toward one mission: fund elite snowsport talent.",
+      "workIndexDescription": "Athlete-led WordPress system clarifying grant pathways and fueling donor momentum.",
+      "tags": ["Nonprofit", "Donations", "Grant Programs", "Athlete Support", "Community"],
+      "proof": ["14-week sprint", "WordPress", "$7M+ grants"],
+      "caseStudyPath": "/work/world-cup-dreams",
+      "caseStudyUrl": "https://creativesguide.us/work/world-cup-dreams",
+      "siteHref": "https://www.worldcupdreams.org",
+      "siteLabel": "Visit worldcupdreams.org"
+    },
+    {
+      "slug": "appreesh",
+      "title": "Appreesh",
+      "eyebrow": "Gratitude gifting co-op",
+      "description": "Community-owned gratitude economy with on-chain rituals, editorial UX, and an innovation-led launch kit.",
+      "workIndexDescription": "Gratitude cooperative launch with smart contracts, analytics, and a ritual-first brand kit.",
+      "tags": ["Product", "Brand", "Web3"],
+      "proof": ["18-week build", "Next.js + Solidity", "Invite-only launch"],
+      "caseStudyPath": "/work/appreesh",
+      "caseStudyUrl": "https://creativesguide.us/work/appreesh",
+      "siteHref": "https://appreesh.org",
+      "siteLabel": "Visit appreesh.org"
+    },
+    {
+      "slug": "lead-me-guide-me",
+      "title": "Lead Me Guide Me",
+      "eyebrow": "Scripture application",
+      "description": "iOS scripture companion pairing daily prompts with original rehearsal cues for gospel choirs.",
+      "workIndexDescription": "SwiftUI scripture companion aligning daily meditations with choir rehearsal flows.",
+      "tags": ["Product", "Music", "Story"],
+      "proof": ["12-week beta", "SwiftUI iOS", "Product · UX · Score"],
+      "caseStudyPath": "/work/lead-me-guide-me",
+      "caseStudyUrl": "https://creativesguide.us/work/lead-me-guide-me",
+      "siteHref": "https://leadmeguideme.org",
+      "siteLabel": "Visit leadmeguideme.org"
+    }
+  ]
+}

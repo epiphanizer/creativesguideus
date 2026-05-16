@@ -1,0 +1,18 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() &&
+        firestore.get(/databases/(default)/documents/adminUsers/$(request.auth.uid)).data.active == true;
+    }
+
+    match /admin-projects/{projectId}/{allPaths=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

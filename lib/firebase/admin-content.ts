@@ -1,0 +1,219 @@
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { getBytes, listAll, ref, uploadString } from "firebase/storage";
+
+import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData } from "@/lib/admin/types";
+
+import { firebaseDb, firebaseStorage } from "./client";
+import { firebaseAdminPaths } from "./config";
+
+export type AdminUserProfile = {
+  active?: boolean;
+  email?: string;
+  displayName?: string;
+  roles?: string[];
+};
+
+function getProjectDoc() {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return doc(firebaseDb, firebaseAdminPaths.adminProjectsCollection, firebaseAdminPaths.wallsDevineProjectId);
+}
+
+function getAdminUserDoc(uid: string) {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return doc(firebaseDb, firebaseAdminPaths.adminUsersCollection, uid);
+}
+
+function getStoragePath(collection: AdminMarkdownCollection, slug?: string) {
+  const suffix = slug ? `${slug}.md` : "";
+  const trailing = suffix ? `/${suffix}` : "";
+
+  return `${firebaseAdminPaths.storageBasePath}/${collection}${trailing}`;
+}
+
+function getMarkdownTitle(content: string, fallback: string) {
+  const match = content.match(/^#\s+(.+)$/m);
+  return match?.[1]?.trim() ?? fallback;
+}
+
+function getMarkdownPreview(content: string) {
+  const sections = content
+    .split("\n\n")
+    .map((section) => section.trim())
+    .filter(Boolean)
+    .filter((section) => !section.startsWith("#") && !section.startsWith("##"));
+
+  return sections[0] ?? "";
+}
+
+function normalizeMarkdown(content: string) {
+  return content.trimEnd() ? `${content.trimEnd()}\n` : "";
+}
+
+async function readMarkdownCollection(collection: AdminMarkdownCollection) {
+  if (!firebaseStorage) {
+    throw new Error("Firebase Storage is not initialized for this Firebase project.");
+  }
+
+  const collectionRef = ref(firebaseStorage, getStoragePath(collection));
+  const result = await listAll(collectionRef);
+  const decoder = new TextDecoder();
+  const sortedItems = [...result.items].sort((left, right) => left.name.localeCompare(right.name));
+
+  return Promise.all(
+    sortedItems.map(async (item) => {
+      const slug = item.name.replace(/\.md$/, "");
+      const content = decoder.decode(await getBytes(item));
+
+      return {
+        slug,
+        title: getMarkdownTitle(content, item.name),
+        filePath: getStoragePath(collection, slug),
+        content,
+        preview: getMarkdownPreview(content)
+      } satisfies AdminMarkdownFile;
+    })
+  );
+}
+
+async function saveReleasePlan(plan: ReleasePlan) {
+  const nextPlan = {
+    ...plan,
+    updatedAt: plan.updatedAt || new Date().toISOString()
+  } satisfies ReleasePlan;
+
+  await setDoc(
+    getProjectDoc(),
+    {
+      projectId: firebaseAdminPaths.wallsDevineProjectId,
+      updatedAt: nextPlan.updatedAt,
+      [firebaseAdminPaths.releasePlanField]: nextPlan
+    },
+    { merge: true }
+  );
+
+  return nextPlan;
+}
+
+function updateMarkdownCollection(
+  files: AdminMarkdownFile[],
+  nextFile: AdminMarkdownFile
+) {
+  const nextFiles = files.some((file) => file.slug === nextFile.slug)
+    ? files.map((file) => (file.slug === nextFile.slug ? nextFile : file))
+    : [...files, nextFile];
+
+  return nextFiles.sort((left, right) => left.slug.localeCompare(right.slug));
+}
+
+export function isActiveAdminProfile(profile: AdminUserProfile | null) {
+  return Boolean(profile && profile.active !== false);
+}
+
+export async function getAdminUserProfile(uid: string) {
+  const snapshot = await getDoc(getAdminUserDoc(uid));
+
+  if (!snapshot.exists()) {
+    return null;
+  }
+
+  return snapshot.data() as AdminUserProfile;
+}
+
+export async function getFirebaseWallsDevineAdminData() {
+  const projectSnapshot = await getDoc(getProjectDoc());
+  const releasePlan = projectSnapshot.data()?.[firebaseAdminPaths.releasePlanField] as ReleasePlan | undefined;
+
+  if (!releasePlan) {
+    return null;
+  }
+
+  const [instagramDrafts, journalEntries] = await Promise.all([
+    readMarkdownCollection("instagram-posts"),
+    readMarkdownCollection("journals")
+  ]);
+
+  if (!instagramDrafts.length || !journalEntries.length) {
+    return null;
+  }
+
+  return {
+    plan: releasePlan,
+    instagramDrafts,
+    journalEntries
+  } satisfies WallsDevineAdminData;
+}
+
+export async function updateFirebaseReleasePlanItem(itemId: string, completed: boolean) {
+  const currentData = await getFirebaseWallsDevineAdminData();
+
+  if (!currentData) {
+    throw new Error("Firebase admin content is not initialized yet.");
+  }
+
+  const nextPlan = {
+    ...currentData.plan,
+    updatedAt: new Date().toISOString(),
+    checklist: currentData.plan.checklist.map((item) => (item.id === itemId ? { ...item, completed } : item))
+  } satisfies ReleasePlan;
+
+  return saveReleasePlan(nextPlan);
+}
+
+export async function updateFirebaseAdminMarkdownFile(collection: AdminMarkdownCollection, slug: string, content: string) {
+  if (!firebaseStorage) {
+    throw new Error("Firebase Storage is not initialized for this Firebase project.");
+  }
+
+  const normalizedContent = normalizeMarkdown(content);
+  const fileRef = ref(firebaseStorage, getStoragePath(collection, slug));
+
+  await uploadString(fileRef, normalizedContent, "raw", {
+    contentType: "text/markdown; charset=utf-8"
+  });
+
+  return {
+    slug,
+    title: getMarkdownTitle(normalizedContent, `${slug}.md`),
+    filePath: getStoragePath(collection, slug),
+    content: normalizedContent,
+    preview: getMarkdownPreview(normalizedContent)
+  } satisfies AdminMarkdownFile;
+}
+
+export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdminData) {
+  await saveReleasePlan({
+    ...seedData.plan,
+    updatedAt: new Date().toISOString()
+  });
+
+  await Promise.all([
+    ...seedData.instagramDrafts.map((file) => updateFirebaseAdminMarkdownFile("instagram-posts", file.slug, file.content)),
+    ...seedData.journalEntries.map((file) => updateFirebaseAdminMarkdownFile("journals", file.slug, file.content))
+  ]);
+
+  return getFirebaseWallsDevineAdminData();
+}
+
+export function replaceAdminMarkdownFile(
+  data: WallsDevineAdminData,
+  collection: AdminMarkdownCollection,
+  nextFile: AdminMarkdownFile
+) {
+  if (collection === "instagram-posts") {
+    return {
+      ...data,
+      instagramDrafts: updateMarkdownCollection(data.instagramDrafts, nextFile)
+    } satisfies WallsDevineAdminData;
+  }
+
+  return {
+    ...data,
+    journalEntries: updateMarkdownCollection(data.journalEntries, nextFile)
+  } satisfies WallsDevineAdminData;
+}

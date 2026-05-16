@@ -1,0 +1,53 @@
+export type ReleasePlanDate = {
+  label: string;
+  value: string;
+};
+
+export type ReleasePlanMetadata = {
+  label: string;
+  value: string;
+};
+
+export type ReleasePlanCalendarItem = {
+  date: string;
+  action: string;
+  purpose: string;
+};
+
+export type ReleasePlanChecklistItem = {
+  id: string;
+  phase: string;
+  title: string;
+  dueDate: string;
+  completed: boolean;
+  notes: string;
+};
+
+export type ReleasePlan = {
+  title: string;
+  summary: string;
+  updatedAt: string;
+  lockedDates: ReleasePlanDate[];
+  guidance: string[];
+  metadataStandards: ReleasePlanMetadata[];
+  recommendedSetup: string[];
+  avoid: string[];
+  calendar: ReleasePlanCalendarItem[];
+  checklist: ReleasePlanChecklistItem[];
+};
+
+export type AdminMarkdownFile = {
+  slug: string;
+  title: string;
+  filePath: string;
+  content: string;
+  preview: string;
+};
+
+export type AdminMarkdownCollection = "instagram-posts" | "journals";
+
+export type WallsDevineAdminData = {
+  plan: ReleasePlan;
+  instagramDrafts: AdminMarkdownFile[];
+  journalEntries: AdminMarkdownFile[];
+};

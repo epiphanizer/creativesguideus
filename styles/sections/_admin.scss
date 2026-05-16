@@ -43,6 +43,16 @@
   color: #8a1f1f;
 }
 
+.cg-admin__helper {
+  margin: 0;
+  color: var(--cg-color-ink-500);
+}
+
+.cg-admin__stack {
+  display: grid;
+  gap: var(--cg-space-sm);
+}
+
 .cg-admin__login-actions {
   display: flex;
 }
@@ -108,6 +118,10 @@
   background: rgba(255, 255, 255, 0.8);
 }
 
+.cg-admin__panel--firebase {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.88), rgba(236, 243, 255, 0.84));
+}
+
 .cg-admin__panel h2,
 .cg-admin__panel h3 {
   margin: 0;
@@ -148,6 +162,40 @@
   height: 6px;
   border-radius: 50%;
   background: var(--cg-color-ink-300);
+}
+
+.cg-admin__status-row {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--cg-space-sm);
+}
+
+.cg-admin__status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(15, 15, 15, 0.12);
+  color: var(--cg-color-ink-500);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.cg-admin__status-badge--ready {
+  color: #136546;
+  border-color: rgba(19, 101, 70, 0.2);
+  background: rgba(19, 101, 70, 0.1);
+}
+
+.cg-admin__status-badge--pending {
+  color: #8b5a17;
+  border-color: rgba(139, 90, 23, 0.2);
+  background: rgba(139, 90, 23, 0.1);
 }
 
 .cg-admin__section-head {
@@ -245,4 +293,51 @@
   font-family: var(--cg-font-mono);
   font-size: 0.85rem;
   line-height: 1.55;
+}
+
+.cg-admin__editor-form,
+.cg-admin__editor-field {
+  display: grid;
+  gap: var(--cg-space-xs);
+}
+
+.cg-admin__editor-field span {
+  font-size: var(--cg-type-body-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-400);
+}
+
+.cg-admin__editor-textarea {
+  width: 100%;
+  min-height: 18rem;
+  resize: vertical;
+  padding: var(--cg-space-md);
+  border: 1px solid rgba(15, 15, 15, 0.12);
+  border-radius: var(--cg-radius-md);
+  background: rgba(255, 255, 255, 0.94);
+  font: inherit;
+  font-family: var(--cg-font-mono);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.cg-admin__editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cg-space-sm);
+}
+
+.cg-admin__save-note {
+  margin: 0;
+  font-size: var(--cg-type-body-sm);
+}
+
+.cg-admin__save-note--success {
+  color: #136546;
+}
+
+.cg-admin__save-note--error {
+  color: #8a1f1f;
 }

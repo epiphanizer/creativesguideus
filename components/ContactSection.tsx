@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/Button";
 const projectTypes = [
   "Walls & Devine",
   "Bong Tour",
-  "Client Build / Case Study",
   "Integrated Release System",
-  "Advisory / Strategy"
+  "Score / Story Collaboration",
+  "Something Else"
 ];
 
 export function ContactSection() {
@@ -18,8 +18,8 @@ export function ContactSection() {
           <SectionHeader
             id="contact-title"
             eyebrow="UPLINK"
-            title="Start With The Right Project Lane"
-            description="Lead with the project that fits: record rollout, screenplay development, or a client build that needs product, score, and story aligned."
+            title="Choose The Right Signal"
+            description="Lead with the world that fits: album rollout, screenplay development, or a release system that needs score, story, and rollout aligned."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4 7h16v10H4z" />
@@ -31,11 +31,11 @@ export function ContactSection() {
           <div className="cg-contact__meta">
             <div className="cg-contact__slots" aria-label="Residency availability">
               <span>Residencies</span>
-              <p>Two focused collaboration slots are open for partners ready to move with a defined project surface.</p>
+              <p>Two focused collaboration slots are open for partners ready to move with a defined creative world.</p>
             </div>
             <p>
               Prefer a direct uplink? Email <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a> with a calendar pin and
-              project intel and the clearest next step you need. We reply within two studio days.
+              release intel and the clearest next step you need. We reply within two studio days.
             </p>
           </div>
         </div>
@@ -69,7 +69,7 @@ export function ContactSection() {
             <label htmlFor="contact-project-type">Select the focus</label>
             <select id="contact-project-type" name="projectType" defaultValue="" required>
               <option value="" disabled>
-                Choose the channel
+                Choose the signal
               </option>
               {projectTypes.map((type) => (
                 <option key={type} value={type}>

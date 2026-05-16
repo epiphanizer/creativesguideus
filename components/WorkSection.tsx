@@ -2,61 +2,45 @@
 
 import { useRouter } from "next/navigation";
 
+import workModule from "@/data/work/module.json";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 
-const highlightProjects = [
-  {
-    title: "World Cup Dreams Foundation",
-    eyebrow: "Ski fundraising platform",
-    description:
-      "World Cup Dreams Foundation is an athlete-first WordPress experience tailored to guide athletes and donors toward one mission: fund elite snowsport talent.",
-    tags: ["Nonprofit", "Donations", "Grant Programs", "Athlete Support", "Community"],
-    caseHref: "/work/world-cup-dreams",
-    siteHref: "https://www.worldcupdreams.org",
-    siteLabel: "Visit worldcupdreams.org",
-    icon: (
-      <svg viewBox="0 0 32 32" role="presentation">
-        <path d="M6 23 16 9l10 14" />
-        <path d="M6 23h20" />
-      </svg>
-    )
-  },
-  {
-    title: "Appreesh",
-    eyebrow: "Gratitude gifting co-op",
-    description: "Community-owned gratitude economy with on-chain rituals, editorial UX, and an innovation-led launch kit.",
-    tags: ["Product", "Brand", "Web3"],
-    caseHref: "/work/appreesh",
-    siteHref: "https://appreesh.org",
-    siteLabel: "Visit appreesh.org",
-    icon: (
-      <svg viewBox="0 0 32 32" role="presentation">
-        <path d="M9.5 12.5a3.5 3.5 0 1 1 5 5L16 19l1.5-1.5a3.5 3.5 0 1 1 5-5" />
-        <path d="M8 20.5 16 24l8-3.5" />
-      </svg>
-    )
-  },
-  {
-    title: "Lead Me Guide Me",
-    eyebrow: "Scripture application",
-    description: "iOS scripture companion pairing daily prompts with original rehearsal cues for gospel choirs.",
-    tags: ["Product", "Music", "Story"],
-    caseHref: "/work/lead-me-guide-me",
-    siteHref: "https://leadmeguideme.org",
-    siteLabel: "Visit leadmeguideme.org",
-    icon: (
-      <svg viewBox="0 0 32 32" role="presentation">
-        <path d="M9 7h14v18H9z" />
-        <path d="M9 12h14" />
-        <path d="M16 12v13" />
-        <path d="M13 10h6" />
-      </svg>
-    )
-  }
-];
+const iconBySlug = {
+  "world-cup-dreams": (
+    <svg viewBox="0 0 32 32" role="presentation">
+      <path d="M6 23 16 9l10 14" />
+      <path d="M6 23h20" />
+    </svg>
+  ),
+  appreesh: (
+    <svg viewBox="0 0 32 32" role="presentation">
+      <path d="M9.5 12.5a3.5 3.5 0 1 1 5 5L16 19l1.5-1.5a3.5 3.5 0 1 1 5-5" />
+      <path d="M8 20.5 16 24l8-3.5" />
+    </svg>
+  ),
+  "lead-me-guide-me": (
+    <svg viewBox="0 0 32 32" role="presentation">
+      <path d="M9 7h14v18H9z" />
+      <path d="M9 12h14" />
+      <path d="M16 12v13" />
+      <path d="M13 10h6" />
+    </svg>
+  )
+} as const;
+
+const highlightProjects = workModule.studies.map((study) => ({
+  title: study.title,
+  eyebrow: study.eyebrow,
+  description: study.description,
+  tags: study.tags,
+  caseHref: study.caseStudyPath,
+  siteHref: study.siteHref,
+  siteLabel: study.siteLabel,
+  icon: iconBySlug[study.slug as keyof typeof iconBySlug]
+}));
 
 const launchPrinciples = [
   {

@@ -1,51 +1,7 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-export type ReleasePlanDate = {
-  label: string;
-  value: string;
-};
-
-export type ReleasePlanMetadata = {
-  label: string;
-  value: string;
-};
-
-export type ReleasePlanCalendarItem = {
-  date: string;
-  action: string;
-  purpose: string;
-};
-
-export type ReleasePlanChecklistItem = {
-  id: string;
-  phase: string;
-  title: string;
-  dueDate: string;
-  completed: boolean;
-  notes: string;
-};
-
-export type ReleasePlan = {
-  title: string;
-  summary: string;
-  updatedAt: string;
-  lockedDates: ReleasePlanDate[];
-  guidance: string[];
-  metadataStandards: ReleasePlanMetadata[];
-  recommendedSetup: string[];
-  avoid: string[];
-  calendar: ReleasePlanCalendarItem[];
-  checklist: ReleasePlanChecklistItem[];
-};
-
-export type AdminMarkdownFile = {
-  slug: string;
-  title: string;
-  filePath: string;
-  content: string;
-  preview: string;
-};
+import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData } from "./types";
 
 const releasePlanPath = path.join(process.cwd(), "data", "walls-devine", "release-plan.json");
 const instagramPostsDir = path.join(process.cwd(), "app", "walls-devine", "instagram-posts");
@@ -89,6 +45,31 @@ async function readMarkdownCollection(directoryPath: string) {
   );
 }
 
+function getMarkdownDirectory(collection: AdminMarkdownCollection) {
+  switch (collection) {
+    case "instagram-posts":
+      return instagramPostsDir;
+    case "journals":
+      return journalsDir;
+    default:
+      return null;
+  }
+}
+
+function getMarkdownFilePath(collection: AdminMarkdownCollection, slug: string) {
+  if (!/^[a-z0-9-]+$/.test(slug)) {
+    return null;
+  }
+
+  const directory = getMarkdownDirectory(collection);
+
+  if (!directory) {
+    return null;
+  }
+
+  return path.join(directory, `${slug}.md`);
+}
+
 export async function getReleasePlan() {
   const content = await readFile(releasePlanPath, "utf8");
   return JSON.parse(content) as ReleasePlan;
@@ -108,6 +89,16 @@ export async function updateReleasePlanItem(itemId: string, completed: boolean) 
   await writeFile(releasePlanPath, `${JSON.stringify(plan, null, 2)}\n`, "utf8");
 }
 
+export async function updateAdminMarkdownFile(collection: AdminMarkdownCollection, slug: string, content: string) {
+  const filePath = getMarkdownFilePath(collection, slug);
+
+  if (!filePath) {
+    throw new Error("Invalid admin markdown target.");
+  }
+
+  await writeFile(filePath, content.trimEnd() ? `${content.trimEnd()}\n` : "", "utf8");
+}
+
 export async function getInstagramDrafts() {
   return readMarkdownCollection(instagramPostsDir);
 }
@@ -123,5 +114,5 @@ export async function getWallsDevineAdminData() {
     plan,
     instagramDrafts,
     journalEntries
-  };
+  } satisfies WallsDevineAdminData;
 }

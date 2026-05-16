@@ -3,7 +3,7 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/Button";
-import posterImage from "@/app/bong-tour/bong-tour-poster.png";
+import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 
 const globalComps = ["The Big Lebowski (stoner philosophy)", "Tropic Thunder (industry satire)", "Fear and Loathing in Las Vegas (trip momentum)", "The Player (meta Hollywood)"];
 
@@ -13,6 +13,24 @@ const keyDetails = [
   { label: "Format", detail: "Feature screenplay · 118 pages" },
   { label: "Budget target", detail: "Streaming mid-tier · USD $12M" },
   { label: "Visual signature", detail: "Masala satire · neon noir" }
+];
+
+const pitchSignals = [
+  {
+    label: "Pitch mode",
+    value: "Cult prestige stoner epic",
+    note: "Treat the deck like a premium campaign page with mythic undertow, not a plain synopsis surface."
+  },
+  {
+    label: "World fuse",
+    value: "Sunset noir × Ganges ritual",
+    note: "The emotional voltage comes from the collision between sacred origin and industry excess."
+  },
+  {
+    label: "Sound bridge",
+    value: "Walls / Devine cue posters",
+    note: "The score cards should keep pulling people toward the companion album world instead of living as isolated references."
+  }
 ];
 
 type CastMember = {
@@ -205,6 +223,24 @@ const musicPosters = [
   }
 ];
 
+const bridgeModules = [
+  {
+    label: "Poster first",
+    title: "Lead with the artifact before the synopsis",
+    copy: "The poster should feel like the invitation object. Everything else follows from the confidence of that first reveal."
+  },
+  {
+    label: "Cue world",
+    title: "Use the score posters as proof of tone",
+    copy: "The music modules are not decoration. They are the fastest route to making the project feel real, cinematic, and already in motion."
+  },
+  {
+    label: "Cross-link",
+    title: "Keep Walls / Devine visibly in the loop",
+    copy: "The landing page should always offer a clean exit into the companion album experience so both pages strengthen each other."
+  }
+];
+
 export function BongTourFeature() {
   return (
     <div className="bt-stage">
@@ -221,7 +257,7 @@ export function BongTourFeature() {
           <div className="bt-hero__content">
             <span className="bt-hero__eyebrow">Feature Screenplay</span>
             <h1>Bong Tour</h1>
-            <p className="bt-hero__descriptor">A diaspora neon noir masquerading as a stoner comedy.</p>
+            <p className="bt-hero__descriptor">A boutique pitch-world where sacred comedy, industry noir, and companion soundtrack mythology collide.</p>
             <div className="bt-hero__logline">
               <h2>Logline</h2>
               <p>
@@ -229,7 +265,6 @@ export function BongTourFeature() {
                 Hollywood keeps hearing &ldquo;Bong Tour&rdquo;; the artifact keeps rewriting the myth until they choose who must burn.
               </p>
             </div>
-
           </div>
         </div>
         <div className="bt-hero__meta" aria-label="Pitch quick facts">
@@ -240,17 +275,66 @@ export function BongTourFeature() {
             </div>
           ))}
         </div>
+        <div className="bt-hero__signal-strip" aria-label="Pitch signals">
+          {pitchSignals.map((signal) => (
+            <article key={signal.label} className="bt-hero__signal-card">
+              <span>{signal.label}</span>
+              <strong>{signal.value}</strong>
+              <p>{signal.note}</p>
+            </article>
+          ))}
+        </div>
         <div className="bt-hero__cta">
           <Button as="a" href="/#contact" className="bt-button">
             Producer invitation
+          </Button>
+          <Button as="a" href="/walls-devine" className="bt-button bt-button--outline">
+            Open Walls / Devine
+          </Button>
+        </div>
+      </section>
+
+      <section className="bt-bridge" aria-labelledby="bt-bridge-title">
+        <div className="bt-bridge__intro">
+          <span>Experience system</span>
+          <h2 id="bt-bridge-title">Built like a branded portal, not a synopsis page.</h2>
+          <p>
+            Poster first. Cue posters second. Story architecture third. Bong Tour should feel like a stylized marketing page with deliberate exits into
+            the companion album universe whenever the score enters the frame.
+          </p>
+        </div>
+
+        <div className="bt-bridge__grid">
+          {bridgeModules.map((module) => (
+            <article key={module.title} className="bt-bridge__card">
+              <span>{module.label}</span>
+              <h3>{module.title}</h3>
+              <p>{module.copy}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="bt-bridge__actions">
+          <Button as="a" href="#score-sketches" className="bt-button">
+            Enter score posters
+          </Button>
+          <Button as="a" href="/walls-devine" className="bt-button bt-button--outline">
+            Open album world
           </Button>
         </div>
       </section>
 
       <section className="bt-music" id="score-sketches" aria-label="Score sketches">
-        <header className="bt-section-header">
-          <h2>Score sketches</h2>
-          <p>Walls/Devine cues built to anchor the pitch deck and hold the invitation open.</p>
+        <header className="bt-section-header bt-section-header--split">
+          <div>
+            <h2>Score sketches</h2>
+            <p>Walls/Devine cues built to anchor the pitch deck and hold the invitation open.</p>
+          </div>
+          <div className="bt-section-header__actions">
+            <Button as="a" href="/walls-devine#walls-devine-post-kit" className="bt-button bt-button--outline">
+              See campaign copy system
+            </Button>
+          </div>
         </header>
         <ul className="bt-music__grid">
           {musicPosters.map((poster, index) => (
@@ -413,7 +497,10 @@ export function BongTourFeature() {
           <p>{finalThought}</p>
           <div className="bt-finale__actions">
             <Button as="a" href="/#contact" className="bt-button bt-button--record">
-             Connect about Bong Tour
+              Connect about Bong Tour
+            </Button>
+            <Button as="a" href="/walls-devine" className="bt-button bt-button--outline">
+              Open Walls / Devine
             </Button>
           </div>
         </div>

@@ -78,7 +78,7 @@ export function HeaderNav() {
         >
           <span className="cg-header__copy">
             <span className="cg-header__studio">Creatives Guide Us</span>
-            <span className="cg-header__tagline">code · composition · story</span>
+            <span className="cg-header__tagline">sound · story · signal</span>
           </span>
         </a>
         <button
@@ -133,7 +133,7 @@ export function HeaderNav() {
             className="cg-header__cta"
             onClick={() => handleNavigate(CONTACT_ANCHOR_ID)}
           >
-            Connect
+            Open Channel
           </button>
         </div>
       </div>

@@ -11,15 +11,15 @@ import {
   sharedCaptionStarter,
   songPostCards
 } from "@/components/walls-devine/content";
-import decayImage from "@/app/5.decay.png";
-import gratitudeImage from "@/app/8.gratitude.png";
-import homeImage from "@/app/4.home.png";
-import jointQueenImage from "@/app/1.joint-queen.png";
-import poetryImage from "@/app/7.poetry.png";
-import resolveImage from "@/app/6.resolve.png";
-import spaceCruiserImage from "@/app/3.space-cruiser.png";
-import stashDaddyImage from "@/app/2.stash-daddy.png";
-import volOneImage from "@/app/WallsDevineVol1.png";
+import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
+import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
+import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
+import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
+import poetryImage from "@/app/walls-devine/assets/instagram/7.poetry.png";
+import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
+import spaceCruiserImage from "@/app/walls-devine/assets/instagram/3.space-cruiser.png";
+import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
+import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 
 type GridTile = {
   title: string;
@@ -65,18 +65,60 @@ const directionNotes = [
   "Design each tile to stand alone while letting smoke, bolts, and symbols visually bridge neighbors."
 ];
 
+const unveilingSignals = [
+  {
+    label: "Edition language",
+    value: "Boutique album reveal",
+    note: "Treat the cover, grid, and copy kit like one premium object instead of separate content blocks."
+  },
+  {
+    label: "Palette lock",
+    value: "Oxblood, paper, charcoal",
+    note: "Lift tone directly from the engraved art so the site feels printed, not generic."
+  },
+  {
+    label: "Companion chamber",
+    value: "Bong Tour score bridge",
+    note: "The first three songs should read like doors into the screenplay world, not unrelated links."
+  }
+];
+
+const experienceModules = [
+  {
+    label: "Artifact first",
+    title: "Unveil the cover like a collector object",
+    copy: "The center artwork should land with the calm and confidence of a limited-edition product reveal before utility copy ever starts speaking."
+  },
+  {
+    label: "Grid as gallery",
+    title: "Let the nine tiles behave like one wall installation",
+    copy: "Every square needs standalone energy, but the typography, smoke language, and pacing should still magnetize back toward the central seal."
+  },
+  {
+    label: "Cross-linking",
+    title: "Keep Bong Tour as the adjoining room",
+    copy: "The companion film world should stay visible through deliberate cue links and restrained bridges, so the mythology expands without turning the album page into a detour."
+  }
+];
+
 export function WallsDevineLanding() {
   return (
     <>
       <SectionShell id="hero" labelledBy="walls-devine-title" variant="hero" className="wd-hero-shell" innerClassName="wd-hero">
+        <div className="wd-hero__marquee" aria-label="Experience mode">
+          <span>Boutique unveiling</span>
+          <span>Album object</span>
+          <span>Companion score world</span>
+        </div>
+
         <div className="wd-hero__layout">
           <div className="wd-hero__copy">
             <SectionHeader
               id="walls-devine-title"
               eyebrow="Album release world"
               title="Walls Devine Vol. 1"
-              subtitle="A split-world cover system built for streaming and social rollout"
-              description="Walls carries the inward writing ritual. Devine carries the amplified stage force. The lightning seam keeps both worlds in one myth."
+              subtitle="A boutique landing experience for a split-world album object"
+              description="Walls is the inward ritual. Devine is the public voltage. The page should feel like unveiling the artifact, the rollout system, and the companion score world in one motion."
               headingLevel="h1"
             />
 
@@ -109,16 +151,52 @@ export function WallsDevineLanding() {
             <div className="wd-hero__cover-frame">
               <Image src={volOneImage} alt="Walls Devine Vol. 1 album cover concept" priority sizes="(max-width: 900px) 86vw, 38vw" />
             </div>
-            <figcaption>Center cover concept for the release universe</figcaption>
+            <figcaption>Collector cover · edition zero</figcaption>
           </figure>
+        </div>
+
+        <div className="wd-hero__signal-grid" aria-label="Experience signals">
+          {unveilingSignals.map((signal) => (
+            <article key={signal.label} className="wd-hero__signal">
+              <span>{signal.label}</span>
+              <strong>{signal.value}</strong>
+              <p>{signal.note}</p>
+            </article>
+          ))}
+        </div>
+      </SectionShell>
+
+      <SectionShell
+        id="walls-devine-experience"
+        labelledBy="walls-devine-experience-title"
+        className="wd-experience-shell"
+        innerClassName="wd-experience"
+      >
+        <header className="wd-experience__intro">
+          <span className="wd-experience__eyebrow">Release architecture</span>
+          <h2 id="walls-devine-experience-title">Built like a boutique product reveal, not a utility page.</h2>
+          <p>
+            The album world should feel editorial, collectible, and calm under pressure. The grid is the gallery wall, the copy system is the edition note,
+            and Bong Tour is the adjoining chamber where the score keeps the mythology moving.
+          </p>
+        </header>
+
+        <div className="wd-experience__grid">
+          {experienceModules.map((module) => (
+            <article key={module.title} className="wd-experience__card">
+              <span>{module.label}</span>
+              <h3>{module.title}</h3>
+              <p>{module.copy}</p>
+            </article>
+          ))}
         </div>
       </SectionShell>
 
       <SectionShell id="walls-devine-grid" labelledBy="walls-devine-grid-title" className="wd-grid-shell" innerClassName="wd-grid-section">
         <header className="wd-grid-section__header">
-          <h2 id="walls-devine-grid-title">Instagram 3 x 3 campaign map</h2>
+          <h2 id="walls-devine-grid-title">The collector grid</h2>
           <p>
-            The center tile anchors the narrative while the surrounding songs read like connected chapters when viewed as a full profile grid.
+            The center tile anchors the narrative while the surrounding songs read like connected chapters when viewed as a full-profile wall installation.
           </p>
         </header>
 
@@ -142,7 +220,7 @@ export function WallsDevineLanding() {
       <SectionShell id="walls-devine-production" labelledBy="walls-devine-production-title" className="wd-production-shell" innerClassName="wd-production">
         <div className="wd-production__columns">
           <section className="wd-production__card" aria-labelledby="walls-devine-production-title">
-            <h2 id="walls-devine-production-title">Final production specs</h2>
+            <h2 id="walls-devine-production-title">Edition specifications</h2>
             <ul className="wd-production__specs">
               {releaseSpecs.map((spec) => (
                 <li key={spec.label}>
@@ -175,9 +253,9 @@ export function WallsDevineLanding() {
 
       <SectionShell id="walls-devine-post-kit" labelledBy="walls-devine-post-kit-title" className="wd-post-shell" innerClassName="wd-post">
         <div className="wd-post__header">
-          <h2 id="walls-devine-post-kit-title">Shared post cards and release roadmap</h2>
+          <h2 id="walls-devine-post-kit-title">Campaign copy system</h2>
           <p>
-            Use one naming standard for DSP metadata and one campaign phrase for social so the rollout stays clear and repeatable.
+            Use one naming standard for DSP metadata and one campaign phrase for social so the rollout stays deliberate, elegant, and repeatable.
           </p>
           <p>
             Joint Queen, Stash Daddy, and Space Cruiser now deep-link to their Bong Tour cue entries while each song card keeps lightweight making and
@@ -204,6 +282,20 @@ export function WallsDevineLanding() {
         </div>
 
         <p className="wd-post__guidance">{cadenceGuidance}</p>
+
+        <div className="wd-post__bridge">
+          <div>
+            <span>Companion pathway</span>
+            <strong>The first three songs already open directly into Bong Tour cue posters.</strong>
+            <p>
+              Let Walls Devine feel like the premium object and Bong Tour feel like the adjacent chamber. The handoff should be elegant, visible, and
+              never obtrusive.
+            </p>
+          </div>
+          <Button as="a" href="/bong-tour#score-sketches" variant="secondary">
+            Trace the soundtrack thread
+          </Button>
+        </div>
 
         <ol className="wd-post__roadmap" aria-label="Release roadmap">
           {roadmapSteps.map((step) => (
