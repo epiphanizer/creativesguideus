@@ -524,12 +524,6 @@ function RoomChallengeExperience({ challenge, roomSlug, onUnlock }: RoomChalleng
   return <RoomTokenSpinGame challenge={challenge} roomSlug={roomSlug} onUnlock={onUnlock} />;
 }
 
-const keyDetails = [
-  { label: "Portal", detail: "Collector rooms and cue bridges" },
-  { label: "Myth", detail: "Sacred comedy on Sunset Boulevard" },
-  { label: "Soundtrack", detail: "Walls/Devine exits built in" }
-];
-
 const portalRooms: Record<string, ExperienceRoom> = {
   producer: {
     slug: "producer-portal",
@@ -898,7 +892,6 @@ export function BongTourFeature() {
               <div className="bt-hero__poster-frame">
                 <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority sizes="(max-width: 960px) 82vw, 32vw" />
               </div>
-              <figcaption>Poster artifact</figcaption>
             </figure>
 
             <div className="bt-hero__content">
@@ -907,23 +900,6 @@ export function BongTourFeature() {
               <p className="bt-hero__descriptor">A collector-first portal for design-led film fans, soundtrack listeners, and worldbuilding obsessives.</p>
 
               <p className="bt-hero__positioning">Move through the poster, collector rooms, cue bridges, and artifact archive without stepping outside the myth.</p>
-
-              <div className="bt-hero__logline bt-hero__experience-card">
-                <h2>Experience preview</h2>
-                <p>
-                  A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to a smoke-script that keeps rewriting
-                  the myth until the industry shows its true price.
-                </p>
-
-                <div className="bt-hero__modules" aria-label="Portal modules">
-                  <span>Story portal</span>
-                  <span>Poster world</span>
-                  <span>Cue rooms</span>
-                  <span>Soundtrack bridge</span>
-                  <span>Object archive</span>
-                  <span>Games and ritual prompts</span>
-                </div>
-              </div>
 
               <div className="bt-hero__cta">
                 <Button type="button" className="bt-button" onClick={() => setActiveRoom(portalRooms.collector)}>
@@ -936,14 +912,6 @@ export function BongTourFeature() {
             </div>
           </div>
 
-          <div className="bt-hero__meta" aria-label="Bong Tour quick facts">
-            {keyDetails.map((item) => (
-              <article key={item.label} className="bt-hero__meta-item">
-                <span className="bt-hero__meta-label">{item.label}</span>
-                <strong className="bt-hero__meta-value">{item.detail}</strong>
-              </article>
-            ))}
-          </div>
         </section>
 
         <section className="bt-collectibles" id="collector-grid" aria-labelledby="bt-collectibles-title">

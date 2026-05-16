@@ -31,16 +31,19 @@ const iconBySlug = {
   )
 } as const;
 
-const highlightProjects = workModule.studies.map((study) => ({
-  title: study.title,
-  eyebrow: study.eyebrow,
-  description: study.description,
-  tags: study.tags,
-  caseHref: study.caseStudyPath,
-  siteHref: study.siteHref,
-  siteLabel: study.siteLabel,
-  icon: iconBySlug[study.slug as keyof typeof iconBySlug]
-}));
+const highlightProjects = workModule.studies
+  .filter((study) => Boolean(study.caseStudyPath && study.caseStudyUrl))
+  .slice(0, 3)
+  .map((study) => ({
+    title: study.title,
+    eyebrow: study.eyebrow,
+    description: study.description,
+    tags: study.tags,
+    caseHref: study.caseStudyPath,
+    siteHref: study.siteHref,
+    siteLabel: study.siteLabel,
+    icon: iconBySlug[study.slug as keyof typeof iconBySlug]
+  }));
 
 const launchPrinciples = [
   {
@@ -145,7 +148,7 @@ export function WorkSection() {
               tags={project.tags}
               icon={project.icon}
               className="cg-work__card"
-              onClick={() => router.push(project.caseHref)}
+              onClick={project.caseHref ? () => router.push(project.caseHref) : undefined}
               ariaLabel={`Open case study for ${project.title}`}
               footer={
                 project.siteHref ? (

@@ -16,7 +16,8 @@
       "caseStudyPath": "/work/world-cup-dreams",
       "caseStudyUrl": "https://creativesguide.us/work/world-cup-dreams",
       "siteHref": "https://www.worldcupdreams.org",
-      "siteLabel": "Visit worldcupdreams.org"
+      "siteLabel": "Visit worldcupdreams.org",
+      "previewImageUrl": ""
     },
     {
       "slug": "appreesh",
@@ -29,7 +30,8 @@
       "caseStudyPath": "/work/appreesh",
       "caseStudyUrl": "https://creativesguide.us/work/appreesh",
       "siteHref": "https://appreesh.org",
-      "siteLabel": "Visit appreesh.org"
+      "siteLabel": "Visit appreesh.org",
+      "previewImageUrl": ""
     },
     {
       "slug": "lead-me-guide-me",
@@ -42,7 +44,22 @@
       "caseStudyPath": "/work/lead-me-guide-me",
       "caseStudyUrl": "https://creativesguide.us/work/lead-me-guide-me",
       "siteHref": "https://leadmeguideme.org",
-      "siteLabel": "Visit leadmeguideme.org"
+      "siteLabel": "Visit leadmeguideme.org",
+      "previewImageUrl": ""
+    },
+    {
+      "slug": "followup-care",
+      "title": "Followup",
+      "eyebrow": "Healthcare operations platform",
+      "description": "Care-team operations platform modernizing patient queues, notifications, reporting, and admin control across follow-up programs.",
+      "workIndexDescription": "Healthcare ops platform aligning queues, notifications, reporting, and admin control across patient follow-up workflows.",
+      "tags": ["Healthcare", "Operations", "Platform", "Angular", "Node.js"],
+      "proof": ["Angular + Ionic", "Node.js + SQL", "Operational telemetry"],
+      "caseStudyPath": "",
+      "caseStudyUrl": "",
+      "siteHref": "",
+      "siteLabel": "",
+      "previewImageUrl": ""
     },
     {
       "slug": "occupational-career-consulting",
@@ -55,7 +72,36 @@
       "caseStudyPath": "",
       "caseStudyUrl": "",
       "siteHref": "https://occ.consulting",
-      "siteLabel": "Visit occ.consulting"
+      "siteLabel": "Visit occ.consulting",
+      "previewImageUrl": ""
+    },
+    {
+      "slug": "cluck-design",
+      "title": "Cluck Design",
+      "eyebrow": "WordPress brand site",
+      "description": "Custom WordPress presence for Cluck Design, pairing a bespoke theme with editorial reveals, contact capture, and a highly branded navigation system.",
+      "workIndexDescription": "Custom WordPress brand system with bespoke navigation, reveal-driven storytelling, and editorial contact surfaces.",
+      "tags": ["Brand", "WordPress", "Editorial", "Design Studio"],
+      "proof": ["Custom theme", "WordPress", "Reveal-driven UX"],
+      "caseStudyPath": "",
+      "caseStudyUrl": "",
+      "siteHref": "https://cluckdesign.com",
+      "siteLabel": "Visit cluckdesign.com",
+      "previewImageUrl": "https://www.cluckdesign.com/wp-content/uploads/2026/04/nightswim_hero_sqsh-1024x683.webp"
+    },
+    {
+      "slug": "total-body-modification",
+      "title": "Total Body Modification",
+      "eyebrow": "Attunement platform",
+      "description": "Dual-surface wellness platform combining WooCommerce scheduling, practitioner portals, assessments, and a live session room.",
+      "workIndexDescription": "Commerce-to-session platform linking WordPress scheduling, practitioner operations, assessments, and real-time video rooms.",
+      "tags": ["Wellness", "Platform", "WordPress", "Realtime", "Commerce"],
+      "proof": ["WordPress + WooCommerce", "Node.js + Socket.IO", "Assessment pipeline"],
+      "caseStudyPath": "",
+      "caseStudyUrl": "",
+      "siteHref": "https://www.livetbm.com",
+      "siteLabel": "Visit livetbm.com",
+      "previewImageUrl": ""
     }
   ]
 }

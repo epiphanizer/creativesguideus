@@ -14,6 +14,7 @@ type CardProps = {
   className?: string;
   children?: ReactNode;
   icon?: ReactNode;
+  previewImage?: { src: string; alt: string };
   onClick?: () => void;
   ariaLabel?: string;
 };
@@ -27,12 +28,13 @@ export function Card({
   className,
   children,
   icon,
+  previewImage,
   onClick,
   ariaLabel
 }: CardProps) {
   const showTopline = Boolean(icon || eyebrow);
   const isInteractive = typeof onClick === "function";
-  const cardClassName = cx("cg-card", isInteractive && "cg-card--link", className);
+  const cardClassName = cx("cg-card", isInteractive && "cg-card--link", previewImage && "cg-card--has-preview", className);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (!isInteractive) return;
@@ -51,6 +53,12 @@ export function Card({
       tabIndex={isInteractive ? 0 : undefined}
       aria-label={isInteractive ? ariaLabel ?? `Open ${title}` : undefined}
     >
+      {previewImage ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <div className="cg-card__preview" aria-hidden="true">
+          <img src={previewImage.src} alt={previewImage.alt} loading="lazy" />
+        </div>
+      ) : null}
       <div className="cg-card__content">
         {showTopline ? (
           <div className="cg-card__topline">

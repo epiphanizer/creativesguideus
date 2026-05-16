@@ -75,6 +75,7 @@
   min-height: calc(100svh - var(--cg-home-header-height));
   padding: var(--cg-home-panel-top-pad) var(--cg-home-panel-side-pad) var(--cg-home-panel-bottom-pad);
   color: inherit;
+  text-decoration: none;
   overflow: hidden;
   border-top: 1px solid transparent;
 }
@@ -284,15 +285,10 @@
   border-color: rgba(120, 24, 16, 0.34);
 }
 
-.cg-home-gate__portal-image-link:focus-visible {
+.cg-home-gate__portal:focus-visible {
   outline: 2px solid rgba(26, 19, 13, 0.88);
   outline-offset: 6px;
-  border-radius: clamp(0.8rem, 1vw, 1rem);
-}
-
-.cg-home-gate__portal-entry:focus-visible {
-  outline: 2px solid rgba(26, 19, 13, 0.88);
-  outline-offset: 3px;
+  border-radius: 0;
 }
 
 .cg-home-gate__portal-image,

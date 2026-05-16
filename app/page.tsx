@@ -36,7 +36,12 @@ export default function HomePage() {
     <main className="cg-page cg-home-page" id="hero">
       <section className="cg-home-gate" aria-label="Featured project gateways">
         {gateways.map((gateway) => (
-          <article key={gateway.title} className={`cg-home-gate__portal cg-home-gate__portal--${gateway.tone}`}>
+          <Link
+            key={gateway.title}
+            href={gateway.href}
+            className={`cg-home-gate__portal cg-home-gate__portal--${gateway.tone}`}
+            aria-label={gateway.entryLabel}
+          >
             <div className="cg-home-gate__portal-head">
               <div className="cg-home-gate__portal-meta">
                 <span className="cg-home-gate__portal-eyebrow">{gateway.eyebrow}</span>
@@ -49,7 +54,7 @@ export default function HomePage() {
             </div>
 
             <div className="cg-home-gate__portal-stage">
-              <Link href={gateway.href} className="cg-home-gate__portal-image-link" aria-label={gateway.entryLabel}>
+              <div className="cg-home-gate__portal-image-link" aria-hidden="true">
                 <Image
                   src={gateway.image}
                   alt={gateway.alt}
@@ -57,16 +62,16 @@ export default function HomePage() {
                   sizes="(max-width: 959px) 86vw, 40vw"
                   className="cg-home-gate__portal-image"
                 />
-              </Link>
+              </div>
 
               <p className="cg-home-gate__portal-stage-copy">{gateway.description}</p>
 
-              <Link href={gateway.href} className="cg-home-gate__portal-entry">
+              <div className="cg-home-gate__portal-entry" aria-hidden="true">
                 <span className="cg-home-gate__portal-entry-label">{gateway.entryLabel}</span>
                 <small className="cg-home-gate__portal-entry-meta">{gateway.entryMeta}</small>
-              </Link>
+              </div>
             </div>
-          </article>
+          </Link>
         ))}
       </section>
     </main>

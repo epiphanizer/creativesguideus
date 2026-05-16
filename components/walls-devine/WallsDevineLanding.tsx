@@ -226,6 +226,11 @@ const collectorLetterQuotes: readonly CollectorLetterQuote[] = [
 ];
 
 const collectorQuoteIntervalSeconds = 15;
+const wallsDevineBookingIntakeHref = `/contact?${new URLSearchParams({
+  context: "walls-devine-booking",
+  project: "Walls/Devine",
+  inquiryType: "live-booking"
+}).toString()}`;
 
 export function WallsDevineLanding() {
   const [activeQuoteIndex, setActiveQuoteIndex] = useState(0);
@@ -434,20 +439,22 @@ export function WallsDevineLanding() {
         <WallsDevineCollectorGrid tiles={instagramGrid} />
 
         <div id="walls-devine-booking" className="wd-grid-section__collector-access">
-          <section className="wd-collector-access wd-collector-access--inline wd-grid-section__collector-banner" aria-label="Book Walls/Devine">
-            <div className="wd-collector-access__copy">
-              <p className="wd-collector-access__eyebrow">Live booking</p>
-              <h3 className="wd-collector-access__title">Book Walls/Devine</h3>
-              <p className="wd-collector-access__description">
-                Bring Volume 1 into the room for listening sessions, screenings, live bookings, and partnership conversations built around the record.
+          <section className="wd-booking-banner" aria-labelledby="walls-devine-booking-title">
+            <div className="wd-booking-banner__copy">
+              <p className="wd-booking-banner__eyebrow">Live Booking</p>
+              <h2 id="walls-devine-booking-title" className="wd-booking-banner__title">
+                Book Walls/Devine
+              </h2>
+              <p className="wd-booking-banner__description">
+                Bring Volume 1 into the room for listening sessions, screenings, live bookings, and partnership conversations around the record.
               </p>
             </div>
 
-            <div className="wd-collector-access__actions">
-              <Button as="a" href="mailto:hello@creativesguide.us?subject=Book%20Walls%2FDevine">
+            <div className="wd-booking-banner__action">
+              <Button as="a" href={wallsDevineBookingIntakeHref} className="wd-booking-banner__button">
                 Book Walls/Devine
               </Button>
-              <p className="wd-collector-access__action-note">Direct studio uplink / Listening events / Performance and partnership inquiries</p>
+              <p className="wd-booking-banner__meta">Listening events · Performance · Partnerships</p>
             </div>
           </section>
         </div>
