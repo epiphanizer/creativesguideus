@@ -4,6 +4,9 @@
 			"path": "."
 		},
 		{
+			"path": "../seanhalls_master"
+		},
+		{
 			"path": "../seanhalls_online"
 		}
 	],
