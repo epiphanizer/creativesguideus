@@ -5,17 +5,24 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { anchors } from "./nav/anchors";
 import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
+import {
+  readWallsDevinePlayerDismissed,
+  requestWallsDevinePlayerRestore,
+  wallsDevinePlayerDismissedChangeEventName
+} from "@/lib/wallsDevinePlayerBridge";
 import { useActiveSection } from "../hooks/useActiveSection";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 export function HeaderNav() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const pathname = usePathname();
+  const isWallsDevineRoute = pathname?.startsWith("/walls-devine") ?? false;
   const router = useRouter();
   const activeAnchors = useMemo(() => anchors, []);
   const anchorIds = useMemo(() => activeAnchors.flatMap((anchor) => (anchor.id ? [anchor.id] : [])), [activeAnchors]);
   const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showPlayerRestore, setShowPlayerRestore] = useState(false);
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
@@ -61,6 +68,26 @@ export function HeaderNav() {
   useEffect(() => {
     closeMenu();
   }, [closeMenu, pathname]);
+
+  useEffect(() => {
+    if (!isWallsDevineRoute) {
+      setShowPlayerRestore(false);
+      return;
+    }
+
+    setShowPlayerRestore(readWallsDevinePlayerDismissed());
+
+    const handleDismissedChange = (event: Event) => {
+      const nextState = (event as CustomEvent<{ isDismissed: boolean }>).detail?.isDismissed ?? false;
+      setShowPlayerRestore(nextState);
+    };
+
+    window.addEventListener(wallsDevinePlayerDismissedChangeEventName, handleDismissedChange);
+
+    return () => {
+      window.removeEventListener(wallsDevinePlayerDismissedChangeEventName, handleDismissedChange);
+    };
+  }, [isWallsDevineRoute]);
 
   return (
     <header className="cg-header" role="banner">
@@ -128,31 +155,50 @@ export function HeaderNav() {
               ))}
             </ul>
           </nav>
-          <WallsDevineCollectorAccess
-            source="header-nav"
-            interest="Walls Devine collector signal list"
-            cardTitle="Enter The Signal Room"
-            cardDescription="Get the shortest route to first-listen links, journal fragments, hidden-room passwords, and release-night signals."
-            triggerLabel="Enter The Signal Room"
-            benefits={["First-listen links", "Studio-journal fragments", "Hidden-room passwords"]}
-            modalTitle="Enter The Signal Room"
-            modalDescription="Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update."
-            submitLabel="Get collector access"
-            successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector signal."
-            note="High-signal only. Used for first listens, hidden-room access, and artifact drops."
-            renderTrigger={(openSignalRoom) => (
-              <button
-                type="button"
-                className="cg-header__cta"
-                onClick={() => {
-                  closeMenu();
-                  openSignalRoom();
-                }}
-              >
-                Signal Room
-              </button>
-            )}
-          />
+          <div className="cg-header__actions">
+            <WallsDevineCollectorAccess
+              source="header-nav"
+              interest="Walls Devine collector signal list"
+              cardTitle="Enter The Signal Room"
+              cardDescription="Get the shortest route to first-listen links, journal fragments, hidden-room passwords, and release-night signals."
+              triggerLabel="Enter The Signal Room"
+              benefits={["First-listen links", "Studio-journal fragments", "Hidden-room passwords"]}
+              modalTitle="Enter The Signal Room"
+              modalDescription="Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update."
+              submitLabel="Get collector access"
+              successMessage="You are in. Watch your inbox for the next room opening, journal fragment, and collector signal."
+              note="High-signal only. Used for first listens, hidden-room access, and artifact drops."
+              renderTrigger={(openSignalRoom) => (
+                <button
+                  type="button"
+                  className="cg-header__cta"
+                  onClick={() => {
+                    closeMenu();
+                    openSignalRoom();
+                  }}
+                >
+                  Signal Room
+                </button>
+              )}
+            />
+
+            {isWallsDevineRoute && showPlayerRestore ? (
+              <div className="cg-header__player-return">
+                <p>Portable player hidden. Bring the listening-room dock back any time from here.</p>
+                <button
+                  type="button"
+                  className="cg-header__player-return-button"
+                  onClick={() => {
+                    requestWallsDevinePlayerRestore();
+                    setShowPlayerRestore(false);
+                    closeMenu();
+                  }}
+                >
+                  Restore portable player
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     </header>

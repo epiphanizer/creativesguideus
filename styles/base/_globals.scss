@@ -980,6 +980,13 @@ p + ol {
   flex-wrap: nowrap;
 }
 
+.cg-header__actions {
+  display: grid;
+  gap: var(--cg-space-2xs);
+  justify-items: end;
+  flex-shrink: 0;
+}
+
 .cg-header__wordmark {
   display: inline-flex;
   align-items: center;
@@ -1044,6 +1051,11 @@ p + ol {
     gap: var(--cg-space-sm) var(--cg-space-lg);
   }
 
+  .cg-header__actions {
+    order: 2;
+    margin-left: auto;
+  }
+
   .cg-header__nav {
     flex: 1 1 100%;
     justify-content: flex-start;
@@ -1057,8 +1069,7 @@ p + ol {
   }
 
   .cg-header__cta {
-    order: 2;
-    margin-left: auto;
+    margin-left: 0;
   }
 }
 
@@ -1113,6 +1124,42 @@ p + ol {
 .cg-header__cta:focus-visible {
   transform: translateY(-1px);
   background: linear-gradient(135deg, var(--cg-color-bong-smoke), var(--cg-color-walls-red));
+}
+
+.cg-header__player-return {
+  display: grid;
+  gap: 0.42rem;
+  max-width: 17rem;
+  justify-items: end;
+  text-align: right;
+}
+
+.cg-header__player-return p {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: rgba(26, 19, 13, 0.72);
+}
+
+.cg-header__player-return-button {
+  padding: 0.38rem 0.78rem;
+  border-radius: 999px;
+  border: 1px solid rgba(26, 19, 13, 0.14);
+  background: rgba(250, 250, 249, 0.74);
+  color: rgba(26, 19, 13, 0.84);
+  font: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--cg-transition-fade), border-color var(--cg-transition-fade), transform var(--cg-transition-move);
+}
+
+.cg-header__player-return-button:hover,
+.cg-header__player-return-button:focus-visible {
+  border-color: rgba(156, 7, 5, 0.34);
+  background: rgba(253, 254, 254, 0.96);
+  transform: translateY(-1px);
 }
 
 
@@ -1965,6 +2012,18 @@ p + ol {
     min-width: clamp(210px, 70vw, 280px);
     font-size: var(--cg-type-body);
     padding: clamp(0.85rem, 3vw, 1rem) clamp(1.6rem, 8vw, 2.4rem);
+  }
+
+  .cg-header__actions {
+    width: 100%;
+    justify-items: center;
+    margin-left: 0;
+  }
+
+  .cg-header__player-return {
+    max-width: min(24rem, 100%);
+    justify-items: center;
+    text-align: center;
   }
 
   .cg-header__wordmark {

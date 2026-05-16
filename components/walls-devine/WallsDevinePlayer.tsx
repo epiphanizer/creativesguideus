@@ -17,6 +17,13 @@ import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.p
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { SongPostCard } from "@/components/walls-devine/content";
 import { createListeningRoomVisit } from "@/lib/firebase/listening-room-visits";
+import {
+  dispatchWallsDevinePlayerDismissedChange,
+  type PlayerDockPosition,
+  type PersistedWallsDevinePlayerState,
+  wallsDevinePlayerRestoreRequestEventName,
+  wallsDevinePlayerStorageKey
+} from "@/lib/wallsDevinePlayerBridge";
 import { cx } from "@/lib/cx";
 
 type WallsDevinePlayerProps = {
@@ -39,18 +46,6 @@ type VisualizerTheme = VisualizerPalette & {
 };
 
 type VisualizerByteArray = Uint8Array<ArrayBuffer>;
-
-type PlayerDockPosition = {
-  x: number;
-  y: number;
-};
-
-type PersistedPlayerState = {
-  activeIndex?: number;
-  isOpen?: boolean;
-  isCollapsed?: boolean;
-  dockPosition?: PlayerDockPosition | null;
-};
 
 const playerQueryKeys = ["player", "song", "track", "slug"] as const;
 
@@ -86,8 +81,6 @@ const trackVisualizerThemes: Record<number, VisualizerTheme> = {
   7: { primary: "#29543b", secondary: "#ca3f3b", glow: "#fafaf9", ink: "#1a130d", field: "#eef2ef", motif: "poetry" },
   8: { primary: "#d66e6c", secondary: "#d96a1f", glow: "#f4e7ce", ink: "#1a130d", field: "#f6ebd7", motif: "gratitude" }
 };
-
-const playerStorageKey = "walls-devine-player-state-v1";
 
 function hexToRgba(hex: string, alpha: number) {
   const sanitized = hex.replace("#", "");
@@ -530,6 +523,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const prefersReducedMotion = usePrefersReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isDismissed, setIsDismissed] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [dockPosition, setDockPosition] = useState<PlayerDockPosition | null>(null);
@@ -625,27 +619,29 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
       return;
     }
 
-    const rawState = window.localStorage.getItem(playerStorageKey);
+    const rawState = window.localStorage.getItem(wallsDevinePlayerStorageKey);
 
     if (!rawState) {
+      setIsDismissed(false);
       setIsCollapsed(true);
       return;
     }
 
     try {
-      const storedState = JSON.parse(rawState) as PersistedPlayerState;
+      const storedState = JSON.parse(rawState) as PersistedWallsDevinePlayerState;
 
       if (Number.isInteger(storedState.activeIndex)) {
         setActiveIndex(clamp(storedState.activeIndex ?? 0, 0, Math.max(0, tracks.length - 1)));
       }
 
+      setIsDismissed(storedState.isDismissed === true);
       setIsCollapsed(true);
 
       // Always boot the listening-room dock at the default top-right anchor.
       // Persisted drag coordinates can place it off-screen between sessions.
       setDockPosition(null);
     } catch {
-      window.localStorage.removeItem(playerStorageKey);
+      window.localStorage.removeItem(wallsDevinePlayerStorageKey);
     }
   }, [tracks.length]);
 
@@ -655,14 +651,19 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
     }
 
     window.localStorage.setItem(
-      playerStorageKey,
+      wallsDevinePlayerStorageKey,
       JSON.stringify({
         activeIndex,
         isOpen,
-        isCollapsed
-      } satisfies PersistedPlayerState)
+        isCollapsed,
+        isDismissed
+      } satisfies PersistedWallsDevinePlayerState)
     );
-  }, [activeIndex, isCollapsed, isOpen]);
+  }, [activeIndex, isCollapsed, isDismissed, isOpen]);
+
+  useEffect(() => {
+    dispatchWallsDevinePlayerDismissedChange(isDismissed);
+  }, [isDismissed]);
 
   useEffect(() => {
     if (!isDraggingDock) {
@@ -806,6 +807,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
 
     deepLinkHandledRef.current = true;
     setActiveIndex(nextIndex);
+    setIsDismissed(false);
     setIsCollapsed(false);
     setIsOpen(true);
 
@@ -954,15 +956,42 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
     teardownAudioVisualizer();
   }, []);
 
+  useEffect(() => {
+    const handleRestoreRequest = () => {
+      setIsDismissed(false);
+      setIsCollapsed(true);
+      setIsOpen(false);
+      setDockPosition(null);
+    };
+
+    window.addEventListener(wallsDevinePlayerRestoreRequestEventName, handleRestoreRequest);
+
+    return () => {
+      window.removeEventListener(wallsDevinePlayerRestoreRequestEventName, handleRestoreRequest);
+    };
+  }, []);
+
   function openPlayer(index: number) {
     setActiveIndex(index);
+    setIsDismissed(false);
     setIsCollapsed(false);
     setIsOpen(true);
   }
 
   function reopenPlayer() {
+    setIsDismissed(false);
     setIsCollapsed(false);
     setIsOpen(true);
+  }
+
+  function dismissPlayer() {
+    audioRef.current?.pause();
+    setIsPlaying(false);
+    setIsDismissed(true);
+    setIsCollapsed(true);
+    setIsOpen(false);
+    setDockPosition(null);
+    syncPlayerUrl(null);
   }
 
   async function playCurrentTrack() {
@@ -1052,7 +1081,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                   )
                 : null}
 
-              {isCollapsed && showDockWhenCollapsed ? (
+              {isCollapsed && showDockWhenCollapsed && !isDismissed ? (
                 <div
                   ref={dockRef}
                   className={cx("wd-player-dock", isDraggingDock && "wd-player-dock--dragging")}
@@ -1072,9 +1101,14 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
 
                   <div ref={dockAudioSlotRef} className="wd-player-dock__audio-slot" onPointerDown={handleDockActionPointerDown} />
 
-                  <button type="button" className="wd-player-dock__tagline" onPointerDown={handleDockActionPointerDown} onClick={reopenPlayer}>
-                    Enter the full Listening Room
-                  </button>
+                  <div className="wd-player-dock__actions" onPointerDown={handleDockActionPointerDown}>
+                    <button type="button" className="wd-player-dock__tagline" onClick={reopenPlayer}>
+                      Enter the full Listening Room
+                    </button>
+                    <button type="button" className="wd-player-dock__button wd-player-dock__button--close" onClick={dismissPlayer}>
+                      Hide player
+                    </button>
+                  </div>
                 </div>
               ) : null}
 
