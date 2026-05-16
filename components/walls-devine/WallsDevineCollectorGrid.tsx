@@ -10,7 +10,16 @@ import { cx } from "@/lib/cx";
 
 import { EcosystemSignupForm } from "./EcosystemSignupForm";
 
-type CollectorChallengeMode = "collect" | "timing" | "sequence";
+type CollectorChallengeMode =
+  | "crown-chase"
+  | "vault-code"
+  | "orbit-lock"
+  | "porch-lights"
+  | "seal-alignment"
+  | "decay-patch"
+  | "spark-ladder"
+  | "line-break"
+  | "bloom-garden";
 
 export type CollectorGridTile = {
   slug: string;
@@ -42,33 +51,82 @@ type TokenPoint = {
   left: number;
 };
 
+type SequenceStatus = "showing" | "active" | "won" | "lost";
+
+type DecayPatch = TokenPoint & {
+  size: number;
+};
+
 function randomInRange(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-function buildTokenPoints(count: number) {
+function buildTokenPoints(count: number, topMin = 10, topMax = 78, leftMin = 10, leftMax = 78) {
   return Array.from({ length: count }, (_, index) => ({
     id: `token-${index}`,
-    top: randomInRange(10, 78),
-    left: randomInRange(10, 78)
+    top: randomInRange(topMin, topMax),
+    left: randomInRange(leftMin, leftMax)
   }));
 }
 
-function buildSequencePattern(length: number) {
-  return Array.from({ length }, () => Math.floor(Math.random() * 4));
+function buildSequencePattern(length: number, padCount: number) {
+  return Array.from({ length }, () => Math.floor(Math.random() * padCount));
 }
 
-function CollectorCollectGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
-  const targetScore = tile.center ? 8 : 6;
+function buildVaultCode(length: number) {
+  return Array.from({ length }, () => Math.floor(randomInRange(1, 10)));
+}
+
+function buildSealPattern(length: number, symbolCount: number) {
+  return Array.from({ length }, () => Math.floor(Math.random() * symbolCount));
+}
+
+function buildDecayPatches(count: number) {
+  return Array.from({ length: count }, (_, index) => ({
+    id: `patch-${index}`,
+    top: randomInRange(12, 82),
+    left: randomInRange(12, 82),
+    size: randomInRange(0.9, 1.24)
+  } satisfies DecayPatch));
+}
+
+const bloomPositions = [
+  { id: "bud-1", top: 20, left: 50 },
+  { id: "bud-2", top: 36, left: 76 },
+  { id: "bud-3", top: 68, left: 68 },
+  { id: "bud-4", top: 68, left: 32 },
+  { id: "bud-5", top: 36, left: 24 }
+] as const;
+
+const poetryRounds = [
+  {
+    lead: "Smoke rewrites the",
+    options: ["myth", "meeting", "checkout"],
+    correct: "myth"
+  },
+  {
+    lead: "before it lets you",
+    options: ["disconnect", "onstage", "delay"],
+    correct: "onstage"
+  },
+  {
+    lead: "and the line lands in",
+    options: ["ink", "static", "traffic"],
+    correct: "ink"
+  }
+] as const;
+
+function CollectorCrownChaseGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
+  const targetScore = 5;
   const [score, setScore] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(14);
-  const [tokens, setTokens] = useState<TokenPoint[]>(() => buildTokenPoints(7));
+  const [secondsLeft, setSecondsLeft] = useState(12);
+  const [tokens, setTokens] = useState<TokenPoint[]>(() => buildTokenPoints(6, 14, 78, 12, 84));
   const [status, setStatus] = useState<"active" | "won" | "lost">("active");
 
   useEffect(() => {
     setScore(0);
-    setSecondsLeft(14);
-    setTokens(buildTokenPoints(7));
+    setSecondsLeft(12);
+    setTokens(buildTokenPoints(6, 14, 78, 12, 84));
     setStatus("active");
   }, [tile.slug]);
 
@@ -97,7 +155,11 @@ function CollectorCollectGame({ tile, onUnlock }: { tile: CollectorGridTile; onU
       return;
     }
 
-    setTokens((current) => current.map((token) => (token.id === tokenId ? { ...token, top: randomInRange(10, 78), left: randomInRange(10, 78) } : token)));
+    setTokens((current) =>
+      current.map((token) =>
+        token.id === tokenId ? { ...token, top: randomInRange(14, 78), left: randomInRange(12, 84) } : token
+      )
+    );
     setScore((current) => {
       const nextScore = current + 1;
 
@@ -112,25 +174,25 @@ function CollectorCollectGame({ tile, onUnlock }: { tile: CollectorGridTile; onU
 
   function handleReset() {
     setScore(0);
-    setSecondsLeft(14);
-    setTokens(buildTokenPoints(7));
+    setSecondsLeft(12);
+    setTokens(buildTokenPoints(6, 14, 78, 12, 84));
     setStatus("active");
   }
 
   return (
     <div className="wd-grid-modal__game-shell">
       <div className="wd-grid-modal__game-status">
-        <span>Collect {targetScore}</span>
+        <span>Crown run</span>
         <span>{score}/{targetScore}</span>
         <span>{secondsLeft}s</span>
       </div>
 
-      <div className="wd-grid-modal__token-field" aria-label={`${tile.title} collector game`}>
+      <div className="wd-grid-modal__token-field wd-grid-modal__token-field--crown" aria-label={`${tile.title} crown chase` }>
         {tokens.map((token) => (
           <button
             key={token.id}
             type="button"
-            className="wd-grid-modal__token"
+            className="wd-grid-modal__token wd-grid-modal__token--crown"
             style={{ "--wd-token-top": `${token.top}%`, "--wd-token-left": `${token.left}%` } as CSSProperties}
             onClick={() => handleTokenCollect(token.id)}
             disabled={status !== "active"}
@@ -143,9 +205,9 @@ function CollectorCollectGame({ tile, onUnlock }: { tile: CollectorGridTile; onU
       <div className="wd-grid-modal__game-footer">
         <p>
           {status === "won"
-            ? "Unlocked. The hidden note is live below."
+            ? "The crown lands. The hidden note is open below."
             : status === "lost"
-              ? "The room closed before the grid locked. Run it again."
+              ? "Missed the last crown. Run it back."
               : tile.challengePrompt}
         </p>
         <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
@@ -156,49 +218,28 @@ function CollectorCollectGame({ tile, onUnlock }: { tile: CollectorGridTile; onU
   );
 }
 
-function CollectorTimingGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
-  const [secondsLeft, setSecondsLeft] = useState(18);
-  const [hits, setHits] = useState(0);
-  const [beamPosition, setBeamPosition] = useState(0);
-  const [beamDirection, setBeamDirection] = useState(1);
-  const [targetStart, setTargetStart] = useState(28);
-  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
-  const targetWidth = 18;
+function CollectorVaultCodeGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
+  const [code, setCode] = useState<number[]>(() => buildVaultCode(4));
+  const [input, setInput] = useState<number[]>([]);
+  const [secondsLeft, setSecondsLeft] = useState(16);
+  const [status, setStatus] = useState<SequenceStatus>("showing");
 
   useEffect(() => {
-    setSecondsLeft(18);
-    setHits(0);
-    setBeamPosition(0);
-    setBeamDirection(1);
-    setTargetStart(randomInRange(18, 70));
-    setStatus("active");
+    setCode(buildVaultCode(4));
+    setInput([]);
+    setSecondsLeft(16);
+    setStatus("showing");
   }, [tile.slug]);
 
   useEffect(() => {
-    if (status !== "active") {
+    if (status !== "showing") {
       return;
     }
 
-    const movement = window.setInterval(() => {
-      setBeamPosition((current) => {
-        const next = current + beamDirection * 4;
+    const revealTimer = window.setTimeout(() => setStatus("active"), 1800);
 
-        if (next >= 100) {
-          setBeamDirection(-1);
-          return 100;
-        }
-
-        if (next <= 0) {
-          setBeamDirection(1);
-          return 0;
-        }
-
-        return next;
-      });
-    }, 70);
-
-    return () => window.clearInterval(movement);
-  }, [beamDirection, status, tile.slug]);
+    return () => window.clearTimeout(revealTimer);
+  }, [status]);
 
   useEffect(() => {
     if (status !== "active") {
@@ -220,14 +261,145 @@ function CollectorTimingGame({ tile, onUnlock }: { tile: CollectorGridTile; onUn
     return () => window.clearInterval(timer);
   }, [status, tile.slug]);
 
+  function handleDigitPress(value: number) {
+    if (status !== "active") {
+      return;
+    }
+
+    const nextIndex = input.length;
+
+    if (code[nextIndex] !== value) {
+      setStatus("lost");
+      return;
+    }
+
+    const nextInput = [...input, value];
+    setInput(nextInput);
+
+    if (nextInput.length === code.length) {
+      setStatus("won");
+      onUnlock();
+    }
+  }
+
+  function handleReset() {
+    setCode(buildVaultCode(4));
+    setInput([]);
+    setSecondsLeft(16);
+    setStatus("showing");
+  }
+
+  return (
+    <div className="wd-grid-modal__game-shell">
+      <div className="wd-grid-modal__game-status">
+        <span>Vault code</span>
+        <span>{input.length}/{code.length}</span>
+        <span>{secondsLeft}s</span>
+      </div>
+
+      <div className="wd-grid-modal__vault-display" aria-label={`${tile.title} vault code`}>
+        {code.map((digit, index) => (
+          <span key={`${tile.slug}-digit-${index}`} className={cx(status === "showing" && "wd-grid-modal__vault-digit--visible")}>
+            {status === "showing" ? digit : input[index] ?? "•"}
+          </span>
+        ))}
+      </div>
+
+      <div className="wd-grid-modal__keypad">
+        {Array.from({ length: 9 }, (_, index) => index + 1).map((digit) => (
+          <button
+            key={`${tile.slug}-key-${digit}`}
+            type="button"
+            className="wd-grid-modal__keypad-key"
+            onClick={() => handleDigitPress(digit)}
+            disabled={status !== "active"}
+          >
+            {digit}
+          </button>
+        ))}
+      </div>
+
+      <div className="wd-grid-modal__game-footer">
+        <p>
+          {status === "won"
+            ? "Vault cracked. The hidden note is live below."
+            : status === "lost"
+              ? "Wrong digit. Spin a new combo."
+              : status === "showing"
+                ? "Read the four digits before the safe shutters down."
+              : tile.challengePrompt}
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
+          New combo
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function normalizeAngle(angle: number) {
+  return ((angle % 360) + 360) % 360;
+}
+
+function angleDistance(current: number, target: number) {
+  return Math.abs((((current - target + 540) % 360) - 180));
+}
+
+function CollectorOrbitLockGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
+  const [secondsLeft, setSecondsLeft] = useState(16);
+  const [hits, setHits] = useState(0);
+  const [orbAngle, setOrbAngle] = useState(0);
+  const [gateAngle, setGateAngle] = useState(24);
+  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
+  const gateWidth = 34;
+
+  useEffect(() => {
+    setSecondsLeft(16);
+    setHits(0);
+    setOrbAngle(0);
+    setGateAngle(randomInRange(18, 320));
+    setStatus("active");
+  }, [tile.slug]);
+
+  useEffect(() => {
+    if (status !== "active") {
+      return;
+    }
+
+    const movement = window.setInterval(() => {
+      setOrbAngle((current) => normalizeAngle(current + 5));
+    }, 40);
+
+    return () => window.clearInterval(movement);
+  }, [status]);
+
+  useEffect(() => {
+    if (status !== "active") {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          window.clearInterval(timer);
+          setStatus("lost");
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [status]);
+
   function handleLock() {
     if (status !== "active") {
       return;
     }
 
-    const inZone = beamPosition >= targetStart && beamPosition <= targetStart + targetWidth;
-
-    if (!inZone) {
+    if (angleDistance(orbAngle, gateAngle) > gateWidth / 2) {
+      setSecondsLeft((current) => Math.max(0, current - 2));
       return;
     }
 
@@ -238,7 +410,7 @@ function CollectorTimingGame({ tile, onUnlock }: { tile: CollectorGridTile; onUn
         setStatus("won");
         onUnlock();
       } else {
-        setTargetStart(randomInRange(12, 74));
+        setGateAngle(randomInRange(18, 320));
       }
 
       return next;
@@ -246,41 +418,41 @@ function CollectorTimingGame({ tile, onUnlock }: { tile: CollectorGridTile; onUn
   }
 
   function handleReset() {
-    setSecondsLeft(18);
+    setSecondsLeft(16);
     setHits(0);
-    setBeamPosition(0);
-    setBeamDirection(1);
-    setTargetStart(randomInRange(18, 70));
+    setOrbAngle(0);
+    setGateAngle(randomInRange(18, 320));
     setStatus("active");
   }
 
   return (
     <div className="wd-grid-modal__game-shell">
       <div className="wd-grid-modal__game-status">
-        <span>Lock 3 pulses</span>
+        <span>Orbit lock</span>
         <span>{hits}/3</span>
         <span>{secondsLeft}s</span>
       </div>
 
-      <div className="wd-grid-modal__meter" aria-label={`${tile.title} pulse game`}>
-        <div className="wd-grid-modal__meter-zone" style={{ left: `${targetStart}%`, width: `${targetWidth}%` }} />
-        <div className="wd-grid-modal__meter-beam" style={{ left: `${beamPosition}%` }} />
+      <div className="wd-grid-modal__orbit" aria-label={`${tile.title} orbit lock`}>
+        <div className="wd-grid-modal__orbit-ring" />
+        <div className="wd-grid-modal__orbit-gate" style={{ "--wd-orbit-angle": `${gateAngle}deg` } as CSSProperties} />
+        <div className="wd-grid-modal__orbit-orb" style={{ "--wd-orbit-angle": `${orbAngle}deg` } as CSSProperties} />
       </div>
 
       <div className="wd-grid-modal__game-footer">
         <p>
           {status === "won"
-            ? "Pulse locked. The hidden note is live below."
+            ? "Three clean locks. The hidden note is live below."
             : status === "lost"
-              ? "The signal slipped. Start a new pass."
+              ? "The cruiser drifted off course. Reset the orbit."
               : tile.challengePrompt}
         </p>
         <div className="wd-grid-modal__game-buttons">
           <Button type="button" variant="primary" size="sm" onClick={handleLock} disabled={status !== "active"}>
-            Lock pulse
+            Lock orbit
           </Button>
           <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
-            Reset run
+            Reset orbit
           </Button>
         </div>
       </div>
@@ -288,21 +460,22 @@ function CollectorTimingGame({ tile, onUnlock }: { tile: CollectorGridTile; onUn
   );
 }
 
-function CollectorSequenceGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
-  const patternLength = tile.center ? 5 : 4;
-  const [pattern, setPattern] = useState<number[]>(() => buildSequencePattern(patternLength));
+function CollectorPorchLightsGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
+  const patternLength = 4;
+  const padCount = 6;
+  const [pattern, setPattern] = useState<number[]>(() => buildSequencePattern(patternLength, padCount));
   const [activePad, setActivePad] = useState<number | null>(null);
   const [input, setInput] = useState<number[]>([]);
-  const [secondsLeft, setSecondsLeft] = useState(22);
-  const [status, setStatus] = useState<"showing" | "active" | "won" | "lost">("showing");
+  const [secondsLeft, setSecondsLeft] = useState(18);
+  const [status, setStatus] = useState<SequenceStatus>("showing");
 
   useEffect(() => {
-    setPattern(buildSequencePattern(patternLength));
+    setPattern(buildSequencePattern(patternLength, padCount));
     setActivePad(null);
     setInput([]);
-    setSecondsLeft(22);
+    setSecondsLeft(18);
     setStatus("showing");
-  }, [patternLength, tile.slug]);
+  }, [tile.slug]);
 
   useEffect(() => {
     if (status !== "showing") {
@@ -369,32 +542,32 @@ function CollectorSequenceGame({ tile, onUnlock }: { tile: CollectorGridTile; on
   }
 
   function handleReset() {
-    setPattern(buildSequencePattern(patternLength));
+    setPattern(buildSequencePattern(patternLength, padCount));
     setActivePad(null);
     setInput([]);
-    setSecondsLeft(22);
+    setSecondsLeft(18);
     setStatus("showing");
   }
 
   return (
     <div className="wd-grid-modal__game-shell">
       <div className="wd-grid-modal__game-status">
-        <span>Repeat the pattern</span>
+        <span>Porch lights</span>
         <span>{input.length}/{pattern.length}</span>
         <span>{secondsLeft}s</span>
       </div>
 
-      <div className="wd-grid-modal__pads" aria-label={`${tile.title} memory game`}>
-        {Array.from({ length: 4 }, (_, index) => (
+      <div className="wd-grid-modal__windows" aria-label={`${tile.title} porch light pattern`}>
+        {Array.from({ length: padCount }, (_, index) => (
           <button
             key={`${tile.slug}-pad-${index}`}
             type="button"
-            className={cx("wd-grid-modal__pad", activePad === index && "wd-grid-modal__pad--active")}
+            className={cx("wd-grid-modal__window", activePad === index && "wd-grid-modal__window--active")}
             onClick={() => handlePadPress(index)}
             disabled={status === "showing"}
           >
-            <span>{tile.tokenLabel}</span>
-            <strong>Pad {index + 1}</strong>
+            <span>Glow</span>
+            <strong>Window {index + 1}</strong>
           </button>
         ))}
       </div>
@@ -404,13 +577,498 @@ function CollectorSequenceGame({ tile, onUnlock }: { tile: CollectorGridTile; on
           {status === "won"
             ? "Pattern matched. The hidden note is live below."
             : status === "lost"
-              ? "Pattern broken. Cue a new reveal."
+              ? "The porch went dark. Cue the pattern again."
               : status === "showing"
-                ? "Watch the pattern once, then repeat it cleanly."
+                ? "Watch the windows once, then replay them cleanly."
                 : tile.challengePrompt}
         </p>
         <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
-          Restart sequence
+          Replay lights
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function CollectorSealAlignmentGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
+  const symbols = [tile.tokenLabel, "thread", "echo", "arc"];
+  const [targetPattern, setTargetPattern] = useState<number[]>(() => buildSealPattern(3, symbols.length));
+  const [currentPattern, setCurrentPattern] = useState<number[]>(() => buildSealPattern(3, symbols.length));
+  const [movesLeft, setMovesLeft] = useState(8);
+  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
+
+  useEffect(() => {
+    setTargetPattern(buildSealPattern(3, symbols.length));
+    setCurrentPattern(buildSealPattern(3, symbols.length));
+    setMovesLeft(8);
+    setStatus("active");
+  }, [tile.slug]);
+
+  function handleRingCycle(index: number) {
+    if (status !== "active") {
+      return;
+    }
+
+    const nextPattern = currentPattern.map((value, valueIndex) => (valueIndex === index ? (value + 1) % symbols.length : value));
+    const nextMovesLeft = movesLeft - 1;
+
+    setCurrentPattern(nextPattern);
+    setMovesLeft(nextMovesLeft);
+
+    if (nextPattern.every((value, valueIndex) => value === targetPattern[valueIndex])) {
+      setStatus("won");
+      onUnlock();
+      return;
+    }
+
+    if (nextMovesLeft <= 0) {
+      setStatus("lost");
+    }
+  }
+
+  function handleReset() {
+    setTargetPattern(buildSealPattern(3, symbols.length));
+    setCurrentPattern(buildSealPattern(3, symbols.length));
+    setMovesLeft(8);
+    setStatus("active");
+  }
+
+  return (
+    <div className="wd-grid-modal__game-shell">
+      <div className="wd-grid-modal__game-status">
+        <span>Seal alignment</span>
+        <span>{movesLeft} moves</span>
+        <span>3 rings</span>
+      </div>
+
+      <div className="wd-grid-modal__seal-target" aria-label={`${tile.title} seal target`}>
+        {targetPattern.map((value, index) => (
+          <span key={`${tile.slug}-target-${index}`}>{symbols[value]}</span>
+        ))}
+      </div>
+
+      <div className="wd-grid-modal__seal-rings">
+        {currentPattern.map((value, index) => (
+          <button key={`${tile.slug}-ring-${index}`} type="button" className="wd-grid-modal__seal-ring" onClick={() => handleRingCycle(index)}>
+            <span>Ring {index + 1}</span>
+            <strong>{symbols[value]}</strong>
+          </button>
+        ))}
+      </div>
+
+      <div className="wd-grid-modal__game-footer">
+        <p>
+          {status === "won"
+            ? "Seal aligned. The hidden note is open below."
+            : status === "lost"
+              ? "The rings slipped out of lock. Start a fresh pass."
+              : tile.challengePrompt}
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
+          Recast seal
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function CollectorDecayPatchGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
+  const [integrity, setIntegrity] = useState(100);
+  const [repairs, setRepairs] = useState(0);
+  const [patches, setPatches] = useState<DecayPatch[]>(() => buildDecayPatches(4));
+  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
+
+  useEffect(() => {
+    setIntegrity(100);
+    setRepairs(0);
+    setPatches(buildDecayPatches(4));
+    setStatus("active");
+  }, [tile.slug]);
+
+  useEffect(() => {
+    if (status !== "active") {
+      return;
+    }
+
+    const decayTimer = window.setInterval(() => {
+      setIntegrity((current) => {
+        const next = current - 7;
+
+        if (next <= 0) {
+          window.clearInterval(decayTimer);
+          setStatus("lost");
+          return 0;
+        }
+
+        return next;
+      });
+
+      setPatches(buildDecayPatches(4));
+    }, 1000);
+
+    return () => window.clearInterval(decayTimer);
+  }, [status]);
+
+  function handlePatch(patchId: string) {
+    if (status !== "active") {
+      return;
+    }
+
+    setPatches((current) => current.map((patch) => (patch.id === patchId ? { ...patch, top: randomInRange(12, 82), left: randomInRange(12, 82), size: randomInRange(0.9, 1.24) } : patch)));
+    setIntegrity((current) => Math.min(100, current + 10));
+    setRepairs((current) => {
+      const next = current + 1;
+
+      if (next >= 6) {
+        setStatus("won");
+        onUnlock();
+      }
+
+      return next;
+    });
+  }
+
+  function handleReset() {
+    setIntegrity(100);
+    setRepairs(0);
+    setPatches(buildDecayPatches(4));
+    setStatus("active");
+  }
+
+  return (
+    <div className="wd-grid-modal__game-shell">
+      <div className="wd-grid-modal__game-status">
+        <span>Decay patch</span>
+        <span>{repairs}/6 repairs</span>
+        <span>{integrity}% intact</span>
+      </div>
+
+      <div className="wd-grid-modal__token-field wd-grid-modal__token-field--decay" aria-label={`${tile.title} decay patch`}>
+        <div className="wd-grid-modal__integrity-bar">
+          <span style={{ width: `${integrity}%` }} />
+        </div>
+
+        {patches.map((patch) => (
+          <button
+            key={patch.id}
+            type="button"
+            className="wd-grid-modal__patch"
+            style={{ "--wd-token-top": `${patch.top}%`, "--wd-token-left": `${patch.left}%`, "--wd-patch-size": patch.size } as CSSProperties}
+            onClick={() => handlePatch(patch.id)}
+            disabled={status !== "active"}
+          >
+            patch
+          </button>
+        ))}
+      </div>
+
+      <div className="wd-grid-modal__game-footer">
+        <p>
+          {status === "won"
+            ? "The structure holds. The hidden note is live below."
+            : status === "lost"
+              ? "The room collapsed. Start a fresh repair pass."
+              : tile.challengePrompt}
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
+          Repair again
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function CollectorSparkLadderGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [secondsLeft, setSecondsLeft] = useState(13);
+  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
+
+  useEffect(() => {
+    setCurrentStep(1);
+    setSecondsLeft(13);
+    setStatus("active");
+  }, [tile.slug]);
+
+  useEffect(() => {
+    if (status !== "active") {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          window.clearInterval(timer);
+          setStatus("lost");
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [status]);
+
+  function handleStepClick(step: number) {
+    if (status !== "active") {
+      return;
+    }
+
+    if (step !== currentStep) {
+      setStatus("lost");
+      return;
+    }
+
+    if (step === 5) {
+      setStatus("won");
+      onUnlock();
+      return;
+    }
+
+    setCurrentStep((current) => current + 1);
+  }
+
+  function handleReset() {
+    setCurrentStep(1);
+    setSecondsLeft(13);
+    setStatus("active");
+  }
+
+  return (
+    <div className="wd-grid-modal__game-shell">
+      <div className="wd-grid-modal__game-status">
+        <span>Spark ladder</span>
+        <span>Step {currentStep}/5</span>
+        <span>{secondsLeft}s</span>
+      </div>
+
+      <div className="wd-grid-modal__ladder" aria-label={`${tile.title} spark ladder`}>
+        {Array.from({ length: 5 }, (_, index) => index + 1).map((step) => (
+          <button
+            key={`${tile.slug}-step-${step}`}
+            type="button"
+            className={cx(
+              "wd-grid-modal__ladder-step",
+              step < currentStep && "wd-grid-modal__ladder-step--complete",
+              step === currentStep && status === "active" && "wd-grid-modal__ladder-step--current"
+            )}
+            onClick={() => handleStepClick(step)}
+          >
+            <span>Fuse</span>
+            <strong>{String(step).padStart(2, "0")}</strong>
+          </button>
+        ))}
+      </div>
+
+      <div className="wd-grid-modal__game-footer">
+        <p>
+          {status === "won"
+            ? "Fuse lit end to end. The hidden note is live below."
+            : status === "lost"
+              ? "The spark broke. Start from step one."
+              : tile.challengePrompt}
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
+          Relight fuse
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function CollectorLineBreakGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
+  const [roundIndex, setRoundIndex] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(18);
+  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
+  const round = poetryRounds[roundIndex];
+
+  useEffect(() => {
+    setRoundIndex(0);
+    setSecondsLeft(18);
+    setStatus("active");
+  }, [tile.slug]);
+
+  useEffect(() => {
+    if (status !== "active") {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          window.clearInterval(timer);
+          setStatus("lost");
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [status]);
+
+  function handleChoice(option: string) {
+    if (status !== "active") {
+      return;
+    }
+
+    if (option !== round.correct) {
+      setStatus("lost");
+      return;
+    }
+
+    if (roundIndex === poetryRounds.length - 1) {
+      setStatus("won");
+      onUnlock();
+      return;
+    }
+
+    setRoundIndex((current) => current + 1);
+  }
+
+  function handleReset() {
+    setRoundIndex(0);
+    setSecondsLeft(18);
+    setStatus("active");
+  }
+
+  return (
+    <div className="wd-grid-modal__game-shell">
+      <div className="wd-grid-modal__game-status">
+        <span>Line break</span>
+        <span>{roundIndex + 1}/{poetryRounds.length}</span>
+        <span>{secondsLeft}s</span>
+      </div>
+
+      <div className="wd-grid-modal__line-card" aria-label={`${tile.title} line break`}>
+        <p>{round.lead}</p>
+      </div>
+
+      <div className="wd-grid-modal__options">
+        {round.options.map((option) => (
+          <button key={`${tile.slug}-${option}`} type="button" className="wd-grid-modal__option" onClick={() => handleChoice(option)}>
+            {option}
+          </button>
+        ))}
+      </div>
+
+      <div className="wd-grid-modal__game-footer">
+        <p>
+          {status === "won"
+            ? "The line lands. The hidden note is live below."
+            : status === "lost"
+              ? "Wrong word. Start the stanza again."
+              : tile.challengePrompt}
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
+          Redraft line
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function CollectorBloomGardenGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
+  const [openBuds, setOpenBuds] = useState<string[]>([]);
+  const [secondsLeft, setSecondsLeft] = useState(18);
+  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
+
+  useEffect(() => {
+    setOpenBuds([]);
+    setSecondsLeft(18);
+    setStatus("active");
+  }, [tile.slug]);
+
+  useEffect(() => {
+    if (status !== "active") {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 1) {
+          window.clearInterval(timer);
+          setStatus("lost");
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [status]);
+
+  function handleBudOpen(id: string) {
+    if (status !== "active" || openBuds.includes(id)) {
+      return;
+    }
+
+    setOpenBuds((current) => [...current, id]);
+  }
+
+  function handleCenterBloom() {
+    if (status !== "active" || openBuds.length !== bloomPositions.length) {
+      return;
+    }
+
+    setStatus("won");
+    onUnlock();
+  }
+
+  function handleReset() {
+    setOpenBuds([]);
+    setSecondsLeft(18);
+    setStatus("active");
+  }
+
+  return (
+    <div className="wd-grid-modal__game-shell">
+      <div className="wd-grid-modal__game-status">
+        <span>Bloom garden</span>
+        <span>{openBuds.length}/{bloomPositions.length}</span>
+        <span>{secondsLeft}s</span>
+      </div>
+
+      <div className="wd-grid-modal__garden" aria-label={`${tile.title} bloom garden`}>
+        {bloomPositions.map((bud) => {
+          const isOpen = openBuds.includes(bud.id);
+
+          return (
+            <button
+              key={bud.id}
+              type="button"
+              className={cx("wd-grid-modal__bud", isOpen && "wd-grid-modal__bud--open")}
+              style={{ "--wd-token-top": `${bud.top}%`, "--wd-token-left": `${bud.left}%` } as CSSProperties}
+              onClick={() => handleBudOpen(bud.id)}
+              disabled={status !== "active" || isOpen}
+            >
+              {isOpen ? "open" : "bud"}
+            </button>
+          );
+        })}
+
+        <button
+          type="button"
+          className={cx("wd-grid-modal__garden-core", openBuds.length === bloomPositions.length && "wd-grid-modal__garden-core--ready")}
+          onClick={handleCenterBloom}
+          disabled={openBuds.length !== bloomPositions.length || status !== "active"}
+        >
+          <span>Final bloom</span>
+        </button>
+      </div>
+
+      <div className="wd-grid-modal__game-footer">
+        <p>
+          {status === "won"
+            ? "Garden opened. The hidden note is live below."
+            : status === "lost"
+              ? "The light faded. Grow it again."
+              : tile.challengePrompt}
+        </p>
+        <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
+          Regrow bloom
         </Button>
       </div>
     </div>
@@ -418,15 +1076,39 @@ function CollectorSequenceGame({ tile, onUnlock }: { tile: CollectorGridTile; on
 }
 
 function CollectorChallenge({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
-  if (tile.gameMode === "collect") {
-    return <CollectorCollectGame tile={tile} onUnlock={onUnlock} />;
+  if (tile.gameMode === "crown-chase") {
+    return <CollectorCrownChaseGame tile={tile} onUnlock={onUnlock} />;
   }
 
-  if (tile.gameMode === "timing") {
-    return <CollectorTimingGame tile={tile} onUnlock={onUnlock} />;
+  if (tile.gameMode === "vault-code") {
+    return <CollectorVaultCodeGame tile={tile} onUnlock={onUnlock} />;
   }
 
-  return <CollectorSequenceGame tile={tile} onUnlock={onUnlock} />;
+  if (tile.gameMode === "orbit-lock") {
+    return <CollectorOrbitLockGame tile={tile} onUnlock={onUnlock} />;
+  }
+
+  if (tile.gameMode === "porch-lights") {
+    return <CollectorPorchLightsGame tile={tile} onUnlock={onUnlock} />;
+  }
+
+  if (tile.gameMode === "seal-alignment") {
+    return <CollectorSealAlignmentGame tile={tile} onUnlock={onUnlock} />;
+  }
+
+  if (tile.gameMode === "decay-patch") {
+    return <CollectorDecayPatchGame tile={tile} onUnlock={onUnlock} />;
+  }
+
+  if (tile.gameMode === "spark-ladder") {
+    return <CollectorSparkLadderGame tile={tile} onUnlock={onUnlock} />;
+  }
+
+  if (tile.gameMode === "line-break") {
+    return <CollectorLineBreakGame tile={tile} onUnlock={onUnlock} />;
+  }
+
+  return <CollectorBloomGardenGame tile={tile} onUnlock={onUnlock} />;
 }
 
 export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProps) {
@@ -504,25 +1186,21 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
                       <Image src={activeTile.image} alt={`${activeTile.title} artwork`} sizes="(max-width: 900px) 88vw, 34vw" />
                     </div>
 
-                    <dl className="wd-grid-modal__notes">
-                      <div>
-                        <dt>Story</dt>
-                        <dd>{activeTile.storySummary}</dd>
-                      </div>
-                      <div>
-                        <dt>Visual thread</dt>
-                        <dd>{activeTile.visualThread}</dd>
-                      </div>
-                      <div>
-                        <dt>Studio note</dt>
-                        <dd>{activeTile.makingNote}</dd>
-                      </div>
-                    </dl>
+                    <article className="wd-grid-modal__fact-card">
+                      <p className="wd-grid-modal__challenge-title">Collector note</p>
+                      <p>{activeTile.storySummary}</p>
+                    </article>
+
+                    <article className="wd-grid-modal__fact-card">
+                      <p className="wd-grid-modal__challenge-title">Studio spark</p>
+                      <p>{activeTile.makingNote}</p>
+                    </article>
                   </aside>
 
                   <div className="wd-grid-modal__experience">
-                    <div className="wd-grid-modal__intro-card">
-                      <p className="wd-grid-modal__challenge-title">Arcade brief</p>
+                    <div className="wd-grid-modal__challenge-card">
+                      <p className="wd-grid-modal__challenge-title">Challenge</p>
+                      <h3>{activeTile.challengeLabel}</h3>
                       <p>{activeTile.challengePrompt}</p>
                     </div>
 
@@ -531,7 +1209,7 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
                     <section className={cx("wd-grid-modal__easter-egg", easterEggUnlocked && "wd-grid-modal__easter-egg--unlocked")}>
                       <p className="wd-grid-modal__challenge-title">Easter egg</p>
                       <h3>{easterEggUnlocked ? activeTile.easterEggTitle : "Locked until the challenge lands"}</h3>
-                      <p>{easterEggUnlocked ? activeTile.easterEggBody : "Beat the modal challenge to reveal the hidden note tied to this chapter of the record."}</p>
+                      <p>{easterEggUnlocked ? activeTile.easterEggBody : "Beat the game to reveal the hidden note for this chapter."}</p>
                     </section>
 
                     <EcosystemSignupForm
@@ -540,7 +1218,7 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
                       interest={activeTile.interest}
                       eyebrow="Collector circle"
                       title="Stay inside the rollout"
-                      description="Get passwords, secret rooms, and first notice when the next artifact or drop opens."
+                      description="Get first notice when this chapter opens again."
                       submitLabel="Join this chapter"
                       successMessage={`You are in for ${activeTile.title}. Expect first-access notes and hidden-room signals in your inbox.`}
                       compact

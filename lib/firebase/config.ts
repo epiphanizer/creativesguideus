@@ -19,6 +19,7 @@ export const firebaseAdminPaths = {
   adminUsersCollection: "adminUsers",
   adminProjectsCollection: "adminProjects",
   ecosystemLeadsCollection: "ecosystemLeads",
+  listeningRoomVisitsCollection: "listeningRoomVisits",
   wallsDevineProjectId: "walls-devine",
   releasePlanField: "releasePlan",
   markdownCollection: "markdownFiles",
@@ -40,6 +41,7 @@ export const firebaseAdminRecommendations = [
   `Use Firestore ${firebaseAdminPaths.adminUsersCollection}/{uid} documents as the editor allowlist.`,
   `Keep the release plan in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}.`,
   `Capture public collector leads in ${firebaseAdminPaths.ecosystemLeadsCollection} and review them from the admin console.`,
+  `Track shared listening-room visits in ${firebaseAdminPaths.listeningRoomVisitsCollection} for song-level arrival analytics.`,
   `Store markdown docs in Firestore ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/{collection}--{slug}.`,
   `Use ${firebaseAdminPaths.storageBasePath}/{collection}/{slug}.md only as a migration source when older Storage content already exists.`,
   "Treat the local JSON and markdown files as migration seed data, not the live admin backend."

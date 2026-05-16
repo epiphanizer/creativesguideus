@@ -59,11 +59,11 @@ const instagramGrid: GridTile[] = [
     playerTarget: "joint-queen",
     teaser: "Smoke-crowned swagger and the first true door into the record.",
     challengeLabel: "Crown run",
-    challengePrompt: "Collect six ember crowns before the room cools to unlock the hidden note.",
+    challengePrompt: "Grab five ember crowns before the smoke drops.",
     easterEggTitle: "The first crown",
     easterEggBody: "Joint Queen marks the moment the project stopped feeling split and finally sounded unified. That sense of arrival is the hidden engine behind the whole rollout.",
     interest: "Joint Queen collector list",
-    gameMode: "collect",
+    gameMode: "crown-chase",
     tokenLabel: "crown"
   }),
   withSongStory({
@@ -74,11 +74,11 @@ const instagramGrid: GridTile[] = [
     playerTarget: "stash-daddy",
     teaser: "Backroom pressure, analog swagger, and low-end authority.",
     challengeLabel: "Vault pulse",
-    challengePrompt: "Lock three clean pulses to hold the stash-room signal long enough for the note to surface.",
+    challengePrompt: "Memorize the four-digit stash code before the shutters drop.",
     easterEggTitle: "Kitchen-table origin",
     easterEggBody: "Stash Daddy carries the sound of creation without rehearsal panic. The hidden note is that its attitude comes from spontaneity, not calculation.",
     interest: "Stash Daddy collector list",
-    gameMode: "timing",
+    gameMode: "vault-code",
     tokenLabel: "vault"
   }),
   withSongStory({
@@ -89,11 +89,11 @@ const instagramGrid: GridTile[] = [
     playerTarget: "space-cruiser",
     teaser: "Cosmic lift, ritual propulsion, and the third portal out of the room.",
     challengeLabel: "Orbital lock",
-    challengePrompt: "Catch three clean locks while the cruiser beam crosses the zone.",
+    challengePrompt: "Hit three perfect orbit locks before the cruiser drifts.",
     easterEggTitle: "Third door opened",
     easterEggBody: "Space Cruiser became the cosmic third door for both the record and Bong Tour, turning a brutal live-show comedown into mythic lift.",
     interest: "Space Cruiser collector list",
-    gameMode: "timing",
+    gameMode: "orbit-lock",
     tokenLabel: "orbit"
   }),
   withSongStory({
@@ -104,11 +104,11 @@ const instagramGrid: GridTile[] = [
     playerTarget: "home",
     teaser: "The quiet middle chapter where the myth comes back to earth.",
     challengeLabel: "Porch pattern",
-    challengePrompt: "Watch the porch-light sequence once, then repeat it cleanly to reveal the hidden room note.",
+    challengePrompt: "Replay the porch lights before the house goes dark.",
     easterEggTitle: "Landing signal",
     easterEggBody: "Home holds the nervous-system reset of finally landing somewhere honest. The hidden note is that its power comes from keeping the first truthful take intact.",
     interest: "Home collector list",
-    gameMode: "sequence",
+    gameMode: "porch-lights",
     tokenLabel: "glow"
   }),
   {
@@ -119,11 +119,11 @@ const instagramGrid: GridTile[] = [
     center: true,
     teaser: "The central object: one release world for music, film, score, and private access.",
     challengeLabel: "Seal sequence",
-    challengePrompt: "Repeat the seal pattern and unlock the collector note behind the central object.",
+    challengePrompt: "Align the three seal rings before the object slips closed.",
     easterEggTitle: "Volume 1 is the artifact",
     easterEggBody: "The center tile is not a poster. It is the invitation layer: album object, score world, and private collector channel bundled into one deliberate experience.",
     interest: "Walls Devine Volume 1 collector list",
-    gameMode: "sequence",
+    gameMode: "seal-alignment",
     tokenLabel: "seal",
     storySummary: "The centerpiece holds the brand logic of the entire experience: make the album feel collectible, cinematic, and alive before anyone hears a note in sequence.",
     visualThread: "Central seal geometry, engraved borders, and the nine-tile wall as a single artifact instead of nine isolated posts.",
@@ -137,11 +137,11 @@ const instagramGrid: GridTile[] = [
     playerTarget: "decay",
     teaser: "Beautiful ruin, stubborn pulse, and collapse turned into testimony.",
     challengeLabel: "Rust line",
-    challengePrompt: "Hold three clean hits on the decay line before the signal corrodes out.",
+    challengePrompt: "Patch six breaks before the room fully decays.",
     easterEggTitle: "Collapse as design",
     easterEggBody: "Decay works because it treats collapse as style and witness at the same time. The hidden note is that its heaviness was a permission slip, not a detour.",
     interest: "Decay collector list",
-    gameMode: "timing",
+    gameMode: "decay-patch",
     tokenLabel: "rust"
   }),
   withSongStory({
@@ -152,11 +152,11 @@ const instagramGrid: GridTile[] = [
     playerTarget: "resolve",
     teaser: "The ignition track that sets campaign pressure and forward motion.",
     challengeLabel: "Spark run",
-    challengePrompt: "Collect six sparks to force the campaign fuse all the way open.",
+    challengePrompt: "Climb the fuse in order before the spark snaps.",
     easterEggTitle: "Campaign fuse",
     easterEggBody: "Resolve exists to move first. The hidden note is that its chorus lands early on purpose, because hesitation would undercut the whole campaign thesis.",
     interest: "Resolve collector list",
-    gameMode: "collect",
+    gameMode: "spark-ladder",
     tokenLabel: "spark"
   }),
   withSongStory({
@@ -167,11 +167,11 @@ const instagramGrid: GridTile[] = [
     playerTarget: "poetry",
     teaser: "Writerly nerve, heartbreak residue, and the record's heart chamber.",
     challengeLabel: "Notebook memory",
-    challengePrompt: "Learn the notebook pattern once, then replay it without breaking the thread.",
+    challengePrompt: "Choose the right word each round to finish the line.",
     easterEggTitle: "Notebook reconstruction",
     easterEggBody: "Poetry widened from private confession into a shared statement. The hidden note is that its language was rebuilt line by line from notebook fragments.",
     interest: "Poetry collector list",
-    gameMode: "sequence",
+    gameMode: "line-break",
     tokenLabel: "line"
   }),
   withSongStory({
@@ -182,11 +182,11 @@ const instagramGrid: GridTile[] = [
     playerTarget: "gratitude",
     teaser: "The closing lift: peace, glow, and open-ended arrival.",
     challengeLabel: "Bloom run",
-    challengePrompt: "Collect six blooms before the final light fades out of the room.",
+    challengePrompt: "Open every bud, then trigger the final bloom.",
     easterEggTitle: "Final-scene glow",
     easterEggBody: "Gratitude was finished last so it could feel like emotional release, not simple closure. The hidden note is that its calm was engineered as the final image.",
     interest: "Gratitude collector list",
-    gameMode: "collect",
+    gameMode: "bloom-garden",
     tokenLabel: "bloom"
   })
 ];

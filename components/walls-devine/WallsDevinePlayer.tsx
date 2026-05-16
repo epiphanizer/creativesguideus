@@ -17,6 +17,7 @@ import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.p
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { SongPostCard } from "@/components/walls-devine/content";
 import { Button } from "@/components/ui/Button";
+import { createListeningRoomVisit } from "@/lib/firebase/listening-room-visits";
 import { cx } from "@/lib/cx";
 
 type WallsDevinePlayerProps = {
@@ -42,6 +43,15 @@ type PersistedPlayerState = {
   isOpen?: boolean;
   isCollapsed?: boolean;
   dockPosition?: PlayerDockPosition | null;
+};
+
+const playerQueryKeys = ["player", "song", "track", "slug"] as const;
+
+type PlayerQueryKey = (typeof playerQueryKeys)[number];
+
+type PlayerQueryRequest = {
+  queryKey: PlayerQueryKey;
+  value: string;
 };
 
 type AudioContextWindow = Window & typeof globalThis & {
@@ -298,6 +308,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
   const [dockPosition, setDockPosition] = useState<PlayerDockPosition | null>(null);
   const [isDraggingDock, setIsDraggingDock] = useState(false);
   const deepLinkHandledRef = useRef(false);
+  const trackedVisitRef = useRef<string | null>(null);
   const playerStateRestoredRef = useRef(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dockRef = useRef<HTMLDivElement | null>(null);
@@ -332,6 +343,39 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
     );
   }
 
+  function getRequestedPlayerTarget(params: URLSearchParams): PlayerQueryRequest | null {
+    for (const queryKey of playerQueryKeys) {
+      const value = normalizePlayerTarget(params.get(queryKey));
+
+      if (value) {
+        return { queryKey, value };
+      }
+    }
+
+    return null;
+  }
+
+  function syncPlayerUrl(nextTarget?: string | null) {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const nextUrl = new URL(window.location.href);
+
+    for (const queryKey of playerQueryKeys) {
+      nextUrl.searchParams.delete(queryKey);
+    }
+
+    if (nextTarget) {
+      nextUrl.searchParams.set("player", nextTarget);
+      nextUrl.hash = "walls-devine-listening-room";
+    } else if (nextUrl.hash === "#walls-devine-listening-room") {
+      nextUrl.hash = "";
+    }
+
+    window.history.replaceState(window.history.state, "", `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`);
+  }
+
   useEffect(() => {
     if (typeof window === "undefined" || playerStateRestoredRef.current) {
       return;
@@ -339,7 +383,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
     playerStateRestoredRef.current = true;
 
-    if (new URLSearchParams(window.location.search).get("player")) {
+    if (getRequestedPlayerTarget(new URLSearchParams(window.location.search))) {
       return;
     }
 
@@ -355,10 +399,6 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
       if (Number.isInteger(storedState.activeIndex)) {
         setActiveIndex(clamp(storedState.activeIndex ?? 0, 0, Math.max(0, tracks.length - 1)));
-      }
-
-      if (storedState.isOpen) {
-        setIsOpen(true);
       }
 
       setIsCollapsed(true);
@@ -491,13 +531,13 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
     }
 
     const params = new URLSearchParams(window.location.search);
-    const requestedPlayerTarget = normalizePlayerTarget(params.get("player"));
+    const requestedPlayer = getRequestedPlayerTarget(params);
 
-    if (!requestedPlayerTarget) {
+    if (!requestedPlayer) {
       return;
     }
 
-    const nextIndex = findTrackIndexFromPlayerTarget(requestedPlayerTarget);
+    const nextIndex = findTrackIndexFromPlayerTarget(requestedPlayer.value);
 
     if (nextIndex === -1) {
       return;
@@ -505,12 +545,45 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
     deepLinkHandledRef.current = true;
     setActiveIndex(nextIndex);
-    setIsCollapsed(true);
+    setIsCollapsed(false);
     setIsOpen(true);
 
-    const hash = window.location.hash || "#walls-devine-listening-room";
-    window.history.replaceState(window.history.state, "", `${window.location.pathname}${hash}`);
+    syncPlayerUrl(tracks[nextIndex]?.journalSlug ?? requestedPlayer.value);
+
+    const visitKey = `${requestedPlayer.queryKey}:${tracks[nextIndex]?.journalSlug ?? requestedPlayer.value}`;
+
+    if (trackedVisitRef.current !== visitKey) {
+      trackedVisitRef.current = visitKey;
+
+      void createListeningRoomVisit({
+        songSlug: tracks[nextIndex]?.journalSlug ?? requestedPlayer.value,
+        songTitle: tracks[nextIndex]?.title ?? requestedPlayer.value,
+        queryKey: requestedPlayer.queryKey,
+        pagePath: `${window.location.pathname}${window.location.search}${window.location.hash}`,
+        referrer: document.referrer,
+        userAgent: window.navigator.userAgent
+      }).catch(() => {
+        trackedVisitRef.current = null;
+      });
+    }
   }, [tracks]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!isOpen && getRequestedPlayerTarget(new URLSearchParams(window.location.search))) {
+      return;
+    }
+
+    if (!isOpen) {
+      syncPlayerUrl(null);
+      return;
+    }
+
+    syncPlayerUrl(activeTrack.journalSlug);
+  }, [activeTrack.journalSlug, isOpen]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -623,12 +696,12 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
 
   function openPlayer(index: number) {
     setActiveIndex(index);
-    setIsCollapsed(true);
+    setIsCollapsed(false);
     setIsOpen(true);
   }
 
   function reopenPlayer() {
-    setIsCollapsed(true);
+    setIsCollapsed(false);
     setIsOpen(true);
   }
 

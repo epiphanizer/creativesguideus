@@ -91,6 +91,27 @@ export type EcosystemLeadInput = {
   interest: string;
 };
 
+export type ListeningRoomVisit = {
+  id: string;
+  eventType: "listening-room-link-visit";
+  songSlug: string;
+  songTitle: string;
+  queryKey: string;
+  pagePath: string;
+  referrer: string;
+  userAgent: string;
+  createdAt: string;
+};
+
+export type ListeningRoomVisitInput = {
+  songSlug: string;
+  songTitle: string;
+  queryKey: string;
+  pagePath: string;
+  referrer?: string;
+  userAgent?: string;
+};
+
 export type WallsDevineAdminData = {
   plan: ReleasePlan;
   instagramDrafts: AdminMarkdownFile[];

@@ -55,6 +55,49 @@ service cloud.firestore {
         request.resource.data.consent == true;
     }
 
+    function isValidListeningRoomVisit() {
+      return request.resource.data.keys().hasOnly([
+          'eventType',
+          'songSlug',
+          'songTitle',
+          'queryKey',
+          'pagePath',
+          'referrer',
+          'userAgent',
+          'createdAt'
+        ]) &&
+        request.resource.data.keys().hasAll([
+          'eventType',
+          'songSlug',
+          'songTitle',
+          'queryKey',
+          'pagePath',
+          'referrer',
+          'userAgent',
+          'createdAt'
+        ]) &&
+        request.resource.data.eventType == 'listening-room-link-visit' &&
+        request.resource.data.songSlug is string &&
+        request.resource.data.songSlug.size() >= 1 &&
+        request.resource.data.songSlug.size() <= 80 &&
+        request.resource.data.songTitle is string &&
+        request.resource.data.songTitle.size() >= 1 &&
+        request.resource.data.songTitle.size() <= 120 &&
+        request.resource.data.queryKey is string &&
+        request.resource.data.queryKey.size() >= 1 &&
+        request.resource.data.queryKey.size() <= 24 &&
+        request.resource.data.pagePath is string &&
+        request.resource.data.pagePath.size() >= 1 &&
+        request.resource.data.pagePath.size() <= 240 &&
+        request.resource.data.referrer is string &&
+        request.resource.data.referrer.size() <= 320 &&
+        request.resource.data.userAgent is string &&
+        request.resource.data.userAgent.size() <= 320 &&
+        request.resource.data.createdAt is string &&
+        request.resource.data.createdAt.size() >= 20 &&
+        request.resource.data.createdAt.size() <= 40;
+    }
+
     match /adminUsers/{userId} {
       allow read: if signedIn() && request.auth.uid == userId;
       allow write: if false;
@@ -67,6 +110,11 @@ service cloud.firestore {
     match /ecosystemLeads/{leadId} {
       allow read: if isAdmin();
       allow create: if isValidLead();
+    }
+
+    match /listeningRoomVisits/{visitId} {
+      allow read: if isAdmin();
+      allow create: if isValidListeningRoomVisit();
     }
   }
 }
