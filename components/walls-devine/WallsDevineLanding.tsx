@@ -6,7 +6,6 @@ import { SectionShell } from "@/components/ui/SectionShell";
 import { songPostCards } from "@/components/walls-devine/content";
 import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
-import { WallsDevinePlayer } from "@/components/walls-devine/WallsDevinePlayer";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
 import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
@@ -251,10 +250,6 @@ export function WallsDevineLanding() {
       </SectionShell>
 
       <div id="walls-devine-listening-room" className="wd-player-anchor" aria-hidden="true" />
-
-      <div className="wd-player-anchor-shell">
-        <WallsDevinePlayer tracks={songPostCards} />
-      </div>
     </>
   );
 }

@@ -2943,3 +2943,115 @@
     padding-inline: clamp(0.9rem, 4vw, 1.25rem);
   }
 }
+
+/* Hero composition tune: keep the collector reveal above the fold on desktop. */
+.wd-page {
+  --wd-hero-top-pad: clamp(0.9rem, 2vh, 1.6rem);
+  --wd-hero-bottom-pad: clamp(0.8rem, 2vh, 1.5rem);
+  --wd-hero-x-pad: clamp(1rem, 3.4vw, 3.2rem);
+  --wd-collector-title-size: clamp(3.05rem, 6.35vw, 5.45rem);
+  --wd-collector-title-lh: 0.9;
+  --wd-collector-copy-size: clamp(1rem, 0.5vw + 0.86rem, 1.12rem);
+  --wd-collector-visual-max-h: clamp(380px, 58vh, 620px);
+}
+
+.wd-page {
+  background:
+    linear-gradient(90deg, rgba(253, 254, 254, 0.92) 0 49.82%, rgba(126, 7, 5, 0.74) 49.82% 50.18%, rgba(247, 224, 224, 0.94) 50.18% 100%),
+    linear-gradient(0deg, transparent 0 14%, rgba(126, 7, 5, 0.14) 14% 14.28%, transparent 14.28% 68%, rgba(202, 63, 59, 0.16) 68% 68.28%, transparent 68.28% 100%),
+    linear-gradient(90deg, transparent 0 10%, rgba(126, 7, 5, 0.11) 10% 10.28%, transparent 10.28% 34%, rgba(179, 22, 18, 0.18) 34% 34.28%, transparent 34.28% 62%, rgba(236, 187, 186, 0.36) 62% 62.28%, transparent 62.28% 86%, rgba(126, 7, 5, 0.11) 86% 86.28%, transparent 86.28% 100%),
+    linear-gradient(180deg, #fffdfd 0%, #f7e0e0 100%);
+}
+
+.wd-page .cg-section:first-of-type {
+  padding-block: 0;
+}
+
+.wd-page .cg-section:first-of-type .cg-section__inner {
+  min-height: calc(100vh - var(--cg-header-height));
+  padding: var(--wd-hero-top-pad) var(--wd-hero-x-pad) var(--wd-hero-bottom-pad);
+  display: grid;
+  align-content: start;
+}
+
+.wd-hero {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: start;
+  gap: clamp(0.6rem, 1.4vh, 1rem);
+}
+
+.wd-hero__marquee {
+  margin-bottom: clamp(0.5rem, 1.25vh, 0.9rem);
+}
+
+.wd-hero__layout {
+  gap: clamp(var(--cg-space-md), 2.2vw, var(--cg-space-lg));
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .wd-hero__layout {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    column-gap: clamp(2rem, 4.4vw, 4.8rem);
+  }
+}
+
+.wd-hero__copy {
+  gap: clamp(0.55rem, 1.35vh, 0.95rem);
+  align-self: start;
+}
+
+.wd-hero__copy .cg-section-header {
+  gap: clamp(0.4rem, 1vh, 0.75rem);
+}
+
+.wd-hero__copy .cg-section-header__content {
+  gap: clamp(0.32rem, 0.85vh, 0.6rem);
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.wd-hero__copy .cg-section-header__title {
+  font-size: var(--wd-collector-title-size);
+  line-height: var(--wd-collector-title-lh);
+  letter-spacing: 0.015em;
+}
+
+.wd-hero__copy .cg-section-header__description {
+  max-width: 34ch;
+  margin-top: clamp(0.2rem, 0.55vh, 0.45rem);
+  font-size: var(--wd-collector-copy-size);
+  line-height: 1.44;
+}
+
+.wd-hero__cover {
+  align-self: start;
+  margin-top: clamp(0.2rem, 0.75vh, 0.7rem);
+}
+
+.wd-hero__cover-frame {
+  width: min(100%, 560px);
+  max-height: var(--wd-collector-visual-max-h);
+  transform: translateY(clamp(-6px, -1.5vh, -18px)) rotate(-1.1deg);
+}
+
+.wd-hero__cover-frame img {
+  max-height: calc(var(--wd-collector-visual-max-h) - clamp(1.1rem, 2.2vw, 2.2rem));
+  object-fit: contain;
+}
+
+.wd-hero-shell::after {
+  background:
+    linear-gradient(145deg, rgba(253, 254, 254, 0.78) 0 36%, rgba(247, 224, 224, 0.74) 36% 62%, rgba(179, 22, 18, 0.12) 62% 100%),
+    linear-gradient(90deg, transparent 0 72%, rgba(126, 7, 5, 0.14) 72% 72.28%, transparent 72.28% 100%),
+    linear-gradient(0deg, transparent 0 74%, rgba(126, 7, 5, 0.11) 74% 74.28%, transparent 74.28% 100%);
+}
+
+/* Keep the listening-room dock available but less intrusive in the hero frame. */
+.wd-page .wd-player-dock {
+  top: calc(var(--cg-header-height) + 0.35rem);
+  right: clamp(0.35rem, 1vw, 0.85rem);
+  width: min(88vw, 18.5rem);
+  opacity: 0.95;
+}

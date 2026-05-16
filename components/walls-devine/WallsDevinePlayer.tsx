@@ -21,6 +21,7 @@ import { cx } from "@/lib/cx";
 
 type WallsDevinePlayerProps = {
   tracks: SongPostCard[];
+  showDockWhenCollapsed?: boolean;
 };
 
 type VisualizerPalette = {
@@ -525,7 +526,7 @@ function isDockInteractiveTarget(target: EventTarget | null) {
   return false;
 }
 
-export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
+export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: WallsDevinePlayerProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -1051,7 +1052,7 @@ export function WallsDevinePlayer({ tracks }: WallsDevinePlayerProps) {
                   )
                 : null}
 
-              {isCollapsed ? (
+              {isCollapsed && showDockWhenCollapsed ? (
                 <div
                   ref={dockRef}
                   className={cx("wd-player-dock", isDraggingDock && "wd-player-dock--dragging")}

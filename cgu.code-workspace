@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "../seanhalls_online"
+		},
+		{
+			"path": "../sh_hub"
 		}
 	],
 	"settings": {

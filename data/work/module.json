@@ -43,6 +43,19 @@
       "caseStudyUrl": "https://creativesguide.us/work/lead-me-guide-me",
       "siteHref": "https://leadmeguideme.org",
       "siteLabel": "Visit leadmeguideme.org"
+    },
+    {
+      "slug": "occupational-career-consulting",
+      "title": "Occupational Career Consulting",
+      "eyebrow": "Outplacement platform",
+      "description": "Human-led outplacement platform helping employers manage workforce transitions with structure, care, and high-touch coaching.",
+      "workIndexDescription": "Structured workforce-transition platform supporting employers and impacted employees with clarity, dignity, and practical coaching.",
+      "tags": ["B2B Services", "Career Coaching", "HR", "Outplacement"],
+      "proof": ["Employer workflows", "High-touch coaching", "Transition support"],
+      "caseStudyPath": "",
+      "caseStudyUrl": "",
+      "siteHref": "https://occ.consulting",
+      "siteLabel": "Visit occ.consulting"
     }
   ]
 }

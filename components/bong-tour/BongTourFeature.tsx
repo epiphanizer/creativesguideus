@@ -4,9 +4,13 @@ import { createPortal } from "react-dom";
 import { useEffect, useId, useState } from "react";
 
 import Image from "next/image";
+import type { StaticImageData } from "next/image";
 
 import { Button } from "@/components/ui/Button";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
+import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
+import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
+import spaceCruiserImage from "@/app/walls-devine/assets/instagram/3.space-cruiser.png";
 import { EcosystemSignupForm } from "@/components/walls-devine/EcosystemSignupForm";
 import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 
@@ -55,6 +59,7 @@ type CuePoster = {
   title: string;
   badge: string;
   playerTarget: string;
+  image: StaticImageData;
   tagline: string;
   description: string;
   highlights: string[];
@@ -578,6 +583,7 @@ const musicPosters: CuePoster[] = [
     title: "Joint Queen",
     badge: "Cue Room 01",
     playerTarget: "joint-queen",
+    image: jointQueenImage,
     tagline: "Psych-funk swagger for the Comedy Store takeover.",
     description:
       "The first cue room proves the film can feel already scored: smoke, confidence, and a slightly dangerous sense of arrival.",
@@ -594,7 +600,7 @@ const musicPosters: CuePoster[] = [
       chips: ["Comedy Store montage", "Psych-funk cue", "Cult-premium posture"],
       beats: ["Built for struts and jump cuts.", "Lets the satire feel cinematic, not explanatory.", "Works best when it visibly connects to Walls/Devine."],
       actions: [
-        { label: "Open in Walls/Devine", href: "/walls-devine?player=joint-queen#walls-devine-listening-room" },
+        { label: "Play in listening room", href: "?player=joint-queen#walls-devine-listening-room" },
         { label: "Talk soundtrack fit", href: "/#contact", outline: true }
       ]
     }
@@ -604,6 +610,7 @@ const musicPosters: CuePoster[] = [
     title: "Stash Daddy",
     badge: "Cue Room 02",
     playerTarget: "stash-daddy",
+    image: stashDaddyImage,
     tagline: "Backroom heist pulse with neon menace.",
     description:
       "A low-end crawl for handshakes, side deals, and the specific Hollywood feeling that every invitation carries a trap door.",
@@ -620,7 +627,7 @@ const musicPosters: CuePoster[] = [
       chips: ["Backroom plotting", "Low-end authority", "Hollywood trapdoor energy"],
       beats: ["Supports late-night deal scenes.", "Bridges satire and threat cleanly.", "Keeps the collectible rollout grounded in attitude."],
       actions: [
-        { label: "Open in Walls/Devine", href: "/walls-devine?player=stash-daddy#walls-devine-listening-room" },
+        { label: "Play in listening room", href: "?player=stash-daddy#walls-devine-listening-room" },
         { label: "Enter the producer room", href: "/#contact", outline: true }
       ]
     }
@@ -630,6 +637,7 @@ const musicPosters: CuePoster[] = [
     title: "Space Cruiser",
     badge: "Cue Room 03",
     playerTarget: "space-cruiser",
+    image: spaceCruiserImage,
     tagline: "Diaspora dreamscape for the return to source.",
     description:
       "The cue that lets the myth breathe: river memory, processed tanpura, and lift that feels earned rather than ornamental.",
@@ -646,7 +654,7 @@ const musicPosters: CuePoster[] = [
       chips: ["Ganges lift", "Diaspora dreamscape", "Final-act release"],
       beats: ["Lets the river imagery open up.", "Supports the India return with dignity.", "Creates the cleanest bridge into the companion album world."],
       actions: [
-        { label: "Open in Walls/Devine", href: "/walls-devine?player=space-cruiser#walls-devine-listening-room" },
+        { label: "Play in listening room", href: "?player=space-cruiser#walls-devine-listening-room" },
         { label: "Open the signal room", href: "/walls-devine", outline: true }
       ]
     }
@@ -862,14 +870,25 @@ export function BongTourFeature() {
             <div className="bt-hero__content">
               <span className="bt-hero__eyebrow">Feature screenplay</span>
               <h1>Bong Tour</h1>
-              <p className="bt-hero__descriptor">A collector-first film portal built like a premium pitch object: poster first, games second, soundtrack bridge always visible.</p>
+              <p className="bt-hero__descriptor">A collector-first screenplay portal for design-led film fans, soundtrack listeners, and worldbuilding obsessives.</p>
 
-              <div className="bt-hero__logline">
-                <h2>Logline</h2>
+              <p className="bt-hero__positioning">Not a generic movie promo page. Enter a premium story object with playable rooms, cue-world bridges, and artifact-led access.</p>
+
+              <div className="bt-hero__logline bt-hero__experience-card">
+                <h2>Experience preview</h2>
                 <p>
                   A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to a smoke-script that keeps rewriting
                   the myth until the industry shows its true price.
                 </p>
+
+                <div className="bt-hero__modules" aria-label="Portal modules">
+                  <span>Screenplay portal</span>
+                  <span>Poster world</span>
+                  <span>Cue deck</span>
+                  <span>Soundtrack bridge</span>
+                  <span>Object archive</span>
+                  <span>Games and ritual prompts</span>
+                </div>
               </div>
 
               <div className="bt-hero__cta">
@@ -955,8 +974,8 @@ export function BongTourFeature() {
               <p>The soundtrack bridge stays compact and obvious: proof-of-tone here, then a direct handoff into the live Walls/Devine listening world.</p>
             </div>
             <div className="bt-section-header__actions">
-              <Button as="a" href="/walls-devine#walls-devine-listening-room" className="bt-button bt-button--outline">
-                Open Walls/Devine listening room
+              <Button as="a" href="?player=joint-queen#walls-devine-listening-room" className="bt-button bt-button--outline">
+                Open portable listening room
               </Button>
             </div>
           </header>
@@ -965,6 +984,7 @@ export function BongTourFeature() {
             {musicPosters.map((poster) => (
               <li key={poster.title} id={poster.id} className="bt-music__poster">
                 <div className="bt-music__visual" aria-hidden="true">
+                  <Image src={poster.image} alt="" className="bt-music__visual-image" sizes="(max-width: 920px) 80vw, 26vw" />
                   <span className="bt-music__badge">{poster.badge}</span>
                   <div className="bt-music__marquee">
                     <h3>{poster.title}</h3>
@@ -983,8 +1003,8 @@ export function BongTourFeature() {
                     <Button type="button" className="bt-button" onClick={() => setActiveRoom(poster.room)}>
                       Open cue room
                     </Button>
-                    <Button as="a" href={`/walls-devine?player=${poster.playerTarget}#walls-devine-listening-room`} className="bt-button bt-button--outline">
-                      Play on Walls/Devine
+                    <Button as="a" href={`?player=${poster.playerTarget}#walls-devine-listening-room`} className="bt-button bt-button--outline">
+                      Play in listening room
                     </Button>
                   </div>
                 </div>
