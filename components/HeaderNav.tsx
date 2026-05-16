@@ -23,7 +23,7 @@ export function HeaderNav() {
   const anchorIds = useMemo(() => activeAnchors.flatMap((anchor) => (anchor.id ? [anchor.id] : [])), [activeAnchors]);
   const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showPlayerRestore, setShowPlayerRestore] = useState(false);
+  const [isPlayerDismissed, setIsPlayerDismissed] = useState(false);
 
   const headerRoom = useMemo(() => {
     if (isBongTourRoute) {
@@ -123,21 +123,47 @@ export function HeaderNav() {
     [closeMenu, router]
   );
 
+  const handleListeningRoomShortcut = useCallback(() => {
+    const listeningRoomAnchorId = "walls-devine-listening-room";
+
+    if (!isWallsDevineRoute) {
+      return;
+    }
+
+    if (isPlayerDismissed) {
+      requestWallsDevinePlayerRestore();
+    }
+
+    closeMenu();
+
+    const target = document.getElementById(listeningRoomAnchorId);
+
+    if (target) {
+      target.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start"
+      });
+      return;
+    }
+
+    router.push(`/walls-devine#${listeningRoomAnchorId}`);
+  }, [closeMenu, isPlayerDismissed, isWallsDevineRoute, prefersReducedMotion, router]);
+
   useEffect(() => {
     closeMenu();
   }, [closeMenu, pathname]);
 
   useEffect(() => {
     if (!isWallsDevineRoute) {
-      setShowPlayerRestore(false);
+      setIsPlayerDismissed(false);
       return;
     }
 
-    setShowPlayerRestore(readWallsDevinePlayerDismissed());
+    setIsPlayerDismissed(readWallsDevinePlayerDismissed());
 
     const handleDismissedChange = (event: Event) => {
       const nextState = (event as CustomEvent<{ isDismissed: boolean }>).detail?.isDismissed ?? false;
-      setShowPlayerRestore(nextState);
+      setIsPlayerDismissed(nextState);
     };
 
     window.addEventListener(wallsDevinePlayerDismissedChangeEventName, handleDismissedChange);
@@ -243,21 +269,15 @@ export function HeaderNav() {
               )}
             />
 
-            {isWallsDevineRoute && showPlayerRestore ? (
-              <div className="cg-header__player-return">
-                <p>Portable player hidden. Bring the listening-room dock back any time from here.</p>
-                <button
-                  type="button"
-                  className="cg-header__player-return-button"
-                  onClick={() => {
-                    requestWallsDevinePlayerRestore();
-                    setShowPlayerRestore(false);
-                    closeMenu();
-                  }}
-                >
-                  Restore portable player
-                </button>
-              </div>
+            {isWallsDevineRoute ? (
+              <button
+                type="button"
+                className="cg-header__utility-button"
+                aria-label={isPlayerDismissed ? "Restore the listening room and jump to it" : "Jump to the listening room"}
+                onClick={handleListeningRoomShortcut}
+              >
+                Listening Room
+              </button>
             ) : null}
           </div>
         </div>

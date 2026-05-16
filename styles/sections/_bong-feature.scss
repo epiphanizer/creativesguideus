@@ -963,6 +963,10 @@
 }
 
 .bt-collectibles__collector-access-card {
+  display: grid;
+  gap: var(--cg-space-md);
+  align-items: center;
+  padding: clamp(var(--cg-space-lg), 3vw, var(--cg-space-2xl));
   border: 1px solid var(--bt-border-strong);
   border-radius: calc(var(--cg-radius-lg) * 0.96);
   background:
@@ -971,28 +975,35 @@
   box-shadow: 0 22px 40px rgba(45, 28, 8, 0.12);
 }
 
-.bt-collectibles__collector-access-card .wd-collector-access__eyebrow {
-  color: rgba(49, 83, 62, 0.82);
+.bt-collectibles__collector-access-copy {
+  display: grid;
+  gap: 0.55rem;
 }
 
-.bt-collectibles__collector-access-card .wd-collector-access__title {
+.bt-collectibles__collector-access-copy h3 {
+  font-size: clamp(1.5rem, 1.2vw + 1.1rem, 2.15rem);
+  line-height: 1.02;
   color: var(--bt-text);
 }
 
-.bt-collectibles__collector-access-card .wd-collector-access__description {
+.bt-collectibles__collector-access-copy p:last-child {
+  margin: 0;
   color: var(--bt-text-soft);
+  line-height: 1.72;
 }
 
-.bt-collectibles__collector-access-card .wd-collector-access__benefits span {
-  border-color: rgba(77, 56, 31, 0.16);
-  background: rgba(255, 250, 242, 0.82);
-  color: rgba(49, 83, 62, 0.88);
+.bt-collectibles__collector-access-card .bt-button {
+  justify-self: start;
 }
 
-.bt-collectibles__collector-access-card .cg-button--primary {
-  background: linear-gradient(135deg, var(--bt-ember), var(--bt-ember-bright));
-  border-color: rgba(104, 61, 19, 0.32);
-  color: #fff7ef;
+@media (min-width: 980px) {
+  .bt-collectibles__collector-access-card {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .bt-collectibles__collector-access-card .bt-button {
+    justify-self: end;
+  }
 }
 
 .bt-collectibles__tile {
@@ -1194,6 +1205,39 @@
     linear-gradient(150deg, rgba(33, 24, 18, 0.98), rgba(27, 22, 18, 0.96));
   box-shadow: 0 38px 90px rgba(0, 0, 0, 0.35);
   color: #f3e9da;
+}
+
+.bt-room-modal--collector {
+  background:
+    radial-gradient(96% 96% at 12% 16%, rgba(201, 106, 35, 0.34), rgba(201, 106, 35, 0) 54%),
+    radial-gradient(84% 82% at 84% 18%, rgba(49, 83, 62, 0.32), rgba(49, 83, 62, 0) 56%),
+    rgba(16, 12, 9, 0.8);
+}
+
+.bt-room-modal--collector .bt-room-modal__panel {
+  width: min(100%, 1080px);
+  max-height: min(100vh - 1.5rem, 920px);
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(255, 249, 239, 0.24), rgba(255, 249, 239, 0) 54%),
+    radial-gradient(90% 120% at 100% 0%, rgba(49, 83, 62, 0.14), rgba(49, 83, 62, 0) 58%),
+    linear-gradient(150deg, rgba(29, 21, 16, 0.99), rgba(24, 19, 15, 0.98));
+  border-color: rgba(225, 210, 183, 0.22);
+}
+
+.bt-room-modal--collector .bt-room-modal__room-script {
+  font-size: clamp(2.8rem, 5vw, 4.6rem);
+}
+
+.bt-room-modal--collector .bt-room-modal__chips span {
+  border-color: rgba(225, 210, 183, 0.22);
+  background: rgba(255, 246, 231, 0.1);
+}
+
+.bt-room-modal--collector .bt-room-modal__signup-shell {
+  border-color: rgba(225, 210, 183, 0.22);
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(201, 106, 35, 0.1), rgba(201, 106, 35, 0) 56%),
+    linear-gradient(160deg, rgba(42, 31, 24, 0.9), rgba(26, 21, 17, 0.96));
 }
 
 .bt-room-modal__room-overlay {

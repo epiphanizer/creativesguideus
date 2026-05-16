@@ -12,7 +12,6 @@ import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.p
 import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
 import spaceCruiserImage from "@/app/walls-devine/assets/instagram/3.space-cruiser.png";
 import { EcosystemSignupForm } from "@/components/walls-devine/EcosystemSignupForm";
-import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 
 type RoomAction = {
   label: string;
@@ -36,6 +35,7 @@ type RoomChallenge = {
   prompt: string;
   mode: RoomChallengeMode;
   tokenLabel: string;
+  noteLabel?: string;
   noteTitle: string;
   noteBody: string;
 };
@@ -516,22 +516,22 @@ function RoomChallengeExperience({ challenge, roomSlug, onUnlock }: RoomChalleng
 }
 
 const keyDetails = [
-  { label: "Format", detail: "Feature screenplay" },
-  { label: "Mood", detail: "Sacred comedy meets Sunset noir" },
-  { label: "Rollout", detail: "Collector grid with soundtrack exits" }
+  { label: "Portal", detail: "Collector rooms and cue bridges" },
+  { label: "Myth", detail: "Sacred comedy on Sunset Boulevard" },
+  { label: "Soundtrack", detail: "Walls/Devine exits built in" }
 ];
 
 const portalRooms: Record<string, ExperienceRoom> = {
   producer: {
     slug: "producer-portal",
-    eyebrow: "Producer portal",
+    eyebrow: "Smoke room",
     title: "Enter the smoke room",
     ambientLabel: "Smoke room",
     ambientSubtitle: "Deck, tone, and score in one move",
     kicker: "For producers, financiers, and creative partners who want the shortest route to the full experience stack.",
     description:
-      "This room is where Bong Tour becomes legible as a premium film object: poster, narrative spine, soundtrack bridge, and packaging intent bundled into one conversation.",
-    chips: ["Pitch deck request", "Soundtrack alignment", "Packaging conversation"],
+      "This room gathers the poster, story spine, soundtrack bridge, and object archive into one conversation without stepping outside the world.",
+    chips: ["Story spine", "Soundtrack alignment", "Object archive"],
     beats: [
       "Lead with the poster and myth signal.",
       "Move into cue-world proof via Walls/Devine.",
@@ -550,30 +550,39 @@ const portalRooms: Record<string, ExperienceRoom> = {
     }
   },
   collector: {
-    slug: "collector-signal-room",
-    eyebrow: "Collector access",
-    title: "Open the signal room",
-    ambientLabel: "Signal room",
-    ambientSubtitle: "Private access for objects and drops",
-    kicker: "A higher-touch path for people who want the worldbuilding, cue drops, and collectible announcements before the public feed catches up.",
+    slug: "collector-room",
+    eyebrow: "Collector's room",
+    title: "Enter the collector's room",
+    ambientLabel: "Collector's room",
+    ambientSubtitle: "Artifact vault and clue archive",
+    kicker: "The private side of Bong Tour: object archive, clue drops, and found rewards that make the myth feel touchable.",
     description:
-      "Instead of pushing every update into the open, Bong Tour can move like a collector rollout: hidden passwords, room openings, teaser drops, and soundtrack-led invitations.",
-    chips: ["Collector drop notes", "Hidden-room passwords", "Cue poster alerts"],
+      "Open this takeover when you want Bong Tour to behave like a returnable story object instead of a static overview. The collector room is where clues, artifacts, and soundtrack-linked unlocks surface first.",
+    chips: ["Artifact vault", "Cue-linked clues", "Game-locked rewards"],
     beats: [
-      "Games and relics give the page a reason to return to.",
-      "Takeover modals keep the CTA immersive instead of transactional.",
+      "Games should reveal objects, not marketing copy.",
+      "The best rewards should stay hidden until the room opens.",
       "Walls/Devine remains the live soundtrack exit."
     ],
     actions: [
-      { label: "See the cue rooms", href: "#score-sketches" },
+      { label: "Open cue rooms", href: "#score-sketches" },
       { label: "Visit Walls/Devine", href: "/walls-devine", outline: true }
     ],
     signup: {
-      source: "bong-tour-signal-room",
-      interest: "Bong Tour signal room",
-      submitLabel: "Join the signal room",
-      successMessage: "You are in. Watch for cue drops, collector notes, and Bong Tour room openings.",
-      note: "High-signal only. Used for collector access, hidden-room notes, and drop alerts."
+      source: "bong-tour-collector-room",
+      interest: "Bong Tour collector room",
+      submitLabel: "Get collector-room access",
+      successMessage: "You are in. Watch for artifacts, clue drops, and the next Bong Tour room opening.",
+      note: "Collector access only. Used for artifact notes, soundtrack-linked clues, and hidden-room updates."
+    },
+    challenge: {
+      label: "Archive seal",
+      prompt: "Align the archive seal before the drawer locks again.",
+      mode: "seal-alignment",
+      tokenLabel: "archive",
+      noteLabel: "Collectible unlocked",
+      noteTitle: "Sealed treatment unlocked",
+      noteBody: "The treatment belongs here as a found object inside the collector room. Keep it gated, collectible, and tied to the room logic instead of advertising it on the page."
     }
   }
 };
@@ -656,7 +665,7 @@ const musicPosters: CuePoster[] = [
       beats: ["Lets the river imagery open up.", "Supports the India return with dignity.", "Creates the cleanest bridge into the companion album world."],
       actions: [
         { label: "Play in listening room", href: "?player=space-cruiser#walls-devine-listening-room" },
-        { label: "Open the signal room", roomKey: "collector", outline: true }
+        { label: "Open collector room", roomKey: "collector", outline: true }
       ]
     }
   }
@@ -678,7 +687,7 @@ const collectibleTiles: CollectibleTile[] = [
       ambientSubtitle: "Origin artifact",
       kicker: "The first collectible should not feel merch-adjacent. It should feel like a myth key.",
       description:
-        "This room frames the relic as the worldbuilding engine. Everything from poster treatment to final-act gravity gets cleaner once the object feels sacred and cinematic.",
+        "This room frames the relic as the worldbuilding engine. Everything from the poster world to final-act gravity gets cleaner once the object feels sacred and cinematic.",
       chips: ["Origin story", "Sacred object", "Poster-first myth"],
       beats: ["Best used as the collector anchor.", "Lets the page lead with story gravity.", "Creates an obvious return-to-source motif."],
       actions: [
@@ -761,7 +770,7 @@ const collectibleTiles: CollectibleTile[] = [
       beats: ["Pairs cleanly with Stash Daddy.", "Adds return-value to the page.", "Turns exposition into a collectible clue."],
       actions: [
         { label: "Open Stash Daddy", href: "/walls-devine?player=stash-daddy#walls-devine-listening-room" },
-        { label: "Open the signal room", roomKey: "collector", outline: true }
+        { label: "Open collector room", roomKey: "collector", outline: true }
       ],
       signup: {
         source: "bong-tour-lollipop-guild-key",
@@ -826,6 +835,7 @@ export function BongTourFeature() {
   const [activeRoom, setActiveRoom] = useState<ExperienceRoom | null>(null);
   const [challengeUnlocked, setChallengeUnlocked] = useState(false);
   const titleId = useId();
+  const isCollectorRoom = activeRoom?.slug === portalRooms.collector.slug;
 
   useEffect(() => {
     setHasMounted(true);
@@ -865,15 +875,15 @@ export function BongTourFeature() {
               <div className="bt-hero__poster-frame">
                 <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority sizes="(max-width: 960px) 82vw, 32vw" />
               </div>
-              <figcaption>Poster artifact · premium pitch portal</figcaption>
+              <figcaption>Poster artifact</figcaption>
             </figure>
 
             <div className="bt-hero__content">
-              <span className="bt-hero__eyebrow">Feature screenplay</span>
+              <span className="bt-hero__eyebrow">Collector-first portal</span>
               <h1>Bong Tour</h1>
-              <p className="bt-hero__descriptor">A collector-first screenplay portal for design-led film fans, soundtrack listeners, and worldbuilding obsessives.</p>
+              <p className="bt-hero__descriptor">A collector-first portal for design-led film fans, soundtrack listeners, and worldbuilding obsessives.</p>
 
-              <p className="bt-hero__positioning">Not a generic movie promo page. Enter a premium story object with playable rooms, cue-world bridges, and artifact-led access.</p>
+              <p className="bt-hero__positioning">Move through the poster, collector rooms, cue bridges, and artifact archive without stepping outside the myth.</p>
 
               <div className="bt-hero__logline bt-hero__experience-card">
                 <h2>Experience preview</h2>
@@ -883,9 +893,9 @@ export function BongTourFeature() {
                 </p>
 
                 <div className="bt-hero__modules" aria-label="Portal modules">
-                  <span>Screenplay portal</span>
+                  <span>Story portal</span>
                   <span>Poster world</span>
-                  <span>Cue deck</span>
+                  <span>Cue rooms</span>
                   <span>Soundtrack bridge</span>
                   <span>Object archive</span>
                   <span>Games and ritual prompts</span>
@@ -893,17 +903,17 @@ export function BongTourFeature() {
               </div>
 
               <div className="bt-hero__cta">
-                <Button type="button" className="bt-button" onClick={() => setActiveRoom(portalRooms.producer)}>
-                  Enter producer portal
+                <Button type="button" className="bt-button" onClick={() => setActiveRoom(portalRooms.collector)}>
+                  Open collector room
                 </Button>
-                <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(portalRooms.collector)}>
-                  Open signal room
+                <Button as="a" href="#score-sketches" className="bt-button bt-button--outline">
+                  Open cue rooms
                 </Button>
               </div>
             </div>
           </div>
 
-          <div className="bt-hero__meta" aria-label="Pitch quick facts">
+          <div className="bt-hero__meta" aria-label="Bong Tour quick facts">
             {keyDetails.map((item) => (
               <article key={item.label} className="bt-hero__meta-item">
                 <span className="bt-hero__meta-label">{item.label}</span>
@@ -917,8 +927,8 @@ export function BongTourFeature() {
           <header className="bt-section-header">
             <div>
               <p className="bt-section-header__eyebrow">Collector grid</p>
-              <h2 id="bt-collectibles-title">Games, relics, and private doors instead of a long screenplay rundown.</h2>
-              <p>Each tile opens a takeover room with a microgame prompt, collector framing, and a clear route back into the Bong Tour world.</p>
+              <h2 id="bt-collectibles-title">Games, relics, and hidden doors built straight into the Bong Tour world.</h2>
+              <p>Each tile opens a full takeover room with a microgame, collector reward, and a clear route back into the cue-world.</p>
             </div>
           </header>
 
@@ -948,22 +958,17 @@ export function BongTourFeature() {
           </ul>
 
           <div className="bt-collectibles__collector-access">
-            <WallsDevineCollectorAccess
-              source="bong-tour-collector-grid"
-              interest="Bong Tour collector signal room"
-              cardEyebrow="Collector access"
-              cardTitle="Keep the next Bong Tour room out of the feed and in your inbox"
-              cardDescription="Get the shortest route to hidden-room passwords, cue poster drops, producer-facing notes, and collector updates as Bong Tour keeps opening."
-              benefits={["Hidden-room passwords", "Cue poster drops", "Collector and partner notes"]}
-              triggerLabel="Enter the signal room"
-              modalTitle="Enter the Bong Tour signal room"
-              modalDescription="Drop your email for the cleanest route to the next room opening, collector clue, and soundtrack-linked Bong Tour update."
-              submitLabel="Get signal-room access"
-              successMessage="You are in. Watch your inbox for the next room opening, clue drop, and Bong Tour signal."
-              note="High-signal only. Used for collector access, soundtrack-linked updates, and private room notes."
-              className="bt-collectibles__collector-access-card"
-              variant="feature"
-            />
+            <article className="bt-collectibles__collector-access-card">
+              <div className="bt-collectibles__collector-access-copy">
+                <p className="bt-section-header__eyebrow">Collector's room</p>
+                <h3>Enter the collector's room</h3>
+                <p>Artifacts, clue drops, soundtrack-linked unlocks, and game-locked rewards live inside the takeover instead of out in the feed.</p>
+              </div>
+
+              <Button type="button" className="bt-button" onClick={() => setActiveRoom(portalRooms.collector)}>
+                Open collector room
+              </Button>
+            </article>
           </div>
         </section>
 
@@ -1017,7 +1022,13 @@ export function BongTourFeature() {
 
       {hasMounted && activeRoom
         ? createPortal(
-            <div className="bt-room-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={() => setActiveRoom(null)}>
+            <div
+              className={`bt-room-modal${isCollectorRoom ? " bt-room-modal--collector" : ""}`}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={titleId}
+              onClick={() => setActiveRoom(null)}
+            >
               <div className="bt-room-modal__panel" onClick={(event) => event.stopPropagation()}>
                 <div className="bt-room-modal__room-overlay" aria-hidden="true">
                   <span className="bt-room-modal__room-script">{activeRoom.ambientLabel}</span>
@@ -1069,7 +1080,7 @@ export function BongTourFeature() {
                         className={`bt-room-modal__hidden-note${challengeUnlocked ? " bt-room-modal__hidden-note--unlocked" : ""}`}
                         aria-live="polite"
                       >
-                        <p className="bt-room-modal__challenge-label">Hidden note</p>
+                        <p className="bt-room-modal__challenge-label">{activeRoom.challenge.noteLabel ?? "Hidden note"}</p>
                         <h3>{challengeUnlocked ? activeRoom.challenge.noteTitle : "Locked until the challenge lands"}</h3>
                         <p>
                           {challengeUnlocked

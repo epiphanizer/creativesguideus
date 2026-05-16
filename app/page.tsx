@@ -8,7 +8,7 @@ const gateways = [
   {
     eyebrow: "Collector experience",
     descriptor: "Collector room · player · journals",
-    title: "Walls/Devine Volume 1",
+    title: "Walls/Devine",
     description: "Enter Volume 1 through the listening room, release journals, and the private collector layer around the record.",
     href: "/walls-devine",
     entryLabel: "Enter Volume 1",

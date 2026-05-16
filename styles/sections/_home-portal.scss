@@ -339,10 +339,6 @@
   .cg-home-gate__portal--bong {
     padding-left: calc(var(--cg-home-panel-side-pad) + var(--cg-home-panel-divider-pad));
   }
-
-  .cg-home-gate__portal--walls .cg-home-gate__portal-entry {
-    justify-self: end;
-  }
 }
 
 @media (max-width: 959px) {

@@ -211,24 +211,37 @@ const collectorLetterQuotes = [
   }
 ] as const;
 
+const collectorQuoteIntervalSeconds = 15;
+
 export function WallsDevineLanding() {
   return (
     <>
       <SectionShell id="hero" labelledBy="walls-devine-title" variant="hero" className="wd-hero-shell" innerClassName="wd-hero">
         <div className="wd-hero__layout">
-          <figure className="wd-hero__cover">
-            <div className="wd-hero__cover-frame">
-              <Image src={volOneImage} alt="Walls/Devine Volume 1 cover artwork" priority sizes="(max-width: 900px) 86vw, 38vw" />
-            </div>
-          </figure>
-
-          <div className="wd-hero__copy">
+          <div className="wd-hero__showcase">
             <SectionHeader
               id="walls-devine-title"
               eyebrow="Collector experience"
               title="Walls/Devine Volume 1"
               headingLevel="h1"
             />
+
+            <figure className="wd-hero__cover">
+              <div className="wd-hero__cover-frame">
+                <Image src={volOneImage} alt="Walls/Devine Volume 1 cover artwork" priority sizes="(max-width: 900px) 86vw, 38vw" />
+              </div>
+            </figure>
+
+            <aside className="wd-hero__signature-card" aria-label="Signed by John Walls and Terry Devine">
+              <p className="wd-hero__letter-signoff">With Love From the Room,</p>
+              <div className="wd-hero__letter-signatures">
+                <span>John Walls</span>
+                <span>Terry Devine</span>
+              </div>
+            </aside>
+          </div>
+
+          <div className="wd-hero__copy">
 
             <div className="wd-hero__note-stack">
               <div className="wd-hero__letter" aria-label="Collector note from John Walls and Terry Devine">
@@ -243,23 +256,21 @@ export function WallsDevineLanding() {
                     Jump to the Signal Room
                   </Button>
                 </div>
-
-                <p className="wd-hero__letter-signoff">With Love From the Room,</p>
-                <div className="wd-hero__letter-signatures" aria-label="Signed by John Walls and Terry Devine">
-                  <span>John Walls</span>
-                  <span>Terry Devine</span>
-                </div>
               </div>
 
               <div className="wd-hero__journal" aria-label="Rotating journal entries from Volume 1">
                 <div className="wd-hero__letter-postscript">
                   <span className="wd-hero__letter-postscript-label">From the journals</span>
-                  <div className="wd-hero__letter-quote-rotator" aria-live="polite">
+                  <div
+                    className="wd-hero__letter-quote-rotator"
+                    aria-live="polite"
+                    style={{ "--wd-letter-quote-duration": `${collectorLetterQuotes.length * collectorQuoteIntervalSeconds}s` } as CSSProperties}
+                  >
                     {collectorLetterQuotes.map((quote, index) => (
                       <figure
                         key={quote.source}
                         className="wd-hero__letter-quote"
-                        style={{ "--wd-letter-quote-delay": `${index * 5}s` } as CSSProperties}
+                        style={{ "--wd-letter-quote-delay": `${index * collectorQuoteIntervalSeconds}s` } as CSSProperties}
                       >
                         <blockquote>{quote.text}</blockquote>
                         <figcaption>{quote.source}</figcaption>
@@ -275,7 +286,7 @@ export function WallsDevineLanding() {
 
       <SectionShell id="walls-devine-grid" labelledBy="walls-devine-grid-title" className="wd-grid-shell" innerClassName="wd-grid-section">
         <header className="wd-grid-section__header">
-          <h2 id="walls-devine-grid-title">The collector grid</h2>
+          <h2 id="walls-devine-grid-title">The Collector Grid</h2>
         </header>
 
         <WallsDevineCollectorGrid tiles={instagramGrid} />

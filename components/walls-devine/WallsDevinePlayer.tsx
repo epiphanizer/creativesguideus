@@ -634,7 +634,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
         setActiveIndex(clamp(storedState.activeIndex ?? 0, 0, Math.max(0, tracks.length - 1)));
       }
 
-      setIsDismissed(storedState.isDismissed === true);
+      setIsDismissed(false);
       setIsCollapsed(true);
 
       // Always boot the listening-room dock at the default top-right anchor.
@@ -656,7 +656,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
         activeIndex,
         isOpen,
         isCollapsed,
-        isDismissed
+        isDismissed: false
       } satisfies PersistedWallsDevinePlayerState)
     );
   }, [activeIndex, isCollapsed, isDismissed, isOpen]);

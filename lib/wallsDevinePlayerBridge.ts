@@ -16,22 +16,7 @@ export const wallsDevinePlayerDismissedChangeEventName = "wd-player-dismissed-ch
 export const wallsDevinePlayerRestoreRequestEventName = "wd-player-restore-request";
 
 export function readWallsDevinePlayerDismissed() {
-  if (typeof window === "undefined") {
-    return false;
-  }
-
-  const rawState = window.localStorage.getItem(wallsDevinePlayerStorageKey);
-
-  if (!rawState) {
-    return false;
-  }
-
-  try {
-    const storedState = JSON.parse(rawState) as PersistedWallsDevinePlayerState;
-    return storedState.isDismissed === true;
-  } catch {
-    return false;
-  }
+  return false;
 }
 
 export function dispatchWallsDevinePlayerDismissedChange(isDismissed: boolean) {

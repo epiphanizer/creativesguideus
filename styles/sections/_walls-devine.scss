@@ -70,26 +70,27 @@
   }
 }
 
+.wd-hero__showcase,
 .wd-hero__copy {
   display: grid;
   gap: clamp(var(--cg-space-md), 2.4vw, var(--cg-space-xl));
 }
 
-.wd-hero__copy .cg-section-header__eyebrow {
+.wd-hero__showcase .cg-section-header__eyebrow {
   color: var(--wd-red-800);
 }
 
-.wd-hero__copy .cg-section-header__title {
+.wd-hero__showcase .cg-section-header__title {
   color: var(--wd-ink);
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
 
-.wd-hero__copy .cg-section-header__subtitle {
+.wd-hero__showcase .cg-section-header__subtitle {
   color: var(--wd-red-800);
 }
 
-.wd-hero__copy .cg-section-header__description {
+.wd-hero__showcase .cg-section-header__description {
   max-width: 39ch;
   font-size: clamp(1rem, 1vw + 0.78rem, 1.12rem);
   color: rgba(27, 21, 21, 0.86);
@@ -98,11 +99,13 @@
 .wd-hero__note-stack {
   display: grid;
   gap: clamp(0.75rem, 1.8vh, 1.05rem);
-  max-width: min(100%, 39rem);
+  width: 100%;
+  max-width: 39rem;
 }
 
 .wd-hero__letter,
-.wd-hero__journal {
+.wd-hero__journal,
+.wd-hero__signature-card {
   position: relative;
   display: grid;
   gap: clamp(0.7rem, 1.8vh, 1rem);
@@ -117,16 +120,24 @@
 }
 
 .wd-hero__letter,
-.wd-hero__journal {
+.wd-hero__journal,
+.wd-hero__signature-card {
   max-width: min(100%, 39rem);
 }
 
 .wd-hero__journal {
   max-width: min(100%, 31rem);
+  justify-self: end;
+}
+
+.wd-hero__signature-card {
+  width: min(100%, 460px);
+  gap: 0.35rem;
 }
 
 .wd-hero__letter::before,
-.wd-hero__journal::before {
+.wd-hero__journal::before,
+.wd-hero__signature-card::before {
   content: "";
   position: absolute;
   inset: 0 auto 0 0;
@@ -135,7 +146,8 @@
 }
 
 .wd-hero__letter::after,
-.wd-hero__journal::after {
+.wd-hero__journal::after,
+.wd-hero__signature-card::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -147,7 +159,8 @@
 }
 
 .wd-hero__letter > *,
-.wd-hero__journal > * {
+.wd-hero__journal > *,
+.wd-hero__signature-card > * {
   position: relative;
   z-index: 1;
 }
@@ -203,6 +216,8 @@
 .wd-hero__journal .wd-hero__letter-postscript {
   padding-top: 0;
   border-top: 0;
+  justify-items: end;
+  text-align: right;
 }
 
 .wd-hero__letter-quote-rotator {
@@ -219,8 +234,13 @@
   margin: 0;
   opacity: 0;
   transform: translateY(6px);
-  animation: wd-hero-letter-quote-rotate 20s linear infinite;
+  animation: wd-hero-letter-quote-rotate var(--wd-letter-quote-duration, 60s) linear infinite;
   animation-delay: var(--wd-letter-quote-delay, 0s);
+}
+
+.wd-hero__journal .wd-hero__letter-quote {
+  justify-items: end;
+  text-align: right;
 }
 
 .wd-hero__letter-quote blockquote {
@@ -235,6 +255,10 @@
 .wd-hero__letter-quote figcaption {
   font-size: 0.64rem;
   color: rgba(108, 5, 8, 0.68);
+}
+
+.wd-hero__journal .wd-hero__letter-quote figcaption {
+  justify-self: end;
 }
 
 .wd-hero__letter-signoff {
@@ -752,7 +776,7 @@
   margin: 0;
   display: grid;
   gap: var(--cg-space-xs);
-  justify-items: center;
+  justify-items: start;
 }
 
 .wd-hero__cover-frame {
@@ -3295,7 +3319,7 @@
   color: rgba(126, 7, 5, 0.86);
 }
 
-.wd-hero__copy .cg-section-header__title,
+.wd-hero__showcase .cg-section-header__title,
 .wd-experience__intro h2,
 .wd-grid-section__header h2,
 .wd-production__card h2,
@@ -3310,12 +3334,12 @@
   letter-spacing: 0.03em;
 }
 
-.wd-hero__copy .cg-section-header__title {
+.wd-hero__showcase .cg-section-header__title {
   font-size: clamp(3.4rem, 8vw, 6.2rem);
   line-height: 0.94;
 }
 
-.wd-hero__copy .cg-section-header__subtitle {
+.wd-hero__showcase .cg-section-header__subtitle {
   font-size: 0.82rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -3673,28 +3697,33 @@
   }
 }
 
+.wd-hero__showcase,
 .wd-hero__copy {
   gap: clamp(0.55rem, 1.35vh, 0.95rem);
   align-self: start;
 }
 
-.wd-hero__copy .cg-section-header {
+.wd-hero__copy {
+  justify-items: start;
+}
+
+.wd-hero__showcase .cg-section-header {
   gap: clamp(0.4rem, 1vh, 0.75rem);
 }
 
-.wd-hero__copy .cg-section-header__content {
+.wd-hero__showcase .cg-section-header__content {
   gap: clamp(0.32rem, 0.85vh, 0.6rem);
   border-bottom: 0;
   padding-bottom: 0;
 }
 
-.wd-hero__copy .cg-section-header__title {
+.wd-hero__showcase .cg-section-header__title {
   font-size: var(--wd-collector-title-size);
   line-height: var(--wd-collector-title-lh);
   letter-spacing: 0.015em;
 }
 
-.wd-hero__copy .cg-section-header__description {
+.wd-hero__showcase .cg-section-header__description {
   max-width: 34ch;
   margin-top: clamp(0.2rem, 0.55vh, 0.45rem);
   font-size: var(--wd-collector-copy-size);
@@ -3726,20 +3755,24 @@
   transform: translateY(clamp(-6px, -1.5vh, -18px)) rotate(-1.1deg);
 }
 
+.wd-hero__signature-card {
+  width: min(100%, 560px);
+}
+
 @keyframes wd-hero-letter-quote-rotate {
   0%,
-  8% {
+  5% {
     opacity: 0;
     transform: translateY(8px);
   }
 
-  12%,
-  22% {
+  10%,
+  30% {
     opacity: 1;
     transform: translateY(0);
   }
 
-  28%,
+  36%,
   100% {
     opacity: 0;
     transform: translateY(-6px);
