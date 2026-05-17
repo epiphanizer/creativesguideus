@@ -3,7 +3,7 @@
 import { type FormEvent, type ReactNode, useEffect, useMemo, useState, useTransition } from "react";
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 
-import type { AdminAudioAnalysis, AdminMarkdownCollection, EcosystemLead, ListeningRoomVisit, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
+import type { AdminAudioAnalysis, AdminMarkdownCollection, EcosystemLead, LinkHubContent, ListeningRoomVisit, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
 import {
   deleteFirebaseAdminMarkdownFile,
   getAdminUserProfile,
@@ -15,6 +15,7 @@ import {
   seedFirebaseWallsDevineAdminData,
   updateFirebaseAdminMarkdownFile,
   updateFirebaseCollectorHeroNote,
+  updateFirebaseLinkHub,
   updateFirebaseReleasePlanItem,
   type AdminUserProfile
 } from "@/lib/firebase/admin-content";
@@ -22,17 +23,20 @@ import { firebaseAuth } from "@/lib/firebase/client";
 import { firebaseAdminPaths } from "@/lib/firebase/config";
 import { getEcosystemLeads } from "@/lib/firebase/ecosystem-leads";
 import { getListeningRoomVisits } from "@/lib/firebase/listening-room-visits";
+import { defaultLinkHubContent } from "@/lib/link-hub/content";
 import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 
+import { AdminLinkHubEditor } from "./AdminLinkHubEditor";
 import { AdminFirebaseStatus } from "./AdminFirebaseStatus";
 
 type SaveState = "saving" | "deleting" | "success" | "error";
 type ContentSource = "pending" | "firebase" | "bootstrap";
 
 const collectorHeroNoteSaveKey = "collectorHeroNote";
+const linkHubSaveKey = "linkHub";
 
 function groupChecklistByPhase(items: ReleasePlanChecklistItem[]) {
   const grouped = new Map<string, ReleasePlanChecklistItem[]>();
@@ -365,6 +369,7 @@ const fallbackAdminData: WallsDevineAdminData = {
   instagramDrafts: [],
   journalEntries: [],
   collectorHeroNote: defaultWallsDevineCollectorHeroNote,
+  linkHub: defaultLinkHubContent,
   storageBacked: false,
   contentBackend: "bootstrap",
   markdownInitialized: false
@@ -976,6 +981,28 @@ export function AdminConsole() {
     }
   }
 
+  async function handleLinkHubSave(nextLinkHub: LinkHubContent) {
+    if (!adminData) {
+      return;
+    }
+
+    setPanelError("");
+    setSaveStates((current) => ({ ...current, [linkHubSaveKey]: "saving" }));
+
+    try {
+      const savedLinkHub = await updateFirebaseLinkHub(nextLinkHub);
+
+      startTransition(() => {
+        setAdminData((current) => (current ? { ...current, linkHub: savedLinkHub } : current));
+      });
+
+      setSaveStates((current) => ({ ...current, [linkHubSaveKey]: "success" }));
+    } catch (error) {
+      setSaveStates((current) => ({ ...current, [linkHubSaveKey]: "error" }));
+      setPanelError(getFirebaseErrorMessage(error));
+    }
+  }
+
   async function handleMarkdownSave(event: FormEvent<HTMLFormElement>, collection: AdminMarkdownCollection, slug: string) {
     event.preventDefault();
 
@@ -1420,6 +1447,13 @@ export function AdminConsole() {
             </div>
           </form>
         </article>
+
+        <AdminLinkHubEditor
+          value={adminViewData.linkHub}
+          saveState={saveStates[linkHubSaveKey]}
+          firestorePath={`${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.publicContentCollection}/${firebaseAdminPaths.linkHubDocId}`}
+          onSave={handleLinkHubSave}
+        />
 
         <div className="cg-admin__phases">
           {checklistByPhase.map(([phase, items]) => (

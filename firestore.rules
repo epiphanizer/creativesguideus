@@ -111,8 +111,8 @@ service cloud.firestore {
       }
     }
 
-    match /adminProjects/walls-devine/publicContent/collectorHeroNote {
-      allow read: if true;
+    match /adminProjects/walls-devine/publicContent/{docId} {
+      allow read: if docId == 'collectorHeroNote' || docId == 'linkHub';
       allow write: if isAdmin();
     }
 

@@ -1,7 +1,8 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, writeBatch } from "firebase/firestore";
 import { getBytes, listAll, ref } from "firebase/storage";
 
-import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData, WallsDevineCollectorHeroNote } from "@/lib/admin/types";
+import type { AdminMarkdownCollection, AdminMarkdownFile, LinkHubContent, ReleasePlan, WallsDevineAdminData, WallsDevineCollectorHeroNote } from "@/lib/admin/types";
+import { defaultLinkHubContent, normalizeLinkHubContent } from "@/lib/link-hub/content";
 import { defaultWallsDevineCollectorHeroNote, normalizeWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 
 import { firebaseDb, firebaseStorage } from "./client";
@@ -53,6 +54,14 @@ function getCollectorHeroNoteDocRef() {
   }
 
   return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.collectorHeroNoteDocId);
+}
+
+function getLinkHubDocRef() {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.linkHubDocId);
 }
 
 function getMarkdownFileId(collectionName: AdminMarkdownCollection, slug: string) {
@@ -284,6 +293,16 @@ async function getCollectorHeroNoteFromFirestore() {
   return normalizeWallsDevineCollectorHeroNote(snapshot.data() as Partial<WallsDevineCollectorHeroNote>);
 }
 
+async function getLinkHubFromFirestore() {
+  const snapshot = await getDoc(getLinkHubDocRef());
+
+  if (!snapshot.exists()) {
+    return defaultLinkHubContent;
+  }
+
+  return normalizeLinkHubContent(snapshot.data() as Partial<LinkHubContent>);
+}
+
 function updateMarkdownCollection(
   files: AdminMarkdownFile[],
   nextFile: AdminMarkdownFile
@@ -325,7 +344,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
   try {
     let { instagramDrafts, journalEntries } = await readFirestoreMarkdownCollections();
     let markdownInitialized = Boolean(projectData?.[firebaseAdminPaths.markdownInitializedField]);
-    const collectorHeroNote = await getCollectorHeroNoteFromFirestore();
+    const [collectorHeroNote, linkHub] = await Promise.all([getCollectorHeroNoteFromFirestore(), getLinkHubFromFirestore()]);
 
     if (!markdownInitialized && !instagramDrafts.length && !journalEntries.length) {
       const migratedContent = await migrateLegacyStorageMarkdownContent();
@@ -342,6 +361,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
       instagramDrafts,
       journalEntries,
       collectorHeroNote,
+      linkHub,
       storageBacked: true,
       contentBackend: "firestore",
       markdownInitialized: markdownInitialized || instagramDrafts.length > 0 || journalEntries.length > 0
@@ -352,6 +372,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
       instagramDrafts: [],
       journalEntries: [],
       collectorHeroNote: defaultWallsDevineCollectorHeroNote,
+      linkHub: defaultLinkHubContent,
       storageBacked: false,
       contentBackend: "bootstrap",
       markdownInitialized: false
@@ -383,6 +404,16 @@ export async function updateFirebaseCollectorHeroNote(note: Partial<WallsDevineC
 
   await setDoc(getCollectorHeroNoteDocRef(), nextNote, { merge: true });
   return nextNote;
+}
+
+export async function updateFirebaseLinkHub(content: Partial<LinkHubContent>) {
+  const nextLinkHub = normalizeLinkHubContent({
+    ...content,
+    updatedAt: new Date().toISOString()
+  });
+
+  await setDoc(getLinkHubDocRef(), nextLinkHub, { merge: true });
+  return nextLinkHub;
 }
 
 export async function updateFirebaseAdminMarkdownFile(collection: AdminMarkdownCollection, slug: string, content: string) {
@@ -444,6 +475,15 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
       getCollectorHeroNoteDocRef(),
       normalizeWallsDevineCollectorHeroNote({
         ...seedData.collectorHeroNote,
+        updatedAt: new Date().toISOString()
+      }),
+      { merge: true }
+    );
+
+    batch.set(
+      getLinkHubDocRef(),
+      normalizeLinkHubContent({
+        ...seedData.linkHub,
         updatedAt: new Date().toISOString()
       }),
       { merge: true }

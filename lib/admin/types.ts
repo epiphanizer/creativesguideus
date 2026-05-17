@@ -42,6 +42,25 @@ export type WallsDevineCollectorHeroNote = {
   updatedAt: string;
 };
 
+export type LinkHubLink = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  href: string;
+  ctaLabel: string;
+  isFeatured: boolean;
+  isActive: boolean;
+};
+
+export type LinkHubContent = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  updatedAt: string;
+  links: LinkHubLink[];
+};
+
 export type AdminMarkdownFile = {
   slug: string;
   title: string;
@@ -123,6 +142,7 @@ export type WallsDevineAdminData = {
   instagramDrafts: AdminMarkdownFile[];
   journalEntries: AdminMarkdownFile[];
   collectorHeroNote: WallsDevineCollectorHeroNote;
+  linkHub: LinkHubContent;
   storageBacked?: boolean;
   contentBackend?: "firestore" | "bootstrap";
   markdownInitialized?: boolean;

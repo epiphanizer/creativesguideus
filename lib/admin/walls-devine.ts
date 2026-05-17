@@ -3,6 +3,7 @@ import path from "node:path";
 
 import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData } from "./types";
 
+import { defaultLinkHubContent } from "@/lib/link-hub/content";
 import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 
 const releasePlanPath = path.join(process.cwd(), "data", "walls-devine", "release-plan.json");
@@ -116,6 +117,7 @@ export async function getWallsDevineAdminData() {
     plan,
     instagramDrafts,
     journalEntries,
-    collectorHeroNote: defaultWallsDevineCollectorHeroNote
+    collectorHeroNote: defaultWallsDevineCollectorHeroNote,
+    linkHub: defaultLinkHubContent
   } satisfies WallsDevineAdminData;
 }

@@ -8,6 +8,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - Authorization: Firestore `adminUsers/{uid}` decides whether a signed-in user is an active editor.
 - Structured content: Firestore `adminProjects/walls-devine` stores the release plan object.
 - Public note copy: Firestore `adminProjects/walls-devine/publicContent/collectorHeroNote` stores the editable collector note shown on the public Volume 1 hero.
+- Public jump-link hub: Firestore `adminProjects/walls-devine/publicContent/linkHub` stores the editable Linktree-style links page at `/links`.
 - Lead capture: Firestore `ecosystemLeads/{leadId}` stores public collector-list signups from the site experience.
 - Longform content: Firestore stores markdown docs at `adminProjects/walls-devine/markdownFiles/{collection}--{slug}`.
 - Legacy migration: Firebase Storage at `admin-projects/walls-devine/{collection}/{slug}.md` is only read when older markdown needs to be migrated into Firestore.
@@ -41,6 +42,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - `adminUsers/{uid}`
 - `adminProjects/walls-devine`
 - `adminProjects/walls-devine/publicContent/collectorHeroNote`
+- `adminProjects/walls-devine/publicContent/linkHub`
 - `ecosystemLeads/{leadId}`
 
 ### Firestore markdown docs
@@ -81,6 +83,7 @@ firebase deploy --only firestore:rules,storage
 2. Confirm the status panel shows the signed-in email and the `adminUsers` gate.
 3. Toggle a release checklist item and verify `adminProjects/walls-devine` updates.
 4. Edit the collector note in `/admin`, refresh `/walls-devine`, and confirm the public hero note updates from Firestore.
-5. Submit one collector signup from the public site and verify a document appears in `ecosystemLeads`.
-6. Save one Instagram draft and one journal entry, then verify Firestore documents appear under `adminProjects/walls-devine/markdownFiles/...`.
-7. Refresh `/admin` and confirm the remote content loads without re-bootstrap.
+5. Edit the link hub in `/admin`, refresh `/links`, and confirm the public link page updates from Firestore.
+6. Submit one collector signup from the public site and verify a document appears in `ecosystemLeads`.
+7. Save one Instagram draft and one journal entry, then verify Firestore documents appear under `adminProjects/walls-devine/markdownFiles/...`.
+8. Refresh `/admin` and confirm the remote content loads without re-bootstrap.
