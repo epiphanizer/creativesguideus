@@ -276,6 +276,10 @@ function formatLeadProgramSummary(label: string, count: number) {
   return `${label} · ${count} lead${count === 1 ? "" : "s"}`;
 }
 
+function getBacklogElementId(tabId: AdminWorkspaceTabId) {
+  return `admin-backlog-${tabId}`;
+}
+
 type AdminWorkspaceSectionId = "admin-release-desk" | "admin-booking-engine" | "admin-journals" | "admin-instagram-posts" | "admin-analytics" | "admin-assets" | "admin-health";
 type AdminWorkspaceTabId = "walls-devine" | "agency";
 
@@ -335,6 +339,7 @@ type AdminWorkspaceSectionProps = {
   description: string;
   detail?: string;
   actions?: ReactNode;
+  isVisible?: boolean;
   isOpen: boolean;
   onToggle: () => void;
   children: ReactNode;
@@ -361,10 +366,15 @@ function AdminWorkspaceSection({
   description,
   detail,
   actions,
+  isVisible = true,
   isOpen,
   onToggle,
   children
 }: AdminWorkspaceSectionProps) {
+  if (!isVisible) {
+    return null;
+  }
+
   return (
     <SectionShell id={id} labelledBy={labelId} className="cg-admin__workspace-shell" innerClassName="cg-admin__section cg-admin__workspace-section">
       <div className="cg-admin__workspace-section-head">
@@ -531,11 +541,13 @@ function buildDashboardModules({
       tab: "walls-devine",
       title: "Booking engine",
       summary: `${bookingTargetsCount} target${bookingTargetsCount === 1 ? "" : "s"} · ${bookingLeadCount} booking-fit lead${bookingLeadCount === 1 ? "" : "s"}`,
-      detail: bookingTargetsCount
-        ? `Lock by ${new Date(bookingDeadline).toLocaleDateString()}. ${bookingCriticalCount} critical target${bookingCriticalCount === 1 ? "" : "s"} seeded.`
-        : "Seed the booking board before the lock date gets too close.",
+      detail: isScaffoldMode
+        ? "Waiting on the live project document before the booking board returns to the primary workspace."
+        : bookingTargetsCount
+          ? `Lock by ${new Date(bookingDeadline).toLocaleDateString()}. ${bookingCriticalCount} critical target${bookingCriticalCount === 1 ? "" : "s"} seeded.`
+          : "Seed the booking board before the lock date gets too close.",
       actionLabel: "Open booking engine",
-      status: bookingTargetsCount ? "ready" : "pending"
+      status: !isScaffoldMode && bookingTargetsCount ? "ready" : "pending"
     },
     {
       id: "admin-instagram-posts",
@@ -567,18 +579,27 @@ function buildDashboardModules({
       tab: "walls-devine",
       title: "Assets & QA",
       summary: `${audioCount} WAV file${audioCount === 1 ? "" : "s"} inspected`,
-      detail: hasAudioError ? "Audio inspection reported an issue. Use refresh to retry." : audioCount ? "Server-side file inspection is returning metadata." : "Run refresh to inspect the live release WAVs.",
+      detail: hasAudioError
+        ? "Audio inspection reported an issue. Use refresh to retry."
+        : audioCount
+          ? "Server-side file inspection is returning metadata."
+          : "Live WAV inspection has not landed yet, so this stays parked in backlog.",
       actionLabel: "Open assets",
-      status: hasAudioError ? "pending" : "ready"
+      status: hasAudioError || !audioCount ? "pending" : "ready"
     },
     {
       id: "admin-health",
       tab: "agency",
       title: "Backend health",
       summary: contentSource === "bootstrap" ? "Fallback mode" : contentSource === "firebase" ? "Firebase live" : "Awaiting backend",
-      detail: hasPanelError ? "One or more auth or content checks need attention." : "Auth gate, content source, and migration readiness are available here.",
+      detail:
+        hasPanelError
+          ? "One or more auth or content checks need attention."
+          : contentSource === "firebase"
+            ? "Auth gate, content source, and migration readiness are available here."
+            : "Keep this parked in backlog until the console is running against live Firebase content.",
       actionLabel: "Open backend health",
-      status: hasPanelError ? "pending" : "ready"
+      status: hasPanelError || contentSource !== "firebase" ? "pending" : "ready"
     }
   ] satisfies DashboardModule[];
 }
@@ -769,16 +790,32 @@ export function AdminConsole() {
     () => adminWorkspaceTabs.find((tab) => tab.id === activeWorkspaceTab) ?? adminWorkspaceTabs[0],
     [activeWorkspaceTab]
   );
+  const moduleStatusById = useMemo(
+    () =>
+      dashboardModules.reduce<Record<AdminWorkspaceSectionId, DashboardModule["status"]>>((statuses, module) => {
+        statuses[module.id] = module.status;
+        return statuses;
+      }, {} as Record<AdminWorkspaceSectionId, DashboardModule["status"]>),
+    [dashboardModules]
+  );
   const visibleDashboardModules = useMemo(
-    () => dashboardModules.filter((module) => module.tab === activeWorkspaceTab),
+    () => dashboardModules.filter((module) => module.tab === activeWorkspaceTab && module.status === "ready"),
+    [dashboardModules, activeWorkspaceTab]
+  );
+  const backlogDashboardModules = useMemo(
+    () => dashboardModules.filter((module) => module.tab === activeWorkspaceTab && module.status === "pending"),
     [dashboardModules, activeWorkspaceTab]
   );
   const visibleJumpLinks = useMemo(
-    () => jumpLinks.filter((link) => link.tab === activeWorkspaceTab),
-    [jumpLinks, activeWorkspaceTab]
+    () => jumpLinks.filter((link) => link.tab === activeWorkspaceTab && moduleStatusById[link.id] === "ready"),
+    [jumpLinks, activeWorkspaceTab, moduleStatusById]
   );
   const isResolvingAuthorizedSession = Boolean(authUser) && dataLoading && !isAuthorized && !panelError;
   const isRefreshingAuthorizedAdmin = Boolean(authUser) && isAuthorized && dataLoading;
+
+  function isSectionReady(sectionId: AdminWorkspaceSectionId) {
+    return moduleStatusById[sectionId] === "ready";
+  }
 
   function setWorkspaceSectionOpen(sectionId: AdminWorkspaceSectionId, nextOpen: boolean) {
     setOpenSections((current) => (current[sectionId] === nextOpen ? current : { ...current, [sectionId]: nextOpen }));
@@ -788,16 +825,30 @@ export function AdminConsole() {
     setOpenSections((current) => ({ ...current, [sectionId]: !current[sectionId] }));
   }
 
-  function scrollToWorkspaceSection(sectionId: AdminWorkspaceSectionId, behavior: ScrollBehavior = "smooth") {
+  function scrollToElement(elementId: string, behavior: ScrollBehavior = "smooth") {
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        document.getElementById(sectionId)?.scrollIntoView({ behavior, block: "start" });
+        document.getElementById(elementId)?.scrollIntoView({ behavior, block: "start" });
       });
     });
   }
 
+  function scrollToWorkspaceSection(sectionId: AdminWorkspaceSectionId, behavior: ScrollBehavior = "smooth") {
+    scrollToElement(sectionId, behavior);
+  }
+
   function handleJumpToSection(sectionId: AdminWorkspaceSectionId) {
-    setActiveWorkspaceTab(workspaceSectionTabs[sectionId]);
+    const tabId = workspaceSectionTabs[sectionId];
+
+    setActiveWorkspaceTab(tabId);
+
+    if (!isSectionReady(sectionId)) {
+      const backlogId = getBacklogElementId(tabId);
+      window.history.replaceState(null, "", `#${backlogId}`);
+      scrollToElement(backlogId);
+      return;
+    }
+
     setWorkspaceSectionOpen(sectionId, true);
     window.history.replaceState(null, "", `#${sectionId}`);
     scrollToWorkspaceSection(sectionId);
@@ -1054,15 +1105,30 @@ export function AdminConsole() {
       return;
     }
 
-    const sectionId = window.location.hash.replace(/^#/, "");
+    const hashId = window.location.hash.replace(/^#/, "");
+
+    if (hashId === getBacklogElementId("walls-devine") || hashId === getBacklogElementId("agency")) {
+      setActiveWorkspaceTab(hashId.endsWith("agency") ? "agency" : "walls-devine");
+      scrollToElement(hashId, "auto");
+      return;
+    }
+
+    const sectionId = hashId;
 
     if (!isWorkspaceSectionId(sectionId)) {
       return;
     }
 
+    setActiveWorkspaceTab(workspaceSectionTabs[sectionId]);
+
+    if (!isSectionReady(sectionId)) {
+      scrollToElement(getBacklogElementId(workspaceSectionTabs[sectionId]), "auto");
+      return;
+    }
+
     setWorkspaceSectionOpen(sectionId, true);
     scrollToWorkspaceSection(sectionId, "auto");
-  }, [isAuthorized]);
+  }, [isAuthorized, moduleStatusById]);
 
   useEffect(() => {
     if (panelError || isScaffoldMode || !hasLiveMarkdownContent) {
@@ -1591,20 +1657,24 @@ export function AdminConsole() {
           <div className="cg-admin__quick-actions">
             {activeWorkspaceTab === "walls-devine" ? (
               <>
-                <Button type="button" onClick={() => handleJumpToSection("admin-journals")}>Write new journal</Button>
-                <Button type="button" variant="secondary" onClick={() => handleJumpToSection("admin-release-desk")}>Open release desk</Button>
-                <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-booking-engine")}>Open booking engine</Button>
-                <Button type="button" variant="ghost" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
-                  {audioLoading ? "Refreshing assets…" : "Refresh assets"}
-                </Button>
+                {isSectionReady("admin-journals") ? <Button type="button" onClick={() => handleJumpToSection("admin-journals")}>Write new journal</Button> : null}
+                {isSectionReady("admin-release-desk") ? <Button type="button" variant="secondary" onClick={() => handleJumpToSection("admin-release-desk")}>Open release desk</Button> : null}
+                {isSectionReady("admin-booking-engine") ? <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-booking-engine")}>Open booking engine</Button> : null}
+                {isSectionReady("admin-assets") ? (
+                  <Button type="button" variant="ghost" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
+                    {audioLoading ? "Refreshing assets…" : "Refresh assets"}
+                  </Button>
+                ) : null}
               </>
             ) : (
               <>
-                <Button type="button" onClick={() => handleJumpToSection("admin-analytics")}>Open signal desk</Button>
-                <Button type="button" variant="secondary" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
-                  {leadsLoading || visitsLoading ? "Refreshing signals…" : "Refresh signals"}
-                </Button>
-                <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-health")}>Open backend health</Button>
+                {isSectionReady("admin-analytics") ? <Button type="button" onClick={() => handleJumpToSection("admin-analytics")}>Open signal desk</Button> : null}
+                {isSectionReady("admin-analytics") ? (
+                  <Button type="button" variant="secondary" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
+                    {leadsLoading || visitsLoading ? "Refreshing signals…" : "Refresh signals"}
+                  </Button>
+                ) : null}
+                {isSectionReady("admin-health") ? <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-health")}>Open backend health</Button> : null}
               </>
             )}
             {!hasLiveMarkdownContent ? (
@@ -1614,39 +1684,71 @@ export function AdminConsole() {
             ) : null}
           </div>
 
-          <div className="cg-admin__module-grid cg-admin__module-grid--ops">
-            {visibleDashboardModules.map((module) => (
-              <article key={module.id} className="cg-admin__panel cg-admin__module-card">
-                <div className="cg-admin__module-head">
-                  <h2>{module.title}</h2>
-                  <span className={["cg-admin__status-badge", module.status === "ready" ? "cg-admin__status-badge--ready" : "cg-admin__status-badge--pending"].join(" ")}>
-                    {module.status === "ready" ? "Ready" : "Pending"}
-                  </span>
-                </div>
-                <strong className="cg-admin__module-stat">{module.summary}</strong>
-                <p>{module.detail}</p>
-                <div className="cg-admin__module-actions">
-                  <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection(module.id)}>
-                    {module.actionLabel}
-                  </Button>
-                </div>
-              </article>
-            ))}
-          </div>
+          {visibleDashboardModules.length ? (
+            <div className="cg-admin__module-grid cg-admin__module-grid--ops">
+              {visibleDashboardModules.map((module) => (
+                <article key={module.id} className="cg-admin__panel cg-admin__module-card">
+                  <div className="cg-admin__module-head">
+                    <h2>{module.title}</h2>
+                    <span className="cg-admin__status-badge cg-admin__status-badge--ready">Ready</span>
+                  </div>
+                  <strong className="cg-admin__module-stat">{module.summary}</strong>
+                  <p>{module.detail}</p>
+                  <div className="cg-admin__module-actions">
+                    <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection(module.id)}>
+                      {module.actionLabel}
+                    </Button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <article className="cg-admin__panel cg-admin__backlog-empty">
+              <h2>Focus lane cleared</h2>
+              <p>Nothing in this tab is fully live yet. The unfinished surfaces are parked in backlog below until they are complete.</p>
+            </article>
+          )}
 
-          <nav className="cg-admin__jump-bar" aria-label="Admin workspace sections">
-            {visibleJumpLinks.map((link) => (
-              <button
-                key={link.id}
-                type="button"
-                className={["cg-admin__jump-chip", openSections[link.id] ? "cg-admin__jump-chip--active" : ""].filter(Boolean).join(" ")}
-                onClick={() => handleJumpToSection(link.id)}
-              >
-                <strong>{link.label}</strong>
-                <span>{link.detail}</span>
-              </button>
-            ))}
-          </nav>
+          {visibleJumpLinks.length ? (
+            <nav className="cg-admin__jump-bar" aria-label="Admin workspace sections">
+              {visibleJumpLinks.map((link) => (
+                <button
+                  key={link.id}
+                  type="button"
+                  className={["cg-admin__jump-chip", openSections[link.id] ? "cg-admin__jump-chip--active" : ""].filter(Boolean).join(" ")}
+                  onClick={() => handleJumpToSection(link.id)}
+                >
+                  <strong>{link.label}</strong>
+                  <span>{link.detail}</span>
+                </button>
+              ))}
+            </nav>
+          ) : null}
+
+          {backlogDashboardModules.length ? (
+            <article id={getBacklogElementId(activeWorkspaceTab)} className="cg-admin__panel cg-admin__backlog-panel">
+              <div className="cg-admin__backlog-head">
+                <div>
+                  <h2>Backlog</h2>
+                  <p>Hidden from the active workspace until each surface is fully live. Nothing here has been removed from code.</p>
+                </div>
+                <p className="cg-admin__path-note">{backlogDashboardModules.length} parked for later</p>
+              </div>
+
+              <div className="cg-admin__backlog-list">
+                {backlogDashboardModules.map((module) => (
+                  <article key={module.id} className="cg-admin__backlog-item">
+                    <div className="cg-admin__module-head">
+                      <h3>{module.title}</h3>
+                      <span className="cg-admin__status-badge cg-admin__status-badge--pending">Backlog</span>
+                    </div>
+                    <strong className="cg-admin__module-stat">{module.summary}</strong>
+                    <p>{module.detail}</p>
+                  </article>
+                ))}
+              </div>
+            </article>
+          ) : null}
         </div>
       </SectionShell>
 
@@ -1658,6 +1760,7 @@ export function AdminConsole() {
         title="Release desk"
         description={adminViewData.plan.summary}
         detail={`Updated ${new Date(adminViewData.plan.updatedAt).toLocaleString()}`}
+        isVisible={isSectionReady("admin-release-desk")}
         isOpen={openSections["admin-release-desk"]}
         onToggle={() => toggleWorkspaceSection("admin-release-desk")}
       >
@@ -1780,6 +1883,7 @@ export function AdminConsole() {
         title="Booking engine"
         description="Availability windows, seeded targets, and booking-fit leads in one operating view."
         detail={`Project doc: ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}.${firebaseAdminPaths.bookingBoardField} + ${firebaseAdminPaths.ecosystemLeadsCollection}`}
+        isVisible={isSectionReady("admin-booking-engine")}
         actions={
           <Button type="button" variant="secondary" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
             {leadsLoading || visitsLoading ? "Refreshing booking signals…" : "Refresh booking signals"}
@@ -1804,6 +1908,7 @@ export function AdminConsole() {
         title="Assets & QA"
         description="Server-inspected technical metadata for the live release WAVs in the Volume 1 folder."
         detail="Source: public/walls-devine/releases/volume1"
+        isVisible={isSectionReady("admin-assets")}
         actions={
           <Button type="button" variant="secondary" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
             {audioLoading ? "Refreshing assets…" : "Refresh analysis"}
@@ -1907,6 +2012,7 @@ export function AdminConsole() {
         title="Draft studio"
         description="Create, rename, update, and delete release-copy drafts without touching repo files."
         detail={`Firestore path: ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/instagram-posts--{slug}`}
+        isVisible={isSectionReady("admin-instagram-posts")}
         isOpen={openSections["admin-instagram-posts"]}
         onToggle={() => toggleWorkspaceSection("admin-instagram-posts")}
       >
@@ -2008,6 +2114,7 @@ export function AdminConsole() {
         title="Journal studio"
         description="Write, publish, and prune the public-facing song journals from the live Firebase layer."
         detail={`Firestore path: ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/journals--{slug}`}
+        isVisible={isSectionReady("admin-journals")}
         isOpen={openSections["admin-journals"]}
         onToggle={() => toggleWorkspaceSection("admin-journals")}
       >
@@ -2110,6 +2217,7 @@ export function AdminConsole() {
         title="Agency signal desk"
         description="Lead generation, guided intake, Bong Tour context, and Walls/Devine listening traffic in one operational view."
         detail={`Firestore: ${firebaseAdminPaths.ecosystemLeadsCollection} + ${firebaseAdminPaths.listeningRoomVisitsCollection}`}
+        isVisible={isSectionReady("admin-analytics")}
         actions={
           <Button type="button" variant="secondary" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
             {leadsLoading || visitsLoading ? "Refreshing signals…" : "Refresh signals"}
@@ -2290,6 +2398,7 @@ export function AdminConsole() {
         title="Backend health"
         description="Firebase auth, live content source, and migration readiness for the admin layer."
         detail={`Content source: ${contentSource === "pending" ? "waiting on Firebase" : contentSource}`}
+        isVisible={isSectionReady("admin-health")}
         isOpen={openSections["admin-health"]}
         onToggle={() => toggleWorkspaceSection("admin-health")}
       >

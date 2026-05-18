@@ -196,8 +196,39 @@
   grid-template-rows: auto auto 1fr auto;
 }
 
+.cg-admin__backlog-empty {
+  align-content: start;
+}
+
 .cg-admin__module-actions {
   margin-top: auto;
+}
+
+.cg-admin__backlog-panel {
+  gap: var(--cg-space-md);
+  border-style: dashed;
+  background: linear-gradient(160deg, rgba(249, 245, 238, 0.96), rgba(255, 255, 255, 0.9));
+}
+
+.cg-admin__backlog-head,
+.cg-admin__backlog-list,
+.cg-admin__backlog-item {
+  display: grid;
+  gap: var(--cg-space-sm);
+}
+
+.cg-admin__backlog-head h2,
+.cg-admin__backlog-head p,
+.cg-admin__backlog-item h3,
+.cg-admin__backlog-item p {
+  margin: 0;
+}
+
+.cg-admin__backlog-item {
+  padding: 0.95rem 1rem;
+  border: 1px dashed rgba(15, 15, 15, 0.12);
+  border-radius: var(--cg-radius-md);
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .cg-admin__module-head {
@@ -238,6 +269,15 @@
 
   .cg-admin__module-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cg-admin__backlog-head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+
+  .cg-admin__backlog-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cg-admin__grid--summary,
