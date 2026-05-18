@@ -10,6 +10,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { songPostCards } from "@/components/walls-devine/content";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
+import type { EcosystemRewardId } from "@/lib/ecosystem/reward-catalog";
 import { getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
 import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
@@ -29,6 +30,7 @@ type GridTile = {
   image: StaticImageData;
   playerTarget?: string;
   center?: boolean;
+  rewardId?: EcosystemRewardId;
   teaser: string;
   challengeLabel: string;
   challengePrompt: string;
@@ -62,6 +64,7 @@ const instagramGrid: GridTile[] = [
     role: "Song 01",
     image: jointQueenImage,
     playerTarget: "joint-queen",
+    rewardId: "wd-joint-queen-hidden-transmission",
     teaser: "Smoke-crowned swagger and the first true door into the record.",
     challengeLabel: "Crown run",
     challengePrompt: "Grab five ember crowns before the smoke drops.",

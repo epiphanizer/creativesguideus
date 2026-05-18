@@ -5,8 +5,10 @@ import type { StaticImageData } from "next/image";
 import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { EcosystemRewardClaimCard } from "@/components/rewards/EcosystemRewardClaimCard";
 import { Button } from "@/components/ui/Button";
 import { cx } from "@/lib/cx";
+import { getEcosystemRewardDefinition } from "@/lib/ecosystem/reward-catalog";
 
 import { WallsDevineCollectorAccess } from "./WallsDevineCollectorAccess";
 
@@ -28,6 +30,7 @@ export type CollectorGridTile = {
   image: StaticImageData;
   center?: boolean;
   playerTarget?: string;
+  rewardId?: string;
   teaser: string;
   challengeLabel: string;
   challengePrompt: string;
@@ -51,6 +54,14 @@ type TokenPoint = {
   left: number;
 };
 
+type CrownTokenPoint = TokenPoint & {
+  driftX: number;
+  rise: number;
+  duration: number;
+  delay: number;
+  scale: number;
+};
+
 type SequenceStatus = "showing" | "active" | "won" | "lost";
 
 type DecayPatch = TokenPoint & {
@@ -67,6 +78,19 @@ function buildTokenPoints(count: number, topMin = 10, topMax = 78, leftMin = 10,
     top: randomInRange(topMin, topMax),
     left: randomInRange(leftMin, leftMax)
   }));
+}
+
+function buildCrownTokens(count: number) {
+  return Array.from({ length: count }, (_, index) => ({
+    id: `crown-${index}`,
+    top: randomInRange(22, 84),
+    left: randomInRange(10, 88),
+    driftX: randomInRange(-1.8, 1.8),
+    rise: randomInRange(1.4, 3.8),
+    duration: randomInRange(8.2, 12.8),
+    delay: randomInRange(-4.4, 0),
+    scale: randomInRange(0.92, 1.16)
+  } satisfies CrownTokenPoint));
 }
 
 function buildSequencePattern(length: number, padCount: number) {
@@ -118,15 +142,17 @@ const poetryRounds = [
 
 function CollectorCrownChaseGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
   const targetScore = 5;
+  const startingVibe = 76;
+  const vibeGainPerCrown = 22;
   const [score, setScore] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(12);
-  const [tokens, setTokens] = useState<TokenPoint[]>(() => buildTokenPoints(6, 14, 78, 12, 84));
-  const [status, setStatus] = useState<"active" | "won" | "lost">("active");
+  const [vibeLevel, setVibeLevel] = useState(startingVibe);
+  const [tokens, setTokens] = useState<CrownTokenPoint[]>(() => buildCrownTokens(5));
+  const [status, setStatus] = useState<"active" | "revealing" | "won" | "lost">("active");
 
   useEffect(() => {
     setScore(0);
-    setSecondsLeft(12);
-    setTokens(buildTokenPoints(6, 14, 78, 12, 84));
+    setVibeLevel(startingVibe);
+    setTokens(buildCrownTokens(5));
     setStatus("active");
   }, [tile.slug]);
 
@@ -136,19 +162,34 @@ function CollectorCrownChaseGame({ tile, onUnlock }: { tile: CollectorGridTile; 
     }
 
     const timer = window.setInterval(() => {
-      setSecondsLeft((current) => {
-        if (current <= 1) {
+      setVibeLevel((current) => {
+        const nextValue = Math.max(current - 0.42, 0);
+
+        if (nextValue <= 0) {
           window.clearInterval(timer);
           setStatus("lost");
           return 0;
         }
 
-        return current - 1;
+        return nextValue;
       });
-    }, 1000);
+    }, 90);
 
     return () => window.clearInterval(timer);
   }, [status, tile.slug]);
+
+  useEffect(() => {
+    if (status !== "revealing") {
+      return;
+    }
+
+    const revealTimer = window.setTimeout(() => {
+      setStatus("won");
+      onUnlock();
+    }, 1100);
+
+    return () => window.clearTimeout(revealTimer);
+  }, [onUnlock, status]);
 
   function handleTokenCollect(tokenId: string) {
     if (status !== "active") {
@@ -157,15 +198,26 @@ function CollectorCrownChaseGame({ tile, onUnlock }: { tile: CollectorGridTile; 
 
     setTokens((current) =>
       current.map((token) =>
-        token.id === tokenId ? { ...token, top: randomInRange(14, 78), left: randomInRange(12, 84) } : token
+        token.id === tokenId
+          ? {
+              ...token,
+              top: randomInRange(22, 84),
+              left: randomInRange(10, 88),
+              driftX: randomInRange(-1.8, 1.8),
+              rise: randomInRange(1.4, 3.8),
+              duration: randomInRange(8.2, 12.8),
+              delay: randomInRange(-4.4, 0),
+              scale: randomInRange(0.92, 1.16)
+            }
+          : token
       )
     );
+    setVibeLevel((current) => Math.min(100, current + vibeGainPerCrown));
     setScore((current) => {
       const nextScore = current + 1;
 
       if (nextScore >= targetScore) {
-        setStatus("won");
-        onUnlock();
+        setStatus("revealing");
       }
 
       return nextScore;
@@ -174,44 +226,92 @@ function CollectorCrownChaseGame({ tile, onUnlock }: { tile: CollectorGridTile; 
 
   function handleReset() {
     setScore(0);
-    setSecondsLeft(12);
-    setTokens(buildTokenPoints(6, 14, 78, 12, 84));
+    setVibeLevel(startingVibe);
+    setTokens(buildCrownTokens(5));
     setStatus("active");
   }
+
+  const hazeBlur = Math.max(1.2, 12 - score * 2);
+  const hazeOpacity = Math.max(0.08, 0.34 - score * 0.05);
+  const vibePercent = Math.max(0, Math.min(100, vibeLevel));
 
   return (
     <div className="wd-grid-modal__game-shell">
       <div className="wd-grid-modal__game-status">
         <span>Crown run</span>
-        <span>{score}/{targetScore}</span>
-        <span>{secondsLeft}s</span>
+        <span>{score}/{targetScore} ember crowns</span>
+        <span>{status === "revealing" ? "Exhale" : status === "won" ? "Stash unlocked" : "Hold the vibe"}</span>
       </div>
 
-      <div className="wd-grid-modal__token-field wd-grid-modal__token-field--crown" aria-label={`${tile.title} crown chase` }>
+      <div className="wd-grid-modal__vibe-meter" aria-label="Vibe meter">
+        <div className="wd-grid-modal__vibe-meter-head">
+          <span>Vibe meter</span>
+          <strong>{Math.round(vibePercent)}%</strong>
+        </div>
+        <div className="wd-grid-modal__vibe-meter-track" aria-hidden="true">
+          <span className="wd-grid-modal__vibe-meter-fill" style={{ width: `${vibePercent}%` }} />
+        </div>
+      </div>
+
+      <div
+        className={cx(
+          "wd-grid-modal__token-field",
+          "wd-grid-modal__token-field--crown",
+          status === "revealing" && "wd-grid-modal__token-field--exhale",
+          status === "won" && "wd-grid-modal__token-field--revealed",
+          status === "lost" && "wd-grid-modal__token-field--dim"
+        )}
+        style={{ "--wd-crown-haze-blur": `${hazeBlur}px`, "--wd-crown-haze-opacity": hazeOpacity } as CSSProperties}
+        aria-label={`${tile.title} crown chase`}
+      >
+        <span className="wd-grid-modal__token-field-haze" aria-hidden="true" />
         {tokens.map((token) => (
           <button
             key={token.id}
             type="button"
             className="wd-grid-modal__token wd-grid-modal__token--crown"
-            style={{ "--wd-token-top": `${token.top}%`, "--wd-token-left": `${token.left}%` } as CSSProperties}
+            style={{
+              "--wd-token-top": `${token.top}%`,
+              "--wd-token-left": `${token.left}%`,
+              "--wd-crown-drift-x": `${token.driftX}rem`,
+              "--wd-crown-rise": `${token.rise}rem`,
+              "--wd-crown-duration": `${token.duration}s`,
+              "--wd-crown-delay": `${token.delay}s`,
+              "--wd-crown-scale": token.scale
+            } as CSSProperties}
             onClick={() => handleTokenCollect(token.id)}
             disabled={status !== "active"}
           >
             {tile.tokenLabel}
           </button>
         ))}
+
+        <div className="wd-grid-modal__crown-pulse" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+
+        {status === "revealing" ? (
+          <div className="wd-grid-modal__stash-transition" aria-live="polite">
+            <p>The room exhales.</p>
+            <strong>Smoke clears. Stash incoming.</strong>
+          </div>
+        ) : null}
       </div>
 
       <div className="wd-grid-modal__game-footer">
         <p>
           {status === "won"
-            ? "The crown lands. The hidden note is open below."
+            ? "The smoke clears. Your stash is unlocked below."
+            : status === "revealing"
+              ? "Let the cloud roll out. The stash interface is opening."
             : status === "lost"
-              ? "Missed the last crown. Run it back."
-              : tile.challengePrompt}
+              ? "The vibe broke. Spark it again and keep the ember crowns alive."
+              : "Keep the vibe alive. Every ember crown you catch reignites the room."}
         </p>
         <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
-          Reset run
+          Recenter the vibe
         </Button>
       </div>
     </div>
@@ -1117,6 +1217,7 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
   const [easterEggUnlocked, setEasterEggUnlocked] = useState(false);
 
   const activeTile = useMemo(() => tiles.find((tile) => tile.slug === activeSlug) ?? null, [activeSlug, tiles]);
+  const activeReward = useMemo(() => getEcosystemRewardDefinition(activeTile?.rewardId), [activeTile?.rewardId]);
 
   function getTileBadgeLabel(tile: CollectorGridTile) {
     if (tile.center) {
@@ -1216,11 +1317,20 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
 
                     <CollectorChallenge tile={activeTile} onUnlock={() => setEasterEggUnlocked(true)} />
 
-                    <section className={cx("wd-grid-modal__easter-egg", easterEggUnlocked && "wd-grid-modal__easter-egg--unlocked")}>
-                      <p className="wd-grid-modal__challenge-title">Easter egg</p>
-                      <h3>{easterEggUnlocked ? activeTile.easterEggTitle : "Locked until the challenge lands"}</h3>
-                      <p>{easterEggUnlocked ? activeTile.easterEggBody : "Beat the game to reveal the hidden note for this chapter."}</p>
-                    </section>
+                    {activeReward ? (
+                      <EcosystemRewardClaimCard
+                        reward={activeReward}
+                        source={`collector-grid:${activeTile.slug}`}
+                        unlocked={easterEggUnlocked}
+                        className="wd-grid-modal__reward-claim"
+                      />
+                    ) : (
+                      <section className={cx("wd-grid-modal__easter-egg", easterEggUnlocked && "wd-grid-modal__easter-egg--unlocked")}>
+                        <p className="wd-grid-modal__challenge-title">Easter egg</p>
+                        <h3>{easterEggUnlocked ? activeTile.easterEggTitle : "Locked until the challenge lands"}</h3>
+                        <p>{easterEggUnlocked ? activeTile.easterEggBody : "Beat the game to reveal the hidden note for this chapter."}</p>
+                      </section>
+                    )}
 
                     <WallsDevineCollectorAccess
                       className="wd-grid-modal__signup"

@@ -3,8 +3,8 @@
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import { createPortal } from "react-dom";
-import { type CSSProperties, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-import { FiMusic } from "react-icons/fi";
+import { type ChangeEvent, type CSSProperties, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { FiMusic, FiPause, FiPlay } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { SiApplemusic, SiBandcamp, SiSoundcloud, SiSpotify, SiTidal, SiYoutubemusic } from "react-icons/si";
 
@@ -611,6 +611,18 @@ function formatTrackNumber(trackNumber: number) {
   return String(trackNumber).padStart(2, "0");
 }
 
+function formatPlaybackTime(totalSeconds: number) {
+  if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
+    return "0:00";
+  }
+
+  const roundedSeconds = Math.floor(totalSeconds);
+  const minutes = Math.floor(roundedSeconds / 60);
+  const seconds = String(roundedSeconds % 60).padStart(2, "0");
+
+  return `${minutes}:${seconds}`;
+}
+
 function getTrackAudioSrc(fileName: string) {
   return `/walls-devine/releases/volume1/${encodeURIComponent(fileName)}`;
 }
@@ -648,6 +660,8 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const [isDismissed, setIsDismissed] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTimeSeconds, setCurrentTimeSeconds] = useState(0);
+  const [durationSeconds, setDurationSeconds] = useState(0);
   const [shareOrigin, setShareOrigin] = useState("");
   const [supportsNativeShare, setSupportsNativeShare] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
@@ -677,6 +691,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const activePosterImage = trackPosterImages[activeTrack.trackNumber] ?? volOneImage;
   const activePosterAlt = `${activeTrack.title} cover artwork`;
   const activeTrackMeta = `Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase} · ${activeTrack.duration}`;
+  const activeTrackAlbumMeta = `Walls/Devine Volume 1 · Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase}`;
   const activeVisualizerTheme = trackVisualizerThemes[activeTrack.trackNumber] ?? trackVisualizerThemes[1];
   const activeShareTitle = `${activeTrack.title} · Walls/Devine Volume 1`;
   const activeShareText = buildListeningRoomShareText(activeTrack);
@@ -685,6 +700,8 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const activeStreamingLinks = buildListeningRoomStreamingLinks(activeTrack);
   const hasDirectStreamingLinks = activeStreamingLinks.some((platform) => platform.isDirect);
   const isDockVisible = isCollapsed && showDockWhenCollapsed && !isDismissed;
+  const currentProgressSeconds = durationSeconds > 0 ? Math.min(currentTimeSeconds, durationSeconds) : 0;
+  const progressPercent = durationSeconds > 0 ? (currentProgressSeconds / durationSeconds) * 100 : 0;
 
   if (typeof document !== "undefined" && !audioPortalHostRef.current) {
     const audioHost = document.createElement("div");
@@ -796,7 +813,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
       setIsDismissed(false);
       setIsCollapsed(true);
 
-      // Always boot the listening-room dock at the default top-right anchor.
+      // Always boot the listening-room dock at its default CSS anchor.
       // Persisted drag coordinates can place it off-screen between sessions.
       setDockPosition(null);
     } catch {
@@ -1053,9 +1070,21 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
       setIsPlaying(false);
     };
 
+    const handleTimeUpdate = () => {
+      setCurrentTimeSeconds(audioElement.currentTime);
+    };
+
+    const handleDurationChange = () => {
+      const nextDuration = Number.isFinite(audioElement.duration) ? audioElement.duration : 0;
+      setDurationSeconds(nextDuration);
+    };
+
     audioElement.addEventListener("play", handlePlay);
     audioElement.addEventListener("pause", handlePause);
     audioElement.addEventListener("ended", handlePause);
+    audioElement.addEventListener("timeupdate", handleTimeUpdate);
+    audioElement.addEventListener("loadedmetadata", handleDurationChange);
+    audioElement.addEventListener("durationchange", handleDurationChange);
 
     if (!audioElement.paused) {
       void handlePlay();
@@ -1063,12 +1092,23 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
       setIsPlaying(false);
     }
 
+    handleTimeUpdate();
+    handleDurationChange();
+
     return () => {
       audioElement.removeEventListener("play", handlePlay);
       audioElement.removeEventListener("pause", handlePause);
       audioElement.removeEventListener("ended", handlePause);
+      audioElement.removeEventListener("timeupdate", handleTimeUpdate);
+      audioElement.removeEventListener("loadedmetadata", handleDurationChange);
+      audioElement.removeEventListener("durationchange", handleDurationChange);
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    setCurrentTimeSeconds(0);
+    setDurationSeconds(0);
+  }, [activeSrc]);
 
   useEffect(() => {
     if (!isOpen || !visualizerCanvasRef.current) {
@@ -1176,6 +1216,22 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
     }
   }
 
+  async function togglePlayback() {
+    const audioElement = audioRef.current;
+
+    if (!audioElement) {
+      return;
+    }
+
+    if (audioElement.paused) {
+      await playCurrentTrack();
+      return;
+    }
+
+    audioElement.pause();
+    setIsPlaying(false);
+  }
+
   function stopCurrentTrack() {
     const audioElement = audioRef.current;
 
@@ -1249,6 +1305,18 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
     }
   }
 
+  function handleProgressChange(event: ChangeEvent<HTMLInputElement>) {
+    const audioElement = audioRef.current;
+    const nextTime = Number(event.target.value);
+
+    if (!audioElement || Number.isNaN(nextTime)) {
+      return;
+    }
+
+    audioElement.currentTime = nextTime;
+    setCurrentTimeSeconds(nextTime);
+  }
+
   function handleDockActionPointerDown(event: React.PointerEvent<HTMLElement>) {
     event.stopPropagation();
   }
@@ -1284,7 +1352,14 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
             <>
               {audioPortalHostRef.current
                 ? createPortal(
-                    <audio ref={audioRef} preload="metadata" src={activeSrc} className="wd-player-audio" controls controlsList="nodownload noplaybackrate">
+                    <audio
+                      ref={audioRef}
+                      preload="metadata"
+                      src={activeSrc}
+                      className="wd-player-audio"
+                      controls={isOpen}
+                      controlsList="nodownload noplaybackrate"
+                    >
                       Your browser does not support audio playback.
                     </audio>,
                     audioPortalHostRef.current
@@ -1292,73 +1367,105 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                 : null}
 
               {isDockVisible ? (
-                <div
-                  ref={dockRef}
-                  className={cx("wd-player-dock", isDraggingDock && "wd-player-dock--dragging")}
-                  style={dockPosition ? { left: `${dockPosition.x}px`, top: `${dockPosition.y}px`, right: "auto", bottom: "auto" } : undefined}
-                  onPointerDown={handleDockPointerDown}
-                >
-                  <div className="wd-player-dock__grabber" aria-hidden="true">
-                    <span className="wd-player-dock__grabber-pill" />
-                    <span className="wd-player-dock__grabber-label">Drag player</span>
+                <div className="wd-player-dock">
+                  <div className="wd-player-dock__left">
+                    <div className="wd-player-dock__summary">
+                      <span>Walls/Devine Volume 1</span>
+                      <strong>{activeTrack.title}</strong>
+                      <p>{activeTrackAlbumMeta}</p>
+                    </div>
                   </div>
 
-                  <div className="wd-player-dock__summary">
-                    <span>Listening room</span>
-                    <strong>{activeTrack.title}</strong>
-                    <p>{activeTrackMeta}</p>
-                  </div>
+                  <div className="wd-player-dock__center">
+                    <button
+                      type="button"
+                      className="wd-player-dock__transport-button"
+                      onClick={() => {
+                        void togglePlayback();
+                      }}
+                      aria-label={isPlaying ? `Pause ${activeTrack.title}` : `Play ${activeTrack.title}`}
+                    >
+                      {isPlaying ? <FiPause aria-hidden="true" /> : <FiPlay aria-hidden="true" />}
+                    </button>
 
-                  <div ref={dockAudioSlotRef} className="wd-player-dock__audio-slot" onPointerDown={handleDockActionPointerDown} />
-
-                  <div className="wd-player-dock__share" onPointerDown={handleDockActionPointerDown}>
-                    <div className="wd-player-dock__share-head">
-                      <span>Currently playing</span>
-                      <div className="wd-player-dock__share-actions">
-                        <button
-                          type="button"
-                          className="wd-player-dock__icon-button"
-                          onClick={handleShareTrack}
-                          disabled={!activeShareUrl}
-                          aria-label={supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Share track") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
-                          title={supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Share track") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
-                        >
-                          {shareFeedback !== "idle" ? (
-                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="2.5 8 6.5 12 13.5 4" /></svg>
-                          ) : supportsNativeShare ? (
-                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 10V3M5 6l3-3 3 3" /><path d="M3 10v3a1 1 0 001 1h8a1 1 0 001-1v-3" /></svg>
-                          ) : (
-                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6.5 9.5a3.5 3.5 0 005 0l2-2a3.5 3.5 0 00-5-5L7 4" /><path d="M9.5 6.5a3.5 3.5 0 00-5 0L2.5 8.5a3.5 3.5 0 005 5L9 12" /></svg>
-                          )}
-                        </button>
-                        <button
-                          type="button"
-                          className="wd-player-dock__icon-button"
-                          onClick={handleCopyTrackLink}
-                          disabled={!activeShareUrl}
-                          aria-label={shareFeedback === "copied" ? "Link copied" : "Copy direct link"}
-                          title={shareFeedback === "copied" ? "Link copied" : "Copy direct link"}
-                        >
-                          {shareFeedback === "copied" ? (
-                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="2.5 8 6.5 12 13.5 4" /></svg>
-                          ) : (
-                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6.5 9.5a3.5 3.5 0 005 0l2-2a3.5 3.5 0 00-5-5L7 4" /><path d="M9.5 6.5a3.5 3.5 0 00-5 0L2.5 8.5a3.5 3.5 0 005 5L9 12" /></svg>
-                          )}
-                        </button>
-                        <button
-                          type="button"
-                          className="wd-player-dock__button wd-player-dock__button--toggle"
-                          onClick={() => setIsDockShareExpanded((current) => !current)}
-                          aria-expanded={isDockShareExpanded}
-                          aria-controls="wd-player-dock-share-platforms"
-                        >
-                          {isDockShareExpanded ? "Hide apps" : "Apps"}
-                        </button>
+                    <div className="wd-player-dock__transport">
+                      <div className="wd-player-dock__progress-wrap">
+                        <span className="wd-player-dock__time">{formatPlaybackTime(currentProgressSeconds)}</span>
+                        <input
+                          type="range"
+                          min={0}
+                          max={durationSeconds || 0}
+                          step="0.1"
+                          value={currentProgressSeconds}
+                          className="wd-player-dock__progress-input"
+                          aria-label={`Seek through ${activeTrack.title}`}
+                          onChange={handleProgressChange}
+                          style={{ "--wd-player-progress": `${progressPercent}%` } as CSSProperties}
+                        />
+                        <span className="wd-player-dock__time">{durationSeconds > 0 ? formatPlaybackTime(durationSeconds) : activeTrack.duration}</span>
                       </div>
                     </div>
 
+                    <div ref={dockAudioSlotRef} className="wd-player-dock__audio-slot" />
+                  </div>
+
+                  <div className="wd-player-dock__right" onPointerDown={handleDockActionPointerDown}>
+                    <div className="wd-player-dock__actions">
+                      <button type="button" className="wd-player-dock__button" onClick={reopenPlayer}>
+                        Currently Playing
+                      </button>
+                      <button
+                        type="button"
+                        className="wd-player-dock__button wd-player-dock__button--toggle"
+                        onClick={() => setIsDockShareExpanded((current) => !current)}
+                        aria-expanded={isDockShareExpanded}
+                        aria-controls="wd-player-dock-share-platforms"
+                      >
+                        {isDockShareExpanded ? "Hide Apps" : "Apps"}
+                      </button>
+                      <button type="button" className="wd-player-dock__button wd-player-dock__button--close" onClick={dismissPlayer}>
+                        Hide Player
+                      </button>
+                    </div>
+
                     {isDockShareExpanded ? (
-                      <>
+                      <div className="wd-player-dock__apps-panel">
+                        <div className="wd-player-dock__apps-head">
+                          <span>Music apps</span>
+                          <div className="wd-player-dock__share-actions">
+                            <button
+                              type="button"
+                              className="wd-player-dock__icon-button"
+                              onClick={handleShareTrack}
+                              disabled={!activeShareUrl}
+                              aria-label={supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Share track") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
+                              title={supportsNativeShare ? (shareFeedback === "shared" ? "Shared" : "Share track") : shareFeedback === "copied" ? "Link copied" : "Copy room link"}
+                            >
+                              {shareFeedback !== "idle" ? (
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="2.5 8 6.5 12 13.5 4" /></svg>
+                              ) : supportsNativeShare ? (
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 10V3M5 6l3-3 3 3" /><path d="M3 10v3a1 1 0 001 1h8a1 1 0 001-1v-3" /></svg>
+                              ) : (
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6.5 9.5a3.5 3.5 0 005 0l2-2a3.5 3.5 0 00-5-5L7 4" /><path d="M9.5 6.5a3.5 3.5 0 00-5 0L2.5 8.5a3.5 3.5 0 005 5L9 12" /></svg>
+                              )}
+                            </button>
+                            <button
+                              type="button"
+                              className="wd-player-dock__icon-button"
+                              onClick={handleCopyTrackLink}
+                              disabled={!activeShareUrl}
+                              aria-label={shareFeedback === "copied" ? "Link copied" : "Copy direct link"}
+                              title={shareFeedback === "copied" ? "Link copied" : "Copy direct link"}
+                            >
+                              {shareFeedback === "copied" ? (
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="2.5 8 6.5 12 13.5 4" /></svg>
+                              ) : (
+                                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6.5 9.5a3.5 3.5 0 005 0l2-2a3.5 3.5 0 00-5-5L7 4" /><path d="M9.5 6.5a3.5 3.5 0 00-5 0L2.5 8.5a3.5 3.5 0 005 5L9 12" /></svg>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+
                         <div id="wd-player-dock-share-platforms" className="wd-player-dock__share-platforms" aria-label={`Open ${activeTrack.title} on music platforms`}>
                           {activeStreamingLinks.map((platform) => (
                             <a
@@ -1379,17 +1486,8 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                         <p className="wd-player-dock__share-note">
                           {hasDirectStreamingLinks ? "Direct song links are live where they have already been mapped." : "Platform chips currently open search results. They will switch to direct song pages as platform URLs are added."}
                         </p>
-                      </>
+                      </div>
                     ) : null}
-                  </div>
-
-                  <div className="wd-player-dock__actions" onPointerDown={handleDockActionPointerDown}>
-                    <button type="button" className="wd-player-dock__tagline" onClick={reopenPlayer}>
-                      Enter the full Listening Room
-                    </button>
-                    <button type="button" className="wd-player-dock__button wd-player-dock__button--close" onClick={dismissPlayer}>
-                      Hide player
-                    </button>
                   </div>
                 </div>
               ) : null}

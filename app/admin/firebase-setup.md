@@ -10,6 +10,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - Public note copy: Firestore `adminProjects/walls-devine/publicContent/collectorHeroNote` stores the editable collector note shown on the public Volume 1 hero.
 - Public jump-link hub: Firestore `adminProjects/walls-devine/publicContent/linkHub` stores the editable Linktree-style links page at `/links`.
 - Lead capture: Firestore `ecosystemLeads/{leadId}` stores public collector-list signups plus richer guided-intake booking leads from the site experience.
+- Reward pipeline: Firestore `collectors/{collectorKey}` stores reusable collector identities and counts, while `rewardClaims/{claimId}` queues any ecosystem reward claim for fulfillment workflows.
 - Longform content: Firestore stores markdown docs at `adminProjects/walls-devine/markdownFiles/{collection}--{slug}`.
 - Legacy migration: Firebase Storage at `admin-projects/walls-devine/{collection}/{slug}.md` is only read when older markdown needs to be migrated into Firestore.
 - Bootstrap source: The local JSON and markdown files remain in the repo only so `/api/admin/bootstrap` can seed Firebase the first time the remote layer is empty.
@@ -44,6 +45,8 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - `adminProjects/walls-devine/publicContent/collectorHeroNote`
 - `adminProjects/walls-devine/publicContent/linkHub`
 - `ecosystemLeads/{leadId}`
+- `collectors/{collectorKey}`
+- `rewardClaims/{claimId}`
 
 ### Firestore markdown docs
 
@@ -63,10 +66,23 @@ Run these from the repo root after confirming the Firebase CLI is pointed at `cr
 firebase deploy --only firestore:rules,firestore:indexes,storage
 ```
 
+If this is the first time you are wiring the universal reward workflow, initialize Functions first:
+
+```bash
+firebase init functions
+npm --prefix functions install
+```
+
 If you only changed rules and not indexes, this smaller command is enough:
 
 ```bash
 firebase deploy --only firestore:rules,storage
+```
+
+To ship the reward trigger with the rest of the Firebase contract:
+
+```bash
+firebase deploy --only functions,firestore:rules,firestore:indexes,storage
 ```
 
 ## Bootstrap behavior
@@ -88,3 +104,5 @@ firebase deploy --only firestore:rules,storage
 7. Confirm the booking engine in `/admin` shows the seeded August-November windows and target list.
 8. Save one Instagram draft and one journal entry, then verify Firestore documents appear under `adminProjects/walls-devine/markdownFiles/...`.
 9. Refresh `/admin` and confirm the remote content loads without re-bootstrap.
+10. Beat the Joint Queen reward flow, submit an email or Collector ID, and confirm the collector doc and reward claim doc appear in Firestore.
+11. Deploy Functions and confirm the trigger writes a `rewardDispatchLogs/{claimId}` document and flips `rewardClaims/{claimId}.status` to `distributed`.

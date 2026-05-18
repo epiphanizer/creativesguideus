@@ -810,6 +810,7 @@ export function AdminConsole() {
     () => jumpLinks.filter((link) => link.tab === activeWorkspaceTab && moduleStatusById[link.id] === "ready"),
     [jumpLinks, activeWorkspaceTab, moduleStatusById]
   );
+  const activeBacklogId = getBacklogElementId(activeWorkspaceTab);
   const isResolvingAuthorizedSession = Boolean(authUser) && dataLoading && !isAuthorized && !panelError;
   const isRefreshingAuthorizedAdmin = Boolean(authUser) && isAuthorized && dataLoading;
 
@@ -856,6 +857,14 @@ export function AdminConsole() {
 
   function handleWorkspaceTabChange(tabId: AdminWorkspaceTabId) {
     setActiveWorkspaceTab(tabId);
+  }
+
+  function handleJumpToBacklog(tabId: AdminWorkspaceTabId = activeWorkspaceTab) {
+    const backlogId = getBacklogElementId(tabId);
+
+    setActiveWorkspaceTab(tabId);
+    window.history.replaceState(null, "", `#${backlogId}`);
+    scrollToElement(backlogId);
   }
 
   function collectionHasDuplicateSlug(collection: AdminMarkdownCollection, slug: string, currentSlug?: string) {
@@ -1653,8 +1662,24 @@ export function AdminConsole() {
                 : "Use the agency desk to triage lead generation, Bong Tour context, and backend readiness without drowning in release-only detail."}
             </p>
           </div>
+        </div>
+      </SectionShell>
 
-          <div className="cg-admin__quick-actions">
+      <div className="cg-admin__workspace-layout">
+        <aside className="cg-admin__workspace-drawer cg-admin__panel" aria-label={`${activeWorkspaceTabConfig.label} workspace drawer`}>
+          <div className="cg-admin__workspace-drawer-head">
+            <div>
+              <strong>{activeWorkspaceTabConfig.label}</strong>
+              <h2>{activeWorkspaceTabConfig.title}</h2>
+            </div>
+            <p>
+              {activeWorkspaceTab === "walls-devine"
+                ? "Use this drawer to jump between release ops, editorial, booking, and QA without keeping every overview card open at once."
+                : "Keep agency-wide triage tight here: leads, listening traffic, and backend readiness stay one click away while the main column stays focused."}
+            </p>
+          </div>
+
+          <div className="cg-admin__workspace-drawer-actions">
             {activeWorkspaceTab === "walls-devine" ? (
               <>
                 {isSectionReady("admin-journals") ? <Button type="button" onClick={() => handleJumpToSection("admin-journals")}>Write new journal</Button> : null}
@@ -1685,72 +1710,51 @@ export function AdminConsole() {
           </div>
 
           {visibleDashboardModules.length ? (
-            <div className="cg-admin__module-grid cg-admin__module-grid--ops">
-              {visibleDashboardModules.map((module) => (
-                <article key={module.id} className="cg-admin__panel cg-admin__module-card">
-                  <div className="cg-admin__module-head">
-                    <h2>{module.title}</h2>
-                    <span className="cg-admin__status-badge cg-admin__status-badge--ready">Ready</span>
-                  </div>
-                  <strong className="cg-admin__module-stat">{module.summary}</strong>
-                  <p>{module.detail}</p>
-                  <div className="cg-admin__module-actions">
-                    <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection(module.id)}>
-                      {module.actionLabel}
-                    </Button>
-                  </div>
-                </article>
-              ))}
-            </div>
+            <nav className="cg-admin__workspace-nav" aria-label={`${activeWorkspaceTabConfig.label} modules`}>
+              {visibleDashboardModules.map((module) => {
+                const moduleLink = visibleJumpLinks.find((link) => link.id === module.id);
+
+                return (
+                  <button key={module.id} type="button" className="cg-admin__workspace-nav-item" onClick={() => handleJumpToSection(module.id)}>
+                    <span>{module.title}</span>
+                    <strong>{module.summary}</strong>
+                    <p>{moduleLink?.detail ?? module.detail}</p>
+                  </button>
+                );
+              })}
+            </nav>
           ) : (
-            <article className="cg-admin__panel cg-admin__backlog-empty">
+            <article className="cg-admin__backlog-empty">
               <h2>Focus lane cleared</h2>
-              <p>Nothing in this tab is fully live yet. The unfinished surfaces are parked in backlog below until they are complete.</p>
+              <p>Nothing in this tab is fully live yet. The unfinished surfaces stay parked in backlog below.</p>
             </article>
           )}
 
-          {visibleJumpLinks.length ? (
-            <nav className="cg-admin__jump-bar" aria-label="Admin workspace sections">
-              {visibleJumpLinks.map((link) => (
-                <button
-                  key={link.id}
-                  type="button"
-                  className={["cg-admin__jump-chip", openSections[link.id] ? "cg-admin__jump-chip--active" : ""].filter(Boolean).join(" ")}
-                  onClick={() => handleJumpToSection(link.id)}
-                >
-                  <strong>{link.label}</strong>
-                  <span>{link.detail}</span>
-                </button>
-              ))}
-            </nav>
-          ) : null}
-
           {backlogDashboardModules.length ? (
-            <article id={getBacklogElementId(activeWorkspaceTab)} className="cg-admin__panel cg-admin__backlog-panel">
-              <div className="cg-admin__backlog-head">
+            <div className="cg-admin__workspace-backlog-drawer">
+              <div className="cg-admin__workspace-backlog-drawer-head">
                 <div>
-                  <h2>Backlog</h2>
-                  <p>Hidden from the active workspace until each surface is fully live. Nothing here has been removed from code.</p>
+                  <strong>Backlog</strong>
+                  <p>{backlogDashboardModules.length} parked for later</p>
                 </div>
-                <p className="cg-admin__path-note">{backlogDashboardModules.length} parked for later</p>
+                <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToBacklog(activeWorkspaceTab)}>
+                  Open backlog
+                </Button>
               </div>
 
-              <div className="cg-admin__backlog-list">
+              <ul className="cg-admin__workspace-backlog-list">
                 {backlogDashboardModules.map((module) => (
-                  <article key={module.id} className="cg-admin__backlog-item">
-                    <div className="cg-admin__module-head">
-                      <h3>{module.title}</h3>
-                      <span className="cg-admin__status-badge cg-admin__status-badge--pending">Backlog</span>
-                    </div>
-                    <strong className="cg-admin__module-stat">{module.summary}</strong>
-                    <p>{module.detail}</p>
-                  </article>
+                  <li key={module.id} className="cg-admin__workspace-backlog-item">
+                    <strong>{module.title}</strong>
+                    <span>{module.summary}</span>
+                  </li>
                 ))}
-              </div>
-            </article>
+              </ul>
+            </div>
           ) : null}
-        </div>
-      </SectionShell>
+        </aside>
+
+        <div className="cg-admin__workspace-main">
 
       {activeWorkspaceTab === "walls-devine" ? (
         <>
@@ -2407,6 +2411,33 @@ export function AdminConsole() {
 
         </>
       ) : null}
+
+          {backlogDashboardModules.length ? (
+            <article id={activeBacklogId} className="cg-admin__panel cg-admin__backlog-panel">
+              <div className="cg-admin__backlog-head">
+                <div>
+                  <h2>Backlog</h2>
+                  <p>Hidden from the active workspace until each surface is fully live. Nothing here has been removed from code.</p>
+                </div>
+                <p className="cg-admin__path-note">{backlogDashboardModules.length} parked for later</p>
+              </div>
+
+              <div className="cg-admin__backlog-list">
+                {backlogDashboardModules.map((module) => (
+                  <article key={module.id} className="cg-admin__backlog-item">
+                    <div className="cg-admin__module-head">
+                      <h3>{module.title}</h3>
+                      <span className="cg-admin__status-badge cg-admin__status-badge--pending">Backlog</span>
+                    </div>
+                    <strong className="cg-admin__module-stat">{module.summary}</strong>
+                    <p>{module.detail}</p>
+                  </article>
+                ))}
+              </div>
+            </article>
+          ) : null}
+        </div>
+      </div>
     </main>
   );
 }
