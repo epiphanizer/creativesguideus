@@ -6,10 +6,10 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 
 - Auth: Firebase Auth email/password signs the editor into the browser session.
 - Authorization: Firestore `adminUsers/{uid}` decides whether a signed-in user is an active editor.
-- Structured content: Firestore `adminProjects/walls-devine` stores the release plan object.
+- Structured content: Firestore `adminProjects/walls-devine` stores the release plan object and the booking board field.
 - Public note copy: Firestore `adminProjects/walls-devine/publicContent/collectorHeroNote` stores the editable collector note shown on the public Volume 1 hero.
 - Public jump-link hub: Firestore `adminProjects/walls-devine/publicContent/linkHub` stores the editable Linktree-style links page at `/links`.
-- Lead capture: Firestore `ecosystemLeads/{leadId}` stores public collector-list signups from the site experience.
+- Lead capture: Firestore `ecosystemLeads/{leadId}` stores public collector-list signups plus richer guided-intake booking leads from the site experience.
 - Longform content: Firestore stores markdown docs at `adminProjects/walls-devine/markdownFiles/{collection}--{slug}`.
 - Legacy migration: Firebase Storage at `admin-projects/walls-devine/{collection}/{slug}.md` is only read when older markdown needs to be migrated into Firestore.
 - Bootstrap source: The local JSON and markdown files remain in the repo only so `/api/admin/bootstrap` can seed Firebase the first time the remote layer is empty.
@@ -71,7 +71,7 @@ firebase deploy --only firestore:rules,storage
 
 ## Bootstrap behavior
 
-- The first authorized login checks Firestore for the Walls Devine admin data.
+- The first authorized login checks Firestore for the Walls Devine admin data, including the booking board.
 - If the Firestore markdown collection is empty, the client checks legacy Storage and migrates any older markdown into Firestore.
 - If the release plan or Firestore markdown docs are still missing after that, `/api/admin/bootstrap` returns the repo copies.
 - The client seeds Firestore, then reloads from Firebase.
@@ -84,6 +84,7 @@ firebase deploy --only firestore:rules,storage
 3. Toggle a release checklist item and verify `adminProjects/walls-devine` updates.
 4. Edit the collector note in `/admin`, refresh `/walls-devine`, and confirm the public hero note updates from Firestore.
 5. Edit the link hub in `/admin`, refresh `/links`, and confirm the public link page updates from Firestore.
-6. Submit one collector signup from the public site and verify a document appears in `ecosystemLeads`.
-7. Save one Instagram draft and one journal entry, then verify Firestore documents appear under `adminProjects/walls-devine/markdownFiles/...`.
-8. Refresh `/admin` and confirm the remote content loads without re-bootstrap.
+6. Submit one collector signup or guided booking intake from the public site and verify a document appears in `ecosystemLeads` with the richer booking fields when applicable.
+7. Confirm the booking engine in `/admin` shows the seeded August-November windows and target list.
+8. Save one Instagram draft and one journal entry, then verify Firestore documents appear under `adminProjects/walls-devine/markdownFiles/...`.
+9. Refresh `/admin` and confirm the remote content loads without re-bootstrap.

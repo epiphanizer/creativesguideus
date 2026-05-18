@@ -61,6 +61,87 @@ export type LinkHubContent = {
   links: LinkHubLink[];
 };
 
+export type BookingTargetCategory = "venue" | "radio" | "podcast" | "festival" | "press";
+
+export type BookingTargetStatus = "seeded" | "researching" | "outreach-ready" | "contacted" | "in-conversation" | "hold" | "confirmed";
+
+export type BookingTargetPriority = "critical" | "high" | "medium";
+
+export type BookingContactMethod = "email" | "form" | "web" | "instagram" | "phone";
+
+export type BookingContactResearchStatus = "verified" | "partial" | "pending";
+
+export type BookingBoardGoal = {
+  title: string;
+  summary: string;
+  lockByDate: string;
+  bookThroughMonths: string[];
+  priorityMarkets: string[];
+  successMetric: string;
+  nextMoves: string[];
+};
+
+export type BookingAvailabilityWindow = {
+  id: string;
+  label: string;
+  startDate: string;
+  endDate: string;
+  market: string;
+  city: string;
+  state: string;
+  purpose: string;
+  bookingTypes: string[];
+  notes: string;
+};
+
+export type BookingTargetContact = {
+  label: string;
+  role: string;
+  method: BookingContactMethod;
+  value: string;
+  sourceUrl: string;
+  note: string;
+  verifiedAt: string;
+};
+
+export type BookingTarget = {
+  id: string;
+  name: string;
+  category: BookingTargetCategory;
+  city: string;
+  state: string;
+  status: BookingTargetStatus;
+  priority: BookingTargetPriority;
+  targetWindowId: string;
+  desiredOutcome: string;
+  fitNote: string;
+  notes: string;
+  sourceUrl: string;
+  contactStatus: BookingContactResearchStatus;
+  contacts: BookingTargetContact[];
+  tags: string[];
+};
+
+export type BookingProspect = {
+  id: string;
+  label: string;
+  market: string;
+  targetWindowId: string;
+  types: string[];
+  rationale: string;
+  searchHints: string[];
+  notes: string;
+  sourceUrl: string;
+};
+
+export type BookingBoard = {
+  updatedAt: string;
+  goal: BookingBoardGoal;
+  availability: BookingAvailabilityWindow[];
+  targets: BookingTarget[];
+  prospects: BookingProspect[];
+};
+
 export type AdminMarkdownFile = {
   slug: string;
   title: string;
@@ -103,6 +184,22 @@ export type EcosystemLead = {
   fullName: string;
   source: string;
   interest: string;
+  company: string;
+  projectTitle: string;
+  brief: string;
+  contextId: string;
+  inquiryType: string;
+  inquiryTypeLabel: string;
+  goal: string;
+  goalLabel: string;
+  surface: string;
+  surfaceLabel: string;
+  engagement: string;
+  engagementLabel: string;
+  timeline: string;
+  timelineLabel: string;
+  budgetRange: string;
+  budgetRangeLabel: string;
   createdAt: string;
   updatedAt: string;
   status: EcosystemLeadStatus;
@@ -139,6 +236,7 @@ export type ListeningRoomVisitInput = {
 
 export type WallsDevineAdminData = {
   plan: ReleasePlan;
+  bookingBoard: BookingBoard;
   instagramDrafts: AdminMarkdownFile[];
   journalEntries: AdminMarkdownFile[];
   collectorHeroNote: WallsDevineCollectorHeroNote;
@@ -146,4 +244,5 @@ export type WallsDevineAdminData = {
   storageBacked?: boolean;
   contentBackend?: "firestore" | "bootstrap";
   markdownInitialized?: boolean;
+  bookingBoardInitialized?: boolean;
 };

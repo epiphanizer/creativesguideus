@@ -35,6 +35,10 @@ function normalizeLeadMeta(value: string, maxLength: number) {
     .slice(0, maxLength);
 }
 
+function readOptionalLeadField(value: unknown) {
+  return typeof value === "string" ? value : "";
+}
+
 function mapLeadDocument(id: string, data: Partial<Omit<EcosystemLead, "id">>) {
   return {
     id,
@@ -42,6 +46,22 @@ function mapLeadDocument(id: string, data: Partial<Omit<EcosystemLead, "id">>) {
     fullName: typeof data.fullName === "string" ? data.fullName : "",
     source: typeof data.source === "string" ? data.source : "",
     interest: typeof data.interest === "string" ? data.interest : "",
+    company: readOptionalLeadField(data.company),
+    projectTitle: readOptionalLeadField(data.projectTitle),
+    brief: readOptionalLeadField(data.brief),
+    contextId: readOptionalLeadField(data.contextId),
+    inquiryType: readOptionalLeadField(data.inquiryType),
+    inquiryTypeLabel: readOptionalLeadField(data.inquiryTypeLabel),
+    goal: readOptionalLeadField(data.goal),
+    goalLabel: readOptionalLeadField(data.goalLabel),
+    surface: readOptionalLeadField(data.surface),
+    surfaceLabel: readOptionalLeadField(data.surfaceLabel),
+    engagement: readOptionalLeadField(data.engagement),
+    engagementLabel: readOptionalLeadField(data.engagementLabel),
+    timeline: readOptionalLeadField(data.timeline),
+    timelineLabel: readOptionalLeadField(data.timelineLabel),
+    budgetRange: readOptionalLeadField(data.budgetRange),
+    budgetRangeLabel: readOptionalLeadField(data.budgetRangeLabel),
     createdAt: typeof data.createdAt === "string" ? data.createdAt : "",
     updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : "",
     status: data.status === "new" ? data.status : "new",
@@ -70,6 +90,22 @@ export async function createEcosystemLead(input: EcosystemLeadInput) {
     fullName,
     source,
     interest,
+    company: "",
+    projectTitle: "",
+    brief: "",
+    contextId: "",
+    inquiryType: "",
+    inquiryTypeLabel: "",
+    goal: "",
+    goalLabel: "",
+    surface: "",
+    surfaceLabel: "",
+    engagement: "",
+    engagementLabel: "",
+    timeline: "",
+    timelineLabel: "",
+    budgetRange: "",
+    budgetRangeLabel: "",
     createdAt: timestamp,
     updatedAt: timestamp,
     status: "new",
@@ -81,7 +117,7 @@ export async function createEcosystemLead(input: EcosystemLeadInput) {
   return mapLeadDocument(docRef.id, payload);
 }
 
-export async function getEcosystemLeads(limitCount = 24) {
+export async function getEcosystemLeads(limitCount = 48) {
   const leadsQuery = query(getEcosystemLeadsCollection(), orderBy("createdAt", "desc"), limit(limitCount));
   const snapshot = await getDocs(leadsQuery);
 

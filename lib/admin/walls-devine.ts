@@ -2,6 +2,7 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData } from "./types";
+import { defaultBookingBoard } from "./booking-engine";
 
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
 import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
@@ -115,6 +116,7 @@ export async function getWallsDevineAdminData() {
 
   return {
     plan,
+    bookingBoard: defaultBookingBoard,
     instagramDrafts,
     journalEntries,
     collectorHeroNote: defaultWallsDevineCollectorHeroNote,

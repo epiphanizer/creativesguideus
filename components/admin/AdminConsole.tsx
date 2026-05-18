@@ -3,7 +3,8 @@
 import { type FormEvent, type ReactNode, useEffect, useMemo, useState, useTransition } from "react";
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 
-import type { AdminAudioAnalysis, AdminMarkdownCollection, EcosystemLead, LinkHubContent, ListeningRoomVisit, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
+import { buildBookingLeadMatches, defaultBookingBoard } from "@/lib/admin/booking-engine";
+import type { AdminAudioAnalysis, AdminMarkdownCollection, BookingTargetStatus, EcosystemLead, LinkHubContent, ListeningRoomVisit, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
 import {
   deleteFirebaseAdminMarkdownFile,
   getAdminUserProfile,
@@ -13,6 +14,7 @@ import {
   renameFirebaseAdminMarkdownFile,
   replaceAdminMarkdownFile,
   seedFirebaseWallsDevineAdminData,
+  updateFirebaseBookingBoard,
   updateFirebaseAdminMarkdownFile,
   updateFirebaseCollectorHeroNote,
   updateFirebaseLinkHub,
@@ -29,6 +31,7 @@ import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 
+import { AdminBookingEngine } from "./AdminBookingEngine";
 import { AdminLinkHubEditor } from "./AdminLinkHubEditor";
 import { AdminFirebaseStatus } from "./AdminFirebaseStatus";
 
@@ -37,6 +40,17 @@ type ContentSource = "pending" | "firebase" | "bootstrap";
 
 const collectorHeroNoteSaveKey = "collectorHeroNote";
 const linkHubSaveKey = "linkHub";
+const bookingTargetSaveKeyPrefix = "bookingTarget";
+
+const bookingTargetStatuses = new Set<BookingTargetStatus>([
+  "seeded",
+  "researching",
+  "outreach-ready",
+  "contacted",
+  "in-conversation",
+  "hold",
+  "confirmed"
+]);
 
 function groupChecklistByPhase(items: ReleasePlanChecklistItem[]) {
   const grouped = new Map<string, ReleasePlanChecklistItem[]>();
@@ -56,6 +70,14 @@ function getSaveNoticeKey(collection: AdminMarkdownCollection, slug: string) {
 
 function getCreateNoticeKey(collection: AdminMarkdownCollection) {
   return `create:${collection}`;
+}
+
+function getBookingTargetSaveKey(targetId: string) {
+  return `${bookingTargetSaveKeyPrefix}:${targetId}`;
+}
+
+function isBookingTargetStatus(value: string): value is BookingTargetStatus {
+  return bookingTargetStatuses.has(value as BookingTargetStatus);
 }
 
 function getMarkdownFiles(data: WallsDevineAdminData, collection: AdminMarkdownCollection) {
@@ -227,10 +249,46 @@ function formatListeningRoomQueryKey(queryKey: string) {
   }
 }
 
-type AdminWorkspaceSectionId = "admin-release-desk" | "admin-journals" | "admin-instagram-posts" | "admin-analytics" | "admin-assets" | "admin-health";
+function getLeadProgramLabel(lead: EcosystemLead) {
+  const haystack = [lead.source, lead.contextId, lead.projectTitle, lead.interest, lead.brief].join(" ").toLowerCase();
+
+  if (haystack.includes("bong-tour") || haystack.includes("bong tour")) {
+    return "Bong Tour";
+  }
+
+  if (
+    haystack.includes("walls-devine") ||
+    haystack.includes("walls devine") ||
+    lead.source === "walls-devine-hero" ||
+    lead.source.startsWith("collector-grid:")
+  ) {
+    return "Walls/Devine";
+  }
+
+  return "CGU / general";
+}
+
+function getLeadPrimaryContext(lead: EcosystemLead) {
+  return lead.projectTitle || lead.inquiryTypeLabel || lead.inquiryType || lead.interest || "General intake";
+}
+
+function formatLeadProgramSummary(label: string, count: number) {
+  return `${label} · ${count} lead${count === 1 ? "" : "s"}`;
+}
+
+type AdminWorkspaceSectionId = "admin-release-desk" | "admin-booking-engine" | "admin-journals" | "admin-instagram-posts" | "admin-analytics" | "admin-assets" | "admin-health";
+type AdminWorkspaceTabId = "walls-devine" | "agency";
+
+type AdminWorkspaceTab = {
+  id: AdminWorkspaceTabId;
+  label: string;
+  title: string;
+  description: string;
+};
 
 type DashboardModule = {
   id: AdminWorkspaceSectionId;
+  tab: AdminWorkspaceTabId;
   title: string;
   summary: string;
   detail: string;
@@ -240,8 +298,34 @@ type DashboardModule = {
 
 type AdminJumpLink = {
   id: AdminWorkspaceSectionId;
+  tab: AdminWorkspaceTabId;
   label: string;
   detail: string;
+};
+
+const adminWorkspaceTabs: AdminWorkspaceTab[] = [
+  {
+    id: "walls-devine",
+    label: "Walls/Devine",
+    title: "Release-world operations",
+    description: "Booking, release sequencing, editorial updates, and asset QA for the Walls/Devine world."
+  },
+  {
+    id: "agency",
+    label: "Agency-wide",
+    title: "CGU signal desk",
+    description: "Lead generation, Bong Tour and intake segmentation, listening traffic, and backend health across the broader studio."
+  }
+];
+
+const workspaceSectionTabs: Record<AdminWorkspaceSectionId, AdminWorkspaceTabId> = {
+  "admin-release-desk": "walls-devine",
+  "admin-booking-engine": "walls-devine",
+  "admin-journals": "walls-devine",
+  "admin-instagram-posts": "walls-devine",
+  "admin-analytics": "agency",
+  "admin-assets": "walls-devine",
+  "admin-health": "agency"
 };
 
 type AdminWorkspaceSectionProps = {
@@ -258,9 +342,10 @@ type AdminWorkspaceSectionProps = {
 
 const defaultOpenSections: Record<AdminWorkspaceSectionId, boolean> = {
   "admin-release-desk": true,
+  "admin-booking-engine": true,
   "admin-journals": true,
   "admin-instagram-posts": false,
-  "admin-analytics": false,
+  "admin-analytics": true,
   "admin-assets": false,
   "admin-health": false
 };
@@ -366,13 +451,15 @@ const fallbackAdminData: WallsDevineAdminData = {
       }
     ]
   },
+  bookingBoard: defaultBookingBoard,
   instagramDrafts: [],
   journalEntries: [],
   collectorHeroNote: defaultWallsDevineCollectorHeroNote,
   linkHub: defaultLinkHubContent,
   storageBacked: false,
   contentBackend: "bootstrap",
-  markdownInitialized: false
+  markdownInitialized: false,
+  bookingBoardInitialized: false
 };
 
 function countCompletedChecklist(items: ReleasePlanChecklistItem[]) {
@@ -384,6 +471,10 @@ function buildDashboardModules({
   adminData,
   isScaffoldMode,
   hasLiveMarkdownContent,
+  bookingTargetsCount,
+  bookingLeadCount,
+  bookingDeadline,
+  bookingCriticalCount,
   leadsCount,
   hasLeadsError,
   leadSources,
@@ -391,12 +482,18 @@ function buildDashboardModules({
   topVisitSong,
   audioCount,
   hasAudioError,
-  hasVisitsError
+  hasVisitsError,
+  contentSource,
+  hasPanelError
 }: {
   completedChecklist: number;
   adminData: WallsDevineAdminData;
   isScaffoldMode: boolean;
   hasLiveMarkdownContent: boolean;
+  bookingTargetsCount: number;
+  bookingLeadCount: number;
+  bookingDeadline: string;
+  bookingCriticalCount: number;
   leadsCount: number;
   hasLeadsError: boolean;
   leadSources: Array<[string, number]>;
@@ -405,12 +502,15 @@ function buildDashboardModules({
   audioCount: number;
   hasAudioError: boolean;
   hasVisitsError: boolean;
+  contentSource: ContentSource;
+  hasPanelError: boolean;
 }) {
   const topLeadSource = leadSources[0]?.[0];
 
   return [
     {
       id: "admin-release-desk",
+      tab: "walls-devine",
       title: "Release desk",
       summary: `${completedChecklist}/${adminData.plan.checklist.length} tasks complete`,
       detail: isScaffoldMode ? "Scaffold mode is holding the release desk visible while live content reconnects." : `Last release update ${new Date(adminData.plan.updatedAt).toLocaleString()}.`,
@@ -419,6 +519,7 @@ function buildDashboardModules({
     },
     {
       id: "admin-journals",
+      tab: "walls-devine",
       title: "Journal studio",
       summary: `${adminData.journalEntries.length} journal${adminData.journalEntries.length === 1 ? "" : "s"}`,
       detail: hasLiveMarkdownContent ? "Write, rename, publish, and prune song journals from one place." : "Waiting on Firestore markdown sync before journal CRUD is live.",
@@ -426,7 +527,19 @@ function buildDashboardModules({
       status: hasLiveMarkdownContent ? "ready" : "pending"
     },
     {
+      id: "admin-booking-engine",
+      tab: "walls-devine",
+      title: "Booking engine",
+      summary: `${bookingTargetsCount} target${bookingTargetsCount === 1 ? "" : "s"} · ${bookingLeadCount} booking-fit lead${bookingLeadCount === 1 ? "" : "s"}`,
+      detail: bookingTargetsCount
+        ? `Lock by ${new Date(bookingDeadline).toLocaleDateString()}. ${bookingCriticalCount} critical target${bookingCriticalCount === 1 ? "" : "s"} seeded.`
+        : "Seed the booking board before the lock date gets too close.",
+      actionLabel: "Open booking engine",
+      status: bookingTargetsCount ? "ready" : "pending"
+    },
+    {
       id: "admin-instagram-posts",
+      tab: "walls-devine",
       title: "Draft studio",
       summary: `${adminData.instagramDrafts.length} draft${adminData.instagramDrafts.length === 1 ? "" : "s"}`,
       detail: hasLiveMarkdownContent ? "Keep release copy editable without touching repo files." : "Draft CRUD will unlock once the markdown collection finishes hydrating.",
@@ -435,7 +548,8 @@ function buildDashboardModules({
     },
     {
       id: "admin-analytics",
-      title: "Analytics",
+      tab: "agency",
+      title: "Agency signal desk",
       summary: `${leadsCount} leads · ${visitsCount} visits`,
       detail:
         hasLeadsError || hasVisitsError
@@ -444,17 +558,27 @@ function buildDashboardModules({
             ? `Top lead source: ${formatLeadSource(topLeadSource)}.`
             : topVisitSong
               ? `Top listening-room arrival: ${topVisitSong}.`
-              : "Collector and listening-room activity will land here.",
-      actionLabel: "Open analytics",
+              : "Lead generation and listening-room activity will land here.",
+      actionLabel: "Open signal desk",
       status: hasLeadsError || hasVisitsError ? "pending" : "ready"
     },
     {
       id: "admin-assets",
+      tab: "walls-devine",
       title: "Assets & QA",
       summary: `${audioCount} WAV file${audioCount === 1 ? "" : "s"} inspected`,
       detail: hasAudioError ? "Audio inspection reported an issue. Use refresh to retry." : audioCount ? "Server-side file inspection is returning metadata." : "Run refresh to inspect the live release WAVs.",
       actionLabel: "Open assets",
       status: hasAudioError ? "pending" : "ready"
+    },
+    {
+      id: "admin-health",
+      tab: "agency",
+      title: "Backend health",
+      summary: contentSource === "bootstrap" ? "Fallback mode" : contentSource === "firebase" ? "Firebase live" : "Awaiting backend",
+      detail: hasPanelError ? "One or more auth or content checks need attention." : "Auth gate, content source, and migration readiness are available here.",
+      actionLabel: "Open backend health",
+      status: hasPanelError ? "pending" : "ready"
     }
   ] satisfies DashboardModule[];
 }
@@ -480,6 +604,7 @@ export function AdminConsole() {
   const [listeningRoomVisits, setListeningRoomVisits] = useState<ListeningRoomVisit[]>([]);
   const [visitsLoading, setVisitsLoading] = useState(false);
   const [visitsError, setVisitsError] = useState("");
+  const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<AdminWorkspaceTabId>("walls-devine");
   const [openSections, setOpenSections] = useState<Record<AdminWorkspaceSectionId, boolean>>(() => ({ ...defaultOpenSections }));
   const [, startTransition] = useTransition();
 
@@ -499,6 +624,38 @@ export function AdminConsole() {
 
     return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
   }, [ecosystemLeads]);
+  const leadProgramMix = useMemo(() => {
+    const counts = new Map<string, number>();
+
+    for (const lead of ecosystemLeads) {
+      const label = getLeadProgramLabel(lead);
+      counts.set(label, (counts.get(label) ?? 0) + 1);
+    }
+
+    return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
+  }, [ecosystemLeads]);
+  const leadContextMix = useMemo(() => {
+    const counts = new Map<string, number>();
+
+    for (const lead of ecosystemLeads) {
+      const label = getLeadPrimaryContext(lead);
+      counts.set(label, (counts.get(label) ?? 0) + 1);
+    }
+
+    return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]).slice(0, 6);
+  }, [ecosystemLeads]);
+  const bookingLeadMatches = useMemo(
+    () => buildBookingLeadMatches(adminViewData.bookingBoard, ecosystemLeads),
+    [adminViewData.bookingBoard, ecosystemLeads]
+  );
+  const bookingTargetSaveStates = useMemo(
+    () =>
+      adminViewData.bookingBoard.targets.reduce<Record<string, SaveState | undefined>>((states, target) => {
+        states[target.id] = saveStates[getBookingTargetSaveKey(target.id)];
+        return states;
+      }, {}),
+    [adminViewData.bookingBoard.targets, saveStates]
+  );
   const visitSongs = useMemo(() => {
     const counts = new Map<string, number>();
 
@@ -516,6 +673,10 @@ export function AdminConsole() {
         adminData: adminViewData,
         isScaffoldMode,
         hasLiveMarkdownContent,
+        bookingTargetsCount: adminViewData.bookingBoard.targets.length,
+        bookingLeadCount: bookingLeadMatches.length,
+        bookingDeadline: adminViewData.bookingBoard.goal.lockByDate,
+        bookingCriticalCount: adminViewData.bookingBoard.targets.filter((target) => target.priority === "critical").length,
         leadsCount: ecosystemLeads.length,
         hasLeadsError: Boolean(leadsError),
         leadSources,
@@ -523,13 +684,16 @@ export function AdminConsole() {
         topVisitSong: visitSongs[0]?.[0] ?? null,
         audioCount: audioAnalysis.length,
         hasAudioError: Boolean(audioError),
-        hasVisitsError: Boolean(visitsError)
+        hasVisitsError: Boolean(visitsError),
+        contentSource,
+        hasPanelError: Boolean(panelError)
       }),
     [
       completedChecklist,
       adminViewData,
       isScaffoldMode,
       hasLiveMarkdownContent,
+      bookingLeadMatches.length,
       ecosystemLeads.length,
       leadsError,
       leadSources,
@@ -538,6 +702,7 @@ export function AdminConsole() {
       audioAnalysis.length,
       audioError,
       visitsError,
+      contentSource,
       panelError
     ]
   );
@@ -545,46 +710,72 @@ export function AdminConsole() {
     () => [
       {
         id: "admin-release-desk",
+        tab: "walls-devine",
         label: "Release desk",
         detail: `${completedChecklist}/${adminViewData.plan.checklist.length} complete`
       },
       {
         id: "admin-journals",
+        tab: "walls-devine",
         label: "Journals",
         detail: `${adminViewData.journalEntries.length} live`
       },
       {
+        id: "admin-booking-engine",
+        tab: "walls-devine",
+        label: "Booking",
+        detail: `${adminViewData.bookingBoard.targets.length} targets · ${bookingLeadMatches.length} matches`
+      },
+      {
         id: "admin-instagram-posts",
+        tab: "walls-devine",
         label: "Drafts",
         detail: `${adminViewData.instagramDrafts.length} live`
       },
       {
         id: "admin-analytics",
-        label: "Analytics",
+        tab: "agency",
+        label: "Signal desk",
         detail: `${ecosystemLeads.length} leads · ${listeningRoomVisits.length} visits`
       },
       {
         id: "admin-assets",
+        tab: "walls-devine",
         label: "Assets",
         detail: `${audioAnalysis.length} WAV${audioAnalysis.length === 1 ? "" : "s"}`
       },
       {
         id: "admin-health",
+        tab: "agency",
         label: "Health",
         detail: panelError ? "Needs attention" : contentSource === "bootstrap" ? "Fallback mode" : "Backend ready"
       }
     ] satisfies AdminJumpLink[],
     [
       audioAnalysis.length,
+      adminViewData.bookingBoard.targets.length,
       adminViewData.instagramDrafts.length,
       adminViewData.journalEntries.length,
       adminViewData.plan.checklist.length,
+      bookingLeadMatches.length,
       completedChecklist,
       contentSource,
       ecosystemLeads.length,
       listeningRoomVisits.length,
       panelError
     ]
+  );
+  const activeWorkspaceTabConfig = useMemo(
+    () => adminWorkspaceTabs.find((tab) => tab.id === activeWorkspaceTab) ?? adminWorkspaceTabs[0],
+    [activeWorkspaceTab]
+  );
+  const visibleDashboardModules = useMemo(
+    () => dashboardModules.filter((module) => module.tab === activeWorkspaceTab),
+    [dashboardModules, activeWorkspaceTab]
+  );
+  const visibleJumpLinks = useMemo(
+    () => jumpLinks.filter((link) => link.tab === activeWorkspaceTab),
+    [jumpLinks, activeWorkspaceTab]
   );
   const isResolvingAuthorizedSession = Boolean(authUser) && dataLoading && !isAuthorized && !panelError;
   const isRefreshingAuthorizedAdmin = Boolean(authUser) && isAuthorized && dataLoading;
@@ -606,9 +797,14 @@ export function AdminConsole() {
   }
 
   function handleJumpToSection(sectionId: AdminWorkspaceSectionId) {
+    setActiveWorkspaceTab(workspaceSectionTabs[sectionId]);
     setWorkspaceSectionOpen(sectionId, true);
     window.history.replaceState(null, "", `#${sectionId}`);
     scrollToWorkspaceSection(sectionId);
+  }
+
+  function handleWorkspaceTabChange(tabId: AdminWorkspaceTabId) {
+    setActiveWorkspaceTab(tabId);
   }
 
   function collectionHasDuplicateSlug(collection: AdminMarkdownCollection, slug: string, currentSlug?: string) {
@@ -637,7 +833,8 @@ export function AdminConsole() {
       const needsBootstrap =
         !nextData ||
         nextData.contentBackend === "bootstrap" ||
-        nextData.markdownInitialized === false;
+        nextData.markdownInitialized === false ||
+        nextData.bookingBoardInitialized === false;
 
       if (needsBootstrap) {
         const bootstrapSeed = await fetchBootstrapData(await user.getIdToken());
@@ -943,6 +1140,62 @@ export function AdminConsole() {
         setAdminData((current) => (current ? { ...current, plan: nextPlan } : current));
       });
     } catch (error) {
+      setPanelError(getFirebaseErrorMessage(error));
+    }
+  }
+
+  async function handleBookingTargetSave(event: FormEvent<HTMLFormElement>, targetId: string) {
+    event.preventDefault();
+
+    if (!adminData) {
+      return;
+    }
+
+    const saveKey = getBookingTargetSaveKey(targetId);
+    const formData = new FormData(event.currentTarget);
+    const nextStatus = String(formData.get("status") ?? "").trim();
+    const nextNotes = String(formData.get("notes") ?? "").trim();
+
+    if (!isBookingTargetStatus(nextStatus)) {
+      setPanelError("Booking targets need a valid workflow status before they can be saved.");
+      setSaveStates((current) => ({ ...current, [saveKey]: "error" }));
+      return;
+    }
+
+    setPanelError("");
+    setSaveStates((current) => ({ ...current, [saveKey]: "saving" }));
+
+    try {
+      const nextBookingBoard = {
+        ...adminData.bookingBoard,
+        updatedAt: new Date().toISOString(),
+        targets: adminData.bookingBoard.targets.map((target) =>
+          target.id === targetId
+            ? {
+                ...target,
+                status: nextStatus,
+                notes: nextNotes
+              }
+            : target
+        )
+      };
+      const savedBookingBoard = await updateFirebaseBookingBoard(nextBookingBoard);
+
+      startTransition(() => {
+        setAdminData((current) =>
+          current
+            ? {
+                ...current,
+                bookingBoard: savedBookingBoard,
+                bookingBoardInitialized: true
+              }
+            : current
+        );
+      });
+
+      setSaveStates((current) => ({ ...current, [saveKey]: "success" }));
+    } catch (error) {
+      setSaveStates((current) => ({ ...current, [saveKey]: "error" }));
       setPanelError(getFirebaseErrorMessage(error));
     }
   }
@@ -1265,8 +1518,8 @@ export function AdminConsole() {
           <SectionHeader
             id="admin-console-title"
             eyebrow="Admin"
-            title="Walls/Devine control room"
-            description={isScaffoldMode ? "Control-room scaffold for releases, journals, analytics, and asset QA while live backend content reconnects." : "Operational workspace for release management, journal publishing, analytics, and asset QA."}
+            title="CGU control room"
+            description={isScaffoldMode ? `Control-room scaffold for ${activeWorkspaceTabConfig.description.toLowerCase()} while live backend content reconnects.` : activeWorkspaceTabConfig.description}
           />
 
           <div className="cg-admin__topbar-actions">
@@ -1307,15 +1560,53 @@ export function AdminConsole() {
         ) : null}
 
         <div className="cg-admin__command-deck">
+          <div className="cg-admin__tab-bar" role="tablist" aria-label="Admin workspace categories">
+            {adminWorkspaceTabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={activeWorkspaceTab === tab.id}
+                className={["cg-admin__tab-chip", activeWorkspaceTab === tab.id ? "cg-admin__tab-chip--active" : ""].filter(Boolean).join(" ")}
+                onClick={() => handleWorkspaceTabChange(tab.id)}
+              >
+                <strong>{tab.label}</strong>
+                <span>{tab.title}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="cg-admin__tab-intro cg-admin__panel">
+            <div>
+              <strong>{activeWorkspaceTabConfig.title}</strong>
+              <p>{activeWorkspaceTabConfig.description}</p>
+            </div>
+            <p className="cg-admin__path-note">
+              {activeWorkspaceTab === "walls-devine"
+                ? "Prioritize the few surfaces that move release momentum fastest: booking, release ops, editorial, and QA."
+                : "Use the agency desk to triage lead generation, Bong Tour context, and backend readiness without drowning in release-only detail."}
+            </p>
+          </div>
+
           <div className="cg-admin__quick-actions">
-            <Button type="button" onClick={() => handleJumpToSection("admin-journals")}>Write new journal</Button>
-            <Button type="button" variant="secondary" onClick={() => handleJumpToSection("admin-release-desk")}>Open release desk</Button>
-            <Button type="button" variant="ghost" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
-              {leadsLoading || visitsLoading ? "Refreshing analytics…" : "Refresh analytics"}
-            </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
-              {audioLoading ? "Refreshing assets…" : "Refresh assets"}
-            </Button>
+            {activeWorkspaceTab === "walls-devine" ? (
+              <>
+                <Button type="button" onClick={() => handleJumpToSection("admin-journals")}>Write new journal</Button>
+                <Button type="button" variant="secondary" onClick={() => handleJumpToSection("admin-release-desk")}>Open release desk</Button>
+                <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-booking-engine")}>Open booking engine</Button>
+                <Button type="button" variant="ghost" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
+                  {audioLoading ? "Refreshing assets…" : "Refresh assets"}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button type="button" onClick={() => handleJumpToSection("admin-analytics")}>Open signal desk</Button>
+                <Button type="button" variant="secondary" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
+                  {leadsLoading || visitsLoading ? "Refreshing signals…" : "Refresh signals"}
+                </Button>
+                <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-health")}>Open backend health</Button>
+              </>
+            )}
             {!hasLiveMarkdownContent ? (
               <Button type="button" variant="ghost" size="sm" onClick={handleRetryAccess} disabled={dataLoading}>
                 {dataLoading ? "Syncing…" : "Retry content sync"}
@@ -1324,7 +1615,7 @@ export function AdminConsole() {
           </div>
 
           <div className="cg-admin__module-grid cg-admin__module-grid--ops">
-            {dashboardModules.map((module) => (
+            {visibleDashboardModules.map((module) => (
               <article key={module.id} className="cg-admin__panel cg-admin__module-card">
                 <div className="cg-admin__module-head">
                   <h2>{module.title}</h2>
@@ -1344,7 +1635,7 @@ export function AdminConsole() {
           </div>
 
           <nav className="cg-admin__jump-bar" aria-label="Admin workspace sections">
-            {jumpLinks.map((link) => (
+            {visibleJumpLinks.map((link) => (
               <button
                 key={link.id}
                 type="button"
@@ -1359,6 +1650,8 @@ export function AdminConsole() {
         </div>
       </SectionShell>
 
+      {activeWorkspaceTab === "walls-devine" ? (
+        <>
       <AdminWorkspaceSection
         id="admin-release-desk"
         labelId="admin-release-desk-title"
@@ -1482,130 +1775,27 @@ export function AdminConsole() {
       </AdminWorkspaceSection>
 
       <AdminWorkspaceSection
-        id="admin-analytics"
-        labelId="admin-analytics-title"
-        title="Audience & listening analytics"
-        description="Collector signups and shared listening-room traffic in one working view."
-        detail={`Firestore: ${firebaseAdminPaths.ecosystemLeadsCollection} + ${firebaseAdminPaths.listeningRoomVisitsCollection}`}
+        id="admin-booking-engine"
+        labelId="admin-booking-engine-title"
+        title="Booking engine"
+        description="Availability windows, seeded targets, and booking-fit leads in one operating view."
+        detail={`Project doc: ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}.${firebaseAdminPaths.bookingBoardField} + ${firebaseAdminPaths.ecosystemLeadsCollection}`}
         actions={
           <Button type="button" variant="secondary" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
-            {leadsLoading || visitsLoading ? "Refreshing analytics…" : "Refresh analytics"}
+            {leadsLoading || visitsLoading ? "Refreshing booking signals…" : "Refresh booking signals"}
           </Button>
         }
-        isOpen={openSections["admin-analytics"]}
-        onToggle={() => toggleWorkspaceSection("admin-analytics")}
+        isOpen={openSections["admin-booking-engine"]}
+        onToggle={() => toggleWorkspaceSection("admin-booking-engine")}
       >
         {leadsError ? <p className="cg-admin__error">{leadsError}</p> : null}
-        {visitsError ? <p className="cg-admin__error">{visitsError}</p> : null}
-
-        <div className="cg-admin__analytics-grid">
-          <div className="cg-admin__stack">
-            <div className="cg-admin__subsection-head">
-              <div>
-                <h3>Collector leads</h3>
-                <p>Recent email captures from the Walls/Devine hero and collector-grid takeover rooms.</p>
-              </div>
-              <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.ecosystemLeadsCollection}</p>
-            </div>
-
-            {leadsLoading && !ecosystemLeads.length ? <p className="cg-admin__helper">Loading collector leads…</p> : null}
-
-            <div className="cg-admin__lead-grid">
-              <article className="cg-admin__panel">
-                <h3>Source mix</h3>
-                {leadSources.length ? (
-                  <ul className="cg-admin__list">
-                    {leadSources.map(([source, count]) => (
-                      <li key={source}>
-                        <strong>{formatLeadSource(source)}</strong>
-                        <span>{count} capture{count === 1 ? "" : "s"}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="cg-admin__helper">No collector leads have landed yet.</p>
-                )}
-              </article>
-
-              <article className="cg-admin__panel">
-                <h3>Recent signups</h3>
-                {ecosystemLeads.length ? (
-                  <ul className="cg-admin__lead-list">
-                    {ecosystemLeads.map((lead) => (
-                      <li key={lead.id} className="cg-admin__lead-item">
-                        <div>
-                          <strong>{lead.email}</strong>
-                          <span>{lead.fullName || "Name not provided"}</span>
-                        </div>
-                        <div className="cg-admin__lead-meta">
-                          <span>{formatLeadSource(lead.source)}</span>
-                          <span>{lead.interest}</span>
-                          <span>{new Date(lead.createdAt).toLocaleString()}</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="cg-admin__helper">Collector signups will appear here once the public CTA is live.</p>
-                )}
-              </article>
-            </div>
-          </div>
-
-          <div className="cg-admin__stack">
-            <div className="cg-admin__subsection-head">
-              <div>
-                <h3>Listening room visits</h3>
-                <p>Recent arrivals from shared song URLs, grouped by track and the query key that opened the room.</p>
-              </div>
-              <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.listeningRoomVisitsCollection}</p>
-            </div>
-
-            {visitsLoading && !listeningRoomVisits.length ? <p className="cg-admin__helper">Loading listening-room visits…</p> : null}
-
-            <div className="cg-admin__lead-grid">
-              <article className="cg-admin__panel">
-                <h3>Song mix</h3>
-                {visitSongs.length ? (
-                  <ul className="cg-admin__list">
-                    {visitSongs.map(([songTitle, count]) => (
-                      <li key={songTitle}>
-                        <strong>{songTitle}</strong>
-                        <span>{count} visit{count === 1 ? "" : "s"}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="cg-admin__helper">Shared song-link traffic will appear here once those URLs start circulating.</p>
-                )}
-              </article>
-
-              <article className="cg-admin__panel">
-                <h3>Recent arrivals</h3>
-                {listeningRoomVisits.length ? (
-                  <ul className="cg-admin__lead-list">
-                    {listeningRoomVisits.map((visit) => (
-                      <li key={visit.id} className="cg-admin__lead-item">
-                        <div>
-                          <strong>{visit.songTitle}</strong>
-                          <span>{visit.songSlug}</span>
-                        </div>
-                        <div className="cg-admin__lead-meta">
-                          <span>{formatListeningRoomQueryKey(visit.queryKey)}</span>
-                          <span>{visit.pagePath}</span>
-                          <span>{visit.referrer || "Direct / unknown referrer"}</span>
-                          <span>{new Date(visit.createdAt).toLocaleString()}</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="cg-admin__helper">No shared listening-room arrivals have been tracked yet.</p>
-                )}
-              </article>
-            </div>
-          </div>
-        </div>
+        <AdminBookingEngine
+          board={adminViewData.bookingBoard}
+          leads={ecosystemLeads}
+          canSave={Boolean(adminData)}
+          targetSaveStates={bookingTargetSaveStates}
+          onTargetSave={handleBookingTargetSave}
+        />
       </AdminWorkspaceSection>
 
       <AdminWorkspaceSection
@@ -1909,6 +2099,191 @@ export function AdminConsole() {
         </div>
       </AdminWorkspaceSection>
 
+        </>
+      ) : null}
+
+      {activeWorkspaceTab === "agency" ? (
+        <>
+      <AdminWorkspaceSection
+        id="admin-analytics"
+        labelId="admin-analytics-title"
+        title="Agency signal desk"
+        description="Lead generation, guided intake, Bong Tour context, and Walls/Devine listening traffic in one operational view."
+        detail={`Firestore: ${firebaseAdminPaths.ecosystemLeadsCollection} + ${firebaseAdminPaths.listeningRoomVisitsCollection}`}
+        actions={
+          <Button type="button" variant="secondary" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
+            {leadsLoading || visitsLoading ? "Refreshing signals…" : "Refresh signals"}
+          </Button>
+        }
+        isOpen={openSections["admin-analytics"]}
+        onToggle={() => toggleWorkspaceSection("admin-analytics")}
+      >
+        {leadsError ? <p className="cg-admin__error">{leadsError}</p> : null}
+        {visitsError ? <p className="cg-admin__error">{visitsError}</p> : null}
+
+        <div className="cg-admin__grid--summary cg-admin__agency-summary-grid">
+          <article className="cg-admin__panel">
+            <h3>Program mix</h3>
+            {leadProgramMix.length ? (
+              <ul className="cg-admin__list">
+                {leadProgramMix.map(([label, count]) => (
+                  <li key={label}>
+                    <strong>{label}</strong>
+                    <span>{count} lead{count === 1 ? "" : "s"}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="cg-admin__helper">Program segmentation will appear once lead traffic lands.</p>
+            )}
+          </article>
+
+          <article className="cg-admin__panel">
+            <h3>Top contexts</h3>
+            {leadContextMix.length ? (
+              <ul className="cg-admin__list">
+                {leadContextMix.map(([label, count]) => (
+                  <li key={label}>
+                    <strong>{label}</strong>
+                    <span>{count} signal{count === 1 ? "" : "s"}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="cg-admin__helper">Lead context mix will appear here once guided intake starts stacking.</p>
+            )}
+          </article>
+
+          <article className="cg-admin__panel">
+            <h3>Priority signals</h3>
+            <ul className="cg-admin__list">
+              <li>
+                <strong>Booking-fit leads</strong>
+                <span>{bookingLeadMatches.length}</span>
+              </li>
+              <li>
+                <strong>Bong Tour signals</strong>
+                <span>{leadProgramMix.find(([label]) => label === "Bong Tour")?.[1] ?? 0}</span>
+              </li>
+              <li>
+                <strong>Listening-room visits</strong>
+                <span>{listeningRoomVisits.length}</span>
+              </li>
+            </ul>
+          </article>
+        </div>
+
+        <div className="cg-admin__analytics-grid">
+          <div className="cg-admin__stack">
+            <div className="cg-admin__subsection-head">
+              <div>
+                <h3>Generated leads</h3>
+                <p>Collector captures and guided-intake leads across Walls/Devine, Bong Tour, and broader CGU requests.</p>
+              </div>
+              <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.ecosystemLeadsCollection}</p>
+            </div>
+
+            {leadsLoading && !ecosystemLeads.length ? <p className="cg-admin__helper">Loading lead backlog…</p> : null}
+
+            <div className="cg-admin__lead-grid">
+              <article className="cg-admin__panel">
+                <h3>Source mix</h3>
+                {leadSources.length ? (
+                  <ul className="cg-admin__list">
+                    {leadSources.map(([source, count]) => (
+                      <li key={source}>
+                        <strong>{formatLeadSource(source)}</strong>
+                        <span>{count} lead{count === 1 ? "" : "s"}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">Lead sources will appear once the public intake surfaces start writing.</p>
+                )}
+              </article>
+
+              <article className="cg-admin__panel">
+                <h3>Recent leads</h3>
+                {ecosystemLeads.length ? (
+                  <ul className="cg-admin__lead-list">
+                    {ecosystemLeads.map((lead) => (
+                      <li key={lead.id} className="cg-admin__lead-item">
+                        <div>
+                          <strong>{lead.fullName || lead.email}</strong>
+                          <span>{lead.email}</span>
+                        </div>
+                        <div className="cg-admin__lead-meta">
+                          <span>{formatLeadProgramSummary(getLeadProgramLabel(lead), 1)}</span>
+                          <span>{getLeadPrimaryContext(lead)}</span>
+                          <span>{formatLeadSource(lead.source)}</span>
+                          <span>{new Date(lead.createdAt).toLocaleString()}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">Generated leads will appear here once site and intake traffic lands.</p>
+                )}
+              </article>
+            </div>
+          </div>
+
+          <div className="cg-admin__stack">
+            <div className="cg-admin__subsection-head">
+              <div>
+                <h3>Walls/Devine listening room traffic</h3>
+                <p>Shared song-link arrivals stay visible here so program-wide lead triage can still see release-world activity.</p>
+              </div>
+              <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.listeningRoomVisitsCollection}</p>
+            </div>
+
+            {visitsLoading && !listeningRoomVisits.length ? <p className="cg-admin__helper">Loading listening-room visits…</p> : null}
+
+            <div className="cg-admin__lead-grid">
+              <article className="cg-admin__panel">
+                <h3>Song mix</h3>
+                {visitSongs.length ? (
+                  <ul className="cg-admin__list">
+                    {visitSongs.map(([songTitle, count]) => (
+                      <li key={songTitle}>
+                        <strong>{songTitle}</strong>
+                        <span>{count} visit{count === 1 ? "" : "s"}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">Shared song-link traffic will appear here once those URLs start circulating.</p>
+                )}
+              </article>
+
+              <article className="cg-admin__panel">
+                <h3>Recent arrivals</h3>
+                {listeningRoomVisits.length ? (
+                  <ul className="cg-admin__lead-list">
+                    {listeningRoomVisits.map((visit) => (
+                      <li key={visit.id} className="cg-admin__lead-item">
+                        <div>
+                          <strong>{visit.songTitle}</strong>
+                          <span>{visit.songSlug}</span>
+                        </div>
+                        <div className="cg-admin__lead-meta">
+                          <span>{formatListeningRoomQueryKey(visit.queryKey)}</span>
+                          <span>{visit.pagePath}</span>
+                          <span>{visit.referrer || "Direct / unknown referrer"}</span>
+                          <span>{new Date(visit.createdAt).toLocaleString()}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">No shared listening-room arrivals have been tracked yet.</p>
+                )}
+              </article>
+            </div>
+          </div>
+        </div>
+      </AdminWorkspaceSection>
+
       <AdminWorkspaceSection
         id="admin-health"
         labelId="admin-health-title"
@@ -1920,6 +2295,9 @@ export function AdminConsole() {
       >
         <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized notice={panelError || undefined} />
       </AdminWorkspaceSection>
+
+        </>
+      ) : null}
     </main>
   );
 }

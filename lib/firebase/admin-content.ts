@@ -1,7 +1,8 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, writeBatch } from "firebase/firestore";
 import { getBytes, listAll, ref } from "firebase/storage";
 
-import type { AdminMarkdownCollection, AdminMarkdownFile, LinkHubContent, ReleasePlan, WallsDevineAdminData, WallsDevineCollectorHeroNote } from "@/lib/admin/types";
+import { defaultBookingBoard, normalizeBookingBoard } from "@/lib/admin/booking-engine";
+import type { AdminMarkdownCollection, AdminMarkdownFile, BookingBoard, LinkHubContent, ReleasePlan, WallsDevineAdminData, WallsDevineCollectorHeroNote } from "@/lib/admin/types";
 import { defaultLinkHubContent, normalizeLinkHubContent } from "@/lib/link-hub/content";
 import { defaultWallsDevineCollectorHeroNote, normalizeWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 
@@ -278,6 +279,25 @@ async function saveReleasePlan(plan: ReleasePlan) {
   return nextPlan;
 }
 
+async function saveBookingBoard(board: BookingBoard) {
+  const nextBookingBoard = normalizeBookingBoard({
+    ...board,
+    updatedAt: board.updatedAt || new Date().toISOString()
+  });
+
+  await setDoc(
+    getProjectDoc(),
+    {
+      projectId: firebaseAdminPaths.wallsDevineProjectId,
+      updatedAt: nextBookingBoard.updatedAt,
+      [firebaseAdminPaths.bookingBoardField]: nextBookingBoard
+    },
+    { merge: true }
+  );
+
+  return nextBookingBoard;
+}
+
 async function getReleasePlanFromFirestore() {
   const projectSnapshot = await getDoc(getProjectDoc());
   return projectSnapshot.data()?.[firebaseAdminPaths.releasePlanField] as ReleasePlan | undefined;
@@ -336,6 +356,8 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
   const projectSnapshot = await getDoc(getProjectDoc());
   const projectData = projectSnapshot.data() ?? null;
   const releasePlan = projectData?.[firebaseAdminPaths.releasePlanField] as ReleasePlan | undefined;
+  const bookingBoard = normalizeBookingBoard(projectData?.[firebaseAdminPaths.bookingBoardField] as Partial<BookingBoard> | undefined);
+  const bookingBoardInitialized = Boolean(projectData?.[firebaseAdminPaths.bookingBoardField]);
 
   if (!releasePlan) {
     return null;
@@ -358,26 +380,34 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
 
     return {
       plan: releasePlan,
+      bookingBoard,
       instagramDrafts,
       journalEntries,
       collectorHeroNote,
       linkHub,
       storageBacked: true,
       contentBackend: "firestore",
-      markdownInitialized: markdownInitialized || instagramDrafts.length > 0 || journalEntries.length > 0
+      markdownInitialized: markdownInitialized || instagramDrafts.length > 0 || journalEntries.length > 0,
+      bookingBoardInitialized
     } satisfies WallsDevineAdminData;
   } catch {
     return {
       plan: releasePlan,
+      bookingBoard,
       instagramDrafts: [],
       journalEntries: [],
       collectorHeroNote: defaultWallsDevineCollectorHeroNote,
       linkHub: defaultLinkHubContent,
       storageBacked: false,
       contentBackend: "bootstrap",
-      markdownInitialized: false
+      markdownInitialized: false,
+      bookingBoardInitialized
     } satisfies WallsDevineAdminData;
   }
+}
+
+export async function updateFirebaseBookingBoard(board: BookingBoard) {
+  return saveBookingBoard(board);
 }
 
 export async function updateFirebaseReleasePlanItem(itemId: string, completed: boolean) {
@@ -455,6 +485,10 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
     ...seedData.plan,
     updatedAt: new Date().toISOString()
   });
+  const nextBookingBoard = normalizeBookingBoard({
+    ...seedData.bookingBoard,
+    updatedAt: new Date().toISOString()
+  });
 
   try {
     if (!firebaseDb) {
@@ -466,7 +500,8 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
     batch.set(
       getProjectDoc(),
       {
-        [firebaseAdminPaths.markdownInitializedField]: true
+        [firebaseAdminPaths.markdownInitializedField]: true,
+        [firebaseAdminPaths.bookingBoardField]: nextBookingBoard
       },
       { merge: true }
     );
@@ -508,18 +543,22 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
     return {
       ...seedData,
       plan: nextPlan,
+      bookingBoard: nextBookingBoard,
       storageBacked: false,
       contentBackend: "bootstrap",
-      markdownInitialized: false
+      markdownInitialized: false,
+      bookingBoardInitialized: false
     } satisfies WallsDevineAdminData;
   }
 
   return {
     ...seedData,
     plan: nextPlan,
+    bookingBoard: nextBookingBoard,
     storageBacked: false,
     contentBackend: "bootstrap",
-    markdownInitialized: false
+    markdownInitialized: false,
+    bookingBoardInitialized: false
   } satisfies WallsDevineAdminData;
 }
 

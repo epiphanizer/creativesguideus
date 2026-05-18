@@ -25,6 +25,7 @@ export const firebaseAdminPaths = {
   collectorHeroNoteDocId: "collectorHeroNote",
   linkHubDocId: "linkHub",
   releasePlanField: "releasePlan",
+  bookingBoardField: "bookingBoard",
   markdownCollection: "markdownFiles",
   markdownInitializedField: "markdownContentInitialized",
   storageBasePath: "admin-projects/walls-devine",
@@ -43,6 +44,7 @@ export const firebaseRoadmapNotes = [
 export const firebaseAdminRecommendations = [
   `Use Firestore ${firebaseAdminPaths.adminUsersCollection}/{uid} documents as the editor allowlist.`,
   `Keep the release plan in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}.`,
+  `Keep the booking board in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId} under the ${firebaseAdminPaths.bookingBoardField} field.`,
   `Keep public Walls/Devine note copy in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.publicContentCollection}/${firebaseAdminPaths.collectorHeroNoteDocId}.`,
   `Keep the public link hub in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.publicContentCollection}/${firebaseAdminPaths.linkHubDocId}.`,
   `Capture public collector leads in ${firebaseAdminPaths.ecosystemLeadsCollection} and review them from the admin console.`,
