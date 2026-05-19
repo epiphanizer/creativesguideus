@@ -280,7 +280,27 @@ function getBacklogElementId(tabId: AdminWorkspaceTabId) {
   return `admin-backlog-${tabId}`;
 }
 
-type AdminWorkspaceSectionId = "admin-release-desk" | "admin-booking-engine" | "admin-journals" | "admin-instagram-posts" | "admin-analytics" | "admin-assets" | "admin-health";
+type AdminWorkspaceSectionId = "admin-release-desk" | "admin-booking-engine" | "admin-journals" | "admin-instagram-posts" | "admin-analytics" | "admin-assets" | "admin-health" | "admin-ideas";
+
+type IdeaEntry = {
+  id: string;
+  name: string;
+  type: "app" | "script" | "feature" | "ecosystem";
+  status: "concept" | "exploring" | "prototyping" | "parked";
+  description: string;
+  notes?: string;
+};
+
+const ideaCatalogue: IdeaEntry[] = [
+  {
+    id: "living-will",
+    name: "The Living Will",
+    type: "ecosystem",
+    status: "concept",
+    description: "Users post their goals and ambitions publicly, then reward people in real time for helping them achieve those goals. Social accountability layer — think Nextdoor with depth, built around contribution and tangible mutual benefit rather than just proximity.",
+    notes: "Key design tension: reward mechanism (token-based, cash-equivalent, or reputation points?), privacy model for personal goals, and how to prevent reward gaming. Strong hook for community retention."
+  }
+];
 type AdminWorkspaceTabId = "walls-devine" | "agency";
 
 type AdminWorkspaceTab = {
@@ -329,7 +349,8 @@ const workspaceSectionTabs: Record<AdminWorkspaceSectionId, AdminWorkspaceTabId>
   "admin-instagram-posts": "walls-devine",
   "admin-analytics": "agency",
   "admin-assets": "walls-devine",
-  "admin-health": "agency"
+  "admin-health": "agency",
+  "admin-ideas": "agency"
 };
 
 type AdminWorkspaceSectionProps = {
@@ -352,7 +373,8 @@ const defaultOpenSections: Record<AdminWorkspaceSectionId, boolean> = {
   "admin-instagram-posts": false,
   "admin-analytics": true,
   "admin-assets": false,
-  "admin-health": false
+  "admin-health": false,
+  "admin-ideas": true
 };
 
 function isWorkspaceSectionId(value: string): value is AdminWorkspaceSectionId {
@@ -600,6 +622,15 @@ function buildDashboardModules({
             : "Keep this parked in backlog until the console is running against live Firebase content.",
       actionLabel: "Open backend health",
       status: hasPanelError || contentSource !== "firebase" ? "pending" : "ready"
+    },
+    {
+      id: "admin-ideas",
+      tab: "agency",
+      title: "Ideas",
+      summary: `${ideaCatalogue.length} idea${ideaCatalogue.length === 1 ? "" : "s"} logged`,
+      detail: "App concepts, ecosystem ideas, and scripts to weigh. A running catalogue of what could be built next.",
+      actionLabel: "Open ideas",
+      status: "ready"
     }
   ] satisfies DashboardModule[];
 }
@@ -770,6 +801,12 @@ export function AdminConsole() {
         tab: "agency",
         label: "Health",
         detail: panelError ? "Needs attention" : contentSource === "bootstrap" ? "Fallback mode" : "Backend ready"
+      },
+      {
+        id: "admin-ideas",
+        tab: "agency",
+        label: "Ideas",
+        detail: `${ideaCatalogue.length} logged`
       }
     ] satisfies AdminJumpLink[],
     [
@@ -2407,6 +2444,39 @@ export function AdminConsole() {
         onToggle={() => toggleWorkspaceSection("admin-health")}
       >
         <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized notice={panelError || undefined} />
+      </AdminWorkspaceSection>
+
+      <AdminWorkspaceSection
+        id="admin-ideas"
+        labelId="admin-ideas-title"
+        title="Ideas"
+        description="App concepts, ecosystem ideas, and scripts to weigh. A running catalogue of what could be built next."
+        detail={`${ideaCatalogue.length} idea${ideaCatalogue.length === 1 ? "" : "s"} logged`}
+        isOpen={openSections["admin-ideas"]}
+        onToggle={() => toggleWorkspaceSection("admin-ideas")}
+      >
+        <div className="cg-admin__ideas-grid">
+          {ideaCatalogue.map((idea) => (
+            <article key={idea.id} className="cg-admin__panel cg-admin__idea-card">
+              <div className="cg-admin__idea-head">
+                <div>
+                  <h3>{idea.name}</h3>
+                  <div className="cg-admin__idea-badges">
+                    <span className="cg-admin__idea-badge cg-admin__idea-badge--type">{idea.type}</span>
+                    <span className={`cg-admin__idea-badge cg-admin__idea-badge--status cg-admin__idea-badge--${idea.status}`}>{idea.status}</span>
+                  </div>
+                </div>
+              </div>
+              <p className="cg-admin__idea-description">{idea.description}</p>
+              {idea.notes ? (
+                <div className="cg-admin__idea-notes">
+                  <span className="cg-admin__editor-field-label">Design notes</span>
+                  <p>{idea.notes}</p>
+                </div>
+              ) : null}
+            </article>
+          ))}
+        </div>
       </AdminWorkspaceSection>
 
         </>
