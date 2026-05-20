@@ -11,6 +11,7 @@
   --cg-home-head-bottom-gap: clamp(0.65rem, 1.4vh, 1rem);
   --cg-home-title-walls: clamp(58px, 5.4vw, 82px);
   --cg-home-title-bong: clamp(62px, 5.8vw, 88px);
+  --cg-home-title-appreesh: clamp(54px, 5vw, 78px);
   --cg-home-body-max: 34ch;
   --cg-home-visual-frame-max-h: clamp(310px, 42vh, 430px);
   --cg-home-visual-image-max-h: clamp(330px, 46vh, 520px);
@@ -29,7 +30,8 @@
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
     "walls"
-    "bong";
+    "bong"
+    "appreesh";
   min-height: calc(100svh - var(--cg-home-header-height));
   isolation: isolate;
 }
@@ -112,6 +114,10 @@
   grid-area: bong;
 }
 
+.cg-home-gate__portal--appreesh {
+  grid-area: appreesh;
+}
+
 .cg-home-gate__portal--bong::before {
   background:
     radial-gradient(90% 84% at 100% 0%, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0) 62%),
@@ -120,6 +126,19 @@
 
 .cg-home-gate__portal--bong::after {
   background: linear-gradient(158deg, rgba(41, 84, 59, 0.09) 0 22%, transparent 22% 74%, rgba(217, 106, 31, 0.08) 74% 100%);
+}
+
+.cg-home-gate__portal--appreesh::before {
+  background:
+    radial-gradient(120% 110% at 4% 0%, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 54%),
+    radial-gradient(84% 84% at 100% 100%, rgba(220, 38, 38, 0.25), rgba(220, 38, 38, 0) 70%),
+    linear-gradient(148deg, rgba(11, 11, 14, 0.99) 0 42%, rgba(23, 10, 12, 0.96) 42% 64%, rgba(185, 28, 28, 0.28) 64% 100%);
+}
+
+.cg-home-gate__portal--appreesh::after {
+  background:
+    linear-gradient(88deg, rgba(248, 113, 113, 0.14) 0 49.86%, rgba(248, 113, 113, 0) 49.86% 50.14%, rgba(248, 113, 113, 0.14) 50.14% 100%),
+    linear-gradient(154deg, rgba(255, 255, 255, 0.08) 0 18%, transparent 18% 72%, rgba(248, 113, 113, 0.14) 72% 100%);
 }
 
 .cg-home-gate__portal > * {
@@ -187,6 +206,12 @@
   color: var(--cg-color-bong-ink);
 }
 
+.cg-home-gate__portal--appreesh .cg-home-gate__portal-copy h2 {
+  font-size: var(--cg-home-title-appreesh);
+  letter-spacing: -0.03em;
+  color: #fca5a5;
+}
+
 .cg-home-gate__portal-stage-copy {
   margin: clamp(0.35rem, 0.9vh, 0.6rem) 0 clamp(0.95rem, 1.8vh, 1.4rem);
   max-width: min(32ch, var(--cg-home-body-max));
@@ -235,6 +260,11 @@
   width: min(82%, 600px);
 }
 
+.cg-home-gate__portal--appreesh .cg-home-gate__portal-image {
+  width: min(30%, 170px);
+  filter: drop-shadow(0 14px 26px rgba(220, 38, 38, 0.4));
+}
+
 .cg-home-gate__portal-entry {
   display: grid;
   gap: 0.25rem;
@@ -271,6 +301,26 @@
 
 .cg-home-gate__portal--bong .cg-home-gate__portal-entry-label {
   color: var(--cg-color-bong-ink);
+}
+
+.cg-home-gate__portal--appreesh .cg-home-gate__portal-meta {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.cg-home-gate__portal--appreesh .cg-home-gate__portal-descriptor,
+.cg-home-gate__portal--appreesh .cg-home-gate__portal-stage-copy,
+.cg-home-gate__portal--appreesh .cg-home-gate__portal-entry-meta {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.cg-home-gate__portal--appreesh .cg-home-gate__portal-entry {
+  border-color: rgba(252, 165, 165, 0.3);
+  background: rgba(24, 10, 12, 0.72);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+.cg-home-gate__portal--appreesh .cg-home-gate__portal-entry-label {
+  color: #fca5a5;
 }
 
 .cg-home-gate__portal:hover .cg-home-gate__portal-image,
@@ -319,7 +369,9 @@
   .cg-home-gate {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas:
-      "walls bong";
+      "walls bong"
+      "appreesh appreesh";
+    min-height: auto;
   }
 
   .cg-home-gate__portal {
@@ -334,6 +386,12 @@
 
   .cg-home-gate__portal--bong {
     padding-left: calc(var(--cg-home-panel-side-pad) + var(--cg-home-panel-divider-pad));
+  }
+
+  .cg-home-gate__portal--appreesh {
+    min-block-size: clamp(24rem, 42vh, 31rem);
+    border-top: 1px solid var(--cg-color-grid-line);
+    padding-inline: clamp(2.5rem, 5.5vw, 5rem);
   }
 }
 
@@ -356,7 +414,8 @@
 
   .cg-home-gate__portal-image,
   .cg-home-gate__portal--walls .cg-home-gate__portal-image,
-  .cg-home-gate__portal--bong .cg-home-gate__portal-image {
+  .cg-home-gate__portal--bong .cg-home-gate__portal-image,
+  .cg-home-gate__portal--appreesh .cg-home-gate__portal-image {
     width: min(96%, 35rem);
     max-height: none;
   }
