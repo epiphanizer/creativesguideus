@@ -678,6 +678,7 @@
   display: grid;
   gap: clamp(var(--cg-space-sm), 1.8vw, var(--cg-space-md));
   align-content: start;
+  max-width: 48rem;
 }
 
 .bt-hero__eyebrow {
@@ -759,8 +760,8 @@
 
 .bt-hero__modules {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.55rem;
   margin-top: clamp(0.45rem, 1vh, 0.8rem);
 }
 
@@ -838,7 +839,7 @@
   padding: clamp(var(--cg-space-md), 2.8vw, var(--cg-space-lg));
   border-radius: calc(var(--cg-radius-lg) * 0.96);
   background: rgba(255, 251, 245, 0.78);
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto 1fr auto;
 }
 
 .bt-bridge__card-head {
@@ -880,6 +881,30 @@
   margin: 0;
   color: var(--bt-text-soft);
   line-height: 1.72;
+}
+
+.bt-bridge__card-link {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  margin-top: var(--cg-space-xs);
+  padding: 0.68rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(49, 83, 62, 0.18);
+  background: rgba(49, 83, 62, 0.08);
+  color: rgba(38, 58, 46, 0.94);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.bt-bridge__card-link:hover,
+.bt-bridge__card-link:focus-visible {
+  transform: translateY(-1px);
+  background: rgba(49, 83, 62, 0.12);
+  border-color: rgba(49, 83, 62, 0.3);
 }
 
 .bt-treatment__lead {
@@ -1056,6 +1081,12 @@
   margin-top: auto;
 }
 
+.bt-music__actions .cg-button.bt-button,
+.bt-music__actions .cg-button.bt-button--outline {
+  flex: 1 1 13rem;
+  justify-content: center;
+}
+
 .bt-room-modal__beats li::before,
 .bt-world__list-block li::before {
   content: "";
@@ -1122,7 +1153,7 @@
 }
 
 .bt-collectibles__grid--preview {
-  width: min(100%, 1080px);
+  width: min(100%, 960px);
 }
 
 .bt-collectibles__collector-access {
@@ -1259,6 +1290,11 @@
 
 .bt-collectibles__grid--preview .bt-collectibles__visual {
   min-height: clamp(180px, 22vw, 250px);
+}
+
+.bt-collectibles__grid--preview .bt-collectibles__image {
+  opacity: 0.42;
+  filter: saturate(1.15) contrast(1.04);
 }
 
 .bt-collectibles__grid--preview .bt-collectibles__marquee h3 {
@@ -2693,8 +2729,18 @@
   }
 
   .bt-hero__layout {
-    grid-template-columns: minmax(340px, 0.92fr) minmax(500px, 1.08fr);
-    align-items: center;
+    grid-template-columns: minmax(300px, 0.76fr) minmax(560px, 1.24fr);
+    align-items: start;
+  }
+
+  .bt-hero__poster {
+    justify-self: end;
+    align-self: end;
+    padding-top: clamp(var(--cg-space-md), 4vw, var(--cg-space-2xl));
+  }
+
+  .bt-hero__content {
+    padding-top: clamp(var(--cg-space-sm), 2.2vw, var(--cg-space-lg));
   }
 
   .bt-music__grid,
@@ -2724,7 +2770,7 @@
   }
 
   .bt-hero__signal-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1.15fr) repeat(2, minmax(0, 0.92fr));
   }
 
   .bt-treatment__lock-grid,
@@ -2750,13 +2796,13 @@
     gap: clamp(var(--cg-space-md), 5vw, var(--cg-space-xl));
   }
 
-  .bt-hero__content {
+  .bt-hero__poster {
     order: 1;
+    justify-items: center;
   }
 
-  .bt-hero__poster {
+  .bt-hero__content {
     order: 2;
-    justify-items: center;
   }
 
   .bt-hero__poster-frame {

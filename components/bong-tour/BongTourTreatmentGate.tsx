@@ -28,7 +28,7 @@ const bongTourContactHref = `/contact?${new URLSearchParams({
   project: "Bong Tour",
   inquiryType: "partnership"
 }).toString()}`;
-const bongTourContactCtaLabel = "Let's talk";
+const bongTourContactCtaLabel = "Request Private Reading Copy";
 const approvedReaderChecklist = [
   "Use the same email already shared through CGU.",
   "Enter the current private password to unlock the treatment.",
@@ -241,7 +241,7 @@ export function BongTourTreatmentGate() {
               </Button>
             ) : (
               <Button type="button" className="bt-button" onClick={() => setIsModalOpen(true)} disabled={isCheckingSession}>
-                Request Treatment Access
+                Open Approved-Reader Gate
               </Button>
             )}
           </div>
@@ -322,7 +322,7 @@ export function BongTourTreatmentGate() {
                 </div>
                 <div className="bt-treatment__track-actions">
                   <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
-                    Start With Contact
+                    {bongTourContactCtaLabel}
                   </Button>
                 </div>
               </section>
@@ -392,7 +392,7 @@ export function BongTourTreatmentGate() {
                     {isSubmitting || isLoadingTreatment ? "Checking access" : "Open Treatment Gate"}
                   </Button>
                   <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
-                    Start With Contact
+                    {bongTourContactCtaLabel}
                   </Button>
                 </div>
               </form>

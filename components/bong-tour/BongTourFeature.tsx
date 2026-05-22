@@ -111,16 +111,26 @@ const bongTourContactHref = `/contact?${new URLSearchParams({
   project: "Bong Tour",
   inquiryType: "partnership"
 }).toString()}`;
-const bongTourContactCtaLabel = "Let's talk";
+const bongTourContactCtaLabel = "Talk About the Film";
+const bongTourPrivatePathCtaLabel = "Open the Private Reading Path";
 
 const bongTourPremise = "A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard.";
 const bongTourLogline =
   "A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to a Hollywood trip that keeps mutating between cult comedy, diaspora myth, and industry reckoning.";
+const bongTourHeroDescriptor =
+  "A cinematic pitch portal for a cult-comedy feature that moves from poster artifact to cue-world proof before it ever asks for a full read.";
 
 const bongTourTreatmentBullets = [
   "Diaspora masala satire with cult-comedy propulsion.",
   "A film-world pitch built for tone, music, and collectible evidence.",
   "A screenplay engine with sequel gravity."
+] as const;
+
+const bongTourHeroModules = [
+  "Poster artifact",
+  "Private reading copy",
+  "Cue-room proof",
+  "Walls/Devine bridge"
 ] as const;
 
 const bongTourHeroFacts = [
@@ -131,40 +141,64 @@ const bongTourHeroFacts = [
 
 const bongTourHeroSignals = [
   {
-    label: "Treatment gate",
-    title: "Private script layer",
-    description: "Approved readers unlock the treatment after the contact path and the current password line up."
+    label: "Private reading copy",
+    title: "Approved readers open the gate.",
+    description: "The screenplay stays behind the reader gate so the public route can sell tone without leaking the pages."
   },
   {
     label: "Cue rooms",
-    title: "Score proof first",
-    description: "Three soundtrack-led entries make the film world legible fast before the archive asks for more attention."
+    title: "Hear the film before you read it.",
+    description: "Three soundtrack-led entries make the world legible quickly before the private read asks for deeper commitment."
   },
   {
-    label: "Collector archive",
-    title: "Reward path later",
-    description: "Artifacts stay downstream so the poster, cue logic, and treatment signal do the first proof work."
+    label: "After-hours archive",
+    title: "Return for the object layer.",
+    description: "Artifacts stay quiet and optional so the poster, cue logic, and private read do the first heavy lifting."
   }
 ] as const;
 
 const bongTourRouteSteps = [
   {
     step: "01",
-    label: "Treatment",
-    title: "Request the gate",
-    description: "Use the public treatment CTA to route approved-reader access without exposing the screenplay in the initial page response."
+    label: "Private reading path",
+    title: "Use the gate after the tone lands.",
+    description: "If the poster and cue rooms fit, the treatment page cleanly splits approved readers from new readers without putting screenplay pages on the public route.",
+    href: bongTourTreatmentHref,
+    ctaLabel: "Open the reader gate"
   },
   {
     step: "02",
     label: "Cue rooms",
-    title: "Hear the proof",
-    description: "Open the score-led rooms to hear tone, motion, and companion-album logic before deeper story architecture is required."
+    title: "Hear the proof fast.",
+    description: "Open the score-led rooms to hear motion, tone, and companion-album logic before deeper story architecture is required.",
+    href: "#score-sketches",
+    ctaLabel: "Enter cue rooms"
   },
   {
     step: "03",
-    label: "Collector layer",
-    title: "Return for rewards",
-    description: "Artifacts and collectible rooms deepen the myth after the poster world and soundtrack bridge have already landed."
+    label: "After-hours archive",
+    title: "Treat collectibles like the return visit.",
+    description: "Artifacts and hidden rooms deepen the myth only after the poster world, cue proof, and private reading path have already landed.",
+    href: "#collector-grid",
+    ctaLabel: "Open the archive"
+  }
+] as const;
+
+const bongTourCollectorOverview = [
+  {
+    label: "Optional return layer",
+    title: "Let the pitch do the first work.",
+    description: "Keep artifacts downstream of the poster, cue rooms, and private reading path so the page never mistakes collectibles for proof."
+  },
+  {
+    label: "Artifact logic",
+    title: "Objects over merch.",
+    description: "Every drawer should feel like story evidence: sacred object, backstage credential, motel-night key, or sequel bait."
+  },
+  {
+    label: "Shared reward spine",
+    title: "Walls/Devine still owns the live unlock path.",
+    description: "When Bong Tour turns secret or collectible, it should still hand the active reward flow back into Volume 1."
   }
 ] as const;
 
@@ -624,17 +658,17 @@ const portalRooms: Record<string, ExperienceRoom> = {
   },
   collector: {
     slug: "collector-room",
-    eyebrow: "Collector's room",
-    title: "Enter the collector's room",
-    ambientLabel: "Collector's room",
-    ambientSubtitle: "Artifact vault and clue archive",
-    kicker: "The private side of Bong Tour: object archive, clue drops, and a clean handoff back into the main release world.",
+    eyebrow: "After-hours archive",
+    title: "Enter the after-hours archive",
+    ambientLabel: "After-hours archive",
+    ambientSubtitle: "Artifact drawers and clue rooms",
+    kicker: "The optional return layer for readers who want the object world after the pitch already lands.",
     description:
-      "Open this takeover when you want Bong Tour to behave like a returnable story object instead of a static overview. The collector room is where clues and artifacts surface first, while the universal reward path and secret-game unlock stay attached to Walls/Devine Volume 1.",
-    chips: ["Artifact vault", "Cue-linked clues", "Volume 1 handoff"],
+      "Open this takeover when Bong Tour needs to feel revisitable without letting the collector layer overpower the main pitch. Artifacts and clues surface here, while the universal reward path still resolves through Walls/Devine Volume 1.",
+    chips: ["Artifact drawers", "Cue-linked clues", "Volume 1 handoff"],
     beats: [
-      "Games should reveal objects, not marketing copy.",
-      "The best rewards should route through the shared Creatives Guide system.",
+      "Best after the cue rooms or private reading path.",
+      "Artifacts should deepen tone, not replace the pitch.",
       "Walls/Devine remains the live soundtrack and unlock exit."
     ],
     actions: [
@@ -642,11 +676,11 @@ const portalRooms: Record<string, ExperienceRoom> = {
       { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
     ],
     signup: {
-      source: "bong-tour-collector-room",
-      interest: "Bong Tour collector room",
-      submitLabel: "Get collector-room access",
-      successMessage: "You are in. Watch for artifacts, clue drops, and the next Bong Tour room opening.",
-      note: "Collector access only. Used for artifact notes, soundtrack-linked clues, and hidden-room updates."
+      source: "bong-tour-after-hours-archive",
+      interest: "Bong Tour after-hours archive",
+      submitLabel: "Request archive access",
+      successMessage: "You are in. Watch for artifacts, clue drops, and the next archive opening.",
+      note: "Archive access only. Used for artifact notes, soundtrack-linked clues, and hidden-room updates."
     },
     challenge: {
       label: "Archive seal",
@@ -655,7 +689,7 @@ const portalRooms: Record<string, ExperienceRoom> = {
       tokenLabel: "archive",
       noteLabel: "Collectible unlocked",
       noteTitle: "Sealed archive note unlocked",
-      noteBody: "The collector room works best as the reward layer that follows the script and cue rooms. Let it deepen the myth instead of hiding the core pitch."
+      noteBody: "The after-hours archive works best as the reward layer that follows the script and cue rooms. Let it deepen the myth instead of hiding the core pitch."
     }
   }
 };
@@ -764,7 +798,7 @@ const collectibleTiles: CollectibleTile[] = [
     image: posterImage,
     teaser: "The origin object: sacred river memory trapped inside a pitch-world artifact.",
     challenge: "Align the river sigil before the smoke clears.",
-    reward: "Collector pull: mythology-first framing for the whole campaign.",
+    reward: "Return note: mythology-first framing for the whole campaign.",
     room: {
       slug: "collectible-room-ganges-relic",
       eyebrow: "Collector object",
@@ -804,7 +838,7 @@ const collectibleTiles: CollectibleTile[] = [
     image: jointQueenImage,
     teaser: "A backstage credential that turns the midsection of the page into a takeover instead of a summary.",
     challenge: "Memorize the room code before the card dissolves.",
-    reward: "Collector pull: swagger-heavy campaign language for the initiation chapter.",
+    reward: "Return note: swagger-heavy campaign language for the initiation chapter.",
     room: {
       slug: "collectible-room-comedy-store-pass",
       eyebrow: "Collector object",
@@ -844,7 +878,7 @@ const collectibleTiles: CollectibleTile[] = [
     image: stashDaddyImage,
     teaser: "A motel-night object for the industry shadow system everybody references and nobody explains.",
     challenge: "Pick the right corridor before the keycard deactivates.",
-    reward: "Collector pull: noir pressure without burying the comedy.",
+    reward: "Return note: noir pressure without burying the comedy.",
     room: {
       slug: "collectible-room-lollipop-guild-key",
       eyebrow: "Collector object",
@@ -858,7 +892,7 @@ const collectibleTiles: CollectibleTile[] = [
       beats: ["Pairs cleanly with Stash Daddy.", "Adds return-value to the page.", "Turns exposition into a collectible clue."],
       actions: [
         { label: "Open Stash Daddy", href: buildWallsDevineListeningRoomHref("stash-daddy") },
-        { label: "Open collector room", roomKey: "collector", outline: true }
+        { label: "Open after-hours archive", roomKey: "collector", outline: true }
       ],
       signup: {
         source: "bong-tour-lollipop-guild-key",
@@ -884,7 +918,7 @@ const collectibleTiles: CollectibleTile[] = [
     image: spaceCruiserImage,
     teaser: "The sequel machine rendered as a polished object that feels seductive and ominous at the same time.",
     challenge: "Keep the token spinning until the sequel offer appears.",
-    reward: "Collector pull: franchise bait without flattening the emotional close.",
+    reward: "Return note: franchise bait without flattening the emotional close.",
     room: {
       slug: "collectible-room-upper-management-token",
       eyebrow: "Collector object",
@@ -972,29 +1006,37 @@ export function BongTourFeature() {
             </figure>
 
             <div className="bt-hero__content">
-              <p className="bt-hero__eyebrow">Feature screenplay portal</p>
+              <p className="bt-hero__eyebrow">Cinematic pitch portal</p>
               <h1>Bong Tour</h1>
 
+              <p className="bt-hero__descriptor">{bongTourHeroDescriptor}</p>
+
+              <div className="bt-hero__modules" aria-label="Bong Tour portal modules">
+                {bongTourHeroModules.map((module) => (
+                  <span key={module}>{module}</span>
+                ))}
+              </div>
+
               <div className="bt-hero__logline">
-                <h2>Logline</h2>
+                <h2>Premise</h2>
                 <p>{bongTourPremise}</p>
               </div>
 
-              <p className="bt-hero__positioning">A poster-first screenplay world built to prove tone quickly: private treatment layer, score-led cue rooms, and a collector archive that stays downstream of the pitch.</p>
+              <p className="bt-hero__positioning">Poster first, then cue-world proof, then a private reading copy for approved partners. The archive stays downstream so the pitch stays legible on first pass.</p>
 
               <div className="bt-hero__cta">
                 <Button as="a" href={bongTourTreatmentHref} className="bt-button">
-                  Request Treatment Access
+                  {bongTourPrivatePathCtaLabel}
                 </Button>
                 <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                   {bongTourContactCtaLabel}
                 </Button>
                 <Button as="a" href="#score-sketches" className="bt-button bt-button--outline">
-                  Explore Cue Rooms
+                  Enter Cue Rooms
                 </Button>
               </div>
 
-              <p className="bt-hero__route">Poster first. Cue rooms prove the score. The treatment opens after approval, and the archive stays as the return layer.</p>
+              <p className="bt-hero__route">Poster first. Cue rooms prove the score. The private reading copy opens after approval, and the archive stays as the return layer.</p>
 
               <div className="bt-hero__meta" aria-label="Bong Tour quick facts">
                 {bongTourHeroFacts.map((fact) => (
@@ -1022,7 +1064,7 @@ export function BongTourFeature() {
           <header className="bt-section-header">
             <p className="bt-section-header__eyebrow">Route guide</p>
             <h2 id="bt-bridge-title">How the world opens</h2>
-            <p>The public route sells tone first. The treatment is gated for approved readers, the cue rooms open the soundtrack proof, and the collector layer stays positioned as the reward path rather than the first door.</p>
+            <p>Start at the poster, move through the cue rooms, then use the private reading path if the world fits. The archive stays optional so the pitch never gets buried under extra layers.</p>
           </header>
 
           <div className="bt-bridge__grid">
@@ -1034,6 +1076,9 @@ export function BongTourFeature() {
                 </div>
                 <strong>{step.title}</strong>
                 <p>{step.description}</p>
+                <a href={step.href} className="bt-bridge__card-link">
+                  {step.ctaLabel}
+                </a>
               </article>
             ))}
           </div>
@@ -1041,8 +1086,8 @@ export function BongTourFeature() {
 
         <section className="bt-world" id="treatment" aria-labelledby="bt-treatment-title">
           <header className="bt-section-header">
-            <h2 id="bt-treatment-title">The Treatment</h2>
-            <p>A gated screenplay layer for approved readers who need the full story architecture after the public tone, poster logic, and soundtrack proof are already clear.</p>
+            <h2 id="bt-treatment-title">Private Reading Path</h2>
+            <p>A protected reading layer for approved partners who need the full story architecture after the public tone, poster logic, and soundtrack proof are already clear.</p>
           </header>
 
           <article className="bt-world__panel bt-world__panel--treatment">
@@ -1055,7 +1100,7 @@ export function BongTourFeature() {
 
             <div className="bt-section-header__actions">
               <Button as="a" href={bongTourTreatmentHref} className="bt-button">
-                Request Treatment Access
+                {bongTourPrivatePathCtaLabel}
               </Button>
               <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                 {bongTourContactCtaLabel}
@@ -1093,6 +1138,9 @@ export function BongTourFeature() {
                     <Button type="button" className="bt-button" onClick={() => setActiveRoom(poster.room)}>
                       Enter Cue Room
                     </Button>
+                    <Button as="a" href={buildWallsDevineListeningRoomHref(poster.playerTarget)} className="bt-button bt-button--outline">
+                      Open Volume 1 Score
+                    </Button>
                   </div>
                 </div>
               </li>
@@ -1103,15 +1151,25 @@ export function BongTourFeature() {
         <section className="bt-collectibles" id="collector-grid" aria-labelledby="bt-collectibles-title">
           <header className="bt-section-header bt-section-header--split">
             <div>
-              <h2 id="bt-collectibles-title">Collector Rewards</h2>
-              <p>Artifacts live inside the world, not beside it. Treat this archive as the return layer after the poster, treatment signal, and cue rooms have already earned the deeper dive.</p>
+              <h2 id="bt-collectibles-title">After-hours Archive</h2>
+              <p>Artifacts live inside the world, not beside it. Treat this archive as the return layer after the poster, private reading path, and cue rooms have already earned the deeper dive.</p>
             </div>
             <div className="bt-section-header__actions">
               <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(portalRooms.collector)}>
-                Explore rewards
+                Open the archive
               </Button>
             </div>
           </header>
+
+          <div className="bt-collectibles__overview" aria-label="Archive framing">
+            {bongTourCollectorOverview.map((item) => (
+              <article key={item.label} className="bt-collectibles__overview-card">
+                <span>{item.label}</span>
+                <strong>{item.title}</strong>
+                <p>{item.description}</p>
+              </article>
+            ))}
+          </div>
 
           <ul className="bt-collectibles__grid bt-collectibles__grid--preview">
             {featuredCollectibles.map((tile) => (
@@ -1132,6 +1190,20 @@ export function BongTourFeature() {
               </li>
             ))}
           </ul>
+
+          <div className="bt-collectibles__collector-access">
+            <article className="bt-collectibles__collector-access-card">
+              <div className="bt-collectibles__collector-access-copy">
+                <span className="bt-collectibles__badge">After-hours route</span>
+                <h3>Want the artifact drawers and hidden clue rooms?</h3>
+                <p>Open the archive when Bong Tour needs a return visit, not a louder first impression. The live reward spine still resolves through Walls/Devine.</p>
+              </div>
+
+              <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(portalRooms.collector)}>
+                Enter the after-hours archive
+              </Button>
+            </article>
+          </div>
         </section>
 
         <section className="bt-finale" id="bong-tour-intake" aria-labelledby="bt-finale-title">
@@ -1144,7 +1216,7 @@ export function BongTourFeature() {
                 {bongTourContactCtaLabel}
               </Button>
               <Button as="a" href={bongTourTreatmentHref} className="bt-button bt-button--outline">
-                Request Treatment Access
+                {bongTourPrivatePathCtaLabel}
               </Button>
             </div>
           </div>
