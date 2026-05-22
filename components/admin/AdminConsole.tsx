@@ -1375,11 +1375,12 @@ export function AdminConsole() {
     const body = String(formData.get("body") ?? "").trim();
     const primaryCtaLabel = String(formData.get("primaryCtaLabel") ?? "").trim();
     const secondaryCtaLabel = String(formData.get("secondaryCtaLabel") ?? "").trim();
+    const mailingListHelper = String(formData.get("mailingListHelper") ?? "").trim();
     const signatureIntro = String(formData.get("signatureIntro") ?? "").trim();
     const journalLabel = String(formData.get("journalLabel") ?? "").trim();
 
-    if (!eyebrow || !title || !salutation || !body || !primaryCtaLabel || !secondaryCtaLabel || !signatureIntro || !journalLabel) {
-      setPanelError("The collector note needs an eyebrow, title, salutation, body copy, both CTA labels, the signoff line, and the journal label before it can be saved.");
+    if (!eyebrow || !title || !salutation || !body || !primaryCtaLabel || !secondaryCtaLabel || !mailingListHelper || !signatureIntro || !journalLabel) {
+      setPanelError("The collector note needs an eyebrow, title, salutation, body copy, both CTA labels, the mailing-list helper copy, the signoff line, and the journal label before it can be saved.");
       setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "error" }));
       return;
     }
@@ -1388,7 +1389,17 @@ export function AdminConsole() {
     setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "saving" }));
 
     try {
-      const nextNote = await updateFirebaseCollectorHeroNote({ eyebrow, title, salutation, body, primaryCtaLabel, secondaryCtaLabel, signatureIntro, journalLabel });
+      const nextNote = await updateFirebaseCollectorHeroNote({
+        eyebrow,
+        title,
+        salutation,
+        body,
+        primaryCtaLabel,
+        secondaryCtaLabel,
+        mailingListHelper,
+        signatureIntro,
+        journalLabel
+      });
 
       startTransition(() => {
         setAdminData((current) => (current ? { ...current, collectorHeroNote: nextNote } : current));
@@ -2230,6 +2241,18 @@ export function AdminConsole() {
                   />
                 </label>
               </div>
+
+              <label className="cg-admin__editor-field">
+                <span>Mailing-list helper copy</span>
+                <textarea
+                  name="mailingListHelper"
+                  className="cg-admin__editor-textarea"
+                  rows={3}
+                  defaultValue={adminViewData.collectorHeroNote.mailingListHelper}
+                  placeholder="Request to be added for drop alerts and collector unlock notices."
+                  required
+                />
+              </label>
 
               <div className="cg-admin__editor-split">
                 <label className="cg-admin__editor-field">

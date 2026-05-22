@@ -928,7 +928,7 @@ export function BongTourFeature() {
             <div className="bt-hero__content">
               <h1>Bong Tour</h1>
               <p className="bt-hero__descriptor">{bongTourPremise}</p>
-              <p className="bt-hero__positioning">A masala stoner odyssey built as a screenplay, soundtrack bridge, and collector-world proof of concept.</p>
+              <p className="bt-hero__positioning">A poster-first screenplay world built to prove tone quickly: private treatment layer, score-led cue rooms, and a collector archive that stays downstream of the pitch.</p>
 
               <div className="bt-hero__cta">
                 <Button as="a" href={bongTourTreatmentHref} className="bt-button">
@@ -978,7 +978,7 @@ export function BongTourFeature() {
         <section className="bt-world" id="treatment" aria-labelledby="bt-treatment-title">
           <header className="bt-section-header">
             <h2 id="bt-treatment-title">The Treatment</h2>
-            <p>A gated feature treatment for approved readers who need the screenplay layer after the public tone and soundtrack proof are in place.</p>
+            <p>A gated screenplay layer for approved readers who need the full story architecture after the public tone, poster logic, and soundtrack proof are already clear.</p>
           </header>
 
           <article className="bt-world__panel bt-world__panel--treatment">
@@ -1003,7 +1003,7 @@ export function BongTourFeature() {
         <section className="bt-music" id="score-sketches" aria-labelledby="bt-music-title">
           <header className="bt-section-header">
             <h2 id="bt-music-title">Cue Rooms</h2>
-            <p>The soundtrack proves the world faster than another paragraph could.</p>
+            <p>These cue rooms do the proof work fast: three score-led entries that make the film world legible before the archive asks for deeper commitment.</p>
           </header>
 
           <ul className="bt-music__grid">
@@ -1021,7 +1021,7 @@ export function BongTourFeature() {
                   <p className="bt-music__lede">{poster.description}</p>
                   <div className="bt-music__actions">
                     <Button type="button" className="bt-button" onClick={() => setActiveRoom(poster.room)}>
-                      Enter cue room
+                      Enter Cue Room
                     </Button>
                   </div>
                 </div>
@@ -1034,7 +1034,7 @@ export function BongTourFeature() {
           <header className="bt-section-header bt-section-header--split">
             <div>
               <h2 id="bt-collectibles-title">Collector Rewards</h2>
-              <p>Artifacts live inside the world, not beside it. Bong Tour uses the archive as a reward layer while Walls/Devine keeps the shared unlock path.</p>
+              <p>Artifacts live inside the world, not beside it. Treat this archive as the return layer after the poster, treatment signal, and cue rooms have already earned the deeper dive.</p>
             </div>
             <div className="bt-section-header__actions">
               <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(portalRooms.collector)}>
@@ -1067,7 +1067,7 @@ export function BongTourFeature() {
         <section className="bt-finale" id="bong-tour-intake" aria-labelledby="bt-finale-title">
           <div className="bt-finale__body">
             <h2 id="bt-finale-title">Seen enough?</h2>
-            <p>Request treatment access, explore the cue rooms, or reach out if there is a fit for production, soundtrack, collector-world, or partnership.</p>
+            <p>If the tone lands, request treatment access, explore the cue rooms, or reach out for production, soundtrack, collector-world, or partnership conversations.</p>
 
             <div className="bt-finale__actions">
               <Button as="a" href={bongTourContactHref} className="bt-button">

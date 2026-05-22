@@ -561,19 +561,19 @@ export function WallsDevineLanding() {
                 <article className="wd-hero__signal">
                   <span>Listening room</span>
                   <strong>Open Volume 1 first</strong>
-                  <p>The hero control restores the shared player behavior and lands you at the listening room without leaving the route.</p>
+                  <p>The hero control now uses the same restore-or-open player shortcut as the header, then lands you at the listening room without a dead hash jump.</p>
                 </article>
 
                 <article className="wd-hero__signal">
                   <span>Collector grid</span>
                   <strong>Eight chapter tiles</strong>
-                  <p>Each tile opens artwork, story notes, and the hidden challenge layer tied back to the Volume 1 object.</p>
+                  <p>Each tile opens artwork, story notes, and the hidden challenge layer so the grid reads like one album-world installation instead of a loose gallery.</p>
                 </article>
 
                 <article className="wd-hero__signal">
                   <span>Signals</span>
                   <strong>Request drop alerts</strong>
-                  <p>Join the mailing list through CGU intake for listening-room updates and collector unlock notices. This sends a request to be added, not an instant subscription.</p>
+                  <p>{collectorHeroNote.mailingListHelper}</p>
                   <Button
                     as="a"
                     href={wallsDevineMailingListHref}
@@ -597,7 +597,7 @@ export function WallsDevineLanding() {
       <SectionShell id="walls-devine-grid" labelledBy="walls-devine-grid-title" className="wd-grid-shell" innerClassName="wd-grid-section">
         <header className="wd-grid-section__header">
           <h2 id="walls-devine-grid-title">The Collector Grid</h2>
-          <p>Start with the center object, open the surrounding chapter tiles, and return to the listening room whenever the score path should lead the story.</p>
+          <p>Start with the center object, open the surrounding chapter tiles, and return to the listening room whenever the score path should lead the story. Booking lives below this grid; merch and signal updates stay in their own lanes.</p>
         </header>
 
         <WallsDevineCollectorGrid tiles={instagramGrid} />

@@ -14,7 +14,7 @@
 
 ## Friday Launch Status — Reference Only
 
-- Launch target is Sunday. Detailed handoff lives in [launch-weekend-handoff.md](launch-weekend-handoff.md).
+- Launch target was Sunday. Cross-repo launch-readiness notes are now consolidated into `../sh_hub/docs/MASTER_STATE.md`; keep the summary below as historical reference only.
 - High-level features landed tonight:
 	- Walls/Devine listening room now uses one stable audio element across dock and modal, keeping playback continuity intact.
 	- Native WAV controls were restored in the listening room, and shareable song URLs plus listening-room analytics were wired into Firestore.

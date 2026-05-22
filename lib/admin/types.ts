@@ -72,6 +72,7 @@ export type WallsDevineCollectorHeroNote = {
   body: string;
   primaryCtaLabel: string;
   secondaryCtaLabel: string;
+  mailingListHelper: string;
   signatureIntro: string;
   journalLabel: string;
   updatedAt: string;
