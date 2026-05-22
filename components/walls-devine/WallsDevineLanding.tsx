@@ -360,7 +360,16 @@ export function WallsDevineLanding() {
 
                 <div className="wd-hero__letter-actions" aria-label="Walls Devine quick actions">
                   <div className="wd-hero__letter-actions-row">
-                    <Button as="a" href={wallsDevineListeningRoomHref} className="wd-hero__letter-cta">
+                    <Button
+                      as="a"
+                      href={wallsDevineListeningRoomHref}
+                      className="wd-hero__letter-cta"
+                      data-analytics-event="walls_devine_cta_click"
+                      data-analytics-param-source="walls_devine"
+                      data-analytics-param-cta="hero_listening_room"
+                      data-analytics-param-destination="listening_room"
+                      data-analytics-param-external="false"
+                    >
                       Open Listening Room
                     </Button>
                     <Button
@@ -370,6 +379,11 @@ export function WallsDevineLanding() {
                       className="wd-hero__signal-link"
                       target="_blank"
                       rel="noreferrer"
+                      data-analytics-event="walls_devine_cta_click"
+                      data-analytics-param-source="walls_devine"
+                      data-analytics-param-cta="hero_merch_shop"
+                      data-analytics-param-destination={wallsDevineMerchShopHref}
+                      data-analytics-param-external="true"
                     >
                       Shop Volume 1 Merch
                     </Button>
@@ -459,7 +473,16 @@ export function WallsDevineLanding() {
             </div>
 
             <div className="wd-booking-banner__action">
-              <Button as="a" href={wallsDevineBookingIntakeHref} className="wd-booking-banner__button">
+              <Button
+                as="a"
+                href={wallsDevineBookingIntakeHref}
+                className="wd-booking-banner__button"
+                data-analytics-event="walls_devine_cta_click"
+                data-analytics-param-source="walls_devine"
+                data-analytics-param-cta="booking_banner_book"
+                data-analytics-param-destination={wallsDevineBookingIntakeHref}
+                data-analytics-param-external="false"
+              >
                 Book Walls/Devine
               </Button>
               <Button
@@ -469,6 +492,11 @@ export function WallsDevineLanding() {
                 className="wd-booking-banner__button wd-booking-banner__button--secondary"
                 target="_blank"
                 rel="noreferrer"
+                data-analytics-event="walls_devine_cta_click"
+                data-analytics-param-source="walls_devine"
+                data-analytics-param-cta="booking_banner_merch"
+                data-analytics-param-destination={wallsDevineMerchShopHref}
+                data-analytics-param-external="true"
               >
                 Visit Merch Shop
               </Button>

@@ -1056,12 +1056,31 @@ export function BongTourFeature() {
                 </div>
 
                 <div className="bt-room-modal__header">
-                  <div>
-                    <p className="bt-room-modal__eyebrow">{activeRoom.eyebrow}</p>
-                    <h2 id={titleId}>{activeRoom.title}</h2>
-                    <p className="bt-room-modal__kicker">{activeRoom.kicker}</p>
-                    <p className="bt-room-modal__description">{activeRoom.description}</p>
-                  </div>
+                  {isCueRoom && activeCuePoster ? (
+                    <div className="bt-room-modal__cue-header-main">
+                      <div className="bt-room-modal__cue-poster" aria-hidden="true">
+                        <div className="bt-room-modal__cue-poster-frame">
+                          <Image src={activeCuePoster.image} alt="" sizes="112px" />
+                        </div>
+                      </div>
+
+                      <div className="bt-room-modal__cue-header-copy">
+                        <p className="bt-room-modal__eyebrow">Bong Tour cue room</p>
+                        <h2 id={titleId}>{activeCuePoster.title}</h2>
+                        <p className="bt-room-modal__cue-meta">
+                          {activeCuePoster.badge} · {activeRoom.ambientSubtitle}
+                        </p>
+                        <p className="bt-room-modal__description">{activeCuePoster.description}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="bt-room-modal__eyebrow">{activeRoom.eyebrow}</p>
+                      <h2 id={titleId}>{activeRoom.title}</h2>
+                      <p className="bt-room-modal__kicker">{activeRoom.kicker}</p>
+                      <p className="bt-room-modal__description">{activeRoom.description}</p>
+                    </div>
+                  )}
                   <Button type="button" variant="ghost" size="sm" className="bt-room-modal__close" onClick={() => setActiveRoom(null)}>
                     Close
                   </Button>
@@ -1188,106 +1207,97 @@ export function BongTourFeature() {
                   ) : isCueRoom && activeCuePoster ? (
                     <div className="bt-room-modal__cue-shell">
                       <section className="bt-room-modal__cue-current" aria-label="Current cue room player">
-                        <div className="bt-room-modal__cue-stage">
-                          <div className="bt-room-modal__cue-video-shell">
-                            <div className="bt-room-modal__cue-video-frame">
-                              {activeCuePoster.video?.embedUrl ? (
-                                <iframe
-                                  src={activeCuePoster.video.embedUrl}
-                                  title={`${activeCuePoster.title} cue video`}
-                                  className="bt-room-modal__cue-embed"
-                                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                                  allowFullScreen
-                                />
-                              ) : activeCuePoster.video?.sourceUrl ? (
-                                <video
-                                  className="bt-room-modal__cue-video"
-                                  controls
-                                  preload="metadata"
-                                  poster={activeCuePoster.video.posterImage?.src ?? activeCuePoster.image.src}
-                                >
-                                  <source src={activeCuePoster.video.sourceUrl} />
-                                  Your browser does not support video playback.
-                                </video>
-                              ) : (
-                                <div className="bt-room-modal__cue-video-placeholder">
-                                  <div className="bt-room-modal__cue-video-placeholder-frame">
-                                    <Image
-                                      src={activeCuePoster.video?.posterImage ?? activeCuePoster.image}
-                                      alt={`${activeCuePoster.title} cue poster`}
-                                      sizes="(max-width: 960px) 78vw, 420px"
-                                    />
-                                  </div>
-                                  <span>{activeCuePoster.video?.label ?? "Cue video deck"}</span>
-                                  <p>{activeCuePoster.video?.note ?? "Hook a cue video link into this room to swap the poster hold for a live player."}</p>
-                                </div>
-                              )}
-                            </div>
+                        <div className="bt-room-modal__cue-art">
+                          <div className="bt-room-modal__cue-stage">
+                            <div className="bt-room-modal__cue-video-shell">
+                              <div className="bt-room-modal__cue-video-frame">
+                                <span className="bt-room-modal__cue-stage-badge bt-room-modal__cue-stage-badge--top">
+                                  {activeCuePoster.badge}
+                                </span>
+                                <span className="bt-room-modal__cue-stage-badge bt-room-modal__cue-stage-badge--bottom">
+                                  {activeRoom.ambientSubtitle}
+                                </span>
 
-                            <div className="bt-room-modal__cue-player-wrap">
-                              <span className="bt-room-modal__cue-player-label">Video player</span>
-                              <div className="bt-room-modal__cue-player-meta">
-                                <span>{activeCuePoster.badge}</span>
-                                <span>{activeCuePoster.tagline}</span>
+                                {activeCuePoster.video?.embedUrl ? (
+                                  <iframe
+                                    src={activeCuePoster.video.embedUrl}
+                                    title={`${activeCuePoster.title} cue video`}
+                                    className="bt-room-modal__cue-embed"
+                                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                                    allowFullScreen
+                                  />
+                                ) : activeCuePoster.video?.sourceUrl ? (
+                                  <video
+                                    className="bt-room-modal__cue-video"
+                                    controls
+                                    preload="metadata"
+                                    poster={activeCuePoster.video.posterImage?.src ?? activeCuePoster.image.src}
+                                  >
+                                    <source src={activeCuePoster.video.sourceUrl} />
+                                    Your browser does not support video playback.
+                                  </video>
+                                ) : (
+                                  <div className="bt-room-modal__cue-video-placeholder">
+                                    <div className="bt-room-modal__cue-video-placeholder-frame">
+                                      <Image
+                                        src={activeCuePoster.video?.posterImage ?? activeCuePoster.image}
+                                        alt={`${activeCuePoster.title} cue poster`}
+                                        sizes="(max-width: 960px) 78vw, 420px"
+                                      />
+                                    </div>
+                                    <span>{activeCuePoster.video?.label ?? "Cue video deck"}</span>
+                                    <p>{activeCuePoster.video?.note ?? "Hook a cue video link into this room to swap the poster hold for a live player."}</p>
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="bt-room-modal__cue-player-wrap">
+                                <span className="bt-room-modal__cue-player-label">Video player</span>
+                                <div className="bt-room-modal__cue-player-meta">
+                                  <span>{activeCuePoster.tagline}</span>
+                                  <span>{activeCuePoster.highlights[0] ?? activeRoom.kicker}</span>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        <div className="bt-room-modal__cue-notes">
-                          <article>
-                            <span>Cue hook</span>
-                            <p>{activeCuePoster.tagline}</p>
-                          </article>
-                          <article>
-                            <span>Scene fit</span>
-                            <p>{activeCuePoster.description}</p>
-                          </article>
-                          <article>
-                            <span>Room thesis</span>
-                            <p>{activeRoom.kicker}</p>
-                          </article>
-                          <article>
-                            <span>Campaign use</span>
-                            <p>{activeRoom.description}</p>
-                          </article>
-                          <article>
-                            <span>Unlock owner</span>
-                            <p>The Bong Tour secret game routes through the Walls/Devine collector grid so the shared Creatives Guide reward path stays attached to Volume 1.</p>
-                          </article>
-                          <article>
-                            <span>Highlight stack</span>
-                            <p>{activeCuePoster.highlights.join(" · ")}</p>
-                          </article>
-                        </div>
+                        <section className="bt-room-modal__cue-notes-shell" aria-label={`${activeCuePoster.title} cue notes`}>
+                          <div className="bt-room-modal__cue-notes-head">
+                            <span className="bt-room-modal__cue-notes-kicker">Cue notes</span>
+                          </div>
+
+                          <div className="bt-room-modal__cue-notes">
+                            <article className="bt-room-modal__cue-note">
+                              <span>Cue hook</span>
+                              <p>{activeCuePoster.tagline}</p>
+                            </article>
+                            <article className="bt-room-modal__cue-note">
+                              <span>Scene fit</span>
+                              <p>{activeCuePoster.description}</p>
+                            </article>
+                            <article className="bt-room-modal__cue-note">
+                              <span>Room thesis</span>
+                              <p>{activeRoom.kicker}</p>
+                            </article>
+                            <article className="bt-room-modal__cue-note">
+                              <span>Campaign use</span>
+                              <p>{activeRoom.description}</p>
+                            </article>
+                            <article className="bt-room-modal__cue-note">
+                              <span>Unlock owner</span>
+                              <p>The Bong Tour secret game routes through the Walls/Devine collector grid so the shared Creatives Guide reward path stays attached to Volume 1.</p>
+                            </article>
+                            <article className="bt-room-modal__cue-note">
+                              <span>Highlight stack</span>
+                              <p>{activeCuePoster.highlights.join(" · ")}</p>
+                            </article>
+                          </div>
+                        </section>
 
                         <div className="bt-room-modal__links bt-room-modal__cue-links">
                           <a href={buildWallsDevineListeningRoomHref(activeCuePoster.playerTarget)}>Play in listening room</a>
                           <a href={wallsDevineCollectorGridHref}>Open Volume 1 collector grid</a>
-                        </div>
-
-                        <div className="bt-room-modal__actions">
-                          {activeRoom.actions.map((action) => (
-                            action.roomKey ? (
-                              <Button
-                                key={action.label}
-                                type="button"
-                                className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
-                                onClick={() => setActiveRoom(portalRooms[action.roomKey ?? "collector"])}
-                              >
-                                {action.label}
-                              </Button>
-                            ) : (
-                              <Button
-                                key={action.label}
-                                as="a"
-                                href={action.href ?? "/"}
-                                className={action.outline ? "bt-button bt-button--outline" : "bt-button"}
-                              >
-                                {action.label}
-                              </Button>
-                            )
-                          ))}
                         </div>
                       </section>
 

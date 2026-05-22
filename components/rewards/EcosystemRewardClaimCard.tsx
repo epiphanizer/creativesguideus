@@ -6,6 +6,7 @@ import { type FormEvent, useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { cx } from "@/lib/cx";
 import type { EcosystemRewardDefinition } from "@/lib/ecosystem/reward-catalog";
+import { trackAnalyticsEvent } from "@/lib/firebase/analytics";
 import { createEcosystemRewardClaim } from "@/lib/firebase/ecosystem-reward-claims";
 
 type EcosystemRewardClaimCardProps = {
@@ -26,6 +27,13 @@ export function EcosystemRewardClaimCard({ reward, source, unlocked, className }
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const airlockTitleId = useId();
+  const rewardAnalyticsParams = {
+    reward_id: reward.id,
+    reward_type: reward.rewardType,
+    chapter: reward.chapter,
+    source,
+    distribution_mode: reward.airdrop ? "airdrop" : "direct"
+  } as const;
 
   useEffect(() => {
     setHasMounted(true);
@@ -57,6 +65,7 @@ export function EcosystemRewardClaimCard({ reward, source, unlocked, className }
 
     setSubmissionState("submitting");
     setFeedbackMessage("");
+    void trackAnalyticsEvent("reward_claim_attempt", rewardAnalyticsParams);
 
     try {
       await createEcosystemRewardClaim({
@@ -78,10 +87,20 @@ export function EcosystemRewardClaimCard({ reward, source, unlocked, className }
       setSubmissionState("success");
       setFeedbackMessage(reward.successMessage);
       setAirlockOpen(false);
+      void trackAnalyticsEvent("reward_claim_success", rewardAnalyticsParams);
     } catch (error) {
       setSubmissionState("error");
       setFeedbackMessage(error instanceof Error ? error.message : "Could not log the reward claim.");
+      void trackAnalyticsEvent("reward_claim_error", {
+        ...rewardAnalyticsParams,
+        error_message: error instanceof Error ? error.message : "unknown_error"
+      });
     }
+  }
+
+  function handleOpenAirlock() {
+    setAirlockOpen(true);
+    void trackAnalyticsEvent("reward_airlock_open", rewardAnalyticsParams);
   }
 
   function renderClaimForm(modal = false) {
@@ -190,7 +209,7 @@ export function EcosystemRewardClaimCard({ reward, source, unlocked, className }
                 <p className="wd-reward-claim__reveal-title">{reward.airdrop.airlockTitle}</p>
                 <p>{reward.airdrop.airlockBody}</p>
               </div>
-              <Button type="button" variant="primary" size="sm" className="wd-signup__submit" onClick={() => setAirlockOpen(true)}>
+              <Button type="button" variant="primary" size="sm" className="wd-signup__submit" onClick={handleOpenAirlock}>
                 {reward.airdrop.ctaLabel}
               </Button>
             </div>

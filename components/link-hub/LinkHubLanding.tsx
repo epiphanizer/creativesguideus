@@ -118,6 +118,13 @@ export function LinkHubLanding() {
                   href={link.href}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noreferrer" : undefined}
+                  data-analytics-event="link_hub_link_click"
+                  data-analytics-param-source="link_hub"
+                  data-analytics-param-linkId={link.id}
+                  data-analytics-param-linkTitle={link.title}
+                  data-analytics-param-destination={link.href}
+                  data-analytics-param-featured={link.isFeatured ? "true" : "false"}
+                  data-analytics-param-external={external ? "true" : "false"}
                 >
                   <div className="cg-link-hub__card-head">
                     <div className="cg-link-hub__card-meta">

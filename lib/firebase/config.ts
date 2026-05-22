@@ -7,6 +7,9 @@ export const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID ?? "1:915803625394:web:261af2d7d2080251dbb6ab"
 } as const;
 
+export const firebaseAnalyticsMeasurementId =
+  process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID ?? process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";
+
 export const firebaseProjectInfo = {
   projectId: firebaseConfig.projectId,
   authDomain: firebaseConfig.authDomain,
@@ -35,6 +38,7 @@ export const firebaseAdminPaths = {
 } as const;
 
 export const hasFirebaseConfig = Object.values(firebaseConfig).every((value) => Boolean(value));
+export const hasFirebaseAnalyticsConfig = hasFirebaseConfig && Boolean(firebaseAnalyticsMeasurementId);
 
 export const firebaseRoadmapNotes = [
   "Admin auth now expects a Firebase Auth email/password account instead of the local cookie bypass.",
@@ -45,6 +49,7 @@ export const firebaseRoadmapNotes = [
 
 export const firebaseAdminRecommendations = [
   `Use Firestore ${firebaseAdminPaths.adminUsersCollection}/{uid} documents as the editor allowlist.`,
+  `Link a GA4 web stream to the ${firebaseConfig.projectId} Firebase project and set NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID so client analytics can report route and CTA activity.`,
   `Keep the release plan in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}.`,
   `Keep the booking board in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId} under the ${firebaseAdminPaths.bookingBoardField} field.`,
   `Keep public Walls/Devine note copy in ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.publicContentCollection}/${firebaseAdminPaths.collectorHeroNoteDocId}.`,

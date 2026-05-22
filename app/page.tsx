@@ -111,6 +111,11 @@ export default function HomePage() {
                 aria-label={gateway.entryLabel}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-analytics-event="home_gateway_click"
+                data-analytics-param-source="home"
+                data-analytics-param-gateway={gateway.title}
+                data-analytics-param-destination={gateway.href}
+                data-analytics-param-external="true"
               >
                 {portalContent}
               </a>
@@ -118,7 +123,17 @@ export default function HomePage() {
           }
 
           return (
-            <Link key={gateway.title} href={gateway.href} className={portalClassName} aria-label={gateway.entryLabel}>
+            <Link
+              key={gateway.title}
+              href={gateway.href}
+              className={portalClassName}
+              aria-label={gateway.entryLabel}
+              data-analytics-event="home_gateway_click"
+              data-analytics-param-source="home"
+              data-analytics-param-gateway={gateway.title}
+              data-analytics-param-destination={gateway.href}
+              data-analytics-param-external="false"
+            >
               {portalContent}
             </Link>
           );
