@@ -1,12 +1,19 @@
 export function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="cg-footer">
       <div className="cg-footer__inner">
         <p className="cg-footer__manifesto">Release the signal. Keep the channel alive.</p>
-        <a className="cg-footer__email" href="mailto:hello@creativesguide.us">
-          hello@creativesguide.us
-        </a>
-        <small className="cg-footer__copyright">© {new Date().getFullYear()} Creatives Guide Us. All rights observed.</small>
+        <div className="cg-footer__links" aria-label="Footer links">
+          <a className="cg-footer__link" href="/links">
+            Links
+          </a>
+          <a className="cg-footer__link" href="mailto:hello@creativesguide.us">
+            hello@creativesguide.us
+          </a>
+        </div>
+        <small className="cg-footer__copyright">© {currentYear} Creatives Guide Us, LLC.</small>
       </div>
     </footer>
   );

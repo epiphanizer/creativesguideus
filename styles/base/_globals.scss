@@ -433,14 +433,21 @@
   color: var(--cg-color-ink-500);
 }
 
-.cg-footer__email {
+.cg-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--cg-space-md);
+}
+
+.cg-footer__link {
   font-family: var(--cg-font-mono, var(--cg-font-sans));
   font-size: var(--cg-type-body);
   letter-spacing: 0.02em;
 }
 
-.cg-footer__email:hover,
-.cg-footer__email:focus-visible {
+.cg-footer__link:hover,
+.cg-footer__link:focus-visible {
   color: var(--cg-color-ink-600);
 }
 
