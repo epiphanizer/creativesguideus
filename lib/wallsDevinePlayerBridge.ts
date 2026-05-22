@@ -72,14 +72,25 @@ export function openWallsDevineListeningRoomShortcut({
 
   const target = document.getElementById(wallsDevineListeningRoomAnchorId);
 
+  const openPlayer = () => {
+    if (isPlayerDismissed) {
+      requestWallsDevinePlayerRestore();
+    }
+
+    requestWallsDevinePlayerOpen();
+  };
+
   if (target) {
     target.scrollIntoView({
-      behavior: prefersReducedMotion ? "auto" : "smooth",
+      behavior: "auto",
       block: "start"
     });
+
+    window.setTimeout(openPlayer, prefersReducedMotion ? 0 : 320);
     return true;
   }
 
+  openPlayer();
   onMissingTarget?.();
   return false;
 }
