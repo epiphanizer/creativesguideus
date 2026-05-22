@@ -4,6 +4,11 @@ import { type ChangeEvent, type FormEvent, useEffect, useRef, useState } from "r
 
 import { createContactIntake } from "@/lib/firebase/contact-intake";
 import { trackAnalyticsEvent } from "@/lib/firebase/analytics";
+import {
+  GuidedIntakeChoiceGrid,
+  GuidedIntakeProgress,
+  GuidedIntakeStepHeader
+} from "@/components/contact-guided/GuidedIntakePrimitives";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { Button } from "@/components/ui/Button";
@@ -1030,52 +1035,6 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
     }
   }
 
-  function renderChoiceGrid(options: ContactChoiceOption[], value: string, onSelect: (nextValue: string) => void) {
-    return (
-      <div className="cg-contact__choice-grid">
-        {options.map((option) => {
-          const isActive = value === option.value;
-
-          return (
-            <button
-              key={option.value}
-              type="button"
-              className={`cg-contact__choice${isActive ? " cg-contact__choice--active" : ""}`}
-              onClick={() => onSelect(option.value)}
-              aria-pressed={isActive}
-            >
-              <span className="cg-contact__choice-label">{option.label}</span>
-              <span className="cg-contact__choice-description">{option.description}</span>
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-
-  function renderMultiChoiceGrid(options: ContactChoiceOption[], values: string[]) {
-    return (
-      <div className="cg-contact__choice-grid">
-        {options.map((option) => {
-          const isActive = values.includes(option.value);
-
-          return (
-            <button
-              key={option.value}
-              type="button"
-              className={`cg-contact__choice${isActive ? " cg-contact__choice--active" : ""}`}
-              onClick={() => handleToggleUpdatePreference(option.value)}
-              aria-pressed={isActive}
-            >
-              <span className="cg-contact__choice-label">{option.label}</span>
-              <span className="cg-contact__choice-description">{option.description}</span>
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-
   function renderStepBody() {
     if (activeStep.id === "intent") {
       if (activeFlow.id === "general" || activeFlow.id === "walls-booking") {
@@ -1084,19 +1043,23 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
             <fieldset className="cg-contact__fieldset">
               <legend className="cg-contact__legend">Choose the room</legend>
               <p className="cg-contact__field-hint">Pick the lane that best fits the first move. You can still clarify the exact shape in the next step.</p>
-              {renderChoiceGrid(inquiryTypeCardOptions, form.inquiryType, (value) => {
-                if (value !== form.inquiryType) {
-                  void trackAnalyticsEvent("contact_guided_inquiry_type_selected", {
-                    contextId: prefill.contextId || "default",
-                    projectTitle: form.projectTitle.trim() || prefill.projectTitle || "none",
-                    inquiryType: value
-                  });
-                }
+              <GuidedIntakeChoiceGrid
+                options={inquiryTypeCardOptions}
+                value={form.inquiryType}
+                onSelect={(value) => {
+                  if (value !== form.inquiryType) {
+                    void trackAnalyticsEvent("contact_guided_inquiry_type_selected", {
+                      contextId: prefill.contextId || "default",
+                      projectTitle: form.projectTitle.trim() || prefill.projectTitle || "none",
+                      inquiryType: value
+                    });
+                  }
 
-                setSubmissionState("idle");
-                setFeedbackMessage("");
-                setForm((current) => ({ ...current, inquiryType: value }));
-              })}
+                  setSubmissionState("idle");
+                  setFeedbackMessage("");
+                  setForm((current) => ({ ...current, inquiryType: value }));
+                }}
+              />
             </fieldset>
 
             {activeFlow.id === "walls-booking" ? (
@@ -1320,7 +1283,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
             <fieldset className="cg-contact__fieldset">
               <legend className="cg-contact__legend">Choose the updates that matter</legend>
               <p className="cg-contact__field-hint">Pick one or many. If you skip these, CGU treats this as a general request for Walls/Devine signal updates.</p>
-              {renderMultiChoiceGrid(mailingPreferenceOptions, routeDetails.updatePreferences)}
+              <GuidedIntakeChoiceGrid
+                options={mailingPreferenceOptions}
+                values={routeDetails.updatePreferences}
+                onSelect={handleToggleUpdatePreference}
+              />
             </fieldset>
 
             <div className="cg-contact__field cg-contact__field--full">
@@ -1471,11 +1438,15 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
           <fieldset className="cg-contact__fieldset">
             <legend className="cg-contact__legend">Choose the closest Bong Tour lane</legend>
             <p className="cg-contact__field-hint">Pick the focus that best fits the first conversation. The full note can still span production, soundtrack, and collector-world context.</p>
-            {renderChoiceGrid(partnershipFocusOptions, routeDetails.partnershipFocus, (value) => {
-              setSubmissionState("idle");
-              setFeedbackMessage("");
-              setRouteDetails((current) => ({ ...current, partnershipFocus: value }));
-            })}
+            <GuidedIntakeChoiceGrid
+              options={partnershipFocusOptions}
+              value={routeDetails.partnershipFocus}
+              onSelect={(value) => {
+                setSubmissionState("idle");
+                setFeedbackMessage("");
+                setRouteDetails((current) => ({ ...current, partnershipFocus: value }));
+              }}
+            />
           </fieldset>
 
           <div className="cg-contact__field-row">
@@ -1604,36 +1575,19 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
 
         <form className="cg-contact__form" onSubmit={handleSubmit} noValidate aria-busy={submissionState === "submitting"}>
           <div className="cg-contact__form-head">
-            <ol className="cg-contact__progress" aria-label="Guided intake steps">
-              {activeFlow.steps.map((step, index) => {
-                const isActive = index === currentStep;
-                const isComplete = index < currentStep;
+            <GuidedIntakeProgress
+              steps={activeFlow.steps.map((step) => ({ key: step.id, label: step.label, title: step.title }))}
+              currentStep={currentStep}
+            />
 
-                return (
-                  <li
-                    key={step.id}
-                    className={`cg-contact__progress-step${isActive ? " cg-contact__progress-step--active" : ""}${isComplete ? " cg-contact__progress-step--complete" : ""}`}
-                    aria-current={isActive ? "step" : undefined}
-                  >
-                    <span className="cg-contact__progress-index">{index + 1}</span>
-                    <span className="cg-contact__progress-copy">
-                      <strong>{step.label}</strong>
-                      <small>{step.title}</small>
-                    </span>
-                  </li>
-                );
-              })}
-            </ol>
-
-            <div className="cg-contact__step-copy">
-              <span className="cg-contact__step-count">
-                Step {currentStep + 1} of {activeFlow.steps.length}
-              </span>
-              <h3 className="cg-contact__step-title">{activeStep.title}</h3>
-              <p className="cg-contact__step-description">{activeStep.description}</p>
-              <p className="cg-contact__trust-note">{activeFlow.trustNote}</p>
-              <p className="cg-contact__step-helper">{activeStep.helper}</p>
-            </div>
+            <GuidedIntakeStepHeader
+              currentStep={currentStep}
+              totalSteps={activeFlow.steps.length}
+              title={activeStep.title}
+              description={activeStep.description}
+              trustNote={activeFlow.trustNote}
+              helper={activeStep.helper}
+            />
           </div>
 
           <div className="cg-contact__step-panel">{renderStepBody()}</div>
