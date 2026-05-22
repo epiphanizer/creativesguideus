@@ -6,9 +6,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { anchors } from "./nav/anchors";
 import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 import {
-  requestWallsDevinePlayerOpen,
+  openWallsDevineListeningRoomShortcut,
   readWallsDevinePlayerDismissed,
-  requestWallsDevinePlayerRestore,
+  wallsDevineListeningRoomAnchorId,
   wallsDevinePlayerDismissedChangeEventName
 } from "@/lib/wallsDevinePlayerBridge";
 import { useActiveSection } from "../hooks/useActiveSection";
@@ -100,30 +100,19 @@ export function HeaderNav() {
   }, [closeMenu, pathname, prefersReducedMotion, router]);
 
   const handleListeningRoomShortcut = useCallback(() => {
-    const listeningRoomAnchorId = "walls-devine-listening-room";
-
     if (!isWallsDevineRoute) {
       return;
     }
 
-    if (isPlayerDismissed) {
-      requestWallsDevinePlayerRestore();
-    }
-
     closeMenu();
-  requestWallsDevinePlayerOpen();
 
-    const target = document.getElementById(listeningRoomAnchorId);
-
-    if (target) {
-      target.scrollIntoView({
-        behavior: prefersReducedMotion ? "auto" : "smooth",
-        block: "start"
-      });
-      return;
-    }
-
-    router.push(`/walls-devine#${listeningRoomAnchorId}`);
+    openWallsDevineListeningRoomShortcut({
+      isPlayerDismissed,
+      prefersReducedMotion,
+      onMissingTarget: () => {
+        router.push(`/walls-devine#${wallsDevineListeningRoomAnchorId}`);
+      }
+    });
   }, [closeMenu, isPlayerDismissed, isWallsDevineRoute, prefersReducedMotion, router]);
 
   useEffect(() => {

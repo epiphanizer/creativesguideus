@@ -15,9 +15,9 @@ import type { EcosystemRewardId } from "@/lib/ecosystem/reward-catalog";
 import { getWallsDevineBookingBannerNote, getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 import {
+  openWallsDevineListeningRoomShortcut,
   readWallsDevinePlayerDismissed,
-  requestWallsDevinePlayerOpen,
-  requestWallsDevinePlayerRestore,
+  wallsDevineListeningRoomAnchorId,
   wallsDevinePlayerDismissedChangeEventName
 } from "@/lib/wallsDevinePlayerBridge";
 import { defaultWallsDevineBookingBannerNote, defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
@@ -250,7 +250,6 @@ const wallsDevineMailingListHref = `/contact?${new URLSearchParams({
   project: "Walls/Devine",
   inquiryType: "mailing-list"
 }).toString()}`;
-const wallsDevineListeningRoomAnchorId = "walls-devine-listening-room";
 const wallsDevineListeningRoomHref = `#${wallsDevineListeningRoomAnchorId}`;
 
 export function WallsDevineLanding() {
@@ -371,21 +370,9 @@ export function WallsDevineLanding() {
   function handleListeningRoomShortcut(event: React.MouseEvent<HTMLAnchorElement>) {
     event.preventDefault();
 
-    if (isPlayerDismissed) {
-      requestWallsDevinePlayerRestore();
-    }
-
-    requestWallsDevinePlayerOpen();
-
-    const target = document.getElementById(wallsDevineListeningRoomAnchorId);
-
-    if (!target) {
-      return;
-    }
-
-    target.scrollIntoView({
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-      block: "start"
+    openWallsDevineListeningRoomShortcut({
+      isPlayerDismissed,
+      prefersReducedMotion
     });
   }
 
@@ -399,7 +386,7 @@ export function WallsDevineLanding() {
               eyebrow={collectorHeroNote.eyebrow}
               title={collectorHeroNote.title}
               headingLevel="h1"
-              description="Start in the listening room, move through the collector grid, then choose merch or request to be added for drop alerts through the CGU intake flow."
+              description="Start with Volume 1 in the listening room, move through the collector grid, and stay with the record as the journals and chapter tiles open."
             />
 
             <div className="wd-hero__gamification-strip" aria-label="Release details">
@@ -560,19 +547,19 @@ export function WallsDevineLanding() {
               <div className="wd-hero__signal-grid" aria-label="Walls Devine route guide">
                 <article className="wd-hero__signal">
                   <span>Listening room</span>
-                  <strong>Open Volume 1 first</strong>
-                  <p>The hero control now uses the same restore-or-open player shortcut as the header, then lands you at the listening room without a dead hash jump.</p>
+                  <strong>Open Volume 1 first.</strong>
+                  <p>Start with the score, then return whenever the grid sends you back into the record.</p>
                 </article>
 
                 <article className="wd-hero__signal">
                   <span>Collector grid</span>
-                  <strong>Eight chapter tiles</strong>
-                  <p>Each tile opens artwork, story notes, and the hidden challenge layer so the grid reads like one album-world installation instead of a loose gallery.</p>
+                  <strong>Eight chapter tiles.</strong>
+                  <p>Each tile opens artwork, story notes, and a challenge layer from the album world.</p>
                 </article>
 
                 <article className="wd-hero__signal">
                   <span>Signals</span>
-                  <strong>Request drop alerts</strong>
+                  <strong>Request drop alerts.</strong>
                   <p>{collectorHeroNote.mailingListHelper}</p>
                   <Button
                     as="a"
@@ -597,7 +584,7 @@ export function WallsDevineLanding() {
       <SectionShell id="walls-devine-grid" labelledBy="walls-devine-grid-title" className="wd-grid-shell" innerClassName="wd-grid-section">
         <header className="wd-grid-section__header">
           <h2 id="walls-devine-grid-title">The Collector Grid</h2>
-          <p>Start with the center object, open the surrounding chapter tiles, and return to the listening room whenever the score path should lead the story. Booking lives below this grid; merch and signal updates stay in their own lanes.</p>
+          <p>Start with the center object, then move through the eight chapter tiles around it. Each unlock points back to the record, the journals, or the room around Volume 1.</p>
         </header>
 
         <WallsDevineCollectorGrid tiles={instagramGrid} />

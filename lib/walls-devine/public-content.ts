@@ -8,7 +8,7 @@ export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote =
   primaryCtaLabel: "Open Listening Room",
   secondaryCtaLabel: "Shop Volume 1 Merch",
   mailingListHelper:
-    "Request to be added for Walls/Devine drop alerts, listening-room updates, and collector unlock notices. This stays inside the CGU intake flow rather than acting like an instant subscription.",
+    "Ask to receive Walls/Devine drop alerts, listening-room updates, and collector unlock notices. Until the dedicated list is live, this request routes through CGU intake.",
   signatureIntro: "With Love From the Room,",
   journalLabel: "From the journals",
   updatedAt: "2026-05-16T00:00:00.000Z"
@@ -16,11 +16,11 @@ export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote =
 
 export const defaultWallsDevineBookingBannerNote: WallsDevineBookingBannerNote = {
   eyebrow: "Live booking",
-  title: "Bring Walls/Devine into the room",
-  description: "Use this lane for listening sessions, screenings, live bookings, or partnership conversations around Volume 1. Merch stays in the storefront, and collector or drop alerts stay in the mailing-list request.",
+  title: "Bring Walls/Devine into the room.",
+  description: "Use this lane for listening sessions, screenings, live bookings, and partnership conversations around Volume 1.",
   primaryCtaLabel: "Book Walls/Devine",
   secondaryCtaLabel: "Shop Volume 1 Merch",
-  meta: "Room programming · Performance · Partnerships",
+  meta: "Listening sessions · Screenings · Partnerships",
   updatedAt: "2026-05-22T00:00:00.000Z"
 };
 

@@ -15,6 +15,13 @@ export const wallsDevinePlayerStorageKey = "walls-devine-player-state-v1";
 export const wallsDevinePlayerDismissedChangeEventName = "wd-player-dismissed-change";
 export const wallsDevinePlayerRestoreRequestEventName = "wd-player-restore-request";
 export const wallsDevinePlayerOpenRequestEventName = "wd-player-open-request";
+export const wallsDevineListeningRoomAnchorId = "walls-devine-listening-room";
+
+type OpenWallsDevineListeningRoomOptions = {
+  isPlayerDismissed: boolean;
+  prefersReducedMotion: boolean;
+  onMissingTarget?: () => void;
+};
 
 export function readWallsDevinePlayerDismissed() {
   return false;
@@ -46,4 +53,33 @@ export function requestWallsDevinePlayerOpen() {
   }
 
   window.dispatchEvent(new Event(wallsDevinePlayerOpenRequestEventName));
+}
+
+export function openWallsDevineListeningRoomShortcut({
+  isPlayerDismissed,
+  prefersReducedMotion,
+  onMissingTarget
+}: OpenWallsDevineListeningRoomOptions) {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  if (isPlayerDismissed) {
+    requestWallsDevinePlayerRestore();
+  }
+
+  requestWallsDevinePlayerOpen();
+
+  const target = document.getElementById(wallsDevineListeningRoomAnchorId);
+
+  if (target) {
+    target.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "start"
+    });
+    return true;
+  }
+
+  onMissingTarget?.();
+  return false;
 }
