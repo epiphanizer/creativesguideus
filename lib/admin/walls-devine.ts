@@ -5,7 +5,7 @@ import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevi
 import { defaultBookingBoard } from "./booking-engine";
 
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
-import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import { defaultWallsDevineBookingBannerNote, defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 
 const releasePlanPath = path.join(process.cwd(), "data", "walls-devine", "release-plan.json");
 const instagramPostsDir = path.join(process.cwd(), "app", "walls-devine", "instagram-posts");
@@ -120,6 +120,7 @@ export async function getWallsDevineAdminData() {
     instagramDrafts,
     journalEntries,
     collectorHeroNote: defaultWallsDevineCollectorHeroNote,
+    bookingBannerNote: defaultWallsDevineBookingBannerNote,
     linkHub: defaultLinkHubContent
   } satisfies WallsDevineAdminData;
 }

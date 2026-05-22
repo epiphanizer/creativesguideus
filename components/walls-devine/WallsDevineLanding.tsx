@@ -11,9 +11,9 @@ import { SectionShell } from "@/components/ui/SectionShell";
 import { songPostCards } from "@/components/walls-devine/content";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
 import type { EcosystemRewardId } from "@/lib/ecosystem/reward-catalog";
-import { getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
+import { getWallsDevineBookingBannerNote, getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
-import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import { defaultWallsDevineBookingBannerNote, defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
 import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
@@ -245,6 +245,7 @@ export function WallsDevineLanding() {
   const [isQuotePaused, setIsQuotePaused] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
   const [collectorHeroNote, setCollectorHeroNote] = useState(defaultWallsDevineCollectorHeroNote);
+  const [bookingBannerNote, setBookingBannerNote] = useState(defaultWallsDevineBookingBannerNote);
   const collectorHeroBody = collectorHeroNote.body.trim() === defaultWallsDevineCollectorHeroNote.body.trim() ? heartfeltCollectorHeroBody : collectorHeroNote.body;
 
   const activeQuote = collectorLetterQuotes[activeQuoteIndex] ?? collectorLetterQuotes[0];
@@ -252,9 +253,10 @@ export function WallsDevineLanding() {
   useEffect(() => {
     let isActive = true;
 
-    void getWallsDevineCollectorHeroNote().then((note) => {
+    void Promise.all([getWallsDevineCollectorHeroNote(), getWallsDevineBookingBannerNote()]).then(([note, banner]) => {
       if (isActive) {
         setCollectorHeroNote(note);
+        setBookingBannerNote(banner);
       }
     });
 
@@ -463,12 +465,12 @@ export function WallsDevineLanding() {
         <div id="walls-devine-booking" className="wd-grid-section__collector-access">
           <section className="wd-booking-banner" aria-labelledby="walls-devine-booking-title">
             <div className="wd-booking-banner__copy">
-              <p className="wd-booking-banner__eyebrow">Live Booking + Merch</p>
+              <p className="wd-booking-banner__eyebrow">{bookingBannerNote.eyebrow}</p>
               <h2 id="walls-devine-booking-title" className="wd-booking-banner__title">
-                Book or shop Walls/Devine
+                {bookingBannerNote.title}
               </h2>
               <p className="wd-booking-banner__description">
-                Bring Volume 1 into the room for listening sessions, screenings, live bookings, partnership conversations, or direct shop traffic for the merch drop.
+                {bookingBannerNote.description}
               </p>
             </div>
 
@@ -500,7 +502,7 @@ export function WallsDevineLanding() {
               >
                 Visit Merch Shop
               </Button>
-              <p className="wd-booking-banner__meta">Listening events · Performance · Partnerships · Fourthwall merch shop</p>
+              <p className="wd-booking-banner__meta">{bookingBannerNote.meta}</p>
             </div>
           </section>
         </div>

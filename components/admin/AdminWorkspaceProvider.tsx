@@ -36,7 +36,7 @@ import { firebaseAuth } from "@/lib/firebase/client";
 import { firebaseAdminPaths } from "@/lib/firebase/config";
 import { getEcosystemLeads } from "@/lib/firebase/ecosystem-leads";
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
-import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import { defaultWallsDevineBookingBannerNote, defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 
 export type SaveState = "saving" | "deleting" | "success" | "error" | undefined;
 export type ContentSource = "pending" | "firebase" | "bootstrap";
@@ -165,6 +165,7 @@ const fallbackAdminData: WallsDevineAdminData = {
   instagramDrafts: [],
   journalEntries: [],
   collectorHeroNote: defaultWallsDevineCollectorHeroNote,
+  bookingBannerNote: defaultWallsDevineBookingBannerNote,
   linkHub: defaultLinkHubContent,
   storageBacked: false,
   contentBackend: "bootstrap",

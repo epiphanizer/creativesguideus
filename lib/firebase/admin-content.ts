@@ -11,10 +11,16 @@ import type {
   LinkHubContent,
   ReleasePlan,
   WallsDevineAdminData,
+  WallsDevineBookingBannerNote,
   WallsDevineCollectorHeroNote
 } from "@/lib/admin/types";
 import { defaultLinkHubContent, normalizeLinkHubContent } from "@/lib/link-hub/content";
-import { defaultWallsDevineCollectorHeroNote, normalizeWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import {
+  defaultWallsDevineBookingBannerNote,
+  defaultWallsDevineCollectorHeroNote,
+  normalizeWallsDevineBookingBannerNote,
+  normalizeWallsDevineCollectorHeroNote
+} from "@/lib/walls-devine/public-content";
 
 import { firebaseDb, firebaseStorage } from "./client";
 import { firebaseAdminPaths } from "./config";
@@ -81,6 +87,14 @@ function getCollectorHeroNoteDocRef() {
   }
 
   return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.collectorHeroNoteDocId);
+}
+
+function getBookingBannerNoteDocRef() {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.bookingBannerNoteDocId);
 }
 
 function getLinkHubDocRef() {
@@ -404,6 +418,16 @@ async function getCollectorHeroNoteFromFirestore() {
   return normalizeWallsDevineCollectorHeroNote(snapshot.data() as Partial<WallsDevineCollectorHeroNote>);
 }
 
+async function getBookingBannerNoteFromFirestore() {
+  const snapshot = await getDoc(getBookingBannerNoteDocRef());
+
+  if (!snapshot.exists()) {
+    return defaultWallsDevineBookingBannerNote;
+  }
+
+  return normalizeWallsDevineBookingBannerNote(snapshot.data() as Partial<WallsDevineBookingBannerNote>);
+}
+
 async function getLinkHubFromFirestore() {
   const snapshot = await getDoc(getLinkHubDocRef());
 
@@ -457,8 +481,9 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
   try {
     let { instagramDrafts, journalEntries } = await readFirestoreMarkdownCollections();
     let markdownInitialized = Boolean(projectData?.[firebaseAdminPaths.markdownInitializedField]);
-    const [collectorHeroNote, linkHub, bookingRoutingTasks] = await Promise.all([
+    const [collectorHeroNote, bookingBannerNote, linkHub, bookingRoutingTasks] = await Promise.all([
       getCollectorHeroNoteFromFirestore(),
+      getBookingBannerNoteFromFirestore(),
       getLinkHubFromFirestore(),
       readBookingRoutingTasks()
     ]);
@@ -480,6 +505,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
       instagramDrafts,
       journalEntries,
       collectorHeroNote,
+      bookingBannerNote,
       linkHub,
       storageBacked: true,
       contentBackend: "firestore",
@@ -493,6 +519,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
       instagramDrafts: [],
       journalEntries: [],
       collectorHeroNote: defaultWallsDevineCollectorHeroNote,
+      bookingBannerNote: defaultWallsDevineBookingBannerNote,
       linkHub: defaultLinkHubContent,
       storageBacked: false,
       contentBackend: "bootstrap",
@@ -541,6 +568,16 @@ export async function updateFirebaseCollectorHeroNote(note: Partial<WallsDevineC
   });
 
   await setDoc(getCollectorHeroNoteDocRef(), nextNote, { merge: true });
+  return nextNote;
+}
+
+export async function updateFirebaseBookingBannerNote(note: Partial<WallsDevineBookingBannerNote>) {
+  const nextNote = normalizeWallsDevineBookingBannerNote({
+    ...note,
+    updatedAt: new Date().toISOString()
+  });
+
+  await setDoc(getBookingBannerNoteDocRef(), nextNote, { merge: true });
   return nextNote;
 }
 

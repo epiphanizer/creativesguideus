@@ -1,9 +1,9 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
-import type { WallsDevineCollectorHeroNote } from "@/lib/admin/types";
+import type { WallsDevineBookingBannerNote, WallsDevineCollectorHeroNote } from "@/lib/admin/types";
 import { firebaseDb } from "@/lib/firebase/client";
 import { firebaseAdminPaths } from "@/lib/firebase/config";
-import { normalizeWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import { normalizeWallsDevineBookingBannerNote, normalizeWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 
 function getCollectorHeroNoteDoc() {
   if (!firebaseDb) {
@@ -16,6 +16,20 @@ function getCollectorHeroNoteDoc() {
     firebaseAdminPaths.wallsDevineProjectId,
     firebaseAdminPaths.publicContentCollection,
     firebaseAdminPaths.collectorHeroNoteDocId
+  );
+}
+
+function getBookingBannerNoteDoc() {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return doc(
+    firebaseDb,
+    firebaseAdminPaths.adminProjectsCollection,
+    firebaseAdminPaths.wallsDevineProjectId,
+    firebaseAdminPaths.publicContentCollection,
+    firebaseAdminPaths.bookingBannerNoteDocId
   );
 }
 
@@ -35,5 +49,24 @@ export async function updateWallsDevineCollectorHeroNote(note: Partial<WallsDevi
   });
 
   await setDoc(getCollectorHeroNoteDoc(), normalizedNote, { merge: true });
+  return normalizedNote;
+}
+
+export async function getWallsDevineBookingBannerNote() {
+  try {
+    const snapshot = await getDoc(getBookingBannerNoteDoc());
+    return normalizeWallsDevineBookingBannerNote(snapshot.exists() ? (snapshot.data() as Partial<WallsDevineBookingBannerNote>) : null);
+  } catch {
+    return normalizeWallsDevineBookingBannerNote();
+  }
+}
+
+export async function updateWallsDevineBookingBannerNote(note: Partial<WallsDevineBookingBannerNote>) {
+  const normalizedNote = normalizeWallsDevineBookingBannerNote({
+    ...note,
+    updatedAt: new Date().toISOString()
+  });
+
+  await setDoc(getBookingBannerNoteDoc(), normalizedNote, { merge: true });
   return normalizedNote;
 }

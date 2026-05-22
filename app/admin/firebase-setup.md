@@ -10,6 +10,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - Calendar sync groundwork: Firestore `releaseTasks/{taskId}` is reserved for Google Calendar-ready release events once the sync layer is enabled.
 - Booking routing sync: Firestore `bookingRoutingTasks/{targetId}` stores Google Calendar-ready hold and confirmed routing dates for the booking engine.
 - Public note copy: Firestore `adminProjects/walls-devine/publicContent/collectorHeroNote` stores the editable collector note shown on the public Volume 1 hero.
+- Public booking banner: Firestore `adminProjects/walls-devine/publicContent/bookingBannerNote` stores the editable booking and merch banner copy shown below the collector grid.
 - Public jump-link hub: Firestore `adminProjects/walls-devine/publicContent/linkHub` stores the editable Linktree-style links page at `/links`.
 - Web analytics: Google/Firebase Analytics can capture route changes plus key CTA events when the Firebase project is linked to a GA4 web stream and `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` is set in the site environment.
 - Lead capture: Firestore `ecosystemLeads/{leadId}` stores public collector-list signups plus richer guided-intake booking leads from the site experience.
@@ -55,6 +56,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - `adminUsers/{uid}`
 - `adminProjects/walls-devine`
 - `adminProjects/walls-devine/publicContent/collectorHeroNote`
+- `adminProjects/walls-devine/publicContent/bookingBannerNote`
 - `adminProjects/walls-devine/publicContent/linkHub`
 - `adminProjects/walls-devine/privateContent/bongTourTreatment`
 - `adminProjects/walls-devine/privateContentAccessLogs/{logId}`

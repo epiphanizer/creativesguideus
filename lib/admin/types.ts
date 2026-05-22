@@ -71,6 +71,14 @@ export type WallsDevineCollectorHeroNote = {
   updatedAt: string;
 };
 
+export type WallsDevineBookingBannerNote = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  meta: string;
+  updatedAt: string;
+};
+
 export type LinkHubLink = {
   id: string;
   eyebrow: string;
@@ -291,6 +299,7 @@ export type WallsDevineAdminData = {
   instagramDrafts: AdminMarkdownFile[];
   journalEntries: AdminMarkdownFile[];
   collectorHeroNote: WallsDevineCollectorHeroNote;
+  bookingBannerNote: WallsDevineBookingBannerNote;
   linkHub: LinkHubContent;
   storageBacked?: boolean;
   contentBackend?: "firestore" | "bootstrap";

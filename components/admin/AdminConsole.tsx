@@ -14,6 +14,7 @@ import {
   renameFirebaseAdminMarkdownFile,
   replaceAdminMarkdownFile,
   seedFirebaseWallsDevineAdminData,
+  updateFirebaseBookingBannerNote,
   updateFirebaseBookingBoard,
   updateFirebaseAdminMarkdownFile,
   updateFirebaseCollectorHeroNote,
@@ -26,7 +27,7 @@ import { firebaseAdminPaths } from "@/lib/firebase/config";
 import { getEcosystemLeads } from "@/lib/firebase/ecosystem-leads";
 import { getListeningRoomVisits } from "@/lib/firebase/listening-room-visits";
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
-import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import { defaultWallsDevineBookingBannerNote, defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import { cx } from "@/lib/cx";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -40,6 +41,7 @@ type SaveState = "saving" | "deleting" | "success" | "error";
 type ContentSource = "pending" | "firebase" | "bootstrap";
 
 const collectorHeroNoteSaveKey = "collectorHeroNote";
+const bookingBannerNoteSaveKey = "bookingBannerNote";
 const linkHubSaveKey = "linkHub";
 const bookingTargetSaveKeyPrefix = "bookingTarget";
 
@@ -507,6 +509,7 @@ const fallbackAdminData: WallsDevineAdminData = {
   instagramDrafts: [],
   journalEntries: [],
   collectorHeroNote: defaultWallsDevineCollectorHeroNote,
+  bookingBannerNote: defaultWallsDevineBookingBannerNote,
   linkHub: defaultLinkHubContent,
   storageBacked: false,
   contentBackend: "bootstrap",
@@ -1392,6 +1395,42 @@ export function AdminConsole() {
     }
   }
 
+  async function handleBookingBannerNoteSave(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!adminData) {
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const eyebrow = String(formData.get("eyebrow") ?? "").trim();
+    const title = String(formData.get("title") ?? "").trim();
+    const description = String(formData.get("description") ?? "").trim();
+    const meta = String(formData.get("meta") ?? "").trim();
+
+    if (!eyebrow || !title || !description || !meta) {
+      setPanelError("The booking banner needs an eyebrow, title, description, and meta line before it can be saved.");
+      setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "error" }));
+      return;
+    }
+
+    setPanelError("");
+    setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "saving" }));
+
+    try {
+      const nextNote = await updateFirebaseBookingBannerNote({ eyebrow, title, description, meta });
+
+      startTransition(() => {
+        setAdminData((current) => (current ? { ...current, bookingBannerNote: nextNote } : current));
+      });
+
+      setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "success" }));
+    } catch (error) {
+      setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "error" }));
+      setPanelError(getFirebaseErrorMessage(error));
+    }
+  }
+
   async function handleLinkHubSave(nextLinkHub: LinkHubContent) {
     if (!adminData) {
       return;
@@ -2141,6 +2180,83 @@ export function AdminConsole() {
                 {saveStates[collectorHeroNoteSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
                 {saveStates[collectorHeroNoteSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
                 {saveStates[collectorHeroNoteSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this note.</p> : null}
+              </div>
+            </form>
+          </article>
+
+          <article className="cg-admin__panel cg-admin__release-note-card">
+            <div className="cg-admin__file-head">
+              <div>
+                <h3>Public booking banner</h3>
+                <p>This copy feeds the booking and merch banner beneath the collector grid on the public Walls/Devine page.</p>
+              </div>
+              <p className="cg-admin__path-note">
+                Firestore: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.publicContentCollection}/{firebaseAdminPaths.bookingBannerNoteDocId}
+              </p>
+            </div>
+
+            <form onSubmit={handleBookingBannerNoteSave} className="cg-admin__editor-form">
+              <div className="cg-admin__editor-split">
+                <label className="cg-admin__editor-field">
+                  <span>Eyebrow</span>
+                  <input
+                    name="eyebrow"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.bookingBannerNote.eyebrow}
+                    placeholder="Live Booking + Merch"
+                    required
+                  />
+                </label>
+                <div className="cg-admin__stack">
+                  <span className="cg-admin__editor-field-label">Last updated</span>
+                  <p className="cg-admin__path-note">{new Date(adminViewData.bookingBannerNote.updatedAt).toLocaleString()}</p>
+                </div>
+              </div>
+
+              <label className="cg-admin__editor-field">
+                <span>Title</span>
+                <input
+                  name="title"
+                  type="text"
+                  className="cg-admin__editor-input"
+                  defaultValue={adminViewData.bookingBannerNote.title}
+                  placeholder="Book or shop Walls/Devine"
+                  required
+                />
+              </label>
+
+              <label className="cg-admin__editor-field">
+                <span>Description</span>
+                <textarea
+                  name="description"
+                  className="cg-admin__editor-textarea"
+                  rows={4}
+                  defaultValue={adminViewData.bookingBannerNote.description}
+                  placeholder="Describe the booking, partnership, or merch invitation shown on the public page."
+                  required
+                />
+              </label>
+
+              <label className="cg-admin__editor-field">
+                <span>Meta line</span>
+                <input
+                  name="meta"
+                  type="text"
+                  className="cg-admin__editor-input"
+                  defaultValue={adminViewData.bookingBannerNote.meta}
+                  placeholder="Listening events · Performance · Partnerships · Fourthwall merch shop"
+                  required
+                />
+              </label>
+
+              <div className="cg-admin__editor-actions">
+                <Button type="submit" variant="secondary" size="sm" disabled={saveStates[bookingBannerNoteSaveKey] === "saving"}>
+                  Save banner
+                </Button>
+                {saveStates[bookingBannerNoteSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
+                {saveStates[bookingBannerNoteSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
+                {saveStates[bookingBannerNoteSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this banner.</p> : null}
               </div>
             </form>
           </article>
