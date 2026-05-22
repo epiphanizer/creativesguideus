@@ -104,6 +104,23 @@ function buildWallsDevineListeningRoomHref(playerTarget: string) {
 }
 
 const wallsDevineCollectorGridHref = "/walls-devine#walls-devine-grid-title";
+const bongTourTreatmentHref = "/bong-tour/treatment";
+const bongTourContactHref = `/contact?${new URLSearchParams({
+  context: "bong-tour-intake",
+  project: "Bong Tour",
+  inquiryType: "partnership"
+}).toString()}`;
+const bongTourContactCtaLabel = "Let's talk";
+
+const bongTourPremise = "A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard.";
+const bongTourLogline =
+  "A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to a Hollywood trip that keeps mutating between cult comedy, diaspora myth, and industry reckoning.";
+
+const bongTourTreatmentBullets = [
+  "Diaspora masala satire with cult-comedy propulsion.",
+  "A film-world pitch built for tone, music, and collectible evidence.",
+  "A screenplay engine with sequel gravity."
+] as const;
 
 function buildVaultCode(length: number) {
   return Array.from({ length }, () => Math.floor(Math.random() * 9) + 1);
@@ -548,7 +565,7 @@ const portalRooms: Record<string, ExperienceRoom> = {
       "Land on packaging and partner fit instead of oversharing plot."
     ],
     actions: [
-      { label: "Connect about Bong Tour", href: "/#contact" },
+      { label: bongTourContactCtaLabel, href: bongTourContactHref },
       { label: "Open Walls/Devine", href: "/walls-devine", outline: true }
     ],
     signup: {
@@ -575,8 +592,8 @@ const portalRooms: Record<string, ExperienceRoom> = {
       "Walls/Devine remains the live soundtrack and unlock exit."
     ],
     actions: [
-      { label: "Open cue rooms", href: "#score-sketches" },
-      { label: "Open Volume 1 collector grid", href: wallsDevineCollectorGridHref, outline: true }
+      { label: "Enter cue rooms", href: "#score-sketches" },
+      { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
     ],
     signup: {
       source: "bong-tour-collector-room",
@@ -591,8 +608,8 @@ const portalRooms: Record<string, ExperienceRoom> = {
       mode: "seal-alignment",
       tokenLabel: "archive",
       noteLabel: "Collectible unlocked",
-      noteTitle: "Sealed treatment unlocked",
-      noteBody: "The treatment belongs here as a found object inside the collector room. Keep it gated, collectible, and tied to the room logic instead of advertising it on the page."
+      noteTitle: "Sealed archive note unlocked",
+      noteBody: "The collector room works best as the reward layer that follows the script and cue rooms. Let it deepen the myth instead of hiding the core pitch."
     }
   }
 };
@@ -620,12 +637,12 @@ const musicPosters: CuePoster[] = [
       ambientSubtitle: "Comedy Store ignition",
       kicker: "This is the sound of the screenplay stepping out of deck mode and into live motion.",
       description:
-        "Joint Queen should frame the first moment Bong Tour feels inevitable. Swagger first, exposition later, with a direct handoff into the companion listening room.",
+        "Joint Queen should frame the first moment Bong Tour feels inevitable. Swagger first, exposition later, with a direct handoff into the companion Volume 1 score path.",
       chips: ["Comedy Store montage", "Psych-funk cue", "Cult-premium posture"],
       beats: ["Built for struts and jump cuts.", "Lets the satire feel cinematic, not explanatory.", "Works best when it visibly connects to Walls/Devine."],
       actions: [
-        { label: "Play in listening room", href: buildWallsDevineListeningRoomHref("joint-queen") },
-        { label: "Open Volume 1 collector grid", href: wallsDevineCollectorGridHref, outline: true }
+        { label: "Open Volume 1 score path", href: buildWallsDevineListeningRoomHref("joint-queen") },
+        { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
       ]
     }
   },
@@ -655,8 +672,8 @@ const musicPosters: CuePoster[] = [
       chips: ["Backroom plotting", "Low-end authority", "Hollywood trapdoor energy"],
       beats: ["Supports late-night deal scenes.", "Bridges satire and threat cleanly.", "Keeps the collectible rollout grounded in attitude."],
       actions: [
-        { label: "Play in listening room", href: buildWallsDevineListeningRoomHref("stash-daddy") },
-        { label: "Open Volume 1 collector grid", href: wallsDevineCollectorGridHref, outline: true }
+        { label: "Open Volume 1 score path", href: buildWallsDevineListeningRoomHref("stash-daddy") },
+        { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
       ]
     }
   },
@@ -686,8 +703,8 @@ const musicPosters: CuePoster[] = [
       chips: ["Ganges lift", "Diaspora dreamscape", "Final-act release"],
       beats: ["Lets the river imagery open up.", "Supports the India return with dignity.", "Creates the cleanest bridge into the companion album world."],
       actions: [
-        { label: "Play in listening room", href: buildWallsDevineListeningRoomHref("space-cruiser") },
-        { label: "Open Volume 1 collector grid", href: wallsDevineCollectorGridHref, outline: true }
+        { label: "Open Volume 1 score path", href: buildWallsDevineListeningRoomHref("space-cruiser") },
+        { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
       ]
     }
   }
@@ -714,7 +731,7 @@ const collectibleTiles: CollectibleTile[] = [
       chips: ["Origin story", "Sacred object", "Poster-first myth"],
       beats: ["Best used as the collector anchor.", "Lets the page lead with story gravity.", "Creates an obvious return-to-source motif."],
       actions: [
-        { label: "Connect about Bong Tour", href: "/#contact" },
+        { label: bongTourContactCtaLabel, href: bongTourContactHref },
         { label: "Open cue posters", href: "#score-sketches", outline: true }
       ],
       signup: {
@@ -835,7 +852,7 @@ const collectibleTiles: CollectibleTile[] = [
       beats: ["Belongs near the closing invitation.", "Lets the campaign end on appetite.", "Protects the myth while opening the door."],
       actions: [
         { label: "Open Space Cruiser", href: buildWallsDevineListeningRoomHref("space-cruiser") },
-        { label: "Open Volume 1 collector grid", href: wallsDevineCollectorGridHref, outline: true }
+        { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
       ],
       signup: {
         source: "bong-tour-upper-management-token",
@@ -864,6 +881,7 @@ export function BongTourFeature() {
   const isCollectorRoom = activeRoom?.slug === portalRooms.collector.slug;
   const activeCuePoster = activeRoom ? musicPosters.find((poster) => poster.room.slug === activeRoom.slug) ?? null : null;
   const isCueRoom = Boolean(activeCuePoster);
+  const featuredCollectibles = collectibleTiles.slice(0, 3);
 
   useEffect(() => {
     setHasMounted(true);
@@ -900,65 +918,109 @@ export function BongTourFeature() {
 
           <div className="bt-hero__layout">
             <figure className="bt-hero__poster">
-              <div className="bt-hero__poster-frame">
-                <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority sizes="(max-width: 960px) 82vw, 32vw" />
-              </div>
+              <a href={bongTourTreatmentHref} className="bt-hero__poster-link" aria-label="Read the Bong Tour treatment">
+                <div className="bt-hero__poster-frame">
+                  <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority sizes="(max-width: 960px) 82vw, 32vw" />
+                </div>
+              </a>
             </figure>
 
             <div className="bt-hero__content">
-              <span className="bt-hero__eyebrow">Collector-first portal</span>
               <h1>Bong Tour</h1>
-              <p className="bt-hero__descriptor">A collector-first portal for design-led film fans, soundtrack listeners, and worldbuilding obsessives.</p>
-
-              <p className="bt-hero__positioning">Move through the poster, collector rooms, cue bridges, and artifact archive without stepping outside the myth.</p>
+              <p className="bt-hero__descriptor">{bongTourPremise}</p>
+              <p className="bt-hero__positioning">A masala stoner odyssey built as a screenplay, soundtrack bridge, and collector-world proof of concept.</p>
 
               <div className="bt-hero__cta">
-                <Button as="a" href="#collector-grid" className="bt-button">
-                  Open collector grid
+                <Button as="a" href={bongTourTreatmentHref} className="bt-button">
+                  Read treatment
+                </Button>
+                <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
+                  {bongTourContactCtaLabel}
                 </Button>
                 <Button as="a" href="#score-sketches" className="bt-button bt-button--outline">
-                  Open cue rooms
+                  Enter cue rooms
                 </Button>
               </div>
+
+              <p className="bt-hero__route">Cue rooms and artifacts open after the world lands.</p>
             </div>
           </div>
+        </section>
 
+        <section className="bt-world" id="treatment" aria-labelledby="bt-treatment-title">
+          <header className="bt-section-header">
+            <h2 id="bt-treatment-title">The Treatment</h2>
+            <p>A feature treatment built for tone, music, and sequel gravity.</p>
+          </header>
+
+          <article className="bt-world__panel bt-world__panel--treatment">
+            <p className="bt-treatment__lead">{bongTourLogline}</p>
+            <ul className="bt-treatment__bullets">
+              {bongTourTreatmentBullets.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+
+            <div className="bt-section-header__actions">
+              <Button as="a" href={bongTourTreatmentHref} className="bt-button">
+                Read treatment
+              </Button>
+              <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
+                {bongTourContactCtaLabel}
+              </Button>
+            </div>
+          </article>
+        </section>
+
+        <section className="bt-music" id="score-sketches" aria-labelledby="bt-music-title">
+          <header className="bt-section-header">
+            <h2 id="bt-music-title">Cue Rooms</h2>
+            <p>The soundtrack proves the world faster than another paragraph could.</p>
+          </header>
+
+          <ul className="bt-music__grid">
+            {musicPosters.map((poster) => (
+              <li key={poster.title} id={poster.id} className="bt-music__poster">
+                <button type="button" className="bt-music__visual" onClick={() => setActiveRoom(poster.room)} aria-label={`Open ${poster.title} cue room`}>
+                  <Image src={poster.image} alt="" className="bt-music__visual-image" sizes="(max-width: 920px) 80vw, 26vw" />
+                  <div className="bt-music__marquee">
+                    <h3>{poster.title}</h3>
+                    <p>{poster.tagline}</p>
+                  </div>
+                </button>
+
+                <div className="bt-music__details">
+                  <p className="bt-music__lede">{poster.description}</p>
+                  <div className="bt-music__actions">
+                    <Button type="button" className="bt-button" onClick={() => setActiveRoom(poster.room)}>
+                      Enter cue room
+                    </Button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </section>
 
         <section className="bt-collectibles" id="collector-grid" aria-labelledby="bt-collectibles-title">
-          <header className="bt-section-header">
+          <header className="bt-section-header bt-section-header--split">
             <div>
-              <p className="bt-section-header__eyebrow">Collector grid</p>
-              <h2 id="bt-collectibles-title">Collector chapters</h2>
-              <p>The object grid is the film-facing archive: artifact notes live here, while the shared Creatives Guide reward path and Bong Tour secret-game unlock resolve inside Walls/Devine Volume 1.</p>
+              <h2 id="bt-collectibles-title">Collector Rewards</h2>
+              <p>Artifacts live inside the world, not beside it. Bong Tour uses the archive as a reward layer while Walls/Devine keeps the shared unlock path.</p>
+            </div>
+            <div className="bt-section-header__actions">
+              <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(portalRooms.collector)}>
+                Explore rewards
+              </Button>
             </div>
           </header>
 
-          <div className="bt-collectibles__overview" aria-label="Collector grid overview">
-            <article className="bt-collectibles__overview-card">
-              <span>4 objects</span>
-              <strong>Collector chapters</strong>
-              <p>Myth keys, backstage credentials, noir evidence, and sequel bait rendered like found artifacts.</p>
-            </article>
-            <article className="bt-collectibles__overview-card">
-              <span>3 cue bridges</span>
-              <strong>Score handoff</strong>
-              <p>Each cue room proves tone locally, then hands the listener back into the live Volume 1 listening world.</p>
-            </article>
-            <article className="bt-collectibles__overview-card">
-              <span>1 unlock owner</span>
-              <strong>Volume 1 collector path</strong>
-              <p>Walls/Devine owns the shared unlock and secret-game handoff so Bong Tour stays a companion world, not a duplicate reward system.</p>
-            </article>
-          </div>
-
-          <ul className="bt-collectibles__grid">
-            {collectibleTiles.map((tile) => (
+          <ul className="bt-collectibles__grid bt-collectibles__grid--preview">
+            {featuredCollectibles.map((tile) => (
               <li key={tile.slug} className="bt-collectibles__tile">
                 <button type="button" className="bt-collectibles__trigger" aria-label={`Open ${tile.title} collector room`} onClick={() => setActiveRoom(tile.room)}>
                   <figure className="bt-collectibles__visual">
                     <Image src={tile.image} alt="" className="bt-collectibles__image" sizes="(max-width: 920px) 80vw, 26vw" />
-                    <span className="bt-collectibles__badge">{tile.badge}</span>
                     <figcaption className="bt-collectibles__marquee">
                       <h3>{tile.title}</h3>
                       <p>{tile.challenge}</p>
@@ -968,75 +1030,26 @@ export function BongTourFeature() {
 
                 <div className="bt-collectibles__details">
                   <p className="bt-collectibles__teaser">{tile.teaser}</p>
-                  <div className="bt-collectibles__route">
-                    <span>Collector pull</span>
-                    <p>{tile.reward}</p>
-                  </div>
                 </div>
               </li>
             ))}
           </ul>
-
-          <div className="bt-collectibles__collector-access">
-            <article className="bt-collectibles__collector-access-card">
-              <div className="bt-collectibles__collector-access-copy">
-                <p className="bt-section-header__eyebrow">Collector's room</p>
-                <h3>Enter the collector's room</h3>
-                <p>Artifacts and clue drops live inside the takeover. The universal reward path and Bong Tour secret-game unlock route through Walls/Devine Volume 1 so the main release world stays in charge.</p>
-              </div>
-
-              <Button type="button" className="bt-button" onClick={() => setActiveRoom(portalRooms.collector)}>
-                Open collector room
-              </Button>
-            </article>
-          </div>
         </section>
 
-        <section className="bt-music" id="score-sketches" aria-labelledby="bt-music-title">
-          <header className="bt-section-header bt-section-header--split">
-            <div>
-              <p className="bt-section-header__eyebrow">Companion listening room</p>
-              <h2 id="bt-music-title">Three cue rooms keep the score visibly attached to the page.</h2>
-              <p>The soundtrack bridge stays compact and obvious: proof-of-tone here, then a direct handoff into the live Walls/Devine listening world and Volume 1 collector unlock path.</p>
-            </div>
-            <div className="bt-section-header__actions">
-              <Button as="a" href={buildWallsDevineListeningRoomHref("joint-queen")} className="bt-button bt-button--outline">
-                Open portable listening room
+        <section className="bt-finale" id="bong-tour-intake" aria-labelledby="bt-finale-title">
+          <div className="bt-finale__body">
+            <h2 id="bt-finale-title">Seen enough?</h2>
+            <p>Read the treatment, enter the cue rooms, or reach out if there is a fit for production, soundtrack, collector-world, or partnership.</p>
+
+            <div className="bt-finale__actions">
+              <Button as="a" href={bongTourContactHref} className="bt-button">
+                {bongTourContactCtaLabel}
+              </Button>
+              <Button as="a" href={bongTourTreatmentHref} className="bt-button bt-button--outline">
+                Read treatment
               </Button>
             </div>
-          </header>
-
-          <ul className="bt-music__grid">
-            {musicPosters.map((poster) => (
-              <li key={poster.title} id={poster.id} className="bt-music__poster">
-                <button type="button" className="bt-music__visual" onClick={() => setActiveRoom(poster.room)} aria-label={`Open ${poster.title} cue room`}>
-                  <Image src={poster.image} alt="" className="bt-music__visual-image" sizes="(max-width: 920px) 80vw, 26vw" />
-                  <span className="bt-music__badge">{poster.badge}</span>
-                  <div className="bt-music__marquee">
-                    <h3>{poster.title}</h3>
-                    <p>{poster.tagline}</p>
-                  </div>
-                </button>
-
-                <div className="bt-music__details">
-                  <p className="bt-music__lede">{poster.description}</p>
-                  <ul className="bt-music__highlights">
-                    {poster.highlights.map((highlight) => (
-                      <li key={highlight}>{highlight}</li>
-                    ))}
-                  </ul>
-                  <div className="bt-music__actions">
-                    <Button type="button" className="bt-button" onClick={() => setActiveRoom(poster.room)}>
-                      Open cue room
-                    </Button>
-                    <Button as="a" href={buildWallsDevineListeningRoomHref(poster.playerTarget)} className="bt-button bt-button--outline">
-                      Play in listening room
-                    </Button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+          </div>
         </section>
       </div>
 
@@ -1296,8 +1309,8 @@ export function BongTourFeature() {
                         </section>
 
                         <div className="bt-room-modal__links bt-room-modal__cue-links">
-                          <a href={buildWallsDevineListeningRoomHref(activeCuePoster.playerTarget)}>Play in listening room</a>
-                          <a href={wallsDevineCollectorGridHref}>Open Volume 1 collector grid</a>
+                          <a href={buildWallsDevineListeningRoomHref(activeCuePoster.playerTarget)}>Open Volume 1 score path</a>
+                          <a href={wallsDevineCollectorGridHref}>Open Volume 1 collector path</a>
                         </div>
                       </section>
 

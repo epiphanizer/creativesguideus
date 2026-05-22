@@ -272,6 +272,14 @@ service cloud.firestore {
       match /markdownFiles/{fileId} {
         allow read, write: if isAdmin();
       }
+
+      match /privateContent/{docId} {
+        allow read, write: if isAdmin();
+      }
+
+      match /privateContentAccessLogs/{logId} {
+        allow read, write: if isAdmin();
+      }
     }
 
     match /adminProjects/walls-devine/publicContent/{docId} {

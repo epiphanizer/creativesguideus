@@ -13,6 +13,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - Lead capture: Firestore `ecosystemLeads/{leadId}` stores public collector-list signups plus richer guided-intake booking leads from the site experience.
 - Reward pipeline: Firestore `collectors/{collectorKey}` stores reusable collector identities and counts, while `rewardClaims/{claimId}` queues any ecosystem reward claim for fulfillment workflows. Airdrop-enabled rewards now store wallet-aware fields on the same claim doc and use deterministic claim IDs to enforce one clearance per wallet.
 - Longform content: Firestore stores markdown docs at `adminProjects/walls-devine/markdownFiles/{collection}--{slug}`.
+- Private screenplay content: Firestore stores gated treatment docs at `adminProjects/walls-devine/privateContent/{docId}` and the server reads them only after the Bong Tour treatment gate passes.
 - Legacy migration: Firebase Storage at `admin-projects/walls-devine/{collection}/{slug}.md` is only read when older markdown needs to be migrated into Firestore.
 - Bootstrap source: The local JSON and markdown files remain in the repo only so `/api/admin/bootstrap` can seed Firebase the first time the remote layer is empty.
 
@@ -26,6 +27,9 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 6. In Firestore, create `adminUsers/{uid}` with an active editor payload.
 7. Deploy the local Firestore and Storage rules from this repo.
 8. Sign into `/admin` with that account. If `adminProjects/walls-devine` or the Firestore markdown docs do not exist yet, the admin will bootstrap them from the repo automatically. If older Storage markdown files exist, the admin migrates them into Firestore on first load.
+9. Set the private treatment server vars for the site runtime: `BONG_TOUR_TREATMENT_ACCESS_PASSWORD`, `BONG_TOUR_TREATMENT_SESSION_SECRET`, and either Firebase Application Default Credentials or `FIREBASE_ADMIN_PROJECT_ID`, `FIREBASE_ADMIN_CLIENT_EMAIL`, `FIREBASE_ADMIN_PRIVATE_KEY`.
+10. Create or confirm `adminProjects/walls-devine/privateContent/bongTourTreatment`. The route can seed it once from `app/bong-tour/treatment.txt`, but the live source of truth should stay in Firestore.
+11. If you want the Next app to use Application Default Credentials outside managed GCP, set `FIREBASE_ADMIN_USE_APPLICATION_DEFAULT=true` and make sure ADC is actually available for that shell.
 
 ## Recommended `adminUsers/{uid}` document
 
@@ -47,6 +51,8 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - `adminProjects/walls-devine`
 - `adminProjects/walls-devine/publicContent/collectorHeroNote`
 - `adminProjects/walls-devine/publicContent/linkHub`
+- `adminProjects/walls-devine/privateContent/bongTourTreatment`
+- `adminProjects/walls-devine/privateContentAccessLogs/{logId}`
 - `ecosystemLeads/{leadId}`
 - `collectors/{collectorKey}`
 - `rewardClaims/{claimId}`
@@ -56,6 +62,19 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX`
 
 If you already standardize on a Google tag variable name, the client also accepts `NEXT_PUBLIC_GA_MEASUREMENT_ID` as a fallback.
+
+### Private treatment environment
+
+- `BONG_TOUR_TREATMENT_ACCESS_PASSWORD=...`
+- `BONG_TOUR_TREATMENT_SESSION_SECRET=...`
+- `FIREBASE_ADMIN_USE_APPLICATION_DEFAULT=true`
+- `FIREBASE_ADMIN_PROJECT_ID=creatives-guide-us`
+- `FIREBASE_ADMIN_CLIENT_EMAIL=...`
+- `FIREBASE_ADMIN_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"`
+
+If the deployment target already has Firebase Application Default Credentials, the treatment routes can use that instead of the three `FIREBASE_ADMIN_*` variables. Local development will not try ADC implicitly anymore; opt into it with `FIREBASE_ADMIN_USE_APPLICATION_DEFAULT=true`.
+
+In `next dev`, the Bong Tour treatment now has a development-only fallback so the modal gate still works even when Firebase admin credentials are missing. In that mode, any valid email plus any non-empty password unlocks the local `app/bong-tour/treatment.txt` copy, and the response is marked as `local-development`. Set `BONG_TOUR_TREATMENT_LOCAL_FALLBACK=false` if you want local development to fail closed until real admin credentials are configured.
 
 ### Firestore markdown docs
 
@@ -118,3 +137,4 @@ firebase deploy --only functions,firestore:rules,firestore:indexes,storage
 12. Retry that same Volume 1 airlock with the same wallet and confirm the claim is rejected because the wallet already cleared that unlock.
 13. Deploy Functions and confirm the trigger writes a `rewardDispatchLogs/{claimId}` document and flips `rewardClaims/{claimId}.status` to `distributed`.
 14. Open the site with the GA DebugView or Realtime panel running and confirm `home_gateway_click`, `link_hub_link_click`, `walls_devine_cta_click`, `reward_airlock_open`, and reward claim events appear after interaction.
+15. Open `/bong-tour/treatment`, confirm the modal appears before any treatment text, verify an unknown email is denied, then verify a known email plus the current password loads the treatment from Firestore.
