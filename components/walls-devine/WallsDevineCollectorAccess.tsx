@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { type ReactNode, useEffect, useId, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { cx } from "@/lib/cx";
 
 import { EcosystemSignupForm } from "./EcosystemSignupForm";
@@ -69,23 +70,22 @@ export function WallsDevineCollectorAccess({
     setHasMounted(true);
   }, []);
 
+  useBodyScrollLock(isOpen);
+
   useEffect(() => {
     if (!isOpen) {
       return;
     }
 
-    const previousOverflow = document.body.style.overflow;
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
       }
     };
 
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen]);

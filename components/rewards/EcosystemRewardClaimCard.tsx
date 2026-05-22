@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { type FormEvent, useEffect, useId, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { cx } from "@/lib/cx";
 import type { EcosystemRewardDefinition } from "@/lib/ecosystem/reward-catalog";
 import { trackAnalyticsEvent } from "@/lib/firebase/analytics";
@@ -39,23 +40,22 @@ export function EcosystemRewardClaimCard({ reward, source, unlocked, className }
     setHasMounted(true);
   }, []);
 
+  useBodyScrollLock(airlockOpen);
+
   useEffect(() => {
     if (!airlockOpen) {
       return;
     }
 
-    const previousOverflow = document.body.style.overflow;
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setAirlockOpen(false);
       }
     };
 
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleEscape);
     };
   }, [airlockOpen]);

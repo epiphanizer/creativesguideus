@@ -7,6 +7,7 @@ import Image from "next/image";
 import type { StaticImageData } from "next/image";
 
 import { Button } from "@/components/ui/Button";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
 import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
@@ -887,24 +888,23 @@ export function BongTourFeature() {
     setHasMounted(true);
   }, []);
 
+  useBodyScrollLock(Boolean(activeRoom));
+
   useEffect(() => {
     if (!activeRoom) {
       return;
     }
 
-    const previousOverflow = document.body.style.overflow;
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setActiveRoom(null);
       }
     };
 
-    document.body.style.overflow = "hidden";
     setChallengeUnlocked(false);
     window.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleEscape);
     };
   }, [activeRoom]);

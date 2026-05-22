@@ -3,6 +3,7 @@
 import { type FormEvent, useEffect, useId, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 type TreatmentPayload = {
   title: string;
@@ -80,17 +81,7 @@ export function BongTourTreatmentGate() {
   const [isLoadingTreatment, setIsLoadingTreatment] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState("");
 
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-
-    if (isModalOpen) {
-      document.body.style.overflow = "hidden";
-    }
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [isModalOpen]);
+  useBodyScrollLock(isModalOpen);
 
   useEffect(() => {
     let cancelled = false;

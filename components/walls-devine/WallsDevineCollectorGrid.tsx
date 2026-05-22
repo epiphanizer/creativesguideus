@@ -8,6 +8,7 @@ import { FiLock } from "react-icons/fi";
 
 import { EcosystemRewardClaimCard } from "@/components/rewards/EcosystemRewardClaimCard";
 import { Button } from "@/components/ui/Button";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { cx } from "@/lib/cx";
 import { getEcosystemRewardDefinition } from "@/lib/ecosystem/reward-catalog";
 
@@ -1279,24 +1280,23 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
     });
   }, [activeSlug, tiles]);
 
+  useBodyScrollLock(Boolean(activeTile));
+
   useEffect(() => {
     if (!activeTile) {
       return;
     }
 
-    const previousOverflow = document.body.style.overflow;
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setActiveSlug(null);
       }
     };
 
-    document.body.style.overflow = "hidden";
     setEasterEggUnlocked(false);
     window.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleEscape);
     };
   }, [activeTile]);

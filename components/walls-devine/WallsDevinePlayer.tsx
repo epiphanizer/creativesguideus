@@ -18,6 +18,7 @@ import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
 import spaceCruiserImage from "@/app/walls-devine/assets/instagram/3.space-cruiser.png";
 import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
 import { Button } from "@/components/ui/Button";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { SongPlatformLinks, SongPostCard } from "@/components/walls-devine/content";
 import { createListeningRoomVisit } from "@/lib/firebase/listening-room-visits";
@@ -1030,7 +1031,15 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
       return;
     }
 
-    const previousOverflow = document.body.style.overflow;
+    teardownAudioVisualizer();
+  }, [isOpen]);
+
+  useBodyScrollLock(isOpen);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -1038,11 +1047,9 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
       }
     };
 
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen]);
