@@ -14,7 +14,6 @@ import {
   GuidedIntakeStepHeader
 } from "@/components/contact-guided/GuidedIntakePrimitives";
 import { buildContactPrefill, type ContactPrefill } from "@/lib/contact-intake-routing";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { Button } from "@/components/ui/Button";
 
@@ -55,16 +54,6 @@ type ContactSectionProps = {
   headingLevel?: "h1" | "h2" | "h3" | "h4";
   initialSearch?: string;
   surface?: "page" | "modal";
-};
-
-type ContactBannerTone = "default" | "walls" | "bong";
-
-type ContactBanner = {
-  tone: ContactBannerTone;
-  eyebrow: string;
-  title: string;
-  description: string;
-  chips: string[];
 };
 
 type ContactFlowId = "general" | "walls-mailing" | "walls-booking" | "bong-treatment" | "bong-partnership";
@@ -260,105 +249,6 @@ function buildInitialForm(prefill: ContactPrefill): ContactFormState {
     engagement: hasOption(engagementOptions, prefill.engagement) ? prefill.engagement : "",
     timeline: hasOption(timelineOptions, prefill.timeline) ? prefill.timeline : "",
     budgetRange: hasOption(budgetRangeOptions, prefill.budgetRange) ? prefill.budgetRange : ""
-  };
-}
-
-function buildContactBanner(prefill: ContactPrefill): ContactBanner {
-  const genericChips = [
-    prefill.projectTitle,
-    getOptionLabel(inquiryTypeOptions, prefill.inquiryType),
-    getOptionLabel(goalOptions, prefill.goal),
-    getOptionLabel(surfaceOptions, prefill.surface)
-  ]
-    .filter(Boolean)
-    .slice(0, 3);
-
-  if (prefill.contextId === "walls-devine-booking") {
-    return {
-      tone: "walls",
-      eyebrow: "Walls/Devine booking",
-      title: "Booking route loaded",
-      description: "Keep the room type, timing, and booking context here so the ask stays attached to the live release world.",
-      chips: ["Live booking", "Timing", "Collector-world context"]
-    };
-  }
-
-  if (prefill.contextId === "walls-devine-mailing-list") {
-    return {
-      tone: "walls",
-      eyebrow: "Walls/Devine signal",
-      title: "Mailing-list route loaded",
-      description: "This intake routes drop alerts, listening-room updates, and collector unlock notices through CGU until the dedicated list is live.",
-      chips: ["Drop alerts", "Listening-room updates", "Collector unlock notices"]
-    };
-  }
-
-  if (prefill.contextId === "bong-tour-treatment-access") {
-    return {
-      tone: "bong",
-      eyebrow: "Bong Tour treatment",
-      title: "Private reading route loaded",
-      description: "Use this lane to introduce a new reader before the private treatment gate opens. Approved readers later use that same email inside the gate.",
-      chips: ["Private treatment", "Reader approval", "Score-world context"]
-    };
-  }
-
-  if (prefill.contextId === "bong-tour-intake") {
-    return {
-      tone: "bong",
-      eyebrow: "Bong Tour route",
-      title: "Screenplay world intake loaded",
-      description: "Route soundtrack, production, partnership, and treatment-adjacent conversations through one clear entry point.",
-      chips: ["Screenplay world", "Cue-room proof", "Partnership routing"]
-    };
-  }
-
-  if (prefill.contextId.includes("appreesh") || prefill.projectTitle.toLowerCase() === "appreesh") {
-    return {
-      tone: "default",
-      eyebrow: "Appreesh route",
-      title: "Appreesh context loaded",
-      description: "This lane keeps the conversation attached to the gratitude layer, release backbone, and systems work underneath Appreesh.",
-      chips: genericChips.length ? genericChips : ["Appreesh", "Release backbone", "Systems + signal"]
-    };
-  }
-
-  if (prefill.contextId.includes("systems") || prefill.goal === "systems" || prefill.surface === "internal-platform") {
-    return {
-      tone: "default",
-      eyebrow: "Systems route",
-      title: "Systems build route loaded",
-      description: "Use this lane for admin tooling, workflow logic, content ops, and the operational backbone behind a public-facing world.",
-      chips: genericChips.length ? genericChips : ["Systems builds", "Operational backbone", "Product logic"]
-    };
-  }
-
-  if (prefill.contextId.includes("release") || prefill.surface === "campaign-world") {
-    return {
-      tone: "default",
-      eyebrow: "Release route",
-      title: "Release-world context loaded",
-      description: "This intake keeps launch rhythm, collaboration, and production context tied to the release world instead of flattening it into a generic inquiry.",
-      chips: genericChips.length ? genericChips : ["Release planning", "Campaign world", "Studio routing"]
-    };
-  }
-
-  if (prefill.projectTitle) {
-    return {
-      tone: "default",
-      eyebrow: "Project route",
-      title: `${prefill.projectTitle} context loaded`,
-      description: "The guided intake keeps the project visible all the way through the note, the routing decision, and the first reply.",
-      chips: genericChips.length ? genericChips : [prefill.projectTitle, "Studio routing", "Guided intake"]
-    };
-  }
-
-  return {
-    tone: "default",
-    eyebrow: "CGU intake",
-    title: "One route for the active worlds",
-    description: "Use the guided intake to route booking asks, release-world collaborations, and system builds without losing context.",
-    chips: ["Booking and release", "Partnerships", "Systems builds"]
   };
 }
 
@@ -628,14 +518,6 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
   };
 }
 
-function buildRouteChipLabel(flowId: ContactFlowId, prefill: ContactPrefill) {
-  if (flowId === "bong-treatment") {
-    return "Private reading request";
-  }
-
-  return getOptionLabel(inquiryTypeOptions, prefill.inquiryType);
-}
-
 function buildDisplayInquiryLabel(flowId: ContactFlowId, inquiryType: string) {
   if (flowId === "bong-treatment") {
     return "Private reading request";
@@ -883,6 +765,7 @@ function validateStep(flow: ContactFlow, stepId: GuidedStepId, form: ContactForm
 
 export function ContactSection({ headingLevel = "h2", initialSearch = "", surface = "page" }: ContactSectionProps) {
   const initialPrefill = buildContactPrefill(initialSearch);
+  const HeadingTag = headingLevel;
   const [prefill, setPrefill] = useState<ContactPrefill>(initialPrefill);
   const [form, setForm] = useState<ContactFormState>(() => buildInitialForm(initialPrefill));
   const [routeDetails, setRouteDetails] = useState<RouteDetailsState>(emptyRouteDetails);
@@ -890,12 +773,10 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const lastTrackedStepKeyRef = useRef("");
-  const contextBanner = buildContactBanner(prefill);
   const activeFlow = buildContactFlow(prefill);
   const activeStep = activeFlow.steps[Math.min(currentStep, activeFlow.steps.length - 1)];
   const reviewItems = buildReviewItems(activeFlow, form, routeDetails);
   const submissionBrief = buildSubmissionBrief(activeFlow.id, form, routeDetails);
-  const loadedRouteChip = buildRouteChipLabel(activeFlow.id, prefill);
 
   useEffect(() => {
     const nextPrefill = buildContactPrefill(initialSearch);
@@ -1523,67 +1404,12 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
     );
   }
 
-  const introContent = (
-    <div className="cg-contact__intro">
-      <div className={`cg-contact__context-banner cg-contact__context-banner--${contextBanner.tone}`} aria-label="Active contact route">
-        <div className="cg-contact__context-copy">
-          <p className="cg-contact__context-eyebrow">{contextBanner.eyebrow}</p>
-          <strong className="cg-contact__context-title">{contextBanner.title}</strong>
-          <p className="cg-contact__context-description">{contextBanner.description}</p>
-        </div>
-
-        <div className="cg-contact__context-chips" aria-label="Route highlights">
-          {contextBanner.chips.map((chip) => (
-            <span key={chip} className="cg-contact__context-chip">
-              {chip}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <SectionHeader
-        id="contact-title"
-        headingLevel={headingLevel}
-        eyebrow="Guided intake"
-        title="Choose the right room"
-        description="Stay on the CGU domain, route the work cleanly, and leave enough signal for the next move to be obvious."
-        icon={
-          <svg viewBox="0 0 24 24">
-            <path d="M4 7h16v10H4z" />
-            <path d="M4 9l8 5 8-5" />
-          </svg>
-        }
-        iconLabel="Creative contact emblem"
-      />
-
-      <div className="cg-contact__meta">
-        <div className="cg-contact__slots" aria-label="Intake routing note">
-          <span>Routing note</span>
-          <p>{activeFlow.routingNote}</p>
-        </div>
-
-        {(prefill.projectTitle || loadedRouteChip) ? (
-          <div className="cg-contact__prefill" aria-label="Loaded contact context">
-            {prefill.projectTitle ? <span className="cg-contact__prefill-chip">{prefill.projectTitle}</span> : null}
-            {loadedRouteChip ? <span className="cg-contact__prefill-chip">{loadedRouteChip}</span> : null}
-          </div>
-        ) : null}
-
-        <ul className="cg-contact__summary" aria-label="What this intake captures">
-          {activeFlow.summary.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-
-        <p>
-          Prefer a direct uplink? Email <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a> with the clearest next step you need.
-        </p>
-      </div>
-    </div>
-  );
-
   const formContent = (
     <form className="cg-contact__form" onSubmit={handleSubmit} noValidate aria-busy={submissionState === "submitting"}>
+      <HeadingTag id="contact-title" className="cg-contact__sr-only">
+        Guided intake
+      </HeadingTag>
+
       <div className="cg-contact__form-head">
         <GuidedIntakeProgress
           steps={activeFlow.steps.map((step) => ({ key: step.id, label: step.label, title: step.title }))}
@@ -1627,24 +1453,22 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         )}
         privacyText="Your intelligence stays inside the core studio signal flow."
       />
+
+      <p className="cg-contact__direct-link">
+        Prefer email? <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a>
+      </p>
     </form>
   );
 
   if (surface === "modal") {
     return (
-      <div className="cg-contact cg-contact--modal">
-        {introContent}
-        {formContent}
-      </div>
+      <div className="cg-contact cg-contact--modal">{formContent}</div>
     );
   }
 
   return (
     <SectionShell id="contact" labelledBy="contact-title" innerClassName="cg-contact__shell">
-      <div className="cg-contact">
-        {introContent}
-        {formContent}
-      </div>
+      <div className="cg-contact cg-contact--solo">{formContent}</div>
     </SectionShell>
   );
 }

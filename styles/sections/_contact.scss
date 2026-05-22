@@ -35,6 +35,10 @@
   gap: clamp(var(--cg-space-lg), 3vw, var(--cg-space-2xl));
 }
 
+.cg-contact--solo {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .cg-contact--modal .cg-contact__intro {
   padding-right: 0;
 }
@@ -451,6 +455,18 @@
   overflow: hidden;
 }
 
+.cg-contact__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .cg-contact__form-head {
   display: grid;
   gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
@@ -817,6 +833,17 @@
   font-size: var(--cg-type-body-sm);
   color: var(--cg-color-ink-400);
   letter-spacing: 0.04em;
+}
+
+.cg-contact__direct-link {
+  margin: 0;
+  font-size: var(--cg-type-body-sm);
+  color: var(--cg-color-ink-500);
+}
+
+.cg-contact__direct-link a {
+  color: inherit;
+  text-underline-offset: 0.16em;
 }
 
 @media (prefers-reduced-motion: reduce) {

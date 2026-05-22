@@ -249,14 +249,6 @@ const wallsDevineBookingIntakeHref = buildContactHref({
     surface: "campaign-world"
   }
 });
-const wallsDevineMailingListHref = buildContactHref({
-  overrides: {
-    context: "walls-devine-mailing-list",
-    project: "Walls/Devine",
-    inquiryType: "mailing-list",
-    surface: "campaign-world"
-  }
-});
 const wallsDevineListeningRoomHref = `#${wallsDevineListeningRoomAnchorId}`;
 
 export function WallsDevineLanding() {
@@ -549,39 +541,6 @@ export function WallsDevineLanding() {
                     </Button>
                   </div>
                 </div>
-              </div>
-
-              <div className="wd-hero__signal-grid" aria-label="Walls Devine route guide">
-                <article className="wd-hero__signal">
-                  <span>Listening room</span>
-                  <strong>Open Volume 1 first.</strong>
-                  <p>Start with the score, then return whenever the grid sends you back into the record.</p>
-                </article>
-
-                <article className="wd-hero__signal">
-                  <span>Collector grid</span>
-                  <strong>Eight chapter tiles.</strong>
-                  <p>Each tile opens artwork, story notes, and a challenge layer from the album world.</p>
-                </article>
-
-                <article className="wd-hero__signal">
-                  <span>Signals</span>
-                  <strong>Request drop alerts.</strong>
-                  <p>{collectorHeroNote.mailingListHelper}</p>
-                  <Button
-                    as="a"
-                    href={wallsDevineMailingListHref}
-                    variant="secondary"
-                    className="wd-hero__signal-link"
-                    data-analytics-event="walls_devine_cta_click"
-                    data-analytics-param-source="walls_devine"
-                    data-analytics-param-cta="hero_join_mailing_list"
-                    data-analytics-param-destination={wallsDevineMailingListHref}
-                    data-analytics-param-external="false"
-                  >
-                    Join the Mailing List
-                  </Button>
-                </article>
               </div>
             </div>
           </div>
