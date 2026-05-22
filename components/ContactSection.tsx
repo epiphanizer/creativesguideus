@@ -41,6 +41,7 @@ type ContactSectionProps = {
 const inquiryTypeOptions: ContactOption[] = [
   { value: "live-booking", label: "Live booking" },
   { value: "listening-session", label: "Listening session" },
+  { value: "mailing-list", label: "Mailing list" },
   { value: "screening", label: "Screening" },
   { value: "performance", label: "Performance" },
   { value: "partnership", label: "Partnership" }
@@ -207,6 +208,8 @@ export function ContactSection({ headingLevel = "h2" }: ContactSectionProps) {
   const contextNote =
     prefill.contextId === "walls-devine-booking"
       ? "Walls/Devine booking context is loaded. Leave the room type, timing, and booking note here and it will stay inside the CGU domain."
+      : prefill.contextId === "walls-devine-mailing-list"
+        ? "Walls/Devine mailing-list request context is loaded. Leave the best contact details here and this request will be routed through the CGU intake flow for drop alerts, listening-room updates, and collector unlock notices."
       : "Use this intake to route booking asks, release-world collaborations, soundtrack conversations, and system builds through one clear entry point.";
 
   return (

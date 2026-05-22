@@ -592,7 +592,7 @@ const portalRooms: Record<string, ExperienceRoom> = {
       "Walls/Devine remains the live soundtrack and unlock exit."
     ],
     actions: [
-      { label: "Enter cue rooms", href: "#score-sketches" },
+      { label: "Explore Cue Rooms", href: "#score-sketches" },
       { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
     ],
     signup: {
@@ -732,7 +732,7 @@ const collectibleTiles: CollectibleTile[] = [
       beats: ["Best used as the collector anchor.", "Lets the page lead with story gravity.", "Creates an obvious return-to-source motif."],
       actions: [
         { label: bongTourContactCtaLabel, href: bongTourContactHref },
-        { label: "Open cue posters", href: "#score-sketches", outline: true }
+        { label: "Explore Cue Rooms", href: "#score-sketches", outline: true }
       ],
       signup: {
         source: "bong-tour-ganges-relic",
@@ -918,7 +918,7 @@ export function BongTourFeature() {
 
           <div className="bt-hero__layout">
             <figure className="bt-hero__poster">
-              <a href={bongTourTreatmentHref} className="bt-hero__poster-link" aria-label="Read the Bong Tour treatment">
+              <a href={bongTourTreatmentHref} className="bt-hero__poster-link" aria-label="Request access to the Bong Tour treatment">
                 <div className="bt-hero__poster-frame">
                   <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority sizes="(max-width: 960px) 82vw, 32vw" />
                 </div>
@@ -932,25 +932,53 @@ export function BongTourFeature() {
 
               <div className="bt-hero__cta">
                 <Button as="a" href={bongTourTreatmentHref} className="bt-button">
-                  Read treatment
+                  Request Treatment Access
                 </Button>
                 <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                   {bongTourContactCtaLabel}
                 </Button>
                 <Button as="a" href="#score-sketches" className="bt-button bt-button--outline">
-                  Enter cue rooms
+                  Explore Cue Rooms
                 </Button>
               </div>
 
-              <p className="bt-hero__route">Cue rooms and artifacts open after the world lands.</p>
+              <p className="bt-hero__route">Request treatment access for the private screenplay layer, explore cue rooms for the score proof, and treat the archive as the reward layer once the world lands.</p>
             </div>
+          </div>
+        </section>
+
+        <section className="bt-bridge" aria-labelledby="bt-bridge-title">
+          <header className="bt-section-header">
+            <p className="bt-section-header__eyebrow">Route guide</p>
+            <h2 id="bt-bridge-title">How the world opens</h2>
+            <p>The public route sells tone first. The treatment is gated for approved readers, the cue rooms open the soundtrack proof, and the collector layer stays positioned as the reward path rather than the first door.</p>
+          </header>
+
+          <div className="bt-bridge__grid">
+            <article className="bt-bridge__card">
+              <span>Treatment</span>
+              <strong>Private script layer</strong>
+              <p>Use the public treatment CTA to request access to the private reading copy. The full screenplay world stays behind the existing gate.</p>
+            </article>
+
+            <article className="bt-bridge__card">
+              <span>Cue rooms</span>
+              <strong>Score proof first</strong>
+              <p>Explore the cue rooms to hear the soundtrack logic quickly. The `Enter Cue Room` label stays reserved for the modal-opening poster actions.</p>
+            </article>
+
+            <article className="bt-bridge__card">
+              <span>Collector layer</span>
+              <strong>Reward, not detour</strong>
+              <p>Artifacts and collectible rooms deepen the myth after the poster, treatment signal, and cue-world proof have already landed.</p>
+            </article>
           </div>
         </section>
 
         <section className="bt-world" id="treatment" aria-labelledby="bt-treatment-title">
           <header className="bt-section-header">
             <h2 id="bt-treatment-title">The Treatment</h2>
-            <p>A feature treatment built for tone, music, and sequel gravity.</p>
+            <p>A gated feature treatment for approved readers who need the screenplay layer after the public tone and soundtrack proof are in place.</p>
           </header>
 
           <article className="bt-world__panel bt-world__panel--treatment">
@@ -963,7 +991,7 @@ export function BongTourFeature() {
 
             <div className="bt-section-header__actions">
               <Button as="a" href={bongTourTreatmentHref} className="bt-button">
-                Read treatment
+                Request Treatment Access
               </Button>
               <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                 {bongTourContactCtaLabel}
@@ -1039,14 +1067,14 @@ export function BongTourFeature() {
         <section className="bt-finale" id="bong-tour-intake" aria-labelledby="bt-finale-title">
           <div className="bt-finale__body">
             <h2 id="bt-finale-title">Seen enough?</h2>
-            <p>Read the treatment, enter the cue rooms, or reach out if there is a fit for production, soundtrack, collector-world, or partnership.</p>
+            <p>Request treatment access, explore the cue rooms, or reach out if there is a fit for production, soundtrack, collector-world, or partnership.</p>
 
             <div className="bt-finale__actions">
               <Button as="a" href={bongTourContactHref} className="bt-button">
                 {bongTourContactCtaLabel}
               </Button>
               <Button as="a" href={bongTourTreatmentHref} className="bt-button bt-button--outline">
-                Read treatment
+                Request Treatment Access
               </Button>
             </div>
           </div>

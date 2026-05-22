@@ -236,11 +236,11 @@ export function BongTourTreatmentGate() {
             </Button>
             {treatment ? (
               <Button as="a" href="/bong-tour#score-sketches" className="bt-button">
-                Enter cue rooms
+                Explore Cue Rooms
               </Button>
             ) : (
               <Button type="button" className="bt-button" onClick={() => setIsModalOpen(true)} disabled={isCheckingSession}>
-                Unlock treatment
+                Request Treatment Access
               </Button>
             )}
           </div>
@@ -290,7 +290,7 @@ export function BongTourTreatmentGate() {
         ) : (
           <article className="bt-treatment__lock-card">
             <p className="bt-section-header__eyebrow">Private reading copy</p>
-            <h2>Unlock the treatment.</h2>
+            <h2>Request treatment access.</h2>
             <p>Use the email already shared through CGU and the current password to read the screenplay world.</p>
             <div className="bt-world__list-block">
               <ul>
@@ -311,7 +311,7 @@ export function BongTourTreatmentGate() {
 
               <div className="bt-treatment__modal-copy">
                 <p className="bt-section-header__eyebrow">Private reading copy</p>
-                <h2 id={`${titleId}-modal`}>Unlock the treatment.</h2>
+                <h2 id={`${titleId}-modal`}>Request treatment access.</h2>
                 <p id={`${descriptionId}-modal`}>Use the email already shared through CGU and the current password.</p>
               </div>
 
@@ -348,7 +348,7 @@ export function BongTourTreatmentGate() {
 
                 <div className="bt-treatment__modal-actions">
                   <Button type="submit" className="bt-button" disabled={isSubmitting || isLoadingTreatment}>
-                    {isSubmitting || isLoadingTreatment ? "Checking access" : "Unlock treatment"}
+                    {isSubmitting || isLoadingTreatment ? "Checking access" : "Request Treatment Access"}
                   </Button>
                   <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                     Say hello first

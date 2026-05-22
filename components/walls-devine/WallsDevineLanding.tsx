@@ -10,9 +10,16 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { songPostCards } from "@/components/walls-devine/content";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { EcosystemRewardId } from "@/lib/ecosystem/reward-catalog";
 import { getWallsDevineBookingBannerNote, getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
+import {
+  readWallsDevinePlayerDismissed,
+  requestWallsDevinePlayerOpen,
+  requestWallsDevinePlayerRestore,
+  wallsDevinePlayerDismissedChangeEventName
+} from "@/lib/wallsDevinePlayerBridge";
 import { defaultWallsDevineBookingBannerNote, defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
@@ -238,15 +245,23 @@ const wallsDevineBookingIntakeHref = `/contact?${new URLSearchParams({
   project: "Walls/Devine",
   inquiryType: "live-booking"
 }).toString()}`;
-const wallsDevineListeningRoomHref = "#walls-devine-listening-room";
+const wallsDevineMailingListHref = `/contact?${new URLSearchParams({
+  context: "walls-devine-mailing-list",
+  project: "Walls/Devine",
+  inquiryType: "mailing-list"
+}).toString()}`;
+const wallsDevineListeningRoomAnchorId = "walls-devine-listening-room";
+const wallsDevineListeningRoomHref = `#${wallsDevineListeningRoomAnchorId}`;
 
 export function WallsDevineLanding() {
   const [activeQuoteIndex, setActiveQuoteIndex] = useState(0);
   const [isQuotePaused, setIsQuotePaused] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
   const [isLetterExpanded, setIsLetterExpanded] = useState(false);
+  const [isPlayerDismissed, setIsPlayerDismissed] = useState(false);
   const [collectorHeroNote, setCollectorHeroNote] = useState(defaultWallsDevineCollectorHeroNote);
   const [bookingBannerNote, setBookingBannerNote] = useState(defaultWallsDevineBookingBannerNote);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const collectorHeroBody = collectorHeroNote.body.trim() === defaultWallsDevineCollectorHeroNote.body.trim() ? heartfeltCollectorHeroBody : collectorHeroNote.body;
 
   const collectorHeroBodyCollapsed = useMemo(() => {
@@ -273,6 +288,21 @@ export function WallsDevineLanding() {
 
     return () => {
       isActive = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsPlayerDismissed(readWallsDevinePlayerDismissed());
+
+    const handleDismissedChange = (event: Event) => {
+      const nextState = (event as CustomEvent<{ isDismissed: boolean }>).detail?.isDismissed ?? false;
+      setIsPlayerDismissed(nextState);
+    };
+
+    window.addEventListener(wallsDevinePlayerDismissedChangeEventName, handleDismissedChange);
+
+    return () => {
+      window.removeEventListener(wallsDevinePlayerDismissedChangeEventName, handleDismissedChange);
     };
   }, []);
 
@@ -338,6 +368,27 @@ export function WallsDevineLanding() {
     }
   }
 
+  function handleListeningRoomShortcut(event: React.MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+
+    if (isPlayerDismissed) {
+      requestWallsDevinePlayerRestore();
+    }
+
+    requestWallsDevinePlayerOpen();
+
+    const target = document.getElementById(wallsDevineListeningRoomAnchorId);
+
+    if (!target) {
+      return;
+    }
+
+    target.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "start"
+    });
+  }
+
   return (
     <>
       <SectionShell id="hero" labelledBy="walls-devine-title" variant="hero" className="wd-hero-shell" innerClassName="wd-hero">
@@ -348,6 +399,7 @@ export function WallsDevineLanding() {
               eyebrow={collectorHeroNote.eyebrow}
               title={collectorHeroNote.title}
               headingLevel="h1"
+              description="Start in the listening room, move through the collector grid, then choose merch or request to be added for drop alerts through the CGU intake flow."
             />
 
             <div className="wd-hero__gamification-strip" aria-label="Release details">
@@ -399,6 +451,7 @@ export function WallsDevineLanding() {
                       as="a"
                       href={wallsDevineListeningRoomHref}
                       className="wd-hero__letter-cta wd-hero__letter-cta--primary-pulse"
+                      onClick={handleListeningRoomShortcut}
                       data-analytics-event="walls_devine_cta_click"
                       data-analytics-param-source="walls_devine"
                       data-analytics-param-cta="hero_listening_room"
@@ -503,6 +556,39 @@ export function WallsDevineLanding() {
                   </div>
                 </div>
               </div>
+
+              <div className="wd-hero__signal-grid" aria-label="Walls Devine route guide">
+                <article className="wd-hero__signal">
+                  <span>Listening room</span>
+                  <strong>Open Volume 1 first</strong>
+                  <p>The hero control restores the shared player behavior and lands you at the listening room without leaving the route.</p>
+                </article>
+
+                <article className="wd-hero__signal">
+                  <span>Collector grid</span>
+                  <strong>Eight chapter tiles</strong>
+                  <p>Each tile opens artwork, story notes, and the hidden challenge layer tied back to the Volume 1 object.</p>
+                </article>
+
+                <article className="wd-hero__signal">
+                  <span>Signals</span>
+                  <strong>Request drop alerts</strong>
+                  <p>Join the mailing list through CGU intake for listening-room updates and collector unlock notices. This sends a request to be added, not an instant subscription.</p>
+                  <Button
+                    as="a"
+                    href={wallsDevineMailingListHref}
+                    variant="secondary"
+                    className="wd-hero__signal-link"
+                    data-analytics-event="walls_devine_cta_click"
+                    data-analytics-param-source="walls_devine"
+                    data-analytics-param-cta="hero_join_mailing_list"
+                    data-analytics-param-destination={wallsDevineMailingListHref}
+                    data-analytics-param-external="false"
+                  >
+                    Join the Mailing List
+                  </Button>
+                </article>
+              </div>
             </div>
           </div>
         </div>
@@ -511,6 +597,7 @@ export function WallsDevineLanding() {
       <SectionShell id="walls-devine-grid" labelledBy="walls-devine-grid-title" className="wd-grid-shell" innerClassName="wd-grid-section">
         <header className="wd-grid-section__header">
           <h2 id="walls-devine-grid-title">The Collector Grid</h2>
+          <p>Start with the center object, open the surrounding chapter tiles, and return to the listening room whenever the score path should lead the story.</p>
         </header>
 
         <WallsDevineCollectorGrid tiles={instagramGrid} />
