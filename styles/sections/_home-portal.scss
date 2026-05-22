@@ -30,9 +30,9 @@
   margin: 0 auto;
   display: grid;
   gap: clamp(0.75rem, 1.8vw, 1.05rem);
-  padding: clamp(1rem, 2.4vw, 1.45rem) clamp(var(--cg-space-md), 3vw, var(--cg-space-xl)) 0;
-  border-bottom: 1px solid rgba(70, 53, 42, 0.14);
-  background: linear-gradient(180deg, rgba(255, 250, 244, 0.88), rgba(255, 250, 244, 0));
+  padding: clamp(1.2rem, 2.8vw, 1.75rem) clamp(var(--cg-space-md), 3vw, var(--cg-space-xl)) clamp(1.4rem, 3vw, 1.9rem);
+  border-top: 1px solid rgba(70, 53, 42, 0.14);
+  background: linear-gradient(180deg, rgba(255, 250, 244, 0.22), rgba(255, 250, 244, 0.9));
 }
 
 .cg-home-dispatch__copy {

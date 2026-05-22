@@ -50,19 +50,6 @@ const gateways = [
 export default function HomePage() {
   return (
     <main className="cg-page cg-home-page" id="hero">
-      <section className="cg-home-dispatch" aria-labelledby="cg-home-dispatch-title">
-        <div className="cg-home-dispatch__copy">
-          <p className="cg-home-dispatch__eyebrow">Creatives Guide Us</p>
-          <h1 id="cg-home-dispatch-title">Active project worlds first. Studio proof one click away.</h1>
-          <p>Start inside the live release rooms, then open selected work when you need the broader build record behind the worlds.</p>
-        </div>
-
-        <nav className="cg-home-dispatch__actions" aria-label="Studio routes">
-          <Link href="/work">View selected work</Link>
-          <Link href="/contact">Open contact</Link>
-        </nav>
-      </section>
-
       <section className="cg-home-gate" aria-label="Featured project gateways">
         {gateways.map((gateway) => {
           const portalClassName = `cg-home-gate__portal cg-home-gate__portal--${gateway.tone}`;
@@ -151,6 +138,18 @@ export default function HomePage() {
             </Link>
           );
         })}
+      </section>
+
+      <section className="cg-home-dispatch" aria-labelledby="cg-home-dispatch-title">
+        <div className="cg-home-dispatch__copy">
+          <p className="cg-home-dispatch__eyebrow">Creatives Guide Us</p>
+          <h1 id="cg-home-dispatch-title">Active project worlds first. The studio lane sits below.</h1>
+          <p>Use this section for direct contact and the broader CGU frame behind Walls/Devine, Bong Tour, and Appreesh.</p>
+        </div>
+
+        <nav className="cg-home-dispatch__actions" aria-label="Studio routes">
+          <Link href="/contact">Open contact</Link>
+        </nav>
       </section>
     </main>
   );
