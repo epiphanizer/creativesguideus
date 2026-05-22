@@ -1,7 +1,18 @@
+import ContactModalLink from "@/components/contact/ContactModalLink";
+import { buildContactHref } from "@/lib/contact-intake-routing";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { Tag } from "@/components/ui/Tag";
+
+const systemsRoadmapHref = buildContactHref({
+  overrides: {
+    context: "systems-build",
+    goal: "systems",
+    surface: "internal-platform",
+    engagement: "systems-layer"
+  }
+});
 
 const modernizationPath = [
   {
@@ -72,9 +83,9 @@ export function TechSection() {
             >
               Explore Appreesh.org
             </Button>
-            <Button as="a" href="#contact" variant="secondary">
+            <ContactModalLink href={systemsRoadmapHref} buttonVariant="secondary">
               Build Your Systems Roadmap
-            </Button>
+            </ContactModalLink>
           </div>
         </div>
 

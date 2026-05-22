@@ -11,6 +11,7 @@ import { SectionShell } from "@/components/ui/SectionShell";
 import { songPostCards } from "@/components/walls-devine/content";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { buildContactHref } from "@/lib/contact-intake-routing";
 import type { EcosystemRewardId } from "@/lib/ecosystem/reward-catalog";
 import { getWallsDevineBookingBannerNote, getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
@@ -240,16 +241,22 @@ const collectorLetterQuotes: readonly CollectorLetterQuote[] = [
 const collectorQuoteIntervalSeconds = 15;
 const heartfeltCollectorHeroBody =
   "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine";
-const wallsDevineBookingIntakeHref = `/contact?${new URLSearchParams({
-  context: "walls-devine-booking",
-  project: "Walls/Devine",
-  inquiryType: "live-booking"
-}).toString()}`;
-const wallsDevineMailingListHref = `/contact?${new URLSearchParams({
-  context: "walls-devine-mailing-list",
-  project: "Walls/Devine",
-  inquiryType: "mailing-list"
-}).toString()}`;
+const wallsDevineBookingIntakeHref = buildContactHref({
+  overrides: {
+    context: "walls-devine-booking",
+    project: "Walls/Devine",
+    inquiryType: "live-booking",
+    surface: "campaign-world"
+  }
+});
+const wallsDevineMailingListHref = buildContactHref({
+  overrides: {
+    context: "walls-devine-mailing-list",
+    project: "Walls/Devine",
+    inquiryType: "mailing-list",
+    surface: "campaign-world"
+  }
+});
 const wallsDevineListeningRoomHref = `#${wallsDevineListeningRoomAnchorId}`;
 
 export function WallsDevineLanding() {

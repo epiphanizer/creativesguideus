@@ -8,6 +8,7 @@ import type { StaticImageData } from "next/image";
 
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { buildContactHref } from "@/lib/contact-intake-routing";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
 import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
@@ -106,11 +107,15 @@ function buildWallsDevineListeningRoomHref(playerTarget: string) {
 
 const wallsDevineCollectorGridHref = "/walls-devine#walls-devine-grid-title";
 const bongTourTreatmentHref = "/bong-tour/treatment";
-const bongTourContactHref = `/contact?${new URLSearchParams({
-  context: "bong-tour-intake",
-  project: "Bong Tour",
-  inquiryType: "partnership"
-}).toString()}`;
+const bongTourContactHref = buildContactHref({
+  overrides: {
+    context: "bong-tour-intake",
+    project: "Bong Tour",
+    inquiryType: "partnership",
+    surface: "campaign-world",
+    engagement: "direction"
+  }
+});
 const bongTourContactCtaLabel = "Talk About the Film";
 const bongTourPrivatePathCtaLabel = "Open the Private Reading Path";
 

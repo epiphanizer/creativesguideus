@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
+import ContactModalLink from "@/components/contact/ContactModalLink";
+import { buildContactHref } from "@/lib/contact-intake-routing";
 import { getLinkHubContent } from "@/lib/firebase/link-hub-public";
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
 
@@ -25,6 +27,7 @@ function formatUpdatedAt(value: string) {
 }
 
 export function LinkHubLanding() {
+  const linkHubConversationHref = buildContactHref({});
   const [linkHub, setLinkHub] = useState(defaultLinkHubContent);
 
   useEffect(() => {
@@ -155,9 +158,9 @@ export function LinkHubLanding() {
               <p className="cg-link-hub__card-eyebrow">Signal routes</p>
               <h2>The current dispatch board is being reset.</h2>
               <p>Check back shortly or head to the studio contact route for the cleanest next step.</p>
-              <Link href="/contact" className="cg-link-hub__card-cta cg-link-hub__card-cta--inline">
-                Open contact
-              </Link>
+              <ContactModalLink href={linkHubConversationHref} className="cg-link-hub__card-cta cg-link-hub__card-cta--inline">
+                Start a Conversation
+              </ContactModalLink>
             </article>
           )}
         </div>

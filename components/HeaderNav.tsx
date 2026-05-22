@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
+import { buildContactHref } from "@/lib/contact-intake-routing";
 import { anchors } from "./nav/anchors";
 import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 import {
@@ -236,16 +237,16 @@ export function HeaderNav() {
                 )}
               />
             ) : (
-              <a
-                href="/contact"
+              <button
+                type="button"
                 className="cg-header__cta"
-                onClick={(event) => {
-                  event.preventDefault();
-                  handleLinkNavigate("/contact");
+                onClick={() => {
+                  router.push(buildContactHref({ pathname: pathname ?? "/" }), { scroll: false });
+                  closeMenu();
                 }}
               >
-                Start Intake
-              </a>
+                Start a Conversation
+              </button>
             )}
 
             {isWallsDevineRoute ? (

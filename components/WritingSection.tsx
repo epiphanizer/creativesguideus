@@ -1,6 +1,15 @@
-import { Button } from "@/components/ui/Button";
+import ContactModalLink from "@/components/contact/ContactModalLink";
+import { buildContactHref } from "@/lib/contact-intake-routing";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
+
+const writingContactHref = buildContactHref({
+  overrides: {
+    context: "narrative-systems",
+    goal: "launch",
+    engagement: "direction"
+  }
+});
 
 const writingHeroCopy = [
   "Screenplays, treatments, and executive narratives turn complex vision into strategic clarity before the first release hits production.",
@@ -55,9 +64,9 @@ export function WritingSection() {
               Request the slate to access table reads, narrative prototypes, and rewrites that plug directly into your growth plan.
             </p>
             <div className="cg-writing__hero-actions">
-              <Button as="a" href="#contact">
+              <ContactModalLink href={writingContactHref} buttonVariant="primary">
                 Command the Narrative
-              </Button>
+              </ContactModalLink>
             </div>
           </div>
 

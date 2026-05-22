@@ -762,6 +762,10 @@ main {
   flex: 1 1 auto;
 }
 
+html {
+  scrollbar-gutter: stable both-edges;
+}
+
 p {
   margin: 0;
   max-width: 60ch;
@@ -1044,7 +1048,7 @@ p + ol {
   font-size: var(--cg-type-body-sm);
   font-family: var(--cg-font-sans);
   color: var(--cg-color-ink-500);
-  transition: color var(--cg-transition-fade), transform var(--cg-transition-move);
+  transition: color var(--cg-transition-fade);
 }
 
 @media (max-width: 1040px) {
@@ -1096,7 +1100,6 @@ p + ol {
 .cg-header__link:hover,
 .cg-header__link:focus-visible {
   color: var(--cg-color-ink-900);
-  transform: translateY(-1px);
 }
 
 .cg-header__link:hover::after,
@@ -1118,22 +1121,25 @@ p + ol {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 2.75rem;
+  min-width: 14.75rem;
   padding: var(--cg-space-xs) var(--cg-space-md);
   border-radius: var(--cg-radius-md);
   border: 1px solid rgba(26, 19, 13, 0.18);
   background: linear-gradient(135deg, var(--cg-color-bong-ink), var(--cg-color-walls-red-deep));
   color: #fff8f0;
   text-decoration: none;
+  font: inherit;
   font-size: var(--cg-type-body-sm);
   font-family: var(--cg-font-sans);
   font-weight: 600;
   flex-shrink: 0;
-  transition: background var(--cg-transition-fade), transform var(--cg-transition-move);
+  cursor: pointer;
+  transition: background var(--cg-transition-fade), border-color var(--cg-transition-fade);
 }
 
 .cg-header__cta:hover,
 .cg-header__cta:focus-visible {
-  transform: translateY(-1px);
   background: linear-gradient(135deg, var(--cg-color-bong-smoke), var(--cg-color-walls-red));
 }
 
@@ -1149,14 +1155,13 @@ p + ol {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background var(--cg-transition-fade), border-color var(--cg-transition-fade), transform var(--cg-transition-move);
+  transition: background var(--cg-transition-fade), border-color var(--cg-transition-fade);
 }
 
 .cg-header__utility-button:hover,
 .cg-header__utility-button:focus-visible {
   border-color: rgba(156, 7, 5, 0.34);
   background: rgba(253, 254, 254, 0.96);
-  transform: translateY(-1px);
 }
 
 
@@ -2033,7 +2038,7 @@ p + ol {
     align-self: center;
     margin-top: clamp(var(--cg-space-xs), 2vw, var(--cg-space-sm));
     width: auto;
-    min-width: clamp(210px, 70vw, 280px);
+    min-width: clamp(238px, 72vw, 320px);
     font-size: var(--cg-type-body);
     padding: clamp(0.85rem, 3vw, 1rem) clamp(1.6rem, 8vw, 2.4rem);
   }

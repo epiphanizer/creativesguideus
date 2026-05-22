@@ -4,6 +4,7 @@ import { type FormEvent, useEffect, useId, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { buildContactHref } from "@/lib/contact-intake-routing";
 
 type TreatmentPayload = {
   title: string;
@@ -23,11 +24,15 @@ const bongTourTreatmentTravelNotes = [
 
 const treatmentAccessHref = "/api/bong-tour/treatment/access";
 const treatmentContentHref = "/api/bong-tour/treatment/content";
-const bongTourContactHref = `/contact?${new URLSearchParams({
-  context: "bong-tour-treatment-access",
-  project: "Bong Tour",
-  inquiryType: "partnership"
-}).toString()}`;
+const bongTourContactHref = buildContactHref({
+  overrides: {
+    context: "bong-tour-treatment-access",
+    project: "Bong Tour",
+    inquiryType: "partnership",
+    surface: "campaign-world",
+    engagement: "direction"
+  }
+});
 const bongTourContactCtaLabel = "Request Private Reading Copy";
 const approvedReaderChecklist = [
   "Use the same email already shared through CGU.",

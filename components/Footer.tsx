@@ -8,6 +8,9 @@ export function Footer() {
       <div className="cg-footer__inner">
         <p className="cg-footer__manifesto">Release the signal. Keep the channel alive.</p>
         <div className="cg-footer__links" aria-label="Footer links">
+          <a className="cg-footer__link" href="/work">
+            Agency Work
+          </a>
           <a className="cg-footer__link" href="/links">
             Links
           </a>

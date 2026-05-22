@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import ContactModalLink from "@/components/contact/ContactModalLink";
+import { buildContactHref } from "@/lib/contact-intake-routing";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
+
+const homeConversationHref = buildContactHref({});
 
 const gateways = [
   {
@@ -148,7 +152,7 @@ export default function HomePage() {
         </div>
 
         <nav className="cg-home-dispatch__actions" aria-label="Studio routes">
-          <Link href="/contact">Open contact</Link>
+          <ContactModalLink href={homeConversationHref}>Start a Conversation</ContactModalLink>
         </nav>
       </section>
     </main>

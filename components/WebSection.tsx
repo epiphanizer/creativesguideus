@@ -1,7 +1,18 @@
+import ContactModalLink from "@/components/contact/ContactModalLink";
+import { buildContactHref } from "@/lib/contact-intake-routing";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
+
+const platformConversationHref = buildContactHref({
+  overrides: {
+    context: "platform-build",
+    goal: "product",
+    surface: "product-app",
+    engagement: "end-to-end"
+  }
+});
 
 const practiceHighlights = [
   {
@@ -105,9 +116,9 @@ export function WebSection() {
             milestone pushes the release toward measurable adoption.
           </p>
           <div className="cg-split__actions">
-            <Button as="a" href="#contact">
+            <ContactModalLink href={platformConversationHref} buttonVariant="primary">
               Forge Your Platform
-            </Button>
+            </ContactModalLink>
             <Button as="a" href="/work" variant="ghost">
               Review the Outcomes
             </Button>
