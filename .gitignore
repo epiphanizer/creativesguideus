@@ -2,5 +2,6 @@ node_modules/
 .next/
 .env*
 dist/
+.artifacts/
 .DS_Store
 public/walls-devine/releases/volume1/Walls_Devine Vol.1 Master V3.wav

@@ -21,12 +21,12 @@ const gateways = [
   },
   {
     eyebrow: "Screenplay portal",
-    descriptor: "Poster world · cue deck · screenplay",
+    descriptor: "Poster world · private gate · cue rooms",
     title: "Bong Tour",
-    description: "Step into the poster world, screenplay portal, and cue deck orbiting the record and score.",
+    description: "Enter the poster world, private treatment gate, and cue rooms orbiting the record and score.",
     href: "/bong-tour",
     entryLabel: "Enter Bong Tour",
-    entryMeta: "Poster World · Screenplay · Cue Deck",
+    entryMeta: "Poster World · Treatment Gate · Cue Rooms",
     image: posterImage,
     alt: "Bong Tour poster artwork",
     tone: "bong",
@@ -50,6 +50,19 @@ const gateways = [
 export default function HomePage() {
   return (
     <main className="cg-page cg-home-page" id="hero">
+      <section className="cg-home-dispatch" aria-labelledby="cg-home-dispatch-title">
+        <div className="cg-home-dispatch__copy">
+          <p className="cg-home-dispatch__eyebrow">Creatives Guide Us</p>
+          <h1 id="cg-home-dispatch-title">Active project worlds first. Studio proof one click away.</h1>
+          <p>Start inside the live release rooms, then open selected work when you need the broader build record behind the worlds.</p>
+        </div>
+
+        <nav className="cg-home-dispatch__actions" aria-label="Studio routes">
+          <Link href="/work">View selected work</Link>
+          <Link href="/contact">Open contact</Link>
+        </nav>
+      </section>
+
       <section className="cg-home-gate" aria-label="Featured project gateways">
         {gateways.map((gateway) => {
           const portalClassName = `cg-home-gate__portal cg-home-gate__portal--${gateway.tone}`;

@@ -47,6 +47,10 @@
   gap: var(--cg-space-sm);
 }
 
+.cg-link-hub__masthead-top {
+  align-items: start;
+}
+
 .cg-link-hub__identity {
   display: inline-flex;
   align-items: center;
@@ -198,6 +202,7 @@
 .cg-link-hub__empty-state {
   position: relative;
   display: grid;
+  align-content: start;
   gap: 0.8rem;
   padding: clamp(1rem, 2.6vw, 1.2rem);
   border-radius: 22px;
@@ -281,6 +286,7 @@
 .cg-link-hub__card-copy {
   display: grid;
   gap: 0.45rem;
+  min-width: 0;
 }
 
 .cg-link-hub__card-copy h2,
@@ -322,9 +328,17 @@
 }
 
 @media (max-width: 540px) {
+  .cg-link-hub__stack {
+    gap: 0.7rem;
+  }
+
   .cg-link-hub__card,
   .cg-link-hub__empty-state {
     padding: 0.9rem 0.9rem 1rem;
+  }
+
+  .cg-link-hub__card-head {
+    align-items: start;
   }
 
   .cg-link-hub__card-foot {
@@ -334,9 +348,18 @@
   .cg-link-hub__card-cta {
     width: 100%;
   }
+
+  .cg-link-hub__card-foot small {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 @media (min-width: 720px) {
+  .cg-link-hub__masthead-top {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
   .cg-link-hub__hero {
     grid-template-columns: minmax(0, 1.15fr) minmax(16rem, 0.85fr);
     align-items: end;
@@ -358,7 +381,7 @@
   .cg-link-hub__card-foot {
     grid-column: 2 / 3;
     grid-row: 1 / span 2;
-    min-width: 10rem;
+    min-width: 11rem;
     flex-direction: column;
     align-items: flex-end;
     justify-content: space-between;

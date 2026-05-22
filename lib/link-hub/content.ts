@@ -1,7 +1,23 @@
 import type { LinkHubContent, LinkHubLink } from "@/lib/admin/types";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
-const defaultUpdatedAt = "2026-05-17T00:00:00.000Z";
+const defaultUpdatedAt = "";
+const wallsDevineMailingListHref = `/contact?${new URLSearchParams({
+  context: "walls-devine-mailing-list",
+  inquiryType: "mailing-list",
+  project: "Walls/Devine"
+}).toString()}`;
+
+const defaultWallsDevineMailingListLink = {
+  id: "walls-devine-mailing-list",
+  eyebrow: "Signal route",
+  title: "Walls/Devine Mailing List",
+  description: "Route drop alerts, listening-room updates, and collector unlock notices through the CGU intake flow.",
+  href: wallsDevineMailingListHref,
+  ctaLabel: "Join mailing list",
+  isFeatured: false,
+  isActive: true
+} satisfies LinkHubLink;
 
 const defaultWallsDevineMerchLink = {
   id: "walls-devine-merch-shop",
@@ -40,6 +56,7 @@ export const defaultLinkHubContent: LinkHubContent = {
       isFeatured: true,
       isActive: true
     },
+    defaultWallsDevineMailingListLink,
     defaultWallsDevineMerchLink,
     {
       id: "contact",
@@ -93,27 +110,37 @@ export function normalizeLinkHubLink(link: Partial<LinkHubLink> | null | undefin
   };
 }
 
-function ensureWallsDevineMerchLink(links: LinkHubLink[]) {
-  const alreadyPresent = links.some(
-    (link) => link.id === defaultWallsDevineMerchLink.id || link.href.replace(/\/$/, "") === wallsDevineMerchShopHref.replace(/\/$/, "")
-  );
-
-  if (alreadyPresent) {
-    return links;
-  }
-
+function ensureRequiredLinks(links: LinkHubLink[]) {
+  let nextLinks = [...links];
   const wallsIndex = links.findIndex((link) => link.id === "walls-devine" || link.href === "/walls-devine");
-  const merchLink = normalizeLinkHubLink(defaultWallsDevineMerchLink, wallsIndex >= 0 ? wallsIndex + 1 : links.length);
+
+  const requiredLinks = [defaultWallsDevineMailingListLink, defaultWallsDevineMerchLink];
+  let insertedCount = 0;
+
+  requiredLinks.forEach((requiredLink) => {
+    const alreadyPresent = nextLinks.some(
+      (link) => link.id === requiredLink.id || link.href.replace(/\/$/, "") === requiredLink.href.replace(/\/$/, "")
+    );
+
+    if (alreadyPresent) {
+      return;
+    }
+
+    const insertionIndex = wallsIndex < 0 ? nextLinks.length : Math.min(wallsIndex + 1 + insertedCount, nextLinks.length);
+    const normalizedLink = normalizeLinkHubLink(requiredLink, insertionIndex);
+    nextLinks = [...nextLinks.slice(0, insertionIndex), normalizedLink, ...nextLinks.slice(insertionIndex)];
+    insertedCount += 1;
+  });
 
   if (wallsIndex < 0) {
-    return [...links, merchLink];
+    return nextLinks;
   }
 
-  return [...links.slice(0, wallsIndex + 1), merchLink, ...links.slice(wallsIndex + 1)];
+  return nextLinks;
 }
 
 export function normalizeLinkHubContent(content?: Partial<LinkHubContent> | null): LinkHubContent {
-  const links = ensureWallsDevineMerchLink(
+  const links = ensureRequiredLinks(
     Array.isArray(content?.links) && content?.links.length ? content.links.map((link, index) => normalizeLinkHubLink(link, index)) : defaultLinkHubContent.links
   );
 

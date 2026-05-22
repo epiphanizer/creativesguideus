@@ -41,7 +41,10 @@ export function LinkHubLanding() {
     };
   }, []);
 
-  const activeLinks = useMemo(() => linkHub.links.filter((link) => link.isActive), [linkHub.links]);
+  const activeLinks = useMemo(
+    () => [...linkHub.links].filter((link) => link.isActive).sort((left, right) => Number(right.isFeatured) - Number(left.isFeatured)),
+    [linkHub.links]
+  );
   const featuredLinkCount = useMemo(() => activeLinks.filter((link) => link.isFeatured).length, [activeLinks]);
 
   return (
@@ -105,6 +108,7 @@ export function LinkHubLanding() {
           {activeLinks.length ? (
             activeLinks.map((link, index) => {
               const external = isExternalHref(link.href);
+              const routeLabel = external ? "External route" : link.href.startsWith("/contact?") ? "Guided intake" : "Inside CGU";
 
               return (
                 <a
@@ -120,8 +124,8 @@ export function LinkHubLanding() {
                   rel={external ? "noreferrer" : undefined}
                   data-analytics-event="link_hub_link_click"
                   data-analytics-param-source="link_hub"
-                  data-analytics-param-linkId={link.id}
-                  data-analytics-param-linkTitle={link.title}
+                  data-analytics-param-link-id={link.id}
+                  data-analytics-param-link-title={link.title}
                   data-analytics-param-destination={link.href}
                   data-analytics-param-featured={link.isFeatured ? "true" : "false"}
                   data-analytics-param-external={external ? "true" : "false"}
@@ -141,7 +145,7 @@ export function LinkHubLanding() {
 
                   <div className="cg-link-hub__card-foot">
                     <span className="cg-link-hub__card-cta">{link.ctaLabel || "Open link"}</span>
-                    <small>{external ? "External route" : "Inside CGU"}</small>
+                    <small>{routeLabel}</small>
                   </div>
                 </a>
               );

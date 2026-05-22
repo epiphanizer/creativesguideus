@@ -24,11 +24,21 @@ const bongTourTreatmentTravelNotes = [
 const treatmentAccessHref = "/api/bong-tour/treatment/access";
 const treatmentContentHref = "/api/bong-tour/treatment/content";
 const bongTourContactHref = `/contact?${new URLSearchParams({
-  context: "bong-tour-intake",
+  context: "bong-tour-treatment-access",
   project: "Bong Tour",
   inquiryType: "partnership"
 }).toString()}`;
 const bongTourContactCtaLabel = "Let's talk";
+const approvedReaderChecklist = [
+  "Use the same email already shared through CGU.",
+  "Enter the current private password to unlock the treatment.",
+  "The screenplay copy stays out of the initial page response until the gate passes."
+] as const;
+const newReaderChecklist = [
+  "Introduce the reader through the CGU contact route first.",
+  "Leave enough context for why the treatment access is needed.",
+  "Approved readers return here and use that same email at the gate."
+] as const;
 
 async function getResponseError(response: Response, fallbackMessage: string) {
   try {
@@ -280,14 +290,42 @@ export function BongTourTreatmentGate() {
           </>
         ) : (
           <article className="bt-treatment__lock-card">
-            <p className="bt-section-header__eyebrow">Private reading copy</p>
-            <h2>Request treatment access.</h2>
-            <p>Use the email already shared through CGU and the current password to read the screenplay world.</p>
-            <div className="bt-world__list-block">
-              <ul>
-                <li>The treatment stays out of the initial page response until the gate passes.</li>
-                <li>Share your email through the contact page if you are new here.</li>
-              </ul>
+            <div className="bt-treatment__lock-grid">
+              <section className="bt-treatment__track">
+                <p className="bt-section-header__eyebrow">Already approved?</p>
+                <h2>Open the private gate.</h2>
+                <p>Use the email already on file with CGU plus the current password to read the screenplay world.</p>
+                <div className="bt-world__list-block">
+                  <ul>
+                    {approvedReaderChecklist.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bt-treatment__track-actions">
+                  <Button type="button" className="bt-button" onClick={() => setIsModalOpen(true)} disabled={isCheckingSession}>
+                    Open Treatment Gate
+                  </Button>
+                </div>
+              </section>
+
+              <section className="bt-treatment__track bt-treatment__track--secondary">
+                <p className="bt-section-header__eyebrow">Need access?</p>
+                <h2>Introduce the reader first.</h2>
+                <p>New readers should route through contact so the treatment stays private, attributable, and out of the public page payload.</p>
+                <div className="bt-world__list-block">
+                  <ul>
+                    {newReaderChecklist.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bt-treatment__track-actions">
+                  <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
+                    Start With Contact
+                  </Button>
+                </div>
+              </section>
             </div>
           </article>
         )}
@@ -302,8 +340,20 @@ export function BongTourTreatmentGate() {
 
               <div className="bt-treatment__modal-copy">
                 <p className="bt-section-header__eyebrow">Private reading copy</p>
-                <h2 id={`${titleId}-modal`}>Request treatment access.</h2>
-                <p id={`${descriptionId}-modal`}>Use the email already shared through CGU and the current password.</p>
+                <h2 id={`${titleId}-modal`}>Use the approved-reader gate.</h2>
+                <p id={`${descriptionId}-modal`}>Approved readers enter the email already on file plus the current password. New readers should start with contact first.</p>
+              </div>
+
+              <div className="bt-treatment__modal-guides" aria-label="Treatment access paths">
+                <article className="bt-treatment__modal-guide">
+                  <span>Already approved?</span>
+                  <p>Use the same email already shared through CGU and the current password.</p>
+                </article>
+
+                <article className="bt-treatment__modal-guide">
+                  <span>Need access?</span>
+                  <p>Open the contact route first so the request stays inside the private CGU intake flow.</p>
+                </article>
               </div>
 
               <form className="bt-treatment__form" onSubmit={handleUnlock}>
@@ -339,10 +389,10 @@ export function BongTourTreatmentGate() {
 
                 <div className="bt-treatment__modal-actions">
                   <Button type="submit" className="bt-button" disabled={isSubmitting || isLoadingTreatment}>
-                    {isSubmitting || isLoadingTreatment ? "Checking access" : "Request Treatment Access"}
+                    {isSubmitting || isLoadingTreatment ? "Checking access" : "Open Treatment Gate"}
                   </Button>
                   <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
-                    Say hello first
+                    Start With Contact
                   </Button>
                 </div>
               </form>

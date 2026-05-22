@@ -38,6 +38,16 @@ type ContactSectionProps = {
   headingLevel?: "h1" | "h2" | "h3" | "h4";
 };
 
+type ContactBannerTone = "default" | "walls" | "bong";
+
+type ContactBanner = {
+  tone: ContactBannerTone;
+  eyebrow: string;
+  title: string;
+  description: string;
+  chips: string[];
+};
+
 const inquiryTypeOptions: ContactOption[] = [
   { value: "live-booking", label: "Live booking" },
   { value: "listening-session", label: "Listening session" },
@@ -133,11 +143,62 @@ function buildInitialForm(prefill: ContactPrefill): ContactFormState {
   };
 }
 
+function buildContactBanner(prefill: ContactPrefill): ContactBanner {
+  if (prefill.contextId === "walls-devine-booking") {
+    return {
+      tone: "walls",
+      eyebrow: "Walls/Devine booking",
+      title: "Booking route loaded",
+      description: "Keep the room type, timing, and booking context here so the ask stays attached to the live release world.",
+      chips: ["Live booking", "Timing", "Collector-world context"]
+    };
+  }
+
+  if (prefill.contextId === "walls-devine-mailing-list") {
+    return {
+      tone: "walls",
+      eyebrow: "Walls/Devine signal",
+      title: "Mailing-list route loaded",
+      description: "This intake currently routes drop alerts, listening-room updates, and collector unlock notices through CGU until the dedicated list is live.",
+      chips: ["Drop alerts", "Listening-room updates", "Collector unlock notices"]
+    };
+  }
+
+  if (prefill.contextId === "bong-tour-treatment-access") {
+    return {
+      tone: "bong",
+      eyebrow: "Bong Tour treatment",
+      title: "Protected reader route loaded",
+      description: "Use this lane to introduce a new reader before the private treatment gate is opened. Approved readers later use that same email inside the gate.",
+      chips: ["Private treatment", "Reader approval", "Score-world context"]
+    };
+  }
+
+  if (prefill.contextId === "bong-tour-intake") {
+    return {
+      tone: "bong",
+      eyebrow: "Bong Tour route",
+      title: "Screenplay world intake loaded",
+      description: "Route soundtrack, production, partnership, and treatment-adjacent conversations through one clear entry point.",
+      chips: ["Screenplay world", "Cue-room proof", "Partnership routing"]
+    };
+  }
+
+  return {
+    tone: "default",
+    eyebrow: "CGU intake",
+    title: "One route for the active worlds",
+    description: "Use the guided intake to route booking asks, release-world collaborations, and system builds without losing context.",
+    chips: ["Booking and release", "Partnerships", "Systems builds"]
+  };
+}
+
 export function ContactSection({ headingLevel = "h2" }: ContactSectionProps) {
   const [prefill, setPrefill] = useState<ContactPrefill>({ contextId: "", inquiryType: "", projectTitle: "" });
   const [form, setForm] = useState<ContactFormState>(emptyForm);
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [feedbackMessage, setFeedbackMessage] = useState("");
+  const contextBanner = buildContactBanner(prefill);
 
   useEffect(() => {
     const nextPrefill = buildContactPrefill(window.location.search);
@@ -210,12 +271,32 @@ export function ContactSection({ headingLevel = "h2" }: ContactSectionProps) {
       ? "Walls/Devine booking context is loaded. Leave the room type, timing, and booking note here and it will stay inside the CGU domain."
       : prefill.contextId === "walls-devine-mailing-list"
         ? "Walls/Devine mailing-list request context is loaded. Leave the best contact details here and this request will be routed through the CGU intake flow for drop alerts, listening-room updates, and collector unlock notices."
+        : prefill.contextId === "bong-tour-treatment-access"
+          ? "Bong Tour treatment access context is loaded. Use this route to introduce a new reader before the private gate opens, or confirm the email that should be approved."
+          : prefill.contextId === "bong-tour-intake"
+            ? "Bong Tour intake context is loaded. Leave the clearest soundtrack, production, or partnership note here so the screenplay world can route cleanly."
       : "Use this intake to route booking asks, release-world collaborations, soundtrack conversations, and system builds through one clear entry point.";
 
   return (
     <SectionShell id="contact" labelledBy="contact-title" innerClassName="cg-contact__shell">
       <div className="cg-contact">
         <div className="cg-contact__intro">
+          <div className={`cg-contact__context-banner cg-contact__context-banner--${contextBanner.tone}`} aria-label="Active contact route">
+            <div className="cg-contact__context-copy">
+              <p className="cg-contact__context-eyebrow">{contextBanner.eyebrow}</p>
+              <strong className="cg-contact__context-title">{contextBanner.title}</strong>
+              <p className="cg-contact__context-description">{contextBanner.description}</p>
+            </div>
+
+            <div className="cg-contact__context-chips" aria-label="Route highlights">
+              {contextBanner.chips.map((chip) => (
+                <span key={chip} className="cg-contact__context-chip">
+                  {chip}
+                </span>
+              ))}
+            </div>
+          </div>
+
           <SectionHeader
             id="contact-title"
             headingLevel={headingLevel}

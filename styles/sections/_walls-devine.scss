@@ -4341,6 +4341,7 @@
 
 .wd-hero__signal-grid {
   display: grid;
+  align-items: stretch;
   gap: var(--cg-space-sm);
   margin-top: clamp(var(--cg-space-lg), 3vw, var(--cg-space-2xl));
 }
@@ -4354,10 +4355,12 @@
 .wd-hero__signal {
   display: grid;
   gap: 0.28rem;
+  grid-template-rows: auto auto 1fr auto;
   padding: clamp(var(--cg-space-sm), 2vw, var(--cg-space-md));
   border: 1px solid rgba(122, 24, 28, 0.18);
   border-radius: calc(var(--cg-radius-md) * 1.08);
   background: rgba(255, 249, 245, 0.76);
+  min-height: 100%;
 }
 
 .wd-hero__signal span,
@@ -4378,6 +4381,11 @@
 .wd-experience__card p {
   margin: 0;
   color: rgba(27, 21, 21, 0.76);
+}
+
+.wd-hero__signal-link {
+  margin-top: auto;
+  justify-self: start;
 }
 
 .wd-experience-shell {

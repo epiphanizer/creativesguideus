@@ -123,6 +123,51 @@ const bongTourTreatmentBullets = [
   "A screenplay engine with sequel gravity."
 ] as const;
 
+const bongTourHeroFacts = [
+  { label: "Format", value: "Feature screenplay" },
+  { label: "Tone", value: "Diaspora cult comedy" },
+  { label: "Score bridge", value: "Walls/Devine Volume 1" }
+] as const;
+
+const bongTourHeroSignals = [
+  {
+    label: "Treatment gate",
+    title: "Private script layer",
+    description: "Approved readers unlock the treatment after the contact path and the current password line up."
+  },
+  {
+    label: "Cue rooms",
+    title: "Score proof first",
+    description: "Three soundtrack-led entries make the film world legible fast before the archive asks for more attention."
+  },
+  {
+    label: "Collector archive",
+    title: "Reward path later",
+    description: "Artifacts stay downstream so the poster, cue logic, and treatment signal do the first proof work."
+  }
+] as const;
+
+const bongTourRouteSteps = [
+  {
+    step: "01",
+    label: "Treatment",
+    title: "Request the gate",
+    description: "Use the public treatment CTA to route approved-reader access without exposing the screenplay in the initial page response."
+  },
+  {
+    step: "02",
+    label: "Cue rooms",
+    title: "Hear the proof",
+    description: "Open the score-led rooms to hear tone, motion, and companion-album logic before deeper story architecture is required."
+  },
+  {
+    step: "03",
+    label: "Collector layer",
+    title: "Return for rewards",
+    description: "Artifacts and collectible rooms deepen the myth after the poster world and soundtrack bridge have already landed."
+  }
+] as const;
+
 function buildVaultCode(length: number) {
   return Array.from({ length }, () => Math.floor(Math.random() * 9) + 1);
 }
@@ -923,11 +968,18 @@ export function BongTourFeature() {
                   <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority sizes="(max-width: 960px) 82vw, 32vw" />
                 </div>
               </a>
+              <figcaption>Poster first. The private treatment opens only after reader approval.</figcaption>
             </figure>
 
             <div className="bt-hero__content">
+              <p className="bt-hero__eyebrow">Feature screenplay portal</p>
               <h1>Bong Tour</h1>
-              <p className="bt-hero__descriptor">{bongTourPremise}</p>
+
+              <div className="bt-hero__logline">
+                <h2>Logline</h2>
+                <p>{bongTourPremise}</p>
+              </div>
+
               <p className="bt-hero__positioning">A poster-first screenplay world built to prove tone quickly: private treatment layer, score-led cue rooms, and a collector archive that stays downstream of the pitch.</p>
 
               <div className="bt-hero__cta">
@@ -942,7 +994,26 @@ export function BongTourFeature() {
                 </Button>
               </div>
 
-              <p className="bt-hero__route">Request treatment access for the private screenplay layer, explore cue rooms for the score proof, and treat the archive as the reward layer once the world lands.</p>
+              <p className="bt-hero__route">Poster first. Cue rooms prove the score. The treatment opens after approval, and the archive stays as the return layer.</p>
+
+              <div className="bt-hero__meta" aria-label="Bong Tour quick facts">
+                {bongTourHeroFacts.map((fact) => (
+                  <article key={fact.label} className="bt-hero__meta-item">
+                    <span className="bt-hero__meta-label">{fact.label}</span>
+                    <strong className="bt-hero__meta-value">{fact.value}</strong>
+                  </article>
+                ))}
+              </div>
+
+              <div className="bt-hero__signal-strip" aria-label="Bong Tour route signals">
+                {bongTourHeroSignals.map((signal) => (
+                  <article key={signal.label} className="bt-hero__signal-card">
+                    <span>{signal.label}</span>
+                    <strong>{signal.title}</strong>
+                    <p>{signal.description}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -955,23 +1026,16 @@ export function BongTourFeature() {
           </header>
 
           <div className="bt-bridge__grid">
-            <article className="bt-bridge__card">
-              <span>Treatment</span>
-              <strong>Private script layer</strong>
-              <p>Use the public treatment CTA to request access to the private reading copy. The full screenplay world stays behind the existing gate.</p>
-            </article>
-
-            <article className="bt-bridge__card">
-              <span>Cue rooms</span>
-              <strong>Score proof first</strong>
-              <p>Explore the cue rooms to hear the soundtrack logic quickly. The `Enter Cue Room` label stays reserved for the modal-opening poster actions.</p>
-            </article>
-
-            <article className="bt-bridge__card">
-              <span>Collector layer</span>
-              <strong>Reward, not detour</strong>
-              <p>Artifacts and collectible rooms deepen the myth after the poster, treatment signal, and cue-world proof have already landed.</p>
-            </article>
+            {bongTourRouteSteps.map((step) => (
+              <article key={step.step} className="bt-bridge__card">
+                <div className="bt-bridge__card-head">
+                  <span className="bt-bridge__card-step">{step.step}</span>
+                  <span>{step.label}</span>
+                </div>
+                <strong>{step.title}</strong>
+                <p>{step.description}</p>
+              </article>
+            ))}
           </div>
         </section>
 
@@ -1012,6 +1076,7 @@ export function BongTourFeature() {
                 <button type="button" className="bt-music__visual" onClick={() => setActiveRoom(poster.room)} aria-label={`Open ${poster.title} cue room`}>
                   <Image src={poster.image} alt="" className="bt-music__visual-image" sizes="(max-width: 920px) 80vw, 26vw" />
                   <div className="bt-music__marquee">
+                    <span className="bt-music__badge">{poster.badge}</span>
                     <h3>{poster.title}</h3>
                     <p>{poster.tagline}</p>
                   </div>
@@ -1019,6 +1084,11 @@ export function BongTourFeature() {
 
                 <div className="bt-music__details">
                   <p className="bt-music__lede">{poster.description}</p>
+                  <div className="bt-world__theme-row" aria-label={`${poster.title} proof points`}>
+                    {poster.highlights.map((highlight) => (
+                      <span key={highlight}>{highlight}</span>
+                    ))}
+                  </div>
                   <div className="bt-music__actions">
                     <Button type="button" className="bt-button" onClick={() => setActiveRoom(poster.room)}>
                       Enter Cue Room
