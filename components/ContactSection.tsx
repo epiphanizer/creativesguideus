@@ -6,7 +6,11 @@ import { createContactIntake } from "@/lib/firebase/contact-intake";
 import { trackAnalyticsEvent } from "@/lib/firebase/analytics";
 import {
   GuidedIntakeChoiceGrid,
+  GuidedIntakeField,
+  GuidedIntakeFieldRow,
+  GuidedIntakeFooter,
   GuidedIntakeProgress,
+  GuidedIntakeStatusMessage,
   GuidedIntakeStepHeader
 } from "@/components/contact-guided/GuidedIntakePrimitives";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -1119,9 +1123,8 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
     if (activeStep.id === "project") {
       return (
         <>
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-project-title">Project or release</label>
+          <GuidedIntakeFieldRow>
+            <GuidedIntakeField label="Project or release" htmlFor="contact-project-title">
               <input
                 id="contact-project-title"
                 name="projectTitle"
@@ -1130,10 +1133,9 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                 value={form.projectTitle}
                 onChange={handleFieldChange}
               />
-            </div>
+            </GuidedIntakeField>
 
-            <div className="cg-contact__field">
-              <label htmlFor="contact-goal">Goal</label>
+            <GuidedIntakeField label="Goal" htmlFor="contact-goal">
               <select id="contact-goal" name="goal" value={form.goal} onChange={handleFieldChange}>
                 <option value="">Choose the lead move</option>
                 {goalOptions.map((option) => (
@@ -1142,12 +1144,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   </option>
                 ))}
               </select>
-            </div>
-          </div>
+            </GuidedIntakeField>
+          </GuidedIntakeFieldRow>
 
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-surface">Surface</label>
+          <GuidedIntakeFieldRow>
+            <GuidedIntakeField label="Surface" htmlFor="contact-surface">
               <select id="contact-surface" name="surface" value={form.surface} onChange={handleFieldChange}>
                 <option value="">Choose the primary surface</option>
                 {surfaceOptions.map((option) => (
@@ -1156,10 +1157,9 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   </option>
                 ))}
               </select>
-            </div>
+            </GuidedIntakeField>
 
-            <div className="cg-contact__field">
-              <label htmlFor="contact-engagement">Engagement</label>
+            <GuidedIntakeField label="Engagement" htmlFor="contact-engagement">
               <select id="contact-engagement" name="engagement" value={form.engagement} onChange={handleFieldChange}>
                 <option value="">Choose the lead mode</option>
                 {engagementOptions.map((option) => (
@@ -1168,12 +1168,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   </option>
                 ))}
               </select>
-            </div>
-          </div>
+            </GuidedIntakeField>
+          </GuidedIntakeFieldRow>
 
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-timeline">Timeline</label>
+          <GuidedIntakeFieldRow>
+            <GuidedIntakeField label="Timeline" htmlFor="contact-timeline">
               <select id="contact-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
                 <option value="">Choose timing</option>
                 {timelineOptions.map((option) => (
@@ -1182,10 +1181,9 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   </option>
                 ))}
               </select>
-            </div>
+            </GuidedIntakeField>
 
-            <div className="cg-contact__field">
-              <label htmlFor="contact-budget-range">Budget range</label>
+            <GuidedIntakeField label="Budget range" htmlFor="contact-budget-range">
               <select id="contact-budget-range" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
                 <option value="">Choose a range</option>
                 {budgetRangeOptions.map((option) => (
@@ -1194,11 +1192,10 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   </option>
                 ))}
               </select>
-            </div>
-          </div>
+            </GuidedIntakeField>
+          </GuidedIntakeFieldRow>
 
-          <div className="cg-contact__field cg-contact__field--full">
-            <label htmlFor="contact-brief">{activeFlow.noteLabel}</label>
+          <GuidedIntakeField label={activeFlow.noteLabel} htmlFor="contact-brief" fullWidth>
             <textarea
               id="contact-brief"
               name="brief"
@@ -1208,7 +1205,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
               onChange={handleFieldChange}
               required
             />
-          </div>
+          </GuidedIntakeField>
         </>
       );
     }
@@ -1216,9 +1213,8 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
     if (activeStep.id === "contact") {
       return (
         <>
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-name">Name</label>
+          <GuidedIntakeFieldRow>
+            <GuidedIntakeField label="Name" htmlFor="contact-name">
               <input
                 id="contact-name"
                 name="name"
@@ -1229,10 +1225,9 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                 onChange={handleFieldChange}
                 required
               />
-            </div>
+            </GuidedIntakeField>
 
-            <div className="cg-contact__field">
-              <label htmlFor="contact-email">Email</label>
+            <GuidedIntakeField label="Email" htmlFor="contact-email">
               <input
                 id="contact-email"
                 name="email"
@@ -1243,12 +1238,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                 onChange={handleFieldChange}
                 required
               />
-            </div>
-          </div>
+            </GuidedIntakeField>
+          </GuidedIntakeFieldRow>
 
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-company">{activeFlow.companyLabel}</label>
+          <GuidedIntakeFieldRow>
+            <GuidedIntakeField label={activeFlow.companyLabel} htmlFor="contact-company">
               <input
                 id="contact-company"
                 name="company"
@@ -1258,10 +1252,9 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                 value={form.company}
                 onChange={handleFieldChange}
               />
-            </div>
+            </GuidedIntakeField>
 
-            <div className="cg-contact__field">
-              <label htmlFor="contact-contact-project-title">Project or release</label>
+            <GuidedIntakeField label="Project or release" htmlFor="contact-contact-project-title">
               <input
                 id="contact-contact-project-title"
                 name="projectTitle"
@@ -1270,8 +1263,8 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                 value={form.projectTitle}
                 onChange={handleFieldChange}
               />
-            </div>
-          </div>
+            </GuidedIntakeField>
+          </GuidedIntakeFieldRow>
         </>
       );
     }
@@ -1290,8 +1283,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
               />
             </fieldset>
 
-            <div className="cg-contact__field cg-contact__field--full">
-              <label htmlFor="contact-mailing-note">{activeFlow.noteLabel}</label>
+            <GuidedIntakeField label={activeFlow.noteLabel} htmlFor="contact-mailing-note" fullWidth>
               <textarea
                 id="contact-mailing-note"
                 name="brief"
@@ -1300,7 +1292,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                 value={form.brief}
                 onChange={handleFieldChange}
               />
-            </div>
+            </GuidedIntakeField>
           </>
         );
       }
@@ -1308,9 +1300,8 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
       if (activeFlow.id === "walls-booking") {
         return (
           <>
-            <div className="cg-contact__field-row">
-              <div className="cg-contact__field">
-                <label htmlFor="contact-booking-location">City or location</label>
+            <GuidedIntakeFieldRow>
+              <GuidedIntakeField label="City or location" htmlFor="contact-booking-location">
                 <input
                   id="contact-booking-location"
                   name="bookingLocation"
@@ -1319,10 +1310,9 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   value={routeDetails.bookingLocation}
                   onChange={handleRouteDetailChange}
                 />
-              </div>
+              </GuidedIntakeField>
 
-              <div className="cg-contact__field">
-                <label htmlFor="contact-booking-timeline">Timeline</label>
+              <GuidedIntakeField label="Timeline" htmlFor="contact-booking-timeline">
                 <select id="contact-booking-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
                   <option value="">Choose timing</option>
                   {timelineOptions.map((option) => (
@@ -1331,12 +1321,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                     </option>
                   ))}
                 </select>
-              </div>
-            </div>
+              </GuidedIntakeField>
+            </GuidedIntakeFieldRow>
 
-            <div className="cg-contact__field-row">
-              <div className="cg-contact__field">
-                <label htmlFor="contact-booking-budget">Budget range</label>
+            <GuidedIntakeFieldRow>
+              <GuidedIntakeField label="Budget range" htmlFor="contact-booking-budget">
                 <select id="contact-booking-budget" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
                   <option value="">Choose a range</option>
                   {budgetRangeOptions.map((option) => (
@@ -1345,10 +1334,9 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                     </option>
                   ))}
                 </select>
-              </div>
+              </GuidedIntakeField>
 
-              <div className="cg-contact__field">
-                <label htmlFor="contact-booking-project-title">Project or release</label>
+              <GuidedIntakeField label="Project or release" htmlFor="contact-booking-project-title">
                 <input
                   id="contact-booking-project-title"
                   name="projectTitle"
@@ -1357,11 +1345,10 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   value={form.projectTitle}
                   onChange={handleFieldChange}
                 />
-              </div>
-            </div>
+              </GuidedIntakeField>
+            </GuidedIntakeFieldRow>
 
-            <div className="cg-contact__field cg-contact__field--full">
-              <label htmlFor="contact-booking-note">{activeFlow.noteLabel}</label>
+            <GuidedIntakeField label={activeFlow.noteLabel} htmlFor="contact-booking-note" fullWidth>
               <textarea
                 id="contact-booking-note"
                 name="brief"
@@ -1371,7 +1358,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                 onChange={handleFieldChange}
                 required
               />
-            </div>
+            </GuidedIntakeField>
           </>
         );
       }
@@ -1379,9 +1366,8 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
       if (activeFlow.id === "bong-treatment") {
         return (
           <>
-            <div className="cg-contact__field-row">
-              <div className="cg-contact__field">
-                <label htmlFor="contact-treatment-relationship">Relationship to the project</label>
+            <GuidedIntakeFieldRow>
+              <GuidedIntakeField label="Relationship to the project" htmlFor="contact-treatment-relationship">
                 <input
                   id="contact-treatment-relationship"
                   name="relationshipToProject"
@@ -1390,10 +1376,9 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   value={routeDetails.relationshipToProject}
                   onChange={handleRouteDetailChange}
                 />
-              </div>
+              </GuidedIntakeField>
 
-              <div className="cg-contact__field">
-                <label htmlFor="contact-treatment-project-title">Project or release</label>
+              <GuidedIntakeField label="Project or release" htmlFor="contact-treatment-project-title">
                 <input
                   id="contact-treatment-project-title"
                   name="projectTitle"
@@ -1402,11 +1387,10 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   value={form.projectTitle}
                   onChange={handleFieldChange}
                 />
-              </div>
-            </div>
+              </GuidedIntakeField>
+            </GuidedIntakeFieldRow>
 
-            <div className="cg-contact__field cg-contact__field--full">
-              <label htmlFor="contact-treatment-reason">Why this reader needs the private copy</label>
+            <GuidedIntakeField label="Why this reader needs the private copy" htmlFor="contact-treatment-reason" fullWidth>
               <textarea
                 id="contact-treatment-reason"
                 name="readerReason"
@@ -1416,10 +1400,9 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                 onChange={handleRouteDetailChange}
                 required
               />
-            </div>
+            </GuidedIntakeField>
 
-            <div className="cg-contact__field cg-contact__field--full">
-              <label htmlFor="contact-treatment-note">{activeFlow.noteLabel}</label>
+            <GuidedIntakeField label={activeFlow.noteLabel} htmlFor="contact-treatment-note" fullWidth>
               <textarea
                 id="contact-treatment-note"
                 name="brief"
@@ -1428,7 +1411,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                 value={form.brief}
                 onChange={handleFieldChange}
               />
-            </div>
+            </GuidedIntakeField>
           </>
         );
       }
@@ -1449,9 +1432,8 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
             />
           </fieldset>
 
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-bong-timeline">Timeline</label>
+          <GuidedIntakeFieldRow>
+            <GuidedIntakeField label="Timeline" htmlFor="contact-bong-timeline">
               <select id="contact-bong-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
                 <option value="">Choose timing</option>
                 {timelineOptions.map((option) => (
@@ -1460,10 +1442,9 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   </option>
                 ))}
               </select>
-            </div>
+            </GuidedIntakeField>
 
-            <div className="cg-contact__field">
-              <label htmlFor="contact-bong-budget">Budget range</label>
+            <GuidedIntakeField label="Budget range" htmlFor="contact-bong-budget">
               <select id="contact-bong-budget" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
                 <option value="">Choose a range</option>
                 {budgetRangeOptions.map((option) => (
@@ -1472,11 +1453,10 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
                   </option>
                 ))}
               </select>
-            </div>
-          </div>
+            </GuidedIntakeField>
+          </GuidedIntakeFieldRow>
 
-          <div className="cg-contact__field cg-contact__field--full">
-            <label htmlFor="contact-bong-note">{activeFlow.noteLabel}</label>
+          <GuidedIntakeField label={activeFlow.noteLabel} htmlFor="contact-bong-note" fullWidth>
             <textarea
               id="contact-bong-note"
               name="brief"
@@ -1486,7 +1466,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
               onChange={handleFieldChange}
               required
             />
-          </div>
+          </GuidedIntakeField>
         </>
       );
     }
@@ -1593,35 +1573,30 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "" }: Cont
           <div className="cg-contact__step-panel">{renderStepBody()}</div>
 
           {feedbackMessage ? (
-            <p
-              className={`cg-contact__form-status cg-contact__form-status--${submissionState === "success" ? "success" : "error"}`}
+            <GuidedIntakeStatusMessage
+              tone={submissionState === "success" ? "success" : "error"}
               role={submissionState === "error" ? "alert" : "status"}
-            >
-              {feedbackMessage}
-            </p>
+              message={feedbackMessage}
+            />
           ) : null}
 
-          <div className="cg-contact__footer">
-            <div className="cg-contact__footer-actions">
-              {currentStep > 0 ? (
-                <Button type="button" variant="ghost" className="cg-contact__nav-button" onClick={handleBack}>
-                  Back
-                </Button>
-              ) : null}
-
-              {currentStep < activeFlow.steps.length - 1 ? (
-                <Button type="button" className="cg-contact__submit" onClick={handleContinue}>
-                  Continue
-                </Button>
-              ) : (
-                <Button type="submit" className="cg-contact__submit" disabled={submissionState === "submitting"}>
-                  {submissionState === "submitting" ? "Sending intake..." : "Send intake"}
-                </Button>
-              )}
-            </div>
-
-            <span className="cg-contact__privacy">Your intelligence stays inside the core studio signal flow.</span>
-          </div>
+          <GuidedIntakeFooter
+            secondaryAction={currentStep > 0 ? (
+              <Button type="button" variant="ghost" className="cg-contact__nav-button" onClick={handleBack}>
+                Back
+              </Button>
+            ) : null}
+            primaryAction={currentStep < activeFlow.steps.length - 1 ? (
+              <Button type="button" className="cg-contact__submit" onClick={handleContinue}>
+                Continue
+              </Button>
+            ) : (
+              <Button type="submit" className="cg-contact__submit" disabled={submissionState === "submitting"}>
+                {submissionState === "submitting" ? "Sending intake..." : "Send intake"}
+              </Button>
+            )}
+            privacyText="Your intelligence stays inside the core studio signal flow."
+          />
         </form>
       </div>
     </SectionShell>
