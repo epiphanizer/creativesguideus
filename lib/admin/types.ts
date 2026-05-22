@@ -66,8 +66,14 @@ export type ReleasePlan = {
 };
 
 export type WallsDevineCollectorHeroNote = {
+  eyebrow: string;
+  title: string;
   salutation: string;
   body: string;
+  primaryCtaLabel: string;
+  secondaryCtaLabel: string;
+  signatureIntro: string;
+  journalLabel: string;
   updatedAt: string;
 };
 
@@ -75,6 +81,8 @@ export type WallsDevineBookingBannerNote = {
   eyebrow: string;
   title: string;
   description: string;
+  primaryCtaLabel: string;
+  secondaryCtaLabel: string;
   meta: string;
   updatedAt: string;
 };

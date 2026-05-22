@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiCheck, FiPause, FiPlay, FiShare2, FiSkipForward } from "react-icons/fi";
 
 import { Button } from "@/components/ui/Button";
@@ -244,9 +244,20 @@ export function WallsDevineLanding() {
   const [activeQuoteIndex, setActiveQuoteIndex] = useState(0);
   const [isQuotePaused, setIsQuotePaused] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
+  const [isLetterExpanded, setIsLetterExpanded] = useState(false);
   const [collectorHeroNote, setCollectorHeroNote] = useState(defaultWallsDevineCollectorHeroNote);
   const [bookingBannerNote, setBookingBannerNote] = useState(defaultWallsDevineBookingBannerNote);
   const collectorHeroBody = collectorHeroNote.body.trim() === defaultWallsDevineCollectorHeroNote.body.trim() ? heartfeltCollectorHeroBody : collectorHeroNote.body;
+
+  const collectorHeroBodyCollapsed = useMemo(() => {
+    const firstBreak = collectorHeroBody.indexOf(". ");
+    return firstBreak !== -1 ? collectorHeroBody.slice(0, firstBreak + 1) : collectorHeroBody;
+  }, [collectorHeroBody]);
+
+  const previewTiles = useMemo(() => {
+    const slugOrder = ["volume-1", "joint-queen", "resolve"] as const;
+    return slugOrder.map((slug) => instagramGrid.find((t) => t.slug === slug)).filter((t): t is GridTile => t !== undefined);
+  }, []);
 
   const activeQuote = collectorLetterQuotes[activeQuoteIndex] ?? collectorLetterQuotes[0];
 
@@ -334,17 +345,25 @@ export function WallsDevineLanding() {
           <div className="wd-hero__showcase">
             <SectionHeader
               id="walls-devine-title"
-              eyebrow="Collector experience"
-              title="Walls/Devine Volume 1"
+              eyebrow={collectorHeroNote.eyebrow}
+              title={collectorHeroNote.title}
               headingLevel="h1"
             />
+
+            <div className="wd-hero__gamification-strip" aria-label="Release details">
+              <span>8 tracks</span>
+              <span className="wd-hero__gamification-strip__dot" aria-hidden="true">·</span>
+              <span>8 collector challenges</span>
+              <span className="wd-hero__gamification-strip__dot" aria-hidden="true">·</span>
+              <span>June 4</span>
+            </div>
 
             <figure className="wd-hero__cover">
               <div className="wd-hero__cover-frame">
                 <Image src={volOneImage} alt="Walls/Devine Volume 1 cover artwork" priority sizes="(max-width: 900px) 82vw, 30vw" />
               </div>
               <figcaption className="wd-hero__cover-signature" aria-label="Signed by John Walls and Terry Devine">
-                <p className="wd-hero__letter-signoff">With Love From the Room,</p>
+                <p className="wd-hero__letter-signoff">{collectorHeroNote.signatureIntro}</p>
                 <div className="wd-hero__letter-signatures">
                   <span>John Walls</span>
                   <span>Terry Devine</span>
@@ -358,27 +377,41 @@ export function WallsDevineLanding() {
             <div className="wd-hero__note-stack">
               <div className="wd-hero__letter" aria-label="Personal collector note for Walls/Devine Volume 1">
                 <p className="wd-hero__letter-kicker">{collectorHeroNote.salutation}</p>
-                <p className="wd-hero__letter-body">{collectorHeroBody}</p>
+                <div className="wd-hero__letter-body-collapse">
+                  <p className="wd-hero__letter-body">
+                    {isLetterExpanded ? collectorHeroBody : collectorHeroBodyCollapsed}
+                  </p>
+                </div>
+                {collectorHeroBody !== collectorHeroBodyCollapsed && (
+                  <button
+                    type="button"
+                    className="wd-hero__letter-collapse-toggle"
+                    onClick={() => setIsLetterExpanded((current) => !current)}
+                    aria-expanded={isLetterExpanded}
+                  >
+                    {isLetterExpanded ? "Close ↑" : "Read the full note →"}
+                  </button>
+                )}
 
                 <div className="wd-hero__letter-actions" aria-label="Walls Devine quick actions">
                   <div className="wd-hero__letter-actions-row">
                     <Button
                       as="a"
                       href={wallsDevineListeningRoomHref}
-                      className="wd-hero__letter-cta"
+                      className="wd-hero__letter-cta wd-hero__letter-cta--primary-pulse"
                       data-analytics-event="walls_devine_cta_click"
                       data-analytics-param-source="walls_devine"
                       data-analytics-param-cta="hero_listening_room"
                       data-analytics-param-destination="listening_room"
                       data-analytics-param-external="false"
                     >
-                      Open Listening Room
+                      {collectorHeroNote.primaryCtaLabel}
                     </Button>
                     <Button
                       as="a"
                       href={wallsDevineMerchShopHref}
-                      variant="secondary"
-                      className="wd-hero__signal-link"
+                      variant="ghost"
+                      className="wd-hero__signal-link wd-hero__signal-link--subdued"
                       target="_blank"
                       rel="noreferrer"
                       data-analytics-event="walls_devine_cta_click"
@@ -387,15 +420,35 @@ export function WallsDevineLanding() {
                       data-analytics-param-destination={wallsDevineMerchShopHref}
                       data-analytics-param-external="true"
                     >
-                      Shop Volume 1 Merch
+                      {collectorHeroNote.secondaryCtaLabel}
                     </Button>
+                  </div>
+
+                  <div className="wd-hero__grid-preview" aria-label="Collector grid preview">
+                    <div className="wd-hero__grid-preview__tiles">
+                      {previewTiles.map((tile) => (
+                        <div
+                          key={tile.slug}
+                          className={`wd-hero__grid-preview__tile${tile.slug === "resolve" ? " wd-hero__grid-preview__tile--live" : ""}`}
+                        >
+                          <Image src={tile.image} alt={tile.title} sizes="56px" />
+                        </div>
+                      ))}
+                    </div>
+                    <a
+                      href="#walls-devine-grid"
+                      className="wd-hero__grid-preview__cta"
+                      aria-label="Jump to the full Collector Grid"
+                    >
+                      ↓ Enter the Collector Grid
+                    </a>
                   </div>
                 </div>
               </div>
 
               <div className="wd-hero__journal" aria-label="Rotating journal entries from Volume 1">
                 <div className="wd-hero__letter-postscript">
-                  <span className="wd-hero__letter-postscript-label">From the journals</span>
+                  <span className="wd-hero__letter-postscript-label">{collectorHeroNote.journalLabel}</span>
                   <div className="wd-hero__letter-quote-rotator" aria-live="polite">
                     {collectorLetterQuotes.map((quote, index) => (
                       <figure
@@ -485,7 +538,7 @@ export function WallsDevineLanding() {
                 data-analytics-param-destination={wallsDevineBookingIntakeHref}
                 data-analytics-param-external="false"
               >
-                Book Walls/Devine
+                {bookingBannerNote.primaryCtaLabel}
               </Button>
               <Button
                 as="a"
@@ -500,7 +553,7 @@ export function WallsDevineLanding() {
                 data-analytics-param-destination={wallsDevineMerchShopHref}
                 data-analytics-param-external="true"
               >
-                Visit Merch Shop
+                {bookingBannerNote.secondaryCtaLabel}
               </Button>
               <p className="wd-booking-banner__meta">{bookingBannerNote.meta}</p>
             </div>

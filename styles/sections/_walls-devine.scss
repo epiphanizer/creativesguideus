@@ -4872,3 +4872,263 @@
     padding-bottom: calc(9.5rem + env(safe-area-inset-bottom, 0px));
   }
 }
+
+/* ─── CRO Refactor: CTA Hierarchy ─── */
+
+.wd-hero__letter-cta--primary-pulse {
+  animation: wd-cta-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes wd-cta-pulse {
+  0%,
+  100% {
+    box-shadow: 0 12px 24px rgba(87, 7, 11, 0.18);
+  }
+
+  50% {
+    box-shadow: 0 12px 24px rgba(87, 7, 11, 0.18), 0 0 0 5px rgba(156, 7, 5, 0.12);
+  }
+}
+
+.wd-hero__signal-link--subdued {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  opacity: 0.62;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  border: none;
+  background: none;
+}
+
+/* ─── CRO Refactor: Gamification Signal Strip ─── */
+
+.wd-hero__gamification-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.63rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-family: var(--cg-font-mono, ui-monospace, monospace);
+  color: rgba(108, 5, 8, 0.7);
+}
+
+.wd-hero__gamification-strip__dot {
+  font-size: 0.5rem;
+  opacity: 0.44;
+}
+
+/* ─── CRO Refactor: Letter Collapse ─── */
+
+.wd-hero__letter-body-collapse {
+  overflow: hidden;
+}
+
+.wd-hero__letter-collapse-toggle {
+  align-self: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: rgba(108, 5, 8, 0.72);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--cg-transition-fade);
+}
+
+.wd-hero__letter-collapse-toggle:hover {
+  color: rgba(108, 5, 8, 1);
+}
+
+/* ─── CRO Refactor: Mini Grid Preview Strip ─── */
+
+.wd-hero__grid-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+  border-top: 1px solid rgba(156, 7, 5, 0.1);
+}
+
+.wd-hero__grid-preview__tiles {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.wd-hero__grid-preview__tile {
+  width: 3.4rem;
+  height: 3.4rem;
+  flex-shrink: 0;
+  border-radius: calc(var(--cg-radius-sm) * 0.85);
+  border: 1px solid rgba(108, 5, 8, 0.24);
+  overflow: hidden;
+  position: relative;
+  transition: border-color var(--cg-transition-fade);
+}
+
+.wd-hero__grid-preview__tile:hover {
+  border-color: rgba(108, 5, 8, 0.58);
+}
+
+.wd-hero__grid-preview__tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.wd-hero__grid-preview__tile--live {
+  border-color: rgba(156, 7, 5, 0.62);
+  animation: wd-preview-tile-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes wd-preview-tile-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(156, 7, 5, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 0 3px rgba(156, 7, 5, 0.16);
+  }
+}
+
+.wd-hero__grid-preview__cta {
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-family: var(--cg-font-mono, ui-monospace, monospace);
+  color: rgba(108, 5, 8, 0.72);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.22rem;
+  transition: color var(--cg-transition-fade);
+}
+
+.wd-hero__grid-preview__cta:hover {
+  color: rgba(108, 5, 8, 1);
+}
+
+/* ─── CRO Refactor: Collector Grid Locked / Live States ─── */
+
+.wd-grid__tile--locked .wd-grid__image-wrap {
+  filter: grayscale(0.42) opacity(0.82);
+  transition: filter var(--cg-transition-fade);
+}
+
+.wd-grid__tile--locked:hover .wd-grid__image-wrap,
+.wd-grid__tile--locked:focus-within .wd-grid__image-wrap {
+  filter: grayscale(0.2) opacity(0.94);
+}
+
+.wd-grid__lock-icon {
+  position: absolute;
+  bottom: clamp(0.38rem, 1vw, 0.58rem);
+  right: clamp(0.38rem, 1vw, 0.58rem);
+  z-index: 2;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(253, 254, 254, 0.9);
+  border: 1px solid rgba(108, 5, 8, 0.16);
+  color: rgba(108, 5, 8, 0.56);
+  pointer-events: none;
+  box-shadow: 0 4px 8px rgba(87, 7, 11, 0.1);
+}
+
+.wd-grid__lock-icon svg {
+  width: 0.72rem;
+  height: 0.72rem;
+}
+
+.wd-grid__tile--live {
+  border-color: rgba(156, 7, 5, 0.5);
+  box-shadow: 0 16px 28px rgba(87, 7, 11, 0.2), 0 0 0 0 rgba(156, 7, 5, 0);
+  animation: wd-live-tile-pulse 3s ease-in-out infinite;
+}
+
+@keyframes wd-live-tile-pulse {
+  0%,
+  100% {
+    box-shadow: 0 16px 28px rgba(87, 7, 11, 0.2), 0 0 0 0 rgba(156, 7, 5, 0);
+  }
+
+  50% {
+    box-shadow: 0 16px 28px rgba(87, 7, 11, 0.2), 0 0 0 4px rgba(156, 7, 5, 0.1);
+  }
+}
+
+.wd-grid__live-badge {
+  position: absolute;
+  top: clamp(0.45rem, 1.1vw, 0.7rem);
+  left: clamp(0.45rem, 1.1vw, 0.7rem);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.22rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(156, 7, 5, 0.92);
+  color: rgba(253, 254, 254, 0.96);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-family: var(--cg-font-mono, ui-monospace, monospace);
+  pointer-events: none;
+  box-shadow: 0 4px 10px rgba(87, 7, 11, 0.2);
+}
+
+.wd-grid__live-badge__dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: currentColor;
+  flex-shrink: 0;
+  animation: wd-live-badge-dot 1.6s ease-in-out infinite;
+}
+
+@keyframes wd-live-badge-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.28;
+  }
+}
+
+/* ─── CRO Refactor: Chapter Progress Indicator ─── */
+
+.wd-grid__progress {
+  margin: 0;
+  padding-top: var(--cg-space-sm);
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-family: var(--cg-font-mono, ui-monospace, monospace);
+  color: rgba(108, 5, 8, 0.52);
+}
+
+/* ─── CRO Refactor: prefers-reduced-motion overrides ─── */
+
+@media (prefers-reduced-motion: reduce) {
+  .wd-hero__letter-cta--primary-pulse,
+  .wd-hero__grid-preview__tile--live,
+  .wd-grid__tile--live,
+  .wd-grid__live-badge__dot {
+    animation: none;
+  }
+}

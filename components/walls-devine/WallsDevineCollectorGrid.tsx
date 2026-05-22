@@ -4,6 +4,7 @@ import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { FiLock } from "react-icons/fi";
 
 import { EcosystemRewardClaimCard } from "@/components/rewards/EcosystemRewardClaimCard";
 import { Button } from "@/components/ui/Button";
@@ -1212,9 +1213,11 @@ function CollectorChallenge({ tile, onUnlock }: { tile: CollectorGridTile; onUnl
 }
 
 export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProps) {
+  const liveTileSlug = "resolve";
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
   const [easterEggUnlocked, setEasterEggUnlocked] = useState(false);
+  const [exploredSlugs, setExploredSlugs] = useState<string[]>([]);
 
   const activeTile = useMemo(() => tiles.find((tile) => tile.slug === activeSlug) ?? null, [activeSlug, tiles]);
   const activeReward = useMemo(() => getEcosystemRewardDefinition(activeTile?.rewardId), [activeTile?.rewardId]);
@@ -1231,6 +1234,50 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
   useEffect(() => {
     setHasMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    try {
+      const stored = localStorage.getItem("wd_unlocked_chapters");
+
+      if (stored) {
+        setExploredSlugs(JSON.parse(stored) as string[]);
+      }
+    } catch {
+      // localStorage unavailable
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!activeSlug || typeof window === "undefined") {
+      return;
+    }
+
+    const tile = tiles.find((t) => t.slug === activeSlug);
+
+    if (!tile || tile.center) {
+      return;
+    }
+
+    setExploredSlugs((current) => {
+      if (current.includes(activeSlug)) {
+        return current;
+      }
+
+      const updated = [...current, activeSlug];
+
+      try {
+        localStorage.setItem("wd_unlocked_chapters", JSON.stringify(updated));
+      } catch {
+        // localStorage unavailable
+      }
+
+      return updated;
+    });
+  }, [activeSlug, tiles]);
 
   useEffect(() => {
     if (!activeTile) {
@@ -1257,19 +1304,49 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
   return (
     <>
       <ol className="wd-grid" aria-label="Walls/Devine release grid">
-        {tiles.map((tile) => (
-          <li key={tile.title} className={cx("wd-grid__tile", `wd-grid__tile--${tile.slug}`, tile.center && "wd-grid__tile--center")}>
-            <button type="button" className="wd-grid__trigger" aria-label={`Open ${tile.title}`} onClick={() => setActiveSlug(tile.slug)}>
-              <figure className="wd-grid__figure">
-                <div className="wd-grid__image-wrap">
-                  {getTileBadgeLabel(tile) ? <span className="wd-grid__badge">{getTileBadgeLabel(tile)}</span> : null}
-                  <Image src={tile.image} alt={`${tile.title} cover artwork`} sizes="(max-width: 680px) 88vw, (max-width: 1040px) 45vw, 30vw" />
-                </div>
-              </figure>
-            </button>
-          </li>
-        ))}
+        {tiles.map((tile) => {
+          const isLive = tile.slug === liveTileSlug;
+          const isLocked = !tile.center && !isLive;
+
+          return (
+            <li
+              key={tile.title}
+              className={cx(
+                "wd-grid__tile",
+                `wd-grid__tile--${tile.slug}`,
+                tile.center && "wd-grid__tile--center",
+                isLive && "wd-grid__tile--live",
+                isLocked && "wd-grid__tile--locked"
+              )}
+            >
+              <button type="button" className="wd-grid__trigger" aria-label={`Open ${tile.title}`} onClick={() => setActiveSlug(tile.slug)}>
+                <figure className="wd-grid__figure">
+                  <div className="wd-grid__image-wrap">
+                    {isLive ? (
+                      <span className="wd-grid__live-badge" aria-label="Live now">
+                        <span className="wd-grid__live-badge__dot" aria-hidden="true" />
+                        LIVE
+                      </span>
+                    ) : (
+                      getTileBadgeLabel(tile) ? <span className="wd-grid__badge">{getTileBadgeLabel(tile)}</span> : null
+                    )}
+                    {isLocked ? (
+                      <span className="wd-grid__lock-icon" aria-hidden="true">
+                        <FiLock />
+                      </span>
+                    ) : null}
+                    <Image src={tile.image} alt={`${tile.title} cover artwork`} sizes="(max-width: 680px) 88vw, (max-width: 1040px) 45vw, 30vw" />
+                  </div>
+                </figure>
+              </button>
+            </li>
+          );
+        })}
       </ol>
+
+      <p className="wd-grid__progress" aria-live="polite">
+        {`You've explored ${Math.min(exploredSlugs.length, 8)} of 8 chapters.`}
+      </p>
 
       {hasMounted && activeTile
         ? createPortal(

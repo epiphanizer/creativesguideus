@@ -1369,11 +1369,17 @@ export function AdminConsole() {
     }
 
     const formData = new FormData(event.currentTarget);
+    const eyebrow = String(formData.get("eyebrow") ?? "").trim();
+    const title = String(formData.get("title") ?? "").trim();
     const salutation = String(formData.get("salutation") ?? "").trim();
     const body = String(formData.get("body") ?? "").trim();
+    const primaryCtaLabel = String(formData.get("primaryCtaLabel") ?? "").trim();
+    const secondaryCtaLabel = String(formData.get("secondaryCtaLabel") ?? "").trim();
+    const signatureIntro = String(formData.get("signatureIntro") ?? "").trim();
+    const journalLabel = String(formData.get("journalLabel") ?? "").trim();
 
-    if (!salutation || !body) {
-      setPanelError("The collector note needs both a salutation and body copy before it can be saved.");
+    if (!eyebrow || !title || !salutation || !body || !primaryCtaLabel || !secondaryCtaLabel || !signatureIntro || !journalLabel) {
+      setPanelError("The collector note needs an eyebrow, title, salutation, body copy, both CTA labels, the signoff line, and the journal label before it can be saved.");
       setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "error" }));
       return;
     }
@@ -1382,7 +1388,7 @@ export function AdminConsole() {
     setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "saving" }));
 
     try {
-      const nextNote = await updateFirebaseCollectorHeroNote({ salutation, body });
+      const nextNote = await updateFirebaseCollectorHeroNote({ eyebrow, title, salutation, body, primaryCtaLabel, secondaryCtaLabel, signatureIntro, journalLabel });
 
       startTransition(() => {
         setAdminData((current) => (current ? { ...current, collectorHeroNote: nextNote } : current));
@@ -1406,10 +1412,12 @@ export function AdminConsole() {
     const eyebrow = String(formData.get("eyebrow") ?? "").trim();
     const title = String(formData.get("title") ?? "").trim();
     const description = String(formData.get("description") ?? "").trim();
+    const primaryCtaLabel = String(formData.get("primaryCtaLabel") ?? "").trim();
+    const secondaryCtaLabel = String(formData.get("secondaryCtaLabel") ?? "").trim();
     const meta = String(formData.get("meta") ?? "").trim();
 
-    if (!eyebrow || !title || !description || !meta) {
-      setPanelError("The booking banner needs an eyebrow, title, description, and meta line before it can be saved.");
+    if (!eyebrow || !title || !description || !primaryCtaLabel || !secondaryCtaLabel || !meta) {
+      setPanelError("The booking banner needs an eyebrow, title, description, both CTA labels, and a meta line before it can be saved.");
       setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "error" }));
       return;
     }
@@ -1418,7 +1426,7 @@ export function AdminConsole() {
     setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "saving" }));
 
     try {
-      const nextNote = await updateFirebaseBookingBannerNote({ eyebrow, title, description, meta });
+      const nextNote = await updateFirebaseBookingBannerNote({ eyebrow, title, description, primaryCtaLabel, secondaryCtaLabel, meta });
 
       startTransition(() => {
         setAdminData((current) => (current ? { ...current, bookingBannerNote: nextNote } : current));
@@ -2145,6 +2153,31 @@ export function AdminConsole() {
             <form onSubmit={handleCollectorHeroNoteSave} className="cg-admin__editor-form">
               <div className="cg-admin__editor-split">
                 <label className="cg-admin__editor-field">
+                  <span>Hero eyebrow</span>
+                  <input
+                    name="eyebrow"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.collectorHeroNote.eyebrow}
+                    placeholder="Collector experience"
+                    required
+                  />
+                </label>
+                <label className="cg-admin__editor-field">
+                  <span>Hero title</span>
+                  <input
+                    name="title"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.collectorHeroNote.title}
+                    placeholder="Walls/Devine Volume 1"
+                    required
+                  />
+                </label>
+              </div>
+
+              <div className="cg-admin__editor-split">
+                <label className="cg-admin__editor-field">
                   <span>Salutation</span>
                   <input
                     name="salutation"
@@ -2172,6 +2205,56 @@ export function AdminConsole() {
                   required
                 />
               </label>
+
+              <div className="cg-admin__editor-split">
+                <label className="cg-admin__editor-field">
+                  <span>Primary CTA label</span>
+                  <input
+                    name="primaryCtaLabel"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.collectorHeroNote.primaryCtaLabel}
+                    placeholder="Open Listening Room"
+                    required
+                  />
+                </label>
+                <label className="cg-admin__editor-field">
+                  <span>Secondary CTA label</span>
+                  <input
+                    name="secondaryCtaLabel"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.collectorHeroNote.secondaryCtaLabel}
+                    placeholder="Shop Volume 1 Merch"
+                    required
+                  />
+                </label>
+              </div>
+
+              <div className="cg-admin__editor-split">
+                <label className="cg-admin__editor-field">
+                  <span>Signature intro</span>
+                  <input
+                    name="signatureIntro"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.collectorHeroNote.signatureIntro}
+                    placeholder="With Love From the Room,"
+                    required
+                  />
+                </label>
+                <label className="cg-admin__editor-field">
+                  <span>Journal label</span>
+                  <input
+                    name="journalLabel"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.collectorHeroNote.journalLabel}
+                    placeholder="From the journals"
+                    required
+                  />
+                </label>
+              </div>
 
               <div className="cg-admin__editor-actions">
                 <Button type="submit" variant="secondary" size="sm" disabled={saveStates[collectorHeroNoteSaveKey] === "saving"}>
@@ -2237,6 +2320,31 @@ export function AdminConsole() {
                   required
                 />
               </label>
+
+              <div className="cg-admin__editor-split">
+                <label className="cg-admin__editor-field">
+                  <span>Primary CTA label</span>
+                  <input
+                    name="primaryCtaLabel"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.bookingBannerNote.primaryCtaLabel}
+                    placeholder="Book Walls/Devine"
+                    required
+                  />
+                </label>
+                <label className="cg-admin__editor-field">
+                  <span>Secondary CTA label</span>
+                  <input
+                    name="secondaryCtaLabel"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.bookingBannerNote.secondaryCtaLabel}
+                    placeholder="Visit Merch Shop"
+                    required
+                  />
+                </label>
+              </div>
 
               <label className="cg-admin__editor-field">
                 <span>Meta line</span>
