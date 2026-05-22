@@ -12,6 +12,7 @@ import { songPostCards } from "@/components/walls-devine/content";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
 import type { EcosystemRewardId } from "@/lib/ecosystem/reward-catalog";
 import { getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
+import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
@@ -125,6 +126,7 @@ const instagramGrid: GridTile[] = [
     role: "Collector's item",
     image: volOneImage,
     center: true,
+    rewardId: "wd-volume-1-bong-tour-secret-game",
     teaser: "The central object: one release world for music, film, score, and private access.",
     challengeLabel: "Seal sequence",
     challengePrompt: "Align the three seal rings before the object slips closed.",
@@ -236,6 +238,7 @@ const wallsDevineBookingIntakeHref = `/contact?${new URLSearchParams({
   project: "Walls/Devine",
   inquiryType: "live-booking"
 }).toString()}`;
+const wallsDevineListeningRoomHref = "#walls-devine-listening-room";
 
 export function WallsDevineLanding() {
   const [activeQuoteIndex, setActiveQuoteIndex] = useState(0);
@@ -354,6 +357,24 @@ export function WallsDevineLanding() {
               <div className="wd-hero__letter" aria-label="Personal collector note for Walls/Devine Volume 1">
                 <p className="wd-hero__letter-kicker">{collectorHeroNote.salutation}</p>
                 <p className="wd-hero__letter-body">{collectorHeroBody}</p>
+
+                <div className="wd-hero__letter-actions" aria-label="Walls Devine quick actions">
+                  <div className="wd-hero__letter-actions-row">
+                    <Button as="a" href={wallsDevineListeningRoomHref} className="wd-hero__letter-cta">
+                      Open Listening Room
+                    </Button>
+                    <Button
+                      as="a"
+                      href={wallsDevineMerchShopHref}
+                      variant="secondary"
+                      className="wd-hero__signal-link"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Shop Volume 1 Merch
+                    </Button>
+                  </div>
+                </div>
               </div>
 
               <div className="wd-hero__journal" aria-label="Rotating journal entries from Volume 1">
@@ -428,12 +449,12 @@ export function WallsDevineLanding() {
         <div id="walls-devine-booking" className="wd-grid-section__collector-access">
           <section className="wd-booking-banner" aria-labelledby="walls-devine-booking-title">
             <div className="wd-booking-banner__copy">
-              <p className="wd-booking-banner__eyebrow">Live Booking</p>
+              <p className="wd-booking-banner__eyebrow">Live Booking + Merch</p>
               <h2 id="walls-devine-booking-title" className="wd-booking-banner__title">
-                Book Walls/Devine
+                Book or shop Walls/Devine
               </h2>
               <p className="wd-booking-banner__description">
-                Bring Volume 1 into the room for listening sessions, screenings, live bookings, and partnership conversations around the record.
+                Bring Volume 1 into the room for listening sessions, screenings, live bookings, partnership conversations, or direct shop traffic for the merch drop.
               </p>
             </div>
 
@@ -441,7 +462,17 @@ export function WallsDevineLanding() {
               <Button as="a" href={wallsDevineBookingIntakeHref} className="wd-booking-banner__button">
                 Book Walls/Devine
               </Button>
-              <p className="wd-booking-banner__meta">Listening events · Performance · Partnerships</p>
+              <Button
+                as="a"
+                href={wallsDevineMerchShopHref}
+                variant="secondary"
+                className="wd-booking-banner__button wd-booking-banner__button--secondary"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Visit Merch Shop
+              </Button>
+              <p className="wd-booking-banner__meta">Listening events · Performance · Partnerships · Fourthwall merch shop</p>
             </div>
           </section>
         </div>

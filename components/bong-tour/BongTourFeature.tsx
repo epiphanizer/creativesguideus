@@ -99,6 +99,12 @@ type CorridorRound = {
   correct: string;
 };
 
+function buildWallsDevineListeningRoomHref(playerTarget: string) {
+  return `/walls-devine?player=${playerTarget}#walls-devine-listening-room`;
+}
+
+const wallsDevineCollectorGridHref = "/walls-devine#walls-devine-grid-title";
+
 function buildVaultCode(length: number) {
   return Array.from({ length }, () => Math.floor(Math.random() * 9) + 1);
 }
@@ -559,18 +565,18 @@ const portalRooms: Record<string, ExperienceRoom> = {
     title: "Enter the collector's room",
     ambientLabel: "Collector's room",
     ambientSubtitle: "Artifact vault and clue archive",
-    kicker: "The private side of Bong Tour: object archive, clue drops, and found rewards that make the myth feel touchable.",
+    kicker: "The private side of Bong Tour: object archive, clue drops, and a clean handoff back into the main release world.",
     description:
-      "Open this takeover when you want Bong Tour to behave like a returnable story object instead of a static overview. The collector room is where clues, artifacts, and soundtrack-linked unlocks surface first.",
-    chips: ["Artifact vault", "Cue-linked clues", "Game-locked rewards"],
+      "Open this takeover when you want Bong Tour to behave like a returnable story object instead of a static overview. The collector room is where clues and artifacts surface first, while the universal reward path and secret-game unlock stay attached to Walls/Devine Volume 1.",
+    chips: ["Artifact vault", "Cue-linked clues", "Volume 1 handoff"],
     beats: [
       "Games should reveal objects, not marketing copy.",
-      "The best rewards should stay hidden until the room opens.",
-      "Walls/Devine remains the live soundtrack exit."
+      "The best rewards should route through the shared Creatives Guide system.",
+      "Walls/Devine remains the live soundtrack and unlock exit."
     ],
     actions: [
       { label: "Open cue rooms", href: "#score-sketches" },
-      { label: "Visit Walls/Devine", href: "/walls-devine", outline: true }
+      { label: "Open Volume 1 collector grid", href: wallsDevineCollectorGridHref, outline: true }
     ],
     signup: {
       source: "bong-tour-collector-room",
@@ -618,8 +624,8 @@ const musicPosters: CuePoster[] = [
       chips: ["Comedy Store montage", "Psych-funk cue", "Cult-premium posture"],
       beats: ["Built for struts and jump cuts.", "Lets the satire feel cinematic, not explanatory.", "Works best when it visibly connects to Walls/Devine."],
       actions: [
-        { label: "Play in listening room", href: "?player=joint-queen#walls-devine-listening-room" },
-        { label: "Talk soundtrack fit", href: "/#contact", outline: true }
+        { label: "Play in listening room", href: buildWallsDevineListeningRoomHref("joint-queen") },
+        { label: "Open Volume 1 collector grid", href: wallsDevineCollectorGridHref, outline: true }
       ]
     }
   },
@@ -649,8 +655,8 @@ const musicPosters: CuePoster[] = [
       chips: ["Backroom plotting", "Low-end authority", "Hollywood trapdoor energy"],
       beats: ["Supports late-night deal scenes.", "Bridges satire and threat cleanly.", "Keeps the collectible rollout grounded in attitude."],
       actions: [
-        { label: "Play in listening room", href: "?player=stash-daddy#walls-devine-listening-room" },
-        { label: "Enter the producer room", roomKey: "producer", outline: true }
+        { label: "Play in listening room", href: buildWallsDevineListeningRoomHref("stash-daddy") },
+        { label: "Open Volume 1 collector grid", href: wallsDevineCollectorGridHref, outline: true }
       ]
     }
   },
@@ -680,8 +686,8 @@ const musicPosters: CuePoster[] = [
       chips: ["Ganges lift", "Diaspora dreamscape", "Final-act release"],
       beats: ["Lets the river imagery open up.", "Supports the India return with dignity.", "Creates the cleanest bridge into the companion album world."],
       actions: [
-        { label: "Play in listening room", href: "?player=space-cruiser#walls-devine-listening-room" },
-        { label: "Open collector room", roomKey: "collector", outline: true }
+        { label: "Play in listening room", href: buildWallsDevineListeningRoomHref("space-cruiser") },
+        { label: "Open Volume 1 collector grid", href: wallsDevineCollectorGridHref, outline: true }
       ]
     }
   }
@@ -695,7 +701,7 @@ const collectibleTiles: CollectibleTile[] = [
     image: posterImage,
     teaser: "The origin object: sacred river memory trapped inside a pitch-world artifact.",
     challenge: "Align the river sigil before the smoke clears.",
-    reward: "Unlock the mythology-first framing for the whole campaign.",
+    reward: "Collector pull: mythology-first framing for the whole campaign.",
     room: {
       slug: "collectible-room-ganges-relic",
       eyebrow: "Collector object",
@@ -735,7 +741,7 @@ const collectibleTiles: CollectibleTile[] = [
     image: jointQueenImage,
     teaser: "A backstage credential that turns the midsection of the page into a takeover instead of a summary.",
     challenge: "Memorize the room code before the card dissolves.",
-    reward: "Unlock the swagger-heavy campaign language for the initiation chapter.",
+    reward: "Collector pull: swagger-heavy campaign language for the initiation chapter.",
     room: {
       slug: "collectible-room-comedy-store-pass",
       eyebrow: "Collector object",
@@ -748,7 +754,7 @@ const collectibleTiles: CollectibleTile[] = [
       chips: ["Backstage key", "Initiation chapter", "Private-door energy"],
       beats: ["Lets CTAs become hidden entries.", "Pairs naturally with Joint Queen.", "Keeps the satire stylish instead of flat."],
       actions: [
-        { label: "Open Joint Queen", href: "/walls-devine?player=joint-queen#walls-devine-listening-room" },
+        { label: "Open Joint Queen", href: buildWallsDevineListeningRoomHref("joint-queen") },
         { label: "Enter the smoke room", roomKey: "producer", outline: true }
       ],
       signup: {
@@ -775,7 +781,7 @@ const collectibleTiles: CollectibleTile[] = [
     image: stashDaddyImage,
     teaser: "A motel-night object for the industry shadow system everybody references and nobody explains.",
     challenge: "Pick the right corridor before the keycard deactivates.",
-    reward: "Unlock the noir layer without burying the comedy.",
+    reward: "Collector pull: noir pressure without burying the comedy.",
     room: {
       slug: "collectible-room-lollipop-guild-key",
       eyebrow: "Collector object",
@@ -788,7 +794,7 @@ const collectibleTiles: CollectibleTile[] = [
       chips: ["Motel-night shadow", "Industry underworld", "Noir pressure"],
       beats: ["Pairs cleanly with Stash Daddy.", "Adds return-value to the page.", "Turns exposition into a collectible clue."],
       actions: [
-        { label: "Open Stash Daddy", href: "/walls-devine?player=stash-daddy#walls-devine-listening-room" },
+        { label: "Open Stash Daddy", href: buildWallsDevineListeningRoomHref("stash-daddy") },
         { label: "Open collector room", roomKey: "collector", outline: true }
       ],
       signup: {
@@ -815,7 +821,7 @@ const collectibleTiles: CollectibleTile[] = [
     image: spaceCruiserImage,
     teaser: "The sequel machine rendered as a polished object that feels seductive and ominous at the same time.",
     challenge: "Keep the token spinning until the sequel offer appears.",
-    reward: "Unlock the ending's franchise bait without flattening the emotional close.",
+    reward: "Collector pull: franchise bait without flattening the emotional close.",
     room: {
       slug: "collectible-room-upper-management-token",
       eyebrow: "Collector object",
@@ -828,8 +834,8 @@ const collectibleTiles: CollectibleTile[] = [
       chips: ["Sequel machine", "Franchise bait", "Final image pressure"],
       beats: ["Belongs near the closing invitation.", "Lets the campaign end on appetite.", "Protects the myth while opening the door."],
       actions: [
-        { label: "Connect about Bong Tour", href: "/#contact" },
-        { label: "Visit Walls/Devine", href: "/walls-devine", outline: true }
+        { label: "Open Space Cruiser", href: buildWallsDevineListeningRoomHref("space-cruiser") },
+        { label: "Open Volume 1 collector grid", href: wallsDevineCollectorGridHref, outline: true }
       ],
       signup: {
         source: "bong-tour-upper-management-token",
@@ -907,8 +913,8 @@ export function BongTourFeature() {
               <p className="bt-hero__positioning">Move through the poster, collector rooms, cue bridges, and artifact archive without stepping outside the myth.</p>
 
               <div className="bt-hero__cta">
-                <Button type="button" className="bt-button" onClick={() => setActiveRoom(portalRooms.collector)}>
-                  Open collector room
+                <Button as="a" href="#collector-grid" className="bt-button">
+                  Open collector grid
                 </Button>
                 <Button as="a" href="#score-sketches" className="bt-button bt-button--outline">
                   Open cue rooms
@@ -924,8 +930,27 @@ export function BongTourFeature() {
             <div>
               <p className="bt-section-header__eyebrow">Collector grid</p>
               <h2 id="bt-collectibles-title">Collector chapters</h2>
+              <p>The object grid is the film-facing archive: artifact notes live here, while the shared Creatives Guide reward path and Bong Tour secret-game unlock resolve inside Walls/Devine Volume 1.</p>
             </div>
           </header>
+
+          <div className="bt-collectibles__overview" aria-label="Collector grid overview">
+            <article className="bt-collectibles__overview-card">
+              <span>4 objects</span>
+              <strong>Collector chapters</strong>
+              <p>Myth keys, backstage credentials, noir evidence, and sequel bait rendered like found artifacts.</p>
+            </article>
+            <article className="bt-collectibles__overview-card">
+              <span>3 cue bridges</span>
+              <strong>Score handoff</strong>
+              <p>Each cue room proves tone locally, then hands the listener back into the live Volume 1 listening world.</p>
+            </article>
+            <article className="bt-collectibles__overview-card">
+              <span>1 unlock owner</span>
+              <strong>Volume 1 collector path</strong>
+              <p>Walls/Devine owns the shared unlock and secret-game handoff so Bong Tour stays a companion world, not a duplicate reward system.</p>
+            </article>
+          </div>
 
           <ul className="bt-collectibles__grid">
             {collectibleTiles.map((tile) => (
@@ -940,6 +965,14 @@ export function BongTourFeature() {
                     </figcaption>
                   </figure>
                 </button>
+
+                <div className="bt-collectibles__details">
+                  <p className="bt-collectibles__teaser">{tile.teaser}</p>
+                  <div className="bt-collectibles__route">
+                    <span>Collector pull</span>
+                    <p>{tile.reward}</p>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
@@ -949,7 +982,7 @@ export function BongTourFeature() {
               <div className="bt-collectibles__collector-access-copy">
                 <p className="bt-section-header__eyebrow">Collector's room</p>
                 <h3>Enter the collector's room</h3>
-                <p>Artifacts, clue drops, soundtrack-linked unlocks, and game-locked rewards live inside the takeover instead of out in the feed.</p>
+                <p>Artifacts and clue drops live inside the takeover. The universal reward path and Bong Tour secret-game unlock route through Walls/Devine Volume 1 so the main release world stays in charge.</p>
               </div>
 
               <Button type="button" className="bt-button" onClick={() => setActiveRoom(portalRooms.collector)}>
@@ -964,10 +997,10 @@ export function BongTourFeature() {
             <div>
               <p className="bt-section-header__eyebrow">Companion listening room</p>
               <h2 id="bt-music-title">Three cue rooms keep the score visibly attached to the page.</h2>
-              <p>The soundtrack bridge stays compact and obvious: proof-of-tone here, then a direct handoff into the live Walls/Devine listening world.</p>
+              <p>The soundtrack bridge stays compact and obvious: proof-of-tone here, then a direct handoff into the live Walls/Devine listening world and Volume 1 collector unlock path.</p>
             </div>
             <div className="bt-section-header__actions">
-              <Button as="a" href="?player=joint-queen#walls-devine-listening-room" className="bt-button bt-button--outline">
+              <Button as="a" href={buildWallsDevineListeningRoomHref("joint-queen")} className="bt-button bt-button--outline">
                 Open portable listening room
               </Button>
             </div>
@@ -996,7 +1029,7 @@ export function BongTourFeature() {
                     <Button type="button" className="bt-button" onClick={() => setActiveRoom(poster.room)}>
                       Open cue room
                     </Button>
-                    <Button as="a" href={`?player=${poster.playerTarget}#walls-devine-listening-room`} className="bt-button bt-button--outline">
+                    <Button as="a" href={buildWallsDevineListeningRoomHref(poster.playerTarget)} className="bt-button bt-button--outline">
                       Play in listening room
                     </Button>
                   </div>
@@ -1219,14 +1252,18 @@ export function BongTourFeature() {
                             <p>{activeRoom.description}</p>
                           </article>
                           <article>
+                            <span>Unlock owner</span>
+                            <p>The Bong Tour secret game routes through the Walls/Devine collector grid so the shared Creatives Guide reward path stays attached to Volume 1.</p>
+                          </article>
+                          <article>
                             <span>Highlight stack</span>
                             <p>{activeCuePoster.highlights.join(" · ")}</p>
                           </article>
                         </div>
 
                         <div className="bt-room-modal__links bt-room-modal__cue-links">
-                          <a href={`?player=${activeCuePoster.playerTarget}#walls-devine-listening-room`}>Play in listening room</a>
-                          <a href={`#${activeCuePoster.id}`}>Jump to cue poster</a>
+                          <a href={buildWallsDevineListeningRoomHref(activeCuePoster.playerTarget)}>Play in listening room</a>
+                          <a href={wallsDevineCollectorGridHref}>Open Volume 1 collector grid</a>
                         </div>
 
                         <div className="bt-room-modal__actions">

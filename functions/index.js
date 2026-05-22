@@ -26,13 +26,19 @@ export const onEcosystemRewardClaimed = onDocumentCreated(
     const rewardType = typeof claimData.reward_type === "string" ? claimData.reward_type : "unknown";
     const rewardLabel = typeof claimData.reward_label === "string" ? claimData.reward_label : "Unknown reward";
     const chapter = typeof claimData.chapter === "string" ? claimData.chapter : "Unknown chapter";
+    const walletAddress = typeof claimData.wallet_address === "string" ? claimData.wallet_address : "";
+    const distributionMode = typeof claimData.distribution_mode === "string" ? claimData.distribution_mode : "direct";
+    const airdropKey = typeof claimData.airdrop_key === "string" ? claimData.airdrop_key : "";
 
     logger.info("Processing ecosystem reward claim.", {
       claimId,
       rewardId,
       rewardType,
       rewardLabel,
-      chapter
+      chapter,
+      distributionMode,
+      airdropKey,
+      walletAddress
     });
 
     await firestore.collection("rewardDispatchLogs").doc(claimId).set({
@@ -41,6 +47,9 @@ export const onEcosystemRewardClaimed = onDocumentCreated(
       reward_type: rewardType,
       reward_label: rewardLabel,
       chapter,
+      wallet_address: walletAddress,
+      distribution_mode: distributionMode,
+      airdrop_key: airdropKey,
       logged_at: FieldValue.serverTimestamp(),
       status: "logged_for_distribution"
     });
@@ -49,7 +58,9 @@ export const onEcosystemRewardClaimed = onDocumentCreated(
       {
         status: "distributed",
         distributed_at: FieldValue.serverTimestamp(),
-        distribution_log: `Logged ${rewardType} (${rewardLabel}) for downstream distribution.`
+        distribution_log: distributionMode === "airdrop"
+          ? `Logged ${rewardType} (${rewardLabel}) for wallet-aware downstream distribution.`
+          : `Logged ${rewardType} (${rewardLabel}) for downstream distribution.`
       },
       { merge: true }
     );

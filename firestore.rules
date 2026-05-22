@@ -195,26 +195,34 @@ service cloud.firestore {
           'collector_key',
           'email',
           'collector_id',
+          'wallet_address',
           'reward_id',
           'reward_label',
           'chapter',
           'reward_type',
           'claimed_at',
           'status',
-          'source'
+          'source',
+          'distribution_mode',
+          'airdrop_key',
+          'max_claims_per_wallet'
         ]) &&
         request.resource.data.keys().hasAll([
           'collector_ref',
           'collector_key',
           'email',
           'collector_id',
+          'wallet_address',
           'reward_id',
           'reward_label',
           'chapter',
           'reward_type',
           'claimed_at',
           'status',
-          'source'
+          'source',
+          'distribution_mode',
+          'airdrop_key',
+          'max_claims_per_wallet'
         ]) &&
         request.resource.data.collector_key is string &&
         request.resource.data.collector_key.size() >= 1 &&
@@ -223,6 +231,8 @@ service cloud.firestore {
         request.resource.data.email.size() <= 160 &&
         request.resource.data.collector_id is string &&
         request.resource.data.collector_id.size() <= 120 &&
+        request.resource.data.wallet_address is string &&
+        request.resource.data.wallet_address.size() <= 80 &&
         request.resource.data.reward_id is string &&
         request.resource.data.reward_id.size() >= 3 &&
         request.resource.data.reward_id.size() <= 120 &&
@@ -238,6 +248,15 @@ service cloud.firestore {
         request.resource.data.source is string &&
         request.resource.data.source.size() >= 3 &&
         request.resource.data.source.size() <= 120 &&
+        request.resource.data.distribution_mode is string &&
+        (request.resource.data.distribution_mode == 'direct' || request.resource.data.distribution_mode == 'airdrop') &&
+        request.resource.data.airdrop_key is string &&
+        request.resource.data.airdrop_key.size() <= 120 &&
+        request.resource.data.max_claims_per_wallet is int &&
+        request.resource.data.max_claims_per_wallet >= 0 &&
+        (request.resource.data.distribution_mode == 'direct'
+          ? request.resource.data.wallet_address.size() == 0 && request.resource.data.max_claims_per_wallet == 0 && request.resource.data.airdrop_key.size() == 0
+          : request.resource.data.wallet_address.size() >= 32 && request.resource.data.max_claims_per_wallet >= 1 && request.resource.data.airdrop_key.size() >= 3) &&
         request.resource.data.claimed_at == request.time &&
         request.resource.data.status == 'pending_distribution';
     }

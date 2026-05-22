@@ -494,6 +494,19 @@
   background: linear-gradient(135deg, rgba(156, 7, 5, 0.98), rgba(202, 63, 59, 0.92));
 }
 
+.wd-booking-banner__button--secondary.cg-button {
+  background: rgba(253, 254, 254, 0.84);
+  color: rgba(108, 5, 8, 0.86);
+  border-color: rgba(156, 7, 5, 0.24);
+  box-shadow: 0 8px 18px rgba(87, 7, 11, 0.1);
+}
+
+.wd-booking-banner__button--secondary.cg-button:hover,
+.wd-booking-banner__button--secondary.cg-button:focus-visible {
+  background: rgba(255, 250, 245, 0.98);
+  color: rgba(126, 7, 5, 0.96);
+}
+
 .wd-booking-banner__meta {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
@@ -2147,6 +2160,83 @@
 
 .wd-reward-claim__note {
   color: rgba(108, 5, 8, 0.7);
+}
+
+.wd-reward-claim__wallet-field,
+.wd-reward-claim__airdrop-shell,
+.wd-reward-claim__airlock-note,
+.wd-reward-claim__airlock-body,
+.wd-reward-claim__airlock-header,
+.wd-reward-claim__airlock-panel {
+  display: grid;
+  gap: var(--cg-space-sm);
+}
+
+.wd-reward-claim__airdrop-shell,
+.wd-reward-claim__airlock-note,
+.wd-reward-claim__airlock-panel {
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(156, 7, 5, 0.14);
+  border-radius: calc(var(--cg-radius-sm) * 1.35);
+  background: rgba(253, 254, 254, 0.72);
+}
+
+.wd-reward-claim__airdrop-shell {
+  align-items: center;
+}
+
+.wd-reward-claim__airdrop-copy,
+.wd-reward-claim__airlock-header > div {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wd-reward-claim__airlock-footnote {
+  margin: 0;
+  color: rgba(27, 21, 21, 0.68);
+  font-size: var(--cg-type-body-sm);
+}
+
+.wd-reward-claim__airlock-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: clamp(var(--cg-space-md), 4vw, var(--cg-space-xl));
+  background: rgba(18, 10, 10, 0.66);
+  backdrop-filter: blur(18px);
+}
+
+.wd-reward-claim__airlock-panel {
+  width: min(100%, 42rem);
+  max-height: min(88vh, 52rem);
+  overflow: auto;
+  box-shadow: 0 28px 62px rgba(40, 8, 10, 0.28);
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(255, 253, 252, 0.96), rgba(255, 253, 252, 0) 55%),
+    linear-gradient(180deg, rgba(255, 248, 244, 0.96), rgba(247, 224, 224, 0.92));
+}
+
+.wd-reward-claim__airlock-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.wd-reward-claim__airlock-body {
+  padding-top: var(--cg-space-2xs);
+}
+
+@media (min-width: 720px) {
+  .wd-reward-claim__airdrop-shell {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+@media (max-width: 719px) {
+  .wd-reward-claim__airlock-header {
+    grid-template-columns: 1fr;
+  }
 }
 
 @keyframes wd-crown-smoke-rise {

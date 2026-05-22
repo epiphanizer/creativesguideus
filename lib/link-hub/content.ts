@@ -1,6 +1,18 @@
 import type { LinkHubContent, LinkHubLink } from "@/lib/admin/types";
+import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
 const defaultUpdatedAt = "2026-05-17T00:00:00.000Z";
+
+const defaultWallsDevineMerchLink = {
+  id: "walls-devine-merch-shop",
+  eyebrow: "Merch shop",
+  title: "Walls/Devine Shop",
+  description: "Open the Fourthwall merch room for Volume 1 apparel, printed goods, and release-world objects.",
+  href: wallsDevineMerchShopHref,
+  ctaLabel: "Open merch shop",
+  isFeatured: true,
+  isActive: true
+} satisfies LinkHubLink;
 
 export const defaultLinkHubContent: LinkHubContent = {
   eyebrow: "Signal routes",
@@ -28,6 +40,7 @@ export const defaultLinkHubContent: LinkHubContent = {
       isFeatured: true,
       isActive: true
     },
+    defaultWallsDevineMerchLink,
     {
       id: "contact",
       eyebrow: "Direct route",
@@ -80,8 +93,29 @@ export function normalizeLinkHubLink(link: Partial<LinkHubLink> | null | undefin
   };
 }
 
+function ensureWallsDevineMerchLink(links: LinkHubLink[]) {
+  const alreadyPresent = links.some(
+    (link) => link.id === defaultWallsDevineMerchLink.id || link.href.replace(/\/$/, "") === wallsDevineMerchShopHref.replace(/\/$/, "")
+  );
+
+  if (alreadyPresent) {
+    return links;
+  }
+
+  const wallsIndex = links.findIndex((link) => link.id === "walls-devine" || link.href === "/walls-devine");
+  const merchLink = normalizeLinkHubLink(defaultWallsDevineMerchLink, wallsIndex >= 0 ? wallsIndex + 1 : links.length);
+
+  if (wallsIndex < 0) {
+    return [...links, merchLink];
+  }
+
+  return [...links.slice(0, wallsIndex + 1), merchLink, ...links.slice(wallsIndex + 1)];
+}
+
 export function normalizeLinkHubContent(content?: Partial<LinkHubContent> | null): LinkHubContent {
-  const links = Array.isArray(content?.links) && content?.links.length ? content.links.map((link, index) => normalizeLinkHubLink(link, index)) : defaultLinkHubContent.links;
+  const links = ensureWallsDevineMerchLink(
+    Array.isArray(content?.links) && content?.links.length ? content.links.map((link, index) => normalizeLinkHubLink(link, index)) : defaultLinkHubContent.links
+  );
 
   return {
     eyebrow: typeof content?.eyebrow === "string" && content.eyebrow.trim() ? content.eyebrow.trim() : defaultLinkHubContent.eyebrow,

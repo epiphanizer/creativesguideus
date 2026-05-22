@@ -10,7 +10,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - Public note copy: Firestore `adminProjects/walls-devine/publicContent/collectorHeroNote` stores the editable collector note shown on the public Volume 1 hero.
 - Public jump-link hub: Firestore `adminProjects/walls-devine/publicContent/linkHub` stores the editable Linktree-style links page at `/links`.
 - Lead capture: Firestore `ecosystemLeads/{leadId}` stores public collector-list signups plus richer guided-intake booking leads from the site experience.
-- Reward pipeline: Firestore `collectors/{collectorKey}` stores reusable collector identities and counts, while `rewardClaims/{claimId}` queues any ecosystem reward claim for fulfillment workflows.
+- Reward pipeline: Firestore `collectors/{collectorKey}` stores reusable collector identities and counts, while `rewardClaims/{claimId}` queues any ecosystem reward claim for fulfillment workflows. Airdrop-enabled rewards now store wallet-aware fields on the same claim doc and use deterministic claim IDs to enforce one clearance per wallet.
 - Longform content: Firestore stores markdown docs at `adminProjects/walls-devine/markdownFiles/{collection}--{slug}`.
 - Legacy migration: Firebase Storage at `admin-projects/walls-devine/{collection}/{slug}.md` is only read when older markdown needs to be migrated into Firestore.
 - Bootstrap source: The local JSON and markdown files remain in the repo only so `/api/admin/bootstrap` can seed Firebase the first time the remote layer is empty.
@@ -105,4 +105,6 @@ firebase deploy --only functions,firestore:rules,firestore:indexes,storage
 8. Save one Instagram draft and one journal entry, then verify Firestore documents appear under `adminProjects/walls-devine/markdownFiles/...`.
 9. Refresh `/admin` and confirm the remote content loads without re-bootstrap.
 10. Beat the Joint Queen reward flow, submit an email or Collector ID, and confirm the collector doc and reward claim doc appear in Firestore.
-11. Deploy Functions and confirm the trigger writes a `rewardDispatchLogs/{claimId}` document and flips `rewardClaims/{claimId}.status` to `distributed`.
+11. Beat the Volume 1 secret-game flow, open the wallet airlock, submit a Solana wallet, and confirm the wallet-aware reward claim doc appears in Firestore with `distribution_mode: "airdrop"`.
+12. Retry that same Volume 1 airlock with the same wallet and confirm the claim is rejected because the wallet already cleared that unlock.
+13. Deploy Functions and confirm the trigger writes a `rewardDispatchLogs/{claimId}` document and flips `rewardClaims/{claimId}.status` to `distributed`.

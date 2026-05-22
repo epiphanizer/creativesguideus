@@ -3,16 +3,17 @@ import Link from "next/link";
 
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
+import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
 const gateways = [
   {
     eyebrow: "Collector experience",
-    descriptor: "Collector room · player · journals",
+    descriptor: "Collector room · player · journals · merch shop",
     title: "Walls/Devine",
-    description: "Enter Volume 1 through the listening room, release journals, and the private collector layer around the record.",
+    description: "Enter Volume 1 through the listening room, release journals, the private collector layer, and the merch route orbiting the record.",
     href: "/walls-devine",
     entryLabel: "Enter Volume 1",
-    entryMeta: "Player · Journals · Collector Access",
+    entryMeta: "Player · Journals · Collector Access · Merch Shop",
     image: volOneImage,
     alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls",
@@ -92,7 +93,10 @@ export default function HomePage() {
 
                 <div className="cg-home-gate__portal-entry" aria-hidden="true">
                   <span className="cg-home-gate__portal-entry-label">{gateway.entryLabel}</span>
-                  <small className="cg-home-gate__portal-entry-meta">{gateway.entryMeta}</small>
+                  <small className="cg-home-gate__portal-entry-meta">
+                    {gateway.entryMeta}
+                    {gateway.title === "Walls/Devine" ? ` · Shop: ${new URL(wallsDevineMerchShopHref).host}` : ""}
+                  </small>
                 </div>
               </div>
             </>

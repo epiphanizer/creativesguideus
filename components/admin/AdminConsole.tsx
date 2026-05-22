@@ -27,6 +27,7 @@ import { getEcosystemLeads } from "@/lib/firebase/ecosystem-leads";
 import { getListeningRoomVisits } from "@/lib/firebase/listening-room-visits";
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
 import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import { cx } from "@/lib/cx";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
@@ -369,12 +370,12 @@ type AdminWorkspaceSectionProps = {
 const defaultOpenSections: Record<AdminWorkspaceSectionId, boolean> = {
   "admin-release-desk": true,
   "admin-booking-engine": true,
-  "admin-journals": true,
+  "admin-journals": false,
   "admin-instagram-posts": false,
   "admin-analytics": true,
   "admin-assets": false,
   "admin-health": false,
-  "admin-ideas": true
+  "admin-ideas": false
 };
 
 function isWorkspaceSectionId(value: string): value is AdminWorkspaceSectionId {
@@ -414,8 +415,27 @@ function AdminWorkspaceSection({
         </div>
       </div>
 
-      {isOpen ? <div id={`${id}-body`} className="cg-admin__workspace-section-body">{children}</div> : <p className="cg-admin__helper">Collapsed. Use the jump rail above to reopen this workspace.</p>}
+      {isOpen ? <div id={`${id}-body`} className="cg-admin__workspace-section-body">{children}</div> : <p className="cg-admin__helper">Collapsed. Reopen it from the whiteboard or the lane navigation.</p>}
     </SectionShell>
+  );
+}
+
+type AdminWhiteboardCardProps = {
+  label: string;
+  title: string;
+  copy?: string;
+  className?: string;
+  children?: ReactNode;
+};
+
+function AdminWhiteboardCard({ label, title, copy, className, children }: AdminWhiteboardCardProps) {
+  return (
+    <article className={cx("cg-admin__whiteboard-card", className)}>
+      <span className="cg-admin__whiteboard-card-label">{label}</span>
+      <h3>{title}</h3>
+      {copy ? <p>{copy}</p> : null}
+      {children}
+    </article>
   );
 }
 
@@ -496,6 +516,27 @@ const fallbackAdminData: WallsDevineAdminData = {
 
 function countCompletedChecklist(items: ReleasePlanChecklistItem[]) {
   return items.filter((item) => item.completed).length;
+}
+
+function formatCountdownToDate(targetDate: string) {
+  const diff = new Date(targetDate).getTime() - Date.now();
+  const dayInMs = 24 * 60 * 60 * 1000;
+  const days = Math.ceil(diff / dayInMs);
+
+  if (Number.isNaN(days)) {
+    return "Needs review";
+  }
+
+  if (days > 0) {
+    return `${days} day${days === 1 ? "" : "s"} out`;
+  }
+
+  if (days === 0) {
+    return "Due today";
+  }
+
+  const elapsed = Math.abs(days);
+  return `${elapsed} day${elapsed === 1 ? "" : "s"} late`;
 }
 
 function buildDashboardModules({
@@ -850,6 +891,11 @@ export function AdminConsole() {
   const activeBacklogId = getBacklogElementId(activeWorkspaceTab);
   const isResolvingAuthorizedSession = Boolean(authUser) && dataLoading && !isAuthorized && !panelError;
   const isRefreshingAuthorizedAdmin = Boolean(authUser) && isAuthorized && dataLoading;
+  const whiteboardActionLinks = visibleJumpLinks.slice(0, 4);
+  const bookingGoalCountdown = formatCountdownToDate(adminViewData.bookingBoard.goal.lockByDate);
+  const releaseFocusItems = Array.from(
+    new Set([...adminViewData.bookingBoard.goal.nextMoves, ...adminViewData.plan.recommendedSetup, ...adminViewData.plan.guidance])
+  ).slice(0, 4);
 
   function isSectionReady(sectionId: AdminWorkspaceSectionId) {
     return moduleStatusById[sectionId] === "ready";
@@ -1671,77 +1717,250 @@ export function AdminConsole() {
           </p>
         ) : null}
 
-        <div className="cg-admin__command-deck">
-          <div className="cg-admin__tab-bar" role="tablist" aria-label="Admin workspace categories">
-            {adminWorkspaceTabs.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={activeWorkspaceTab === tab.id}
-                className={["cg-admin__tab-chip", activeWorkspaceTab === tab.id ? "cg-admin__tab-chip--active" : ""].filter(Boolean).join(" ")}
-                onClick={() => handleWorkspaceTabChange(tab.id)}
-              >
-                <strong>{tab.label}</strong>
-                <span>{tab.title}</span>
-              </button>
-            ))}
+        <section className="cg-admin__whiteboard" aria-label={`${activeWorkspaceTabConfig.label} whiteboard`}>
+          <div className="cg-admin__whiteboard-head">
+            <div className="cg-admin__whiteboard-copy">
+              <p className="cg-admin__whiteboard-eyebrow">Whiteboard</p>
+              <h2>
+                {activeWorkspaceTab === "walls-devine"
+                  ? "Schedule, goals, and the few moves that actually change the June 4 release."
+                  : "Signals, routing, and backend readiness kept above the fold."}
+              </h2>
+              <p>
+                {activeWorkspaceTab === "walls-devine"
+                  ? "This lane keeps the release plan visible first, then lets you jump directly into booking, editorial, and QA without hunting through the whole dashboard."
+                  : "This lane keeps lead flow, listening traffic, and backend state in one place so the broader studio picture stays legible."}
+              </p>
+            </div>
+
+            <div className="cg-admin__whiteboard-controls">
+              <div className="cg-admin__tab-bar" role="tablist" aria-label="Admin workspace categories">
+                {adminWorkspaceTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeWorkspaceTab === tab.id}
+                    className={["cg-admin__tab-chip", activeWorkspaceTab === tab.id ? "cg-admin__tab-chip--active" : ""].filter(Boolean).join(" ")}
+                    onClick={() => handleWorkspaceTabChange(tab.id)}
+                  >
+                    <strong>{tab.label}</strong>
+                    <span>{tab.title}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="cg-admin__tab-intro cg-admin__panel">
-            <div>
-              <strong>{activeWorkspaceTabConfig.title}</strong>
-              <p>{activeWorkspaceTabConfig.description}</p>
-            </div>
-            <p className="cg-admin__path-note">
-              {activeWorkspaceTab === "walls-devine"
-                ? "Prioritize the few surfaces that move release momentum fastest: booking, release ops, editorial, and QA."
-                : "Use the agency desk to triage lead generation, Bong Tour context, and backend readiness without drowning in release-only detail."}
-            </p>
+          <div className="cg-admin__whiteboard-grid">
+            {activeWorkspaceTab === "walls-devine" ? (
+              <>
+                <AdminWhiteboardCard
+                  label="Primary goal"
+                  title={adminViewData.bookingBoard.goal.title}
+                  copy={adminViewData.bookingBoard.goal.summary}
+                  className="cg-admin__whiteboard-card--goal"
+                >
+                  <p className="cg-admin__whiteboard-card-note">Success metric: {adminViewData.bookingBoard.goal.successMetric}</p>
+                </AdminWhiteboardCard>
+
+                <AdminWhiteboardCard
+                  label="Locked schedule"
+                  title={adminViewData.plan.lockedDates[0]?.value ?? "Schedule pending"}
+                  copy={adminViewData.plan.lockedDates[0]?.label ?? "Set the release anchors first."}
+                >
+                  <ul className="cg-admin__list">
+                    {adminViewData.plan.lockedDates.slice(1).map((item) => (
+                      <li key={item.label}>
+                        <strong>{item.label}</strong>
+                        <span>{item.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </AdminWhiteboardCard>
+
+                <AdminWhiteboardCard
+                  label="Pareto focus"
+                  title="Run the smallest set of launch-moving tasks"
+                  copy="Keep the current goal and the next few actions visible. Everything else can wait below the fold or stay collapsed."
+                >
+                  <ul className="cg-admin__bullet-list">
+                    {releaseFocusItems.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </AdminWhiteboardCard>
+
+                <AdminWhiteboardCard
+                  label="Operate now"
+                  title="Open the right lane"
+                  copy="Jump into the live sections or force a content sync if a lane is still hydrating."
+                >
+                  <div className="cg-admin__whiteboard-actions-list">
+                    {whiteboardActionLinks.map((link) => (
+                      <Button key={link.id} type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection(link.id)}>
+                        {link.label}
+                      </Button>
+                    ))}
+                    {!hasLiveMarkdownContent ? (
+                      <Button type="button" variant="secondary" size="sm" onClick={handleRetryAccess} disabled={dataLoading}>
+                        {dataLoading ? "Syncing…" : "Retry content sync"}
+                      </Button>
+                    ) : null}
+                  </div>
+                </AdminWhiteboardCard>
+              </>
+            ) : (
+              <>
+                <AdminWhiteboardCard
+                  label="Signal goal"
+                  title="Keep routing, listening traffic, and backend state readable"
+                  copy="This lane is for triage. Use it to sort what needs attention and leave the lower-priority modules collapsed until you need them."
+                  className="cg-admin__whiteboard-card--goal"
+                >
+                  <p className="cg-admin__whiteboard-card-note">Backend mode: {contentSource === "firebase" ? "Firebase live" : contentSource === "bootstrap" ? "Bootstrap fallback" : "Awaiting backend"}</p>
+                </AdminWhiteboardCard>
+
+                <AdminWhiteboardCard
+                  label="Lead stack"
+                  title={leadSources[0] ? formatLeadSource(leadSources[0][0]) : "Lead intake is quiet"}
+                  copy={leadSources[0] ? `${leadSources[0][1]} lead${leadSources[0][1] === 1 ? "" : "s"} from the strongest active source.` : "Once collector and guided-intake traffic lands, the biggest source will surface here first."}
+                >
+                  <ul className="cg-admin__list">
+                    {leadProgramMix.slice(0, 3).map(([label, count]) => (
+                      <li key={label}>
+                        <strong>{label}</strong>
+                        <span>{count} lead{count === 1 ? "" : "s"}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </AdminWhiteboardCard>
+
+                <AdminWhiteboardCard
+                  label="Listening traffic"
+                  title={visitSongs[0]?.[0] ?? "No song traffic yet"}
+                  copy={visitSongs[0] ? `${visitSongs[0][1]} visit${visitSongs[0][1] === 1 ? "" : "s"} on the most active song-link route.` : "Listening-room arrivals will show up here once shared links start circulating."}
+                >
+                  <ul className="cg-admin__list">
+                    {leadContextMix.slice(0, 3).map(([label, count]) => (
+                      <li key={label}>
+                        <strong>{label}</strong>
+                        <span>{count} signal{count === 1 ? "" : "s"}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </AdminWhiteboardCard>
+
+                <AdminWhiteboardCard
+                  label="Operate now"
+                  title="Open the active lane"
+                  copy="Stay on the few sections that are already wired, and keep health tucked away unless something breaks."
+                >
+                  <div className="cg-admin__whiteboard-actions-list">
+                    {whiteboardActionLinks.map((link) => (
+                      <Button key={link.id} type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection(link.id)}>
+                        {link.label}
+                      </Button>
+                    ))}
+                    <Button type="button" variant="secondary" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
+                      {leadsLoading || visitsLoading ? "Refreshing…" : "Refresh signals"}
+                    </Button>
+                  </div>
+                </AdminWhiteboardCard>
+              </>
+            )}
           </div>
-        </div>
+
+          <div className="cg-admin__whiteboard-strip" aria-label="At a glance metrics">
+            {activeWorkspaceTab === "walls-devine" ? (
+              <>
+                <article className="cg-admin__whiteboard-metric">
+                  <span>Checklist</span>
+                  <strong>{completedChecklist}/{adminViewData.plan.checklist.length}</strong>
+                  <p>release tasks complete</p>
+                </article>
+                <article className="cg-admin__whiteboard-metric">
+                  <span>Lock date</span>
+                  <strong>{new Date(adminViewData.bookingBoard.goal.lockByDate).toLocaleDateString()}</strong>
+                  <p>{bookingGoalCountdown}</p>
+                </article>
+                <article className="cg-admin__whiteboard-metric">
+                  <span>Booking-fit leads</span>
+                  <strong>{bookingLeadMatches.length}</strong>
+                  <p>ready for follow-through</p>
+                </article>
+                <article className="cg-admin__whiteboard-metric">
+                  <span>Live lanes</span>
+                  <strong>{visibleDashboardModules.length}</strong>
+                  <p>{backlogDashboardModules.length} still parked</p>
+                </article>
+              </>
+            ) : (
+              <>
+                <article className="cg-admin__whiteboard-metric">
+                  <span>Leads</span>
+                  <strong>{ecosystemLeads.length}</strong>
+                  <p>in the intake queue</p>
+                </article>
+                <article className="cg-admin__whiteboard-metric">
+                  <span>Visits</span>
+                  <strong>{listeningRoomVisits.length}</strong>
+                  <p>listening-room arrivals</p>
+                </article>
+                <article className="cg-admin__whiteboard-metric">
+                  <span>Booking-fit</span>
+                  <strong>{bookingLeadMatches.length}</strong>
+                  <p>lead and release overlap</p>
+                </article>
+                <article className="cg-admin__whiteboard-metric">
+                  <span>Backend</span>
+                  <strong>{contentSource === "firebase" ? "Live" : contentSource === "bootstrap" ? "Fallback" : "Pending"}</strong>
+                  <p>{panelError ? "needs attention" : "status clear"}</p>
+                </article>
+              </>
+            )}
+          </div>
+        </section>
       </SectionShell>
 
       <div className="cg-admin__workspace-layout">
         <aside className="cg-admin__workspace-drawer cg-admin__panel" aria-label={`${activeWorkspaceTabConfig.label} workspace drawer`}>
           <div className="cg-admin__workspace-drawer-head">
             <div>
-              <strong>{activeWorkspaceTabConfig.label}</strong>
-              <h2>{activeWorkspaceTabConfig.title}</h2>
+              <strong>Navigation</strong>
+              <h2>{activeWorkspaceTabConfig.label}</h2>
             </div>
             <p>
               {activeWorkspaceTab === "walls-devine"
-                ? "Use this drawer to jump between release ops, editorial, booking, and QA without keeping every overview card open at once."
-                : "Keep agency-wide triage tight here: leads, listening traffic, and backend readiness stay one click away while the main column stays focused."}
+                ? "Start with the release desk, then open booking, editorial, or QA only when you need to act."
+                : "Use this lane to jump between signals and health checks without drowning in every lower-priority surface."}
             </p>
           </div>
 
           <div className="cg-admin__workspace-drawer-actions">
             {activeWorkspaceTab === "walls-devine" ? (
               <>
-                {isSectionReady("admin-journals") ? <Button type="button" onClick={() => handleJumpToSection("admin-journals")}>Write new journal</Button> : null}
-                {isSectionReady("admin-release-desk") ? <Button type="button" variant="secondary" onClick={() => handleJumpToSection("admin-release-desk")}>Open release desk</Button> : null}
-                {isSectionReady("admin-booking-engine") ? <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-booking-engine")}>Open booking engine</Button> : null}
-                {isSectionReady("admin-assets") ? (
-                  <Button type="button" variant="ghost" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
-                    {audioLoading ? "Refreshing assets…" : "Refresh assets"}
-                  </Button>
-                ) : null}
+                {isSectionReady("admin-release-desk") ? <Button type="button" onClick={() => handleJumpToSection("admin-release-desk")}>Open release desk</Button> : null}
+                {isSectionReady("admin-booking-engine") ? <Button type="button" variant="secondary" onClick={() => handleJumpToSection("admin-booking-engine")}>Open booking engine</Button> : null}
+                {isSectionReady("admin-journals") ? <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-journals")}>Open journals</Button> : null}
               </>
             ) : (
               <>
                 {isSectionReady("admin-analytics") ? <Button type="button" onClick={() => handleJumpToSection("admin-analytics")}>Open signal desk</Button> : null}
-                {isSectionReady("admin-analytics") ? (
-                  <Button type="button" variant="secondary" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
-                    {leadsLoading || visitsLoading ? "Refreshing signals…" : "Refresh signals"}
-                  </Button>
-                ) : null}
+                <Button type="button" variant="secondary" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
+                  {leadsLoading || visitsLoading ? "Refreshing signals…" : "Refresh signals"}
+                </Button>
                 {isSectionReady("admin-health") ? <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-health")}>Open backend health</Button> : null}
               </>
             )}
             {!hasLiveMarkdownContent ? (
               <Button type="button" variant="ghost" size="sm" onClick={handleRetryAccess} disabled={dataLoading}>
                 {dataLoading ? "Syncing…" : "Retry content sync"}
+              </Button>
+            ) : null}
+            {backlogDashboardModules.length ? (
+              <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToBacklog(activeWorkspaceTab)}>
+                Open backlog
               </Button>
             ) : null}
           </div>
@@ -1805,7 +2024,22 @@ export function AdminConsole() {
         isOpen={openSections["admin-release-desk"]}
         onToggle={() => toggleWorkspaceSection("admin-release-desk")}
       >
-        <div className="cg-admin__release-grid">
+        <div className="cg-admin__release-board">
+          <article className="cg-admin__panel cg-admin__release-priority-card">
+            <div className="cg-admin__status-row">
+              <h3>Release goal</h3>
+              <span className="cg-admin__status-badge cg-admin__status-badge--ready">{bookingGoalCountdown}</span>
+            </div>
+            <p className="cg-admin__whiteboard-card-note">{adminViewData.bookingBoard.goal.title}</p>
+            <p>{adminViewData.bookingBoard.goal.summary}</p>
+            <p className="cg-admin__path-note">Success metric: {adminViewData.bookingBoard.goal.successMetric}</p>
+            <ul className="cg-admin__bullet-list">
+              {adminViewData.bookingBoard.goal.nextMoves.slice(0, 4).map((move) => (
+                <li key={move}>{move}</li>
+              ))}
+            </ul>
+          </article>
+
           <article className="cg-admin__panel">
             <h3>Locked dates</h3>
             <ul className="cg-admin__list">
@@ -1819,8 +2053,8 @@ export function AdminConsole() {
           </article>
 
           <article className="cg-admin__panel">
-            <h3>Campaign calendar</h3>
-            <div className="cg-admin__calendar">
+            <h3>Near-term schedule</h3>
+            <div className="cg-admin__calendar cg-admin__calendar--stacked">
               {adminViewData.plan.calendar.map((item) => (
                 <article key={`${item.date}-${item.action}`} className="cg-admin__panel">
                   <span className="cg-admin__calendar-date">{item.date}</span>
@@ -1831,66 +2065,6 @@ export function AdminConsole() {
             </div>
           </article>
         </div>
-
-        <article className="cg-admin__panel cg-admin__release-note-card">
-          <div className="cg-admin__file-head">
-            <div>
-              <h3>Public collector note</h3>
-              <p>This note feeds the personalized collector letter on the public Walls/Devine Volume 1 hero.</p>
-            </div>
-            <p className="cg-admin__path-note">
-              Firestore: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.publicContentCollection}/{firebaseAdminPaths.collectorHeroNoteDocId}
-            </p>
-          </div>
-
-          <form onSubmit={handleCollectorHeroNoteSave} className="cg-admin__editor-form">
-            <div className="cg-admin__editor-split">
-              <label className="cg-admin__editor-field">
-                <span>Salutation</span>
-                <input
-                  name="salutation"
-                  type="text"
-                  className="cg-admin__editor-input"
-                  defaultValue={adminViewData.collectorHeroNote.salutation}
-                  placeholder="Dear Collector,"
-                  required
-                />
-              </label>
-              <div className="cg-admin__stack">
-                <span className="cg-admin__editor-field-label">Last updated</span>
-                <p className="cg-admin__path-note">{new Date(adminViewData.collectorHeroNote.updatedAt).toLocaleString()}</p>
-              </div>
-            </div>
-
-            <label className="cg-admin__editor-field">
-              <span>Body copy</span>
-              <textarea
-                name="body"
-                className="cg-admin__editor-textarea"
-                rows={6}
-                defaultValue={adminViewData.collectorHeroNote.body}
-                placeholder="Write the note that appears beside the collector signup."
-                required
-              />
-            </label>
-
-            <div className="cg-admin__editor-actions">
-              <Button type="submit" variant="secondary" size="sm" disabled={saveStates[collectorHeroNoteSaveKey] === "saving"}>
-                Save note
-              </Button>
-              {saveStates[collectorHeroNoteSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
-              {saveStates[collectorHeroNoteSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
-              {saveStates[collectorHeroNoteSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this note.</p> : null}
-            </div>
-          </form>
-        </article>
-
-        <AdminLinkHubEditor
-          value={adminViewData.linkHub}
-          saveState={saveStates[linkHubSaveKey]}
-          firestorePath={`${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.publicContentCollection}/${firebaseAdminPaths.linkHubDocId}`}
-          onSave={handleLinkHubSave}
-        />
 
         <div className="cg-admin__phases">
           {checklistByPhase.map(([phase, items]) => (
@@ -1915,6 +2089,68 @@ export function AdminConsole() {
               </div>
             </article>
           ))}
+        </div>
+
+        <div className="cg-admin__release-editors">
+          <article className="cg-admin__panel cg-admin__release-note-card">
+            <div className="cg-admin__file-head">
+              <div>
+                <h3>Public collector note</h3>
+                <p>This note feeds the personalized collector letter on the public Walls/Devine Volume 1 hero.</p>
+              </div>
+              <p className="cg-admin__path-note">
+                Firestore: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.publicContentCollection}/{firebaseAdminPaths.collectorHeroNoteDocId}
+              </p>
+            </div>
+
+            <form onSubmit={handleCollectorHeroNoteSave} className="cg-admin__editor-form">
+              <div className="cg-admin__editor-split">
+                <label className="cg-admin__editor-field">
+                  <span>Salutation</span>
+                  <input
+                    name="salutation"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.collectorHeroNote.salutation}
+                    placeholder="Dear Collector,"
+                    required
+                  />
+                </label>
+                <div className="cg-admin__stack">
+                  <span className="cg-admin__editor-field-label">Last updated</span>
+                  <p className="cg-admin__path-note">{new Date(adminViewData.collectorHeroNote.updatedAt).toLocaleString()}</p>
+                </div>
+              </div>
+
+              <label className="cg-admin__editor-field">
+                <span>Body copy</span>
+                <textarea
+                  name="body"
+                  className="cg-admin__editor-textarea"
+                  rows={6}
+                  defaultValue={adminViewData.collectorHeroNote.body}
+                  placeholder="Write the note that appears beside the collector signup."
+                  required
+                />
+              </label>
+
+              <div className="cg-admin__editor-actions">
+                <Button type="submit" variant="secondary" size="sm" disabled={saveStates[collectorHeroNoteSaveKey] === "saving"}>
+                  Save note
+                </Button>
+                {saveStates[collectorHeroNoteSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
+                {saveStates[collectorHeroNoteSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
+                {saveStates[collectorHeroNoteSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this note.</p> : null}
+              </div>
+            </form>
+          </article>
+
+          <AdminLinkHubEditor
+            value={adminViewData.linkHub}
+            saveState={saveStates[linkHubSaveKey]}
+            firestorePath={`${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.publicContentCollection}/${firebaseAdminPaths.linkHubDocId}`}
+            onSave={handleLinkHubSave}
+          />
         </div>
       </AdminWorkspaceSection>
 
