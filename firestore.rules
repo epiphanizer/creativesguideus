@@ -292,6 +292,14 @@ service cloud.firestore {
       allow create: if isValidLead();
     }
 
+    match /releaseTasks/{taskId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /bookingRoutingTasks/{targetId} {
+      allow read, write: if isAdmin();
+    }
+
     match /collectors/{collectorId} {
       allow read: if isAdmin();
       allow create: if isValidCollectorCreate();

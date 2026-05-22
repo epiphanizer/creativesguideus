@@ -1,8 +1,18 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, writeBatch } from "firebase/firestore";
 import { getBytes, listAll, ref } from "firebase/storage";
 
-import { defaultBookingBoard, normalizeBookingBoard } from "@/lib/admin/booking-engine";
-import type { AdminMarkdownCollection, AdminMarkdownFile, BookingBoard, LinkHubContent, ReleasePlan, WallsDevineAdminData, WallsDevineCollectorHeroNote } from "@/lib/admin/types";
+import { defaultBookingBoard, isBookingRoutingStatus, normalizeBookingBoard } from "@/lib/admin/booking-engine";
+import type {
+  AdminMarkdownCollection,
+  AdminMarkdownFile,
+  BookingBoard,
+  BookingRoutingTaskDocument,
+  BookingTarget,
+  LinkHubContent,
+  ReleasePlan,
+  WallsDevineAdminData,
+  WallsDevineCollectorHeroNote
+} from "@/lib/admin/types";
 import { defaultLinkHubContent, normalizeLinkHubContent } from "@/lib/link-hub/content";
 import { defaultWallsDevineCollectorHeroNote, normalizeWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 
@@ -47,6 +57,22 @@ function getMarkdownCollectionRef() {
   }
 
   return collection(getProjectDoc(), firebaseAdminPaths.markdownCollection);
+}
+
+function getBookingRoutingTasksCollectionRef() {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return collection(firebaseDb, firebaseAdminPaths.bookingRoutingTasksCollection);
+}
+
+function getBookingRoutingTaskDocRef(targetId: string) {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return doc(firebaseDb, firebaseAdminPaths.bookingRoutingTasksCollection, targetId);
 }
 
 function getCollectorHeroNoteDocRef() {
@@ -105,6 +131,71 @@ function getMarkdownPreview(content: string) {
 
 function normalizeMarkdown(content: string) {
   return content.trimEnd() ? `${content.trimEnd()}\n` : "";
+}
+
+function normalizeString(value: unknown, fallback = "") {
+  return typeof value === "string" ? value.trim() : fallback;
+}
+
+function normalizeBookingRoutingTask(value: Partial<BookingRoutingTaskDocument> | undefined, fallbackTarget?: BookingTarget) {
+  const marketFallback = fallbackTarget ? `${fallbackTarget.city}, ${fallbackTarget.state}` : "";
+  const inferredStatus = isBookingRoutingStatus(value?.status)
+    ? value.status
+    : isBookingRoutingStatus(fallbackTarget?.status)
+      ? fallbackTarget.status
+      : "hold";
+
+  return {
+    id: normalizeString(value?.id, fallbackTarget?.id ?? ""),
+    targetId: normalizeString(value?.targetId, fallbackTarget?.id ?? ""),
+    targetName: normalizeString(value?.targetName, fallbackTarget?.name ?? ""),
+    market: normalizeString(value?.market, marketFallback),
+    city: normalizeString(value?.city, fallbackTarget?.city ?? ""),
+    state: normalizeString(value?.state, fallbackTarget?.state ?? ""),
+    status: inferredStatus,
+    summary: normalizeString(value?.summary),
+    description: normalizeString(value?.description),
+    start: normalizeString(value?.start, fallbackTarget?.routingStart ?? ""),
+    end: normalizeString(value?.end, fallbackTarget?.routingEnd ?? ""),
+    notes: normalizeString(value?.notes, fallbackTarget?.notes ?? ""),
+    gCalEventId: typeof value?.gCalEventId === "string" ? value.gCalEventId : fallbackTarget?.routingGCalEventId ?? null,
+    syncSource: typeof value?.syncSource === "string" ? value.syncSource : fallbackTarget?.routingSyncSource,
+    updatedAt: normalizeString(value?.updatedAt)
+  } satisfies BookingRoutingTaskDocument;
+}
+
+async function readBookingRoutingTasks() {
+  const snapshot = await getDocs(getBookingRoutingTasksCollectionRef());
+  return snapshot.docs.map((taskDoc) => normalizeBookingRoutingTask(taskDoc.data() as Partial<BookingRoutingTaskDocument>, undefined));
+}
+
+function mergeBookingRoutingTasks(board: BookingBoard, routingTasks: BookingRoutingTaskDocument[]) {
+  if (!routingTasks.length) {
+    return board;
+  }
+
+  const tasksByTargetId = new Map(routingTasks.map((task) => [task.targetId, task]));
+
+  return normalizeBookingBoard({
+    ...board,
+    targets: board.targets.map((target) => {
+      const routingTask = tasksByTargetId.get(target.id);
+
+      if (!routingTask) {
+        return target;
+      }
+
+      return {
+        ...target,
+        status: routingTask.status,
+        notes: routingTask.notes || target.notes,
+        routingStart: routingTask.start,
+        routingEnd: routingTask.end,
+        routingGCalEventId: routingTask.gCalEventId,
+        routingSyncSource: routingTask.syncSource
+      } satisfies BookingTarget;
+    })
+  });
 }
 
 function createFirestoreMarkdownPayload(
@@ -366,7 +457,12 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
   try {
     let { instagramDrafts, journalEntries } = await readFirestoreMarkdownCollections();
     let markdownInitialized = Boolean(projectData?.[firebaseAdminPaths.markdownInitializedField]);
-    const [collectorHeroNote, linkHub] = await Promise.all([getCollectorHeroNoteFromFirestore(), getLinkHubFromFirestore()]);
+    const [collectorHeroNote, linkHub, bookingRoutingTasks] = await Promise.all([
+      getCollectorHeroNoteFromFirestore(),
+      getLinkHubFromFirestore(),
+      readBookingRoutingTasks()
+    ]);
+    const mergedBookingBoard = mergeBookingRoutingTasks(bookingBoard, bookingRoutingTasks);
 
     if (!markdownInitialized && !instagramDrafts.length && !journalEntries.length) {
       const migratedContent = await migrateLegacyStorageMarkdownContent();
@@ -380,7 +476,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
 
     return {
       plan: releasePlan,
-      bookingBoard,
+      bookingBoard: mergedBookingBoard,
       instagramDrafts,
       journalEntries,
       collectorHeroNote,
@@ -408,6 +504,18 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
 
 export async function updateFirebaseBookingBoard(board: BookingBoard) {
   return saveBookingBoard(board);
+}
+
+export async function upsertFirebaseBookingRoutingTask(task: BookingRoutingTaskDocument) {
+  const nextTask = normalizeBookingRoutingTask(task);
+
+  await setDoc(getBookingRoutingTaskDocRef(nextTask.targetId), nextTask, { merge: true });
+
+  return nextTask;
+}
+
+export async function deleteFirebaseBookingRoutingTask(targetId: string) {
+  await deleteDoc(getBookingRoutingTaskDocRef(targetId));
 }
 
 export async function updateFirebaseReleasePlanItem(itemId: string, completed: boolean) {

@@ -9,9 +9,31 @@ export type ReleasePlanMetadata = {
 };
 
 export type ReleasePlanCalendarItem = {
+  id?: string;
+  phase?: string;
   date: string;
   action: string;
   purpose: string;
+  start?: string;
+  end?: string;
+};
+
+export type ReleaseTaskSyncSource = "admin-ui" | "calendar-sync" | "gcal-webhook" | "seed";
+
+export type BookingRoutingStatus = "hold" | "confirmed";
+
+export type ReleaseTaskDocument = {
+  id: string;
+  phase: string;
+  summary: string;
+  description: string;
+  start: string;
+  end: string;
+  completed: boolean;
+  notes: string;
+  gCalEventId: string | null;
+  syncSource?: ReleaseTaskSyncSource;
+  updatedAt?: string;
 };
 
 export type ReleasePlanChecklistItem = {
@@ -21,6 +43,13 @@ export type ReleasePlanChecklistItem = {
   dueDate: string;
   completed: boolean;
   notes: string;
+  summary?: string;
+  description?: string;
+  start?: string;
+  end?: string;
+  gCalEventId?: string | null;
+  syncSource?: ReleaseTaskSyncSource;
+  updatedAt?: string;
 };
 
 export type ReleasePlan = {
@@ -120,6 +149,28 @@ export type BookingTarget = {
   contactStatus: BookingContactResearchStatus;
   contacts: BookingTargetContact[];
   tags: string[];
+  routingStart?: string;
+  routingEnd?: string;
+  routingGCalEventId?: string | null;
+  routingSyncSource?: ReleaseTaskSyncSource;
+};
+
+export type BookingRoutingTaskDocument = {
+  id: string;
+  targetId: string;
+  targetName: string;
+  market: string;
+  city: string;
+  state: string;
+  status: BookingRoutingStatus;
+  summary: string;
+  description: string;
+  start: string;
+  end: string;
+  notes: string;
+  gCalEventId: string | null;
+  syncSource?: ReleaseTaskSyncSource;
+  updatedAt?: string;
 };
 
 export type BookingProspect = {

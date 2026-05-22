@@ -1,7 +1,7 @@
-import { AdminConsole } from "@/components/admin/AdminConsole";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default function AdminPage() {
-  return <AdminConsole />;
+  redirect("/admin/overview");
 }

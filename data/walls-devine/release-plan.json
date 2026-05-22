@@ -31,14 +31,78 @@
     "Do not re-pitch Resolve as the album focus track if it already served as the single pitch."
   ],
   "calendar": [
-    { "date": "Now", "action": "Upload Resolve single", "purpose": "Get it delivered and pitchable ASAP" },
-    { "date": "May 17–18", "action": "Pitch Resolve in Spotify for Artists", "purpose": "Needs at least 7 days before May 24" },
-    { "date": "May 24", "action": "Resolve single release", "purpose": "First public ignition" },
-    { "date": "May 24–June 3", "action": "Run daily or near-daily 9-grid posts", "purpose": "Build toward album" },
-    { "date": "June 4", "action": "Volume 1 album release", "purpose": "Main launch" },
-    { "date": "June 4–June 18", "action": "Push album focus track", "purpose": "Keep album alive after release day" },
-    { "date": "July 10", "action": "Volume 1: Instrumentals release", "purpose": "Second campaign wave" },
-    { "date": "July 10 onward", "action": "Pitch instrumental and sync angle", "purpose": "Extend the world behind the songs" }
+    {
+      "id": "calendar-resolve-upload",
+      "phase": "Phase 1 — Lead single",
+      "date": "Now",
+      "action": "Upload Resolve single",
+      "purpose": "Get it delivered and pitchable ASAP",
+      "start": "2026-05-16T09:00:00.000Z",
+      "end": "2026-05-16T10:00:00.000Z"
+    },
+    {
+      "id": "calendar-resolve-pitch-window",
+      "phase": "Phase 1 — Lead single",
+      "date": "May 17–18",
+      "action": "Pitch Resolve in Spotify for Artists",
+      "purpose": "Needs at least 7 days before May 24",
+      "start": "2026-05-17T09:00:00.000Z",
+      "end": "2026-05-18T18:00:00.000Z"
+    },
+    {
+      "id": "calendar-resolve-release",
+      "phase": "Phase 1 — Lead single",
+      "date": "May 24",
+      "action": "Resolve single release",
+      "purpose": "First public ignition",
+      "start": "2026-05-24T00:00:00.000Z",
+      "end": "2026-05-24T23:59:59.000Z"
+    },
+    {
+      "id": "calendar-nine-grid-window",
+      "phase": "Phase 1 — Lead single",
+      "date": "May 24–June 3",
+      "action": "Run daily or near-daily 9-grid posts",
+      "purpose": "Build toward album",
+      "start": "2026-05-24T09:00:00.000Z",
+      "end": "2026-06-03T18:00:00.000Z"
+    },
+    {
+      "id": "calendar-album-release",
+      "phase": "Phase 2 — Album",
+      "date": "June 4",
+      "action": "Volume 1 album release",
+      "purpose": "Main launch",
+      "start": "2026-06-04T00:00:00.000Z",
+      "end": "2026-06-04T23:59:59.000Z"
+    },
+    {
+      "id": "calendar-album-focus-window",
+      "phase": "Phase 2 — Album",
+      "date": "June 4–June 18",
+      "action": "Push album focus track",
+      "purpose": "Keep album alive after release day",
+      "start": "2026-06-04T09:00:00.000Z",
+      "end": "2026-06-18T18:00:00.000Z"
+    },
+    {
+      "id": "calendar-instrumental-release",
+      "phase": "Phase 3 — Instrumentals",
+      "date": "July 10",
+      "action": "Volume 1: Instrumentals release",
+      "purpose": "Second campaign wave",
+      "start": "2026-07-10T00:00:00.000Z",
+      "end": "2026-07-10T23:59:59.000Z"
+    },
+    {
+      "id": "calendar-instrumental-pitch-window",
+      "phase": "Phase 3 — Instrumentals",
+      "date": "July 10 onward",
+      "action": "Pitch instrumental and sync angle",
+      "purpose": "Extend the world behind the songs",
+      "start": "2026-07-10T09:00:00.000Z",
+      "end": "2026-07-17T18:00:00.000Z"
+    }
   ],
   "checklist": [
     {
@@ -47,7 +111,13 @@
       "title": "Lock Resolve single artwork",
       "dueDate": "Before upload",
       "completed": false,
-      "notes": "Use the Resolve art, not the Vol. 1 cover. Treat the single as its own chapter."
+      "notes": "Use the Resolve art, not the Vol. 1 cover. Treat the single as its own chapter.",
+      "summary": "Lock Resolve single artwork",
+      "description": "Finalize standalone Resolve art before the upload goes live.",
+      "start": "2026-05-16T08:00:00.000Z",
+      "end": "2026-05-16T09:00:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     },
     {
       "id": "resolve-upload",
@@ -55,7 +125,13 @@
       "title": "Upload Resolve as a single in DistroKid",
       "dueDate": "Now",
       "completed": false,
-      "notes": "Audio, artwork, metadata, and credits should all be final before upload."
+      "notes": "Audio, artwork, metadata, and credits should all be final before upload.",
+      "summary": "Upload Resolve as a single",
+      "description": "Create the Resolve release in DistroKid with final metadata, credits, and audio.",
+      "start": "2026-05-16T09:00:00.000Z",
+      "end": "2026-05-16T10:30:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     },
     {
       "id": "resolve-isrc-save",
@@ -63,7 +139,13 @@
       "title": "Save Resolve ISRC for album carryover",
       "dueDate": "At upload",
       "completed": false,
-      "notes": "Reuse the same ISRC, audio file, title, and artist name when Resolve appears on the album."
+      "notes": "Reuse the same ISRC, audio file, title, and artist name when Resolve appears on the album.",
+      "summary": "Save Resolve ISRC for album carryover",
+      "description": "Capture the live ISRC at upload so the album version carries the same recording identity.",
+      "start": "2026-05-16T10:30:00.000Z",
+      "end": "2026-05-16T11:00:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     },
     {
       "id": "resolve-pitch",
@@ -71,7 +153,13 @@
       "title": "Pitch Resolve in Spotify for Artists",
       "dueDate": "May 17–18",
       "completed": false,
-      "notes": "Pitch as soon as the unreleased single appears in Spotify for Artists."
+      "notes": "Pitch as soon as the unreleased single appears in Spotify for Artists.",
+      "summary": "Pitch Resolve in Spotify for Artists",
+      "description": "Submit the Resolve pitch as soon as the unreleased single appears in Spotify for Artists.",
+      "start": "2026-05-17T09:00:00.000Z",
+      "end": "2026-05-18T18:00:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     },
     {
       "id": "grid-posts-prep",
@@ -79,7 +167,13 @@
       "title": "Prepare 9-grid post sequence",
       "dueDate": "Before May 24",
       "completed": false,
-      "notes": "Use the red-and-white visual system to build from Resolve into the full album world."
+      "notes": "Use the red-and-white visual system to build from Resolve into the full album world.",
+      "summary": "Prepare 9-grid post sequence",
+      "description": "Stage the pre-release visual sequence that leads from Resolve into the album launch.",
+      "start": "2026-05-19T10:00:00.000Z",
+      "end": "2026-05-23T18:00:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     },
     {
       "id": "album-upload",
@@ -87,7 +181,13 @@
       "title": "Upload Volume 1 album in DistroKid",
       "dueDate": "Before June 4",
       "completed": false,
-      "notes": "Track list: Joint Queen, Stash Daddy, Space Cruiser, Home, Decay, Resolve, Poetry, Gratitude."
+      "notes": "Track list: Joint Queen, Stash Daddy, Space Cruiser, Home, Decay, Resolve, Poetry, Gratitude.",
+      "summary": "Upload Volume 1 album",
+      "description": "Build the full album release in DistroKid and confirm final sequencing, metadata, and credits.",
+      "start": "2026-05-27T09:00:00.000Z",
+      "end": "2026-06-02T18:00:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     },
     {
       "id": "album-focus-track",
@@ -95,7 +195,13 @@
       "title": "Choose album focus track for Spotify pitch",
       "dueDate": "Before album pitch",
       "completed": false,
-      "notes": "Recommended focus track: Poetry. Alternatives: Gratitude or Joint Queen."
+      "notes": "Recommended focus track: Poetry. Alternatives: Gratitude or Joint Queen.",
+      "summary": "Choose album focus track for Spotify pitch",
+      "description": "Pick the album track to pitch once the album is live in Spotify for Artists.",
+      "start": "2026-05-30T09:00:00.000Z",
+      "end": "2026-06-03T12:00:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     },
     {
       "id": "album-launch-window",
@@ -103,7 +209,13 @@
       "title": "Run post-release focus window for album",
       "dueDate": "June 4–June 18",
       "completed": false,
-      "notes": "Keep the album alive after release day instead of moving immediately into the next upload."
+      "notes": "Keep the album alive after release day instead of moving immediately into the next upload.",
+      "summary": "Run post-release focus window for album",
+      "description": "Sustain album attention with a focused post-release window before moving to instrumentals.",
+      "start": "2026-06-04T09:00:00.000Z",
+      "end": "2026-06-18T18:00:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     },
     {
       "id": "instrumental-title-lock",
@@ -111,7 +223,13 @@
       "title": "Lock instrumental release naming",
       "dueDate": "Before July rollout",
       "completed": false,
-      "notes": "Preferred title: Volume 1: Instrumentals."
+      "notes": "Preferred title: Volume 1: Instrumentals.",
+      "summary": "Lock instrumental release naming",
+      "description": "Confirm the instrumental release title and naming system before rollout prep starts.",
+      "start": "2026-06-29T09:00:00.000Z",
+      "end": "2026-07-02T12:00:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     },
     {
       "id": "instrumental-isrcs",
@@ -119,7 +237,13 @@
       "title": "Assign new ISRCs to instrumental recordings",
       "dueDate": "Before upload",
       "completed": false,
-      "notes": "Instrumentals are separate recordings and should not reuse the vocal ISRCs."
+      "notes": "Instrumentals are separate recordings and should not reuse the vocal ISRCs.",
+      "summary": "Assign new ISRCs to instrumental recordings",
+      "description": "Prepare new ISRCs for the instrumental masters before the upload window opens.",
+      "start": "2026-07-03T09:00:00.000Z",
+      "end": "2026-07-07T12:00:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     },
     {
       "id": "instrumental-upload",
@@ -127,7 +251,13 @@
       "title": "Upload Volume 1: Instrumentals",
       "dueDate": "Target July 10",
       "completed": false,
-      "notes": "Mark tracks as instrumental in DistroKid and use clean version info formatting."
+      "notes": "Mark tracks as instrumental in DistroKid and use clean version info formatting.",
+      "summary": "Upload Volume 1: Instrumentals",
+      "description": "Create the instrumental release in DistroKid and confirm instrumental metadata before July 10.",
+      "start": "2026-07-08T09:00:00.000Z",
+      "end": "2026-07-10T12:00:00.000Z",
+      "gCalEventId": null,
+      "syncSource": "seed"
     }
   ]
 }

@@ -136,10 +136,9 @@ export function AdminLinkHubEditor({ value, saveState, firestorePath, onSave }: 
     <article className="cg-admin__panel cg-admin__release-note-card">
       <div className="cg-admin__file-head">
         <div>
-          <h3>Public link hub</h3>
-          <p>Curate a Linktree-style jump page for CGU rooms, partner platforms, merch, ticketing, or anywhere else the active signal should point.</p>
+          <h3>Link hub</h3>
+          <p>Shape the public /links page and decide where each route sends people next.</p>
         </div>
-        <p className="cg-admin__path-note">Firestore: {firestorePath}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="cg-admin__editor-form">
@@ -188,7 +187,7 @@ export function AdminLinkHubEditor({ value, saveState, firestorePath, onSave }: 
             <a className="cg-admin__external-link" href="/links" target="_blank" rel="noreferrer">
               Open public page
             </a>
-            <Button type="button" variant="ghost" size="sm" onClick={handleAddLink}>
+            <Button type="button" variant="secondary" size="sm" onClick={handleAddLink}>
               Add link
             </Button>
           </div>
@@ -303,7 +302,7 @@ export function AdminLinkHubEditor({ value, saveState, firestorePath, onSave }: 
         {localError ? <p className="cg-admin__save-note cg-admin__save-note--error">{localError}</p> : null}
 
         <div className="cg-admin__editor-actions">
-          <Button type="submit" variant="secondary" size="sm" disabled={saveState === "saving"}>
+          <Button type="submit" variant="primary" size="sm" disabled={saveState === "saving"}>
             Save link hub
           </Button>
           {saveState === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}

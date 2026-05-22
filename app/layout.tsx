@@ -3,9 +3,7 @@ import { Suspense } from "react";
 import "../styles/styles.scss";
 
 import AnalyticsBootstrap from "@/components/analytics/AnalyticsBootstrap";
-import { Footer } from "@/components/Footer";
-import HeaderNav from "@/components/HeaderNav";
-import PortableListeningRoom from "@/components/walls-devine/PortableListeningRoom";
+import GlobalChrome from "@/components/GlobalChrome";
 
 export const metadata: Metadata = {
   title: "Creatives Guide Us",
@@ -19,10 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Suspense fallback={null}>
           <AnalyticsBootstrap />
         </Suspense>
-        <HeaderNav />
-        {children}
-        <Footer />
-        <PortableListeningRoom />
+        <GlobalChrome>{children}</GlobalChrome>
       </body>
     </html>
   );

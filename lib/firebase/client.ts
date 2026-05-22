@@ -1,6 +1,7 @@
 import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getFunctions } from "firebase/functions";
 import { getStorage } from "firebase/storage";
 
 import { firebaseConfig, hasFirebaseConfig } from "./config";
@@ -22,4 +23,5 @@ export function getFirebaseApp() {
 export const firebaseApp = getFirebaseApp();
 export const firebaseAuth = firebaseApp ? getAuth(firebaseApp) : null;
 export const firebaseDb = firebaseApp ? getFirestore(firebaseApp) : null;
+export const firebaseFunctions = firebaseApp ? getFunctions(firebaseApp, "us-central1") : null;
 export const firebaseStorage = firebaseApp ? getStorage(firebaseApp) : null;

@@ -7,6 +7,8 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - Auth: Firebase Auth email/password signs the editor into the browser session.
 - Authorization: Firestore `adminUsers/{uid}` decides whether a signed-in user is an active editor.
 - Structured content: Firestore `adminProjects/walls-devine` stores the release plan object and the booking board field.
+- Calendar sync groundwork: Firestore `releaseTasks/{taskId}` is reserved for Google Calendar-ready release events once the sync layer is enabled.
+- Booking routing sync: Firestore `bookingRoutingTasks/{targetId}` stores Google Calendar-ready hold and confirmed routing dates for the booking engine.
 - Public note copy: Firestore `adminProjects/walls-devine/publicContent/collectorHeroNote` stores the editable collector note shown on the public Volume 1 hero.
 - Public jump-link hub: Firestore `adminProjects/walls-devine/publicContent/linkHub` stores the editable Linktree-style links page at `/links`.
 - Web analytics: Google/Firebase Analytics can capture route changes plus key CTA events when the Firebase project is linked to a GA4 web stream and `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` is set in the site environment.
@@ -30,6 +32,9 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 9. Set the private treatment server vars for the site runtime: `BONG_TOUR_TREATMENT_ACCESS_PASSWORD`, `BONG_TOUR_TREATMENT_SESSION_SECRET`, and either Firebase Application Default Credentials or `FIREBASE_ADMIN_PROJECT_ID`, `FIREBASE_ADMIN_CLIENT_EMAIL`, `FIREBASE_ADMIN_PRIVATE_KEY`.
 10. Create or confirm `adminProjects/walls-devine/privateContent/bongTourTreatment`. The route can seed it once from `app/bong-tour/treatment.txt`, but the live source of truth should stay in Firestore.
 11. If you want the Next app to use Application Default Credentials outside managed GCP, set `FIREBASE_ADMIN_USE_APPLICATION_DEFAULT=true` and make sure ADC is actually available for that shell.
+12. In the linked Google Cloud project, enable the Google Calendar API.
+13. Share the target Google Calendar with the Firebase Functions service account so it can create and update events.
+14. Set `GOOGLE_CALENDAR_ID` and `GOOGLE_CALENDAR_CHANNEL_TOKEN` for the Functions runtime before deploying the calendar sync handlers.
 
 ## Recommended `adminUsers/{uid}` document
 
@@ -54,6 +59,8 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - `adminProjects/walls-devine/privateContent/bongTourTreatment`
 - `adminProjects/walls-devine/privateContentAccessLogs/{logId}`
 - `ecosystemLeads/{leadId}`
+- `releaseTasks/{taskId}`
+- `bookingRoutingTasks/{targetId}`
 - `collectors/{collectorKey}`
 - `rewardClaims/{claimId}`
 
@@ -73,6 +80,13 @@ If you already standardize on a Google tag variable name, the client also accept
 - `FIREBASE_ADMIN_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"`
 
 If the deployment target already has Firebase Application Default Credentials, the treatment routes can use that instead of the three `FIREBASE_ADMIN_*` variables. Local development will not try ADC implicitly anymore; opt into it with `FIREBASE_ADMIN_USE_APPLICATION_DEFAULT=true`.
+
+### Google Calendar sync environment
+
+- `GOOGLE_CALENDAR_ID=...`
+- `GOOGLE_CALENDAR_CHANNEL_TOKEN=...`
+
+Register the deployed webhook URL from `onGoogleCalendarWebhook` with `calendar.events.watch` and pass the same channel token so the HTTP handler can reject spoofed notifications.
 
 In `next dev`, the Bong Tour treatment now has a development-only fallback so the modal gate still works even when Firebase admin credentials are missing. In that mode, any valid email plus any non-empty password unlocks the local `app/bong-tour/treatment.txt` copy, and the response is marked as `local-development`. Set `BONG_TOUR_TREATMENT_LOCAL_FALLBACK=false` if you want local development to fail closed until real admin credentials are configured.
 
@@ -132,9 +146,12 @@ firebase deploy --only functions,firestore:rules,firestore:indexes,storage
 7. Confirm the booking engine in `/admin` shows the seeded August-November windows and target list.
 8. Save one Instagram draft and one journal entry, then verify Firestore documents appear under `adminProjects/walls-devine/markdownFiles/...`.
 9. Refresh `/admin` and confirm the remote content loads without re-bootstrap.
-10. Beat the Joint Queen reward flow, submit an email or Collector ID, and confirm the collector doc and reward claim doc appear in Firestore.
-11. Beat the Volume 1 secret-game flow, open the wallet airlock, submit a Solana wallet, and confirm the wallet-aware reward claim doc appears in Firestore with `distribution_mode: "airdrop"`.
-12. Retry that same Volume 1 airlock with the same wallet and confirm the claim is rejected because the wallet already cleared that unlock.
-13. Deploy Functions and confirm the trigger writes a `rewardDispatchLogs/{claimId}` document and flips `rewardClaims/{claimId}.status` to `distributed`.
-14. Open the site with the GA DebugView or Realtime panel running and confirm `home_gateway_click`, `link_hub_link_click`, `walls_devine_cta_click`, `reward_airlock_open`, and reward claim events appear after interaction.
-15. Open `/bong-tour/treatment`, confirm the modal appears before any treatment text, verify an unknown email is denied, then verify a known email plus the current password loads the treatment from Firestore.
+10. Create a `releaseTasks/{taskId}` document with `summary`, `description`, `start`, `end`, and `gCalEventId: null`, then confirm the outbound Functions sync creates a Google Calendar event and writes the returned `gCalEventId` back into Firestore.
+11. Create or update a booking target with `status: "hold"` or `status: "confirmed"` plus routing dates, then confirm `bookingRoutingTasks/{targetId}` is created and the outbound Functions sync creates a tagged Google Calendar event.
+12. Update either synced Google Calendar event and confirm the webhook maps back into the correct Firestore document through `extendedProperties.private.firestoreId` and `extendedProperties.private.syncCollection`.
+13. Beat the Joint Queen reward flow, submit an email or Collector ID, and confirm the collector doc and reward claim doc appear in Firestore.
+14. Beat the Volume 1 secret-game flow, open the wallet airlock, submit a Solana wallet, and confirm the wallet-aware reward claim doc appears in Firestore with `distribution_mode: "airdrop"`.
+15. Retry that same Volume 1 airlock with the same wallet and confirm the claim is rejected because the wallet already cleared that unlock.
+16. Deploy Functions and confirm the trigger writes a `rewardDispatchLogs/{claimId}` document and flips `rewardClaims/{claimId}.status` to `distributed`.
+17. Open the site with the GA DebugView or Realtime panel running and confirm `home_gateway_click`, `link_hub_link_click`, `walls_devine_cta_click`, `reward_airlock_open`, and reward claim events appear after interaction.
+18. Open `/bong-tour/treatment`, confirm the modal appears before any treatment text, verify an unknown email is denied, then verify a known email plus the current password loads the treatment from Firestore.
