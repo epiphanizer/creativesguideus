@@ -1,8 +1,9 @@
 "use client";
 
-import { type ChangeEvent, type FormEvent, useEffect, useState } from "react";
+import { type ChangeEvent, type FormEvent, useEffect, useRef, useState } from "react";
 
 import { createContactIntake } from "@/lib/firebase/contact-intake";
+import { trackAnalyticsEvent } from "@/lib/firebase/analytics";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { Button } from "@/components/ui/Button";
@@ -10,6 +11,10 @@ import { Button } from "@/components/ui/Button";
 type ContactOption = {
   value: string;
   label: string;
+};
+
+type ContactChoiceOption = ContactOption & {
+  description: string;
 };
 
 type ContactPrefill = {
@@ -32,10 +37,19 @@ type ContactFormState = {
   brief: string;
 };
 
+type RouteDetailsState = {
+  updatePreferences: string[];
+  bookingLocation: string;
+  relationshipToProject: string;
+  readerReason: string;
+  partnershipFocus: string;
+};
+
 type SubmissionState = "idle" | "submitting" | "success" | "error";
 
 type ContactSectionProps = {
   headingLevel?: "h1" | "h2" | "h3" | "h4";
+  initialSearch?: string;
 };
 
 type ContactBannerTone = "default" | "walls" | "bong";
@@ -48,6 +62,36 @@ type ContactBanner = {
   chips: string[];
 };
 
+type ContactFlowId = "general" | "walls-mailing" | "walls-booking" | "bong-treatment" | "bong-partnership";
+
+type GuidedStepId = "intent" | "project" | "contact" | "details" | "review";
+
+type GuidedStep = {
+  id: GuidedStepId;
+  label: string;
+  title: string;
+  description: string;
+  helper: string;
+};
+
+type ContactFlow = {
+  id: ContactFlowId;
+  routingNote: string;
+  summary: string[];
+  trustNote: string;
+  noteLabel: string;
+  notePlaceholder: string;
+  companyLabel: string;
+  companyPlaceholder: string;
+  steps: GuidedStep[];
+};
+
+type ReviewItem = {
+  label: string;
+  value: string;
+  description: string;
+};
+
 const inquiryTypeOptions: ContactOption[] = [
   { value: "live-booking", label: "Live booking" },
   { value: "listening-session", label: "Listening session" },
@@ -55,6 +99,39 @@ const inquiryTypeOptions: ContactOption[] = [
   { value: "screening", label: "Screening" },
   { value: "performance", label: "Performance" },
   { value: "partnership", label: "Partnership" }
+];
+
+const inquiryTypeCardOptions: ContactChoiceOption[] = [
+  {
+    value: "live-booking",
+    label: "Live booking",
+    description: "Bring a room, screening, or live performance context into the conversation."
+  },
+  {
+    value: "listening-session",
+    label: "Listening session",
+    description: "Set up a smaller listening-room or curated playback conversation around the work."
+  },
+  {
+    value: "mailing-list",
+    label: "Mailing list",
+    description: "Route signal updates, drop alerts, and collector unlock notices through the studio intake."
+  },
+  {
+    value: "screening",
+    label: "Screening",
+    description: "Frame a screening, visual companion, or event-world activation around the release."
+  },
+  {
+    value: "performance",
+    label: "Performance",
+    description: "Open a staged performance or live activation conversation without losing the project context."
+  },
+  {
+    value: "partnership",
+    label: "Partnership",
+    description: "Talk production, soundtrack, collector-world, or long-form collaborator fit."
+  }
 ];
 
 const goalOptions: ContactOption[] = [
@@ -93,6 +170,47 @@ const budgetRangeOptions: ContactOption[] = [
   { value: "not-sure", label: "Not sure yet" }
 ];
 
+const mailingPreferenceOptions: ContactChoiceOption[] = [
+  {
+    value: "drop-alerts",
+    label: "Drop alerts",
+    description: "The main release drops, merch releases, and major listening-room moments."
+  },
+  {
+    value: "listening-room-updates",
+    label: "Listening-room updates",
+    description: "New playback notes, room updates, and audio-world additions around Volume 1."
+  },
+  {
+    value: "collector-unlocks",
+    label: "Collector unlock notices",
+    description: "Signals tied to chapter reveals, collector paths, and deeper worldbuilding updates."
+  }
+];
+
+const partnershipFocusOptions: ContactChoiceOption[] = [
+  {
+    value: "production",
+    label: "Production",
+    description: "Film production, packaging, financing, or strategic collaborator fit."
+  },
+  {
+    value: "soundtrack",
+    label: "Soundtrack",
+    description: "Music direction, soundtrack expansion, or release-world collaboration around the score."
+  },
+  {
+    value: "collector-world",
+    label: "Collector world",
+    description: "Physical objects, editions, or companion experiences that extend the film."
+  },
+  {
+    value: "partnership",
+    label: "Partnership",
+    description: "A broader collaboration lane when the fit spans more than one surface."
+  }
+];
+
 const emptyForm: ContactFormState = {
   name: "",
   email: "",
@@ -105,6 +223,14 @@ const emptyForm: ContactFormState = {
   timeline: "",
   budgetRange: "",
   brief: ""
+};
+
+const emptyRouteDetails: RouteDetailsState = {
+  updatePreferences: [],
+  bookingLocation: "",
+  relationshipToProject: "",
+  readerReason: "",
+  partnershipFocus: ""
 };
 
 function normalizeQueryToken(value: string | null) {
@@ -123,6 +249,10 @@ function getOptionLabel(options: ContactOption[], value: string) {
 
 function hasOption(options: ContactOption[], value: string) {
   return options.some((option) => option.value === value);
+}
+
+function formatOptionLabels(values: string[], options: ContactOption[]) {
+  return values.map((value) => getOptionLabel(options, value)).filter(Boolean);
 }
 
 function buildContactPrefill(search: string): ContactPrefill {
@@ -159,7 +289,7 @@ function buildContactBanner(prefill: ContactPrefill): ContactBanner {
       tone: "walls",
       eyebrow: "Walls/Devine signal",
       title: "Mailing-list route loaded",
-      description: "This intake currently routes drop alerts, listening-room updates, and collector unlock notices through CGU until the dedicated list is live.",
+      description: "This intake routes drop alerts, listening-room updates, and collector unlock notices through CGU until the dedicated list is live.",
       chips: ["Drop alerts", "Listening-room updates", "Collector unlock notices"]
     };
   }
@@ -168,8 +298,8 @@ function buildContactBanner(prefill: ContactPrefill): ContactBanner {
     return {
       tone: "bong",
       eyebrow: "Bong Tour treatment",
-      title: "Protected reader route loaded",
-      description: "Use this lane to introduce a new reader before the private treatment gate is opened. Approved readers later use that same email inside the gate.",
+      title: "Private reading route loaded",
+      description: "Use this lane to introduce a new reader before the private treatment gate opens. Approved readers later use that same email inside the gate.",
       chips: ["Private treatment", "Reader approval", "Score-world context"]
     };
   }
@@ -193,33 +323,650 @@ function buildContactBanner(prefill: ContactPrefill): ContactBanner {
   };
 }
 
-export function ContactSection({ headingLevel = "h2" }: ContactSectionProps) {
-  const [prefill, setPrefill] = useState<ContactPrefill>({ contextId: "", inquiryType: "", projectTitle: "" });
-  const [form, setForm] = useState<ContactFormState>(emptyForm);
+function getContactFlowId(prefill: ContactPrefill): ContactFlowId {
+  if (prefill.contextId === "walls-devine-mailing-list") {
+    return "walls-mailing";
+  }
+
+  if (prefill.contextId === "walls-devine-booking") {
+    return "walls-booking";
+  }
+
+  if (prefill.contextId === "bong-tour-treatment-access") {
+    return "bong-treatment";
+  }
+
+  if (prefill.contextId === "bong-tour-intake") {
+    return "bong-partnership";
+  }
+
+  return "general";
+}
+
+function buildContactFlow(prefill: ContactPrefill): ContactFlow {
+  const flowId = getContactFlowId(prefill);
+
+  if (flowId === "walls-mailing") {
+    return {
+      id: flowId,
+      routingNote:
+        "Walls/Devine mailing-list request context is loaded. This stays inside the CGU intake flow until the dedicated list is wired.",
+      summary: [
+        "Signal preferences stay attached to the Walls/Devine route instead of a generic signup widget.",
+        "Your email remains the anchor for future drop alerts, listening-room updates, and collector unlock notices.",
+        "Requests are reviewed manually until the dedicated mailing provider is live."
+      ],
+      trustNote: "This is a request lane, not an instant subscription. CGU reviews it first, then routes the right signal back to this inbox.",
+      noteLabel: "Optional note",
+      notePlaceholder: "Anything we should know about how you found the record or what kind of update matters most?",
+      companyLabel: "Company or context",
+      companyPlaceholder: "Label, publication, collaborator, or listener context",
+      steps: [
+        {
+          id: "intent",
+          label: "Confirm request",
+          title: "Request the signal lane",
+          description: "This is the Walls/Devine request path for drop alerts, listening-room updates, and collector unlock notices.",
+          helper: "You are not entering a calendar or third-party newsletter flow here. CGU keeps the request attached to Volume 1."
+        },
+        {
+          id: "contact",
+          label: "Contact details",
+          title: "Anchor the inbox",
+          description: "Use the best email for future updates so the request stays attached to the right person.",
+          helper: "A company or listener context is optional, but useful if this request comes from a publication, label, or collaborator."
+        },
+        {
+          id: "details",
+          label: "Update preferences",
+          title: "Choose the updates that matter",
+          description: "Pick the signal types you actually want, then add any note that helps the studio route this cleanly.",
+          helper: "If you skip this step, CGU treats it as a general request for Walls/Devine updates."
+        },
+        {
+          id: "review",
+          label: "Review",
+          title: "Review the routed request",
+          description: "Confirm the contact lane, then send it into the studio signal flow.",
+          helper: "This request is reviewed manually before any future mailing or unlock updates are sent."
+        }
+      ]
+    };
+  }
+
+  if (flowId === "walls-booking") {
+    return {
+      id: flowId,
+      routingNote:
+        "Walls/Devine booking context is loaded. Leave the room type, timing, and booking note here so it stays attached to Volume 1.",
+      summary: [
+        "The booking lane stays attached to the release world instead of dropping into a generic calendar flow.",
+        "Inquiry type, timing, and room note remain visible to booking-fit review in admin.",
+        "Direct contact details stay inside CGU rather than being handed off to a third-party scheduler."
+      ],
+      trustNote:
+        "This route is for listening sessions, screenings, live bookings, and partnership-adjacent room asks around Walls/Devine.",
+      noteLabel: "Room note",
+      notePlaceholder: "Room size, event type, desired date, collaborators, press angle, or the exact booking context.",
+      companyLabel: "Company or context",
+      companyPlaceholder: "Venue, organizer, promoter, or collaborator",
+      steps: [
+        {
+          id: "intent",
+          label: "Confirm intent",
+          title: "Choose the booking lane",
+          description: "Pick the closest room so CGU routes the ask to the right side of the release world.",
+          helper: "You can keep this inside the Walls/Devine lane even if the ask spans live performance, listening, screening, or partnership."
+        },
+        {
+          id: "contact",
+          label: "Contact details",
+          title: "Anchor the conversation",
+          description: "Use the best email and organization context so the reply can start from the real room.",
+          helper: "Independent rooms are fine. If there is no formal venue yet, use the clearest working context you have."
+        },
+        {
+          id: "details",
+          label: "Booking details",
+          title: "Describe the room",
+          description: "Leave the location, timing, and a clear note so the booking path lands with enough signal to move.",
+          helper: "A concise room note is more important here than perfect scheduling detail."
+        },
+        {
+          id: "review",
+          label: "Review",
+          title: "Review the booking route",
+          description: "Confirm the room, contact lane, and timing before sending the request into CGU.",
+          helper: "The request stays attached to Walls/Devine rather than being stripped into a generic intake row."
+        }
+      ]
+    };
+  }
+
+  if (flowId === "bong-treatment") {
+    return {
+      id: flowId,
+      routingNote:
+        "Bong Tour treatment access context is loaded. Use this route to introduce a new reader before the private gate opens.",
+      summary: [
+        "The private treatment stays off the public route until access is reviewed and approved.",
+        "The submitted email becomes the identity that later enters the protected reader gate.",
+        "Reader context and access reason remain tied to the film instead of a generic inbox ask."
+      ],
+      trustNote:
+        "This does not grant instant access. CGU reviews the reader request first, then approved readers use the same email inside the protected gate.",
+      noteLabel: "Additional context",
+      notePlaceholder: "Any extra context around the reader, the relationship, or the conversation this should unlock.",
+      companyLabel: "Role or company",
+      companyPlaceholder: "Producer, reader, company, publication, or collaborator",
+      steps: [
+        {
+          id: "intent",
+          label: "Confirm request",
+          title: "Request private reading review",
+          description: "This route is for new-reader treatment access, not an instant unlock.",
+          helper: "The screenplay copy stays behind the existing protected gate until the request is reviewed."
+        },
+        {
+          id: "contact",
+          label: "Contact details",
+          title: "Anchor the reader identity",
+          description: "Use the exact email the reader should later use inside the private gate.",
+          helper: "Role or company context helps the review, but the submitted email is the key identity."
+        },
+        {
+          id: "details",
+          label: "Reader details",
+          title: "Describe the reader fit",
+          description: "Leave the relationship to the project and why this reader needs the private copy.",
+          helper: "A concise reason is enough. The goal is to protect the treatment while keeping approvals legible."
+        },
+        {
+          id: "review",
+          label: "Review",
+          title: "Review the reader request",
+          description: "Confirm the reader identity and access note before sending it into the review lane.",
+          helper: "Approved readers later return to the protected gate with this same email."
+        }
+      ]
+    };
+  }
+
+  if (flowId === "bong-partnership") {
+    return {
+      id: flowId,
+      routingNote:
+        "Bong Tour intake context is loaded. Leave the clearest production, soundtrack, or partnership note here so the screenplay world can route cleanly.",
+      summary: [
+        "Production, soundtrack, collector-world, and partnership signals stay attached to the film.",
+        "The intake leads with fit and context instead of a scheduling-first experience.",
+        "CGU can route the ask cleanly without losing the cue-room or treatment-adjacent context."
+      ],
+      trustNote:
+        "This is the film-fit lane. CGU captures the right signal first, then decides what the next operational move should be.",
+      noteLabel: "Partnership note",
+      notePlaceholder: "What you see, the fit you want to explore, and the clearest next move around Bong Tour.",
+      companyLabel: "Role or company",
+      companyPlaceholder: "Studio, producer, music partner, financier, or collaborator",
+      steps: [
+        {
+          id: "intent",
+          label: "Confirm intent",
+          title: "Open the film-fit lane",
+          description: "This route is for production, soundtrack, collector-world, or broader partnership conversations around Bong Tour.",
+          helper: "The intake starts with fit and context, not a calendar handoff."
+        },
+        {
+          id: "contact",
+          label: "Contact details",
+          title: "Anchor the partner lane",
+          description: "Use the best email and role context so the next response can start from the real fit.",
+          helper: "If the conversation spans multiple people, use the clearest primary contact here and cover the rest in the note."
+        },
+        {
+          id: "details",
+          label: "Partnership details",
+          title: "Describe the fit",
+          description: "Choose the lane that fits best, add timing if you have it, and leave the clearest note you can.",
+          helper: "Production, soundtrack, and collector-world context can all live together here without losing the film signal."
+        },
+        {
+          id: "review",
+          label: "Review",
+          title: "Review the film-fit route",
+          description: "Confirm the focus, contact lane, and timing before sending the note through CGU.",
+          helper: "The goal is to preserve the right intent before any later operational routing happens."
+        }
+      ]
+    };
+  }
+
+  return {
+    id: "general",
+    routingNote:
+      "Use this intake to route booking asks, release-world collaborations, soundtrack conversations, and system builds through one clear entry point.",
+    summary: [
+      "Inquiry type, timing, and range stay visible so the request lands in the right lane.",
+      "Project context and a real note keep the conversation anchored to the work instead of a blank inbox.",
+      "Direct contact details stay inside the CGU signal flow rather than a third-party form handoff."
+    ],
+    trustNote:
+      "This is the main CGU intake route. The guided flow keeps enough signal intact that the next move can be obvious without turning into a scheduling widget.",
+    noteLabel: "Project note",
+    notePlaceholder: "Scope, desired move, collaborators, links, or the exact conversation you want to have.",
+    companyLabel: "Company or context",
+    companyPlaceholder: "Studio, company, or context",
+    steps: [
+      {
+        id: "intent",
+        label: "Confirm intent",
+        title: "Choose the right room",
+        description: "Pick the closest lane so the request enters the studio with the right shape.",
+        helper: "You do not need perfect information yet. The goal is to keep the first move legible."
+      },
+      {
+        id: "project",
+        label: "Project shape",
+        title: "Describe the project shape",
+        description: "Add the core project details so the request can be routed without guesswork.",
+        helper: "Goal, surface, engagement, timing, and range are all helpful, but the project note carries the most weight."
+      },
+      {
+        id: "contact",
+        label: "Contact details",
+        title: "Anchor the reply path",
+        description: "Use the best inbox and context so the conversation can continue cleanly.",
+        helper: "If there is no company yet, leave the working context that best explains the lane."
+      },
+      {
+        id: "review",
+        label: "Review",
+        title: "Review the routed intake",
+        description: "Confirm the lane, contact path, and project note before sending it into CGU.",
+        helper: "This stays inside the studio signal flow until the next move is clear."
+      }
+    ]
+  };
+}
+
+function buildRouteChipLabel(flowId: ContactFlowId, prefill: ContactPrefill) {
+  if (flowId === "bong-treatment") {
+    return "Private reading request";
+  }
+
+  return getOptionLabel(inquiryTypeOptions, prefill.inquiryType);
+}
+
+function buildDisplayInquiryLabel(flowId: ContactFlowId, inquiryType: string) {
+  if (flowId === "bong-treatment") {
+    return "Private reading request";
+  }
+
+  return getOptionLabel(inquiryTypeOptions, inquiryType) || "Guided intake";
+}
+
+function buildInterestLabel(flowId: ContactFlowId, inquiryTypeLabel: string) {
+  if (flowId === "bong-treatment") {
+    return "Treatment access";
+  }
+
+  return inquiryTypeLabel || "Guided intake";
+}
+
+function buildSubmissionBrief(flowId: ContactFlowId, form: ContactFormState, routeDetails: RouteDetailsState) {
+  const trimmedBrief = form.brief.trim();
+  const timelineLabel = getOptionLabel(timelineOptions, form.timeline);
+  const budgetRangeLabel = getOptionLabel(budgetRangeOptions, form.budgetRange);
+
+  if (flowId === "general") {
+    return trimmedBrief;
+  }
+
+  if (flowId === "walls-mailing") {
+    const selectedPreferences = formatOptionLabels(routeDetails.updatePreferences, mailingPreferenceOptions);
+
+    return [
+      "Request: Walls/Devine mailing-list updates routed through CGU intake.",
+      `Requested updates: ${selectedPreferences.length ? selectedPreferences.join(", ") : "General signal updates"}.`,
+      trimmedBrief ? `Note: ${trimmedBrief}` : ""
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+  }
+
+  if (flowId === "walls-booking") {
+    return [
+      `Request: ${buildDisplayInquiryLabel(flowId, form.inquiryType)}.`,
+      routeDetails.bookingLocation.trim() ? `Location: ${routeDetails.bookingLocation.trim()}.` : "",
+      timelineLabel ? `Timing: ${timelineLabel}.` : "",
+      budgetRangeLabel ? `Budget range: ${budgetRangeLabel}.` : "",
+      trimmedBrief ? `Room note: ${trimmedBrief}` : ""
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+  }
+
+  if (flowId === "bong-treatment") {
+    return [
+      "Request: Bong Tour private reading review.",
+      routeDetails.relationshipToProject.trim() ? `Relationship to project: ${routeDetails.relationshipToProject.trim()}.` : "",
+      routeDetails.readerReason.trim() ? `Reader note: ${routeDetails.readerReason.trim()}` : "",
+      trimmedBrief ? `Additional context: ${trimmedBrief}` : ""
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+  }
+
+  return [
+    "Request: Bong Tour partnership conversation.",
+    routeDetails.partnershipFocus ? `Focus: ${getOptionLabel(partnershipFocusOptions, routeDetails.partnershipFocus)}.` : "",
+    timelineLabel ? `Timing: ${timelineLabel}.` : "",
+    budgetRangeLabel ? `Budget range: ${budgetRangeLabel}.` : "",
+    trimmedBrief ? `Partnership note: ${trimmedBrief}` : ""
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetails: RouteDetailsState): ReviewItem[] {
+  const contactValue = [form.name.trim(), form.email.trim()].filter(Boolean).join(" · ") || "Contact details pending";
+  const timelineLabel = getOptionLabel(timelineOptions, form.timeline) || "Timing still flexible";
+  const budgetRangeLabel = getOptionLabel(budgetRangeOptions, form.budgetRange) || "Range still flexible";
+  const displayInquiryLabel = buildDisplayInquiryLabel(flow.id, form.inquiryType);
+
+  if (flow.id === "walls-mailing") {
+    const selectedPreferences = formatOptionLabels(routeDetails.updatePreferences, mailingPreferenceOptions).join(" · ") || "General signal updates";
+
+    return [
+      {
+        label: "Request",
+        value: "Walls/Devine mailing-list request",
+        description: selectedPreferences
+      },
+      {
+        label: "Contact",
+        value: contactValue,
+        description: form.company.trim() || "Direct listener or collaborator route"
+      },
+      {
+        label: "Project",
+        value: form.projectTitle.trim() || "Walls/Devine",
+        description: "Routed through CGU until the dedicated list is live."
+      },
+      {
+        label: "Next move",
+        value: "Manual signal review",
+        description: "CGU reviews this request before any future update goes to this inbox."
+      }
+    ];
+  }
+
+  if (flow.id === "walls-booking") {
+    return [
+      {
+        label: "Room",
+        value: displayInquiryLabel,
+        description: routeDetails.bookingLocation.trim() || "Location still flexible"
+      },
+      {
+        label: "Project",
+        value: form.projectTitle.trim() || "Walls/Devine",
+        description: `${timelineLabel} · ${budgetRangeLabel}`
+      },
+      {
+        label: "Contact",
+        value: contactValue,
+        description: form.company.trim() || "Independent room or direct collaborator route"
+      },
+      {
+        label: "Next move",
+        value: "Booking-fit review",
+        description: "The request stays attached to Volume 1 instead of flattening into a generic calendar flow."
+      }
+    ];
+  }
+
+  if (flow.id === "bong-treatment") {
+    return [
+      {
+        label: "Request",
+        value: "Private reading request",
+        description: routeDetails.relationshipToProject.trim() || "Relationship details arrive in the routed note below."
+      },
+      {
+        label: "Contact",
+        value: contactValue,
+        description: form.company.trim() || "Independent reader or collaborator route"
+      },
+      {
+        label: "Project",
+        value: form.projectTitle.trim() || "Bong Tour",
+        description: "Access is reviewed manually before the protected gate opens."
+      },
+      {
+        label: "Next move",
+        value: "Reader review",
+        description: "Approved readers later use this same email inside the private gate."
+      }
+    ];
+  }
+
+  if (flow.id === "bong-partnership") {
+    return [
+      {
+        label: "Focus",
+        value: getOptionLabel(partnershipFocusOptions, routeDetails.partnershipFocus) || "Bong Tour fit conversation",
+        description: `${timelineLabel} · ${budgetRangeLabel}`
+      },
+      {
+        label: "Contact",
+        value: contactValue,
+        description: form.company.trim() || "Independent partner route"
+      },
+      {
+        label: "Project",
+        value: form.projectTitle.trim() || "Bong Tour",
+        description: "Production, soundtrack, and collector-world context stay attached to the film."
+      },
+      {
+        label: "Next move",
+        value: "CGU partnership routing",
+        description: "The fit is reviewed before any scheduling layer appears."
+      }
+    ];
+  }
+
+  return [
+    {
+      label: "Inquiry type",
+      value: displayInquiryLabel,
+      description: [getOptionLabel(goalOptions, form.goal), getOptionLabel(surfaceOptions, form.surface), getOptionLabel(engagementOptions, form.engagement)]
+        .filter(Boolean)
+        .join(" · ") || "Goal, surface, and engagement stay flexible."
+    },
+    {
+      label: "Project",
+      value: form.projectTitle.trim() || "New project or studio ask",
+      description: `${timelineLabel} · ${budgetRangeLabel}`
+    },
+    {
+      label: "Contact",
+      value: contactValue,
+      description: form.company.trim() || "No company context added yet"
+    },
+    {
+      label: "Next move",
+      value: "CGU review and routing",
+      description: "The routed note stays inside the studio signal flow instead of a scheduling widget."
+    }
+  ];
+}
+
+function validateStep(flow: ContactFlow, stepId: GuidedStepId, form: ContactFormState, routeDetails: RouteDetailsState) {
+  if (stepId === "intent" && (flow.id === "general" || flow.id === "walls-booking") && !form.inquiryType) {
+    return "Choose the closest room before continuing.";
+  }
+
+  if (stepId === "project" && flow.id === "general" && !form.brief.trim()) {
+    return "Leave a clear project note before continuing.";
+  }
+
+  if (stepId === "contact" && (!form.name.trim() || !form.email.trim())) {
+    return "Name and email are required before continuing.";
+  }
+
+  if (stepId === "details") {
+    if (flow.id === "walls-booking" && !form.brief.trim()) {
+      return "Leave the clearest room note you can before continuing.";
+    }
+
+    if (flow.id === "bong-treatment" && !routeDetails.readerReason.trim()) {
+      return "Tell us why this reader needs the private copy before continuing.";
+    }
+
+    if (flow.id === "bong-partnership") {
+      if (!routeDetails.partnershipFocus) {
+        return "Choose the closest Bong Tour lane before continuing.";
+      }
+
+      if (!form.brief.trim()) {
+        return "Leave the clearest film-fit note you can before continuing.";
+      }
+    }
+  }
+
+  if (stepId === "review" && !buildSubmissionBrief(flow.id, form, routeDetails).trim()) {
+    return "Add enough detail for CGU to route the request before sending it.";
+  }
+
+  return "";
+}
+
+export function ContactSection({ headingLevel = "h2", initialSearch = "" }: ContactSectionProps) {
+  const initialPrefill = buildContactPrefill(initialSearch);
+  const [prefill, setPrefill] = useState<ContactPrefill>(initialPrefill);
+  const [form, setForm] = useState<ContactFormState>(() => buildInitialForm(initialPrefill));
+  const [routeDetails, setRouteDetails] = useState<RouteDetailsState>(emptyRouteDetails);
+  const [currentStep, setCurrentStep] = useState(0);
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [feedbackMessage, setFeedbackMessage] = useState("");
+  const lastTrackedStepKeyRef = useRef("");
   const contextBanner = buildContactBanner(prefill);
+  const activeFlow = buildContactFlow(prefill);
+  const activeStep = activeFlow.steps[Math.min(currentStep, activeFlow.steps.length - 1)];
+  const reviewItems = buildReviewItems(activeFlow, form, routeDetails);
+  const submissionBrief = buildSubmissionBrief(activeFlow.id, form, routeDetails);
+  const loadedRouteChip = buildRouteChipLabel(activeFlow.id, prefill);
 
   useEffect(() => {
-    const nextPrefill = buildContactPrefill(window.location.search);
+    const nextPrefill = buildContactPrefill(initialSearch);
     setPrefill(nextPrefill);
     setForm(buildInitialForm(nextPrefill));
-  }, []);
+    setRouteDetails(emptyRouteDetails);
+    setCurrentStep(0);
+    setSubmissionState("idle");
+    setFeedbackMessage("");
+    lastTrackedStepKeyRef.current = "";
+
+    void trackAnalyticsEvent("contact_guided_context_detected", {
+      contextId: nextPrefill.contextId || "default",
+      projectTitle: nextPrefill.projectTitle || "none",
+      inquiryType: nextPrefill.inquiryType || "none"
+    });
+  }, [initialSearch]);
+
+  useEffect(() => {
+    const trackingKey = `${activeFlow.id}:${activeStep.id}:${currentStep}`;
+
+    if (lastTrackedStepKeyRef.current === trackingKey) {
+      return;
+    }
+
+    lastTrackedStepKeyRef.current = trackingKey;
+
+    void trackAnalyticsEvent("contact_guided_step_started", {
+      contextId: prefill.contextId || "default",
+      projectTitle: form.projectTitle.trim() || prefill.projectTitle || "none",
+      inquiryType: form.inquiryType || prefill.inquiryType || "none",
+      stepId: activeStep.id,
+      stepIndex: currentStep + 1
+    });
+  }, [activeFlow.id, activeStep.id, currentStep, form.inquiryType, form.projectTitle, prefill.contextId, prefill.inquiryType, prefill.projectTitle]);
 
   function handleFieldChange(event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
     const { name, value } = event.target;
+
+    if (name === "inquiryType" && value && value !== form.inquiryType) {
+      void trackAnalyticsEvent("contact_guided_inquiry_type_selected", {
+        contextId: prefill.contextId || "default",
+        projectTitle: form.projectTitle.trim() || prefill.projectTitle || "none",
+        inquiryType: value
+      });
+    }
 
     setSubmissionState("idle");
     setFeedbackMessage("");
     setForm((current) => ({ ...current, [name]: value }));
   }
 
+  function handleRouteDetailChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+    const { name, value } = event.target;
+
+    setSubmissionState("idle");
+    setFeedbackMessage("");
+    setRouteDetails((current) => ({ ...current, [name]: value }));
+  }
+
+  function handleToggleUpdatePreference(value: string) {
+    setSubmissionState("idle");
+    setFeedbackMessage("");
+    setRouteDetails((current) => ({
+      ...current,
+      updatePreferences: current.updatePreferences.includes(value)
+        ? current.updatePreferences.filter((entry) => entry !== value)
+        : [...current.updatePreferences, value]
+    }));
+  }
+
+  function trackStepCompleted(stepId: GuidedStepId) {
+    void trackAnalyticsEvent("contact_guided_step_completed", {
+      contextId: prefill.contextId || "default",
+      projectTitle: form.projectTitle.trim() || prefill.projectTitle || "none",
+      inquiryType: form.inquiryType || prefill.inquiryType || "none",
+      stepId,
+      stepIndex: currentStep + 1
+    });
+  }
+
+  function handleBack() {
+    setSubmissionState("idle");
+    setFeedbackMessage("");
+    setCurrentStep((step) => Math.max(step - 1, 0));
+  }
+
+  function handleContinue() {
+    const validationMessage = validateStep(activeFlow, activeStep.id, form, routeDetails);
+
+    if (validationMessage) {
+      setSubmissionState("error");
+      setFeedbackMessage(validationMessage);
+      return;
+    }
+
+    trackStepCompleted(activeStep.id);
+    setSubmissionState("idle");
+    setFeedbackMessage("");
+    setCurrentStep((step) => Math.min(step + 1, activeFlow.steps.length - 1));
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!form.name.trim() || !form.email.trim() || !form.brief.trim()) {
+    const validationMessage = validateStep(activeFlow, activeStep.id, form, routeDetails);
+
+    if (validationMessage) {
       setSubmissionState("error");
-      setFeedbackMessage("Name, email, and a clear project note are required before sending the intake.");
+      setFeedbackMessage(validationMessage);
       return;
     }
 
@@ -239,9 +986,9 @@ export function ContactSection({ headingLevel = "h2" }: ContactSectionProps) {
         email: form.email,
         company: form.company,
         projectTitle: form.projectTitle,
-        brief: form.brief,
+        brief: submissionBrief,
         source: prefill.contextId ? `contact:${prefill.contextId}` : "contact-page",
-        interest: [form.projectTitle.trim(), inquiryTypeLabel || "Guided intake"].filter(Boolean).join(" · "),
+        interest: [form.projectTitle.trim(), buildInterestLabel(activeFlow.id, inquiryTypeLabel)].filter(Boolean).join(" · "),
         contextId: prefill.contextId,
         inquiryType: form.inquiryType,
         inquiryTypeLabel,
@@ -257,25 +1004,543 @@ export function ContactSection({ headingLevel = "h2" }: ContactSectionProps) {
         budgetRangeLabel
       });
 
+      void trackAnalyticsEvent("contact_guided_submit_success", {
+        contextId: prefill.contextId || "default",
+        projectTitle: form.projectTitle.trim() || prefill.projectTitle || "none",
+        inquiryType: form.inquiryType || prefill.inquiryType || "none",
+        stepId: activeStep.id
+      });
+
       setForm(buildInitialForm(prefill));
+      setRouteDetails(emptyRouteDetails);
+      setCurrentStep(0);
       setSubmissionState("success");
       setFeedbackMessage("Intake received. It is now sitting inside the CGU signal flow for review and routing.");
     } catch (error) {
+      void trackAnalyticsEvent("contact_guided_submit_error", {
+        contextId: prefill.contextId || "default",
+        projectTitle: form.projectTitle.trim() || prefill.projectTitle || "none",
+        inquiryType: form.inquiryType || prefill.inquiryType || "none",
+        stepId: activeStep.id,
+        errorMessage: error instanceof Error ? error.message : "unknown_error"
+      });
+
       setSubmissionState("error");
       setFeedbackMessage(error instanceof Error ? error.message : "Could not send the intake right now.");
     }
   }
 
-  const contextNote =
-    prefill.contextId === "walls-devine-booking"
-      ? "Walls/Devine booking context is loaded. Leave the room type, timing, and booking note here and it will stay inside the CGU domain."
-      : prefill.contextId === "walls-devine-mailing-list"
-        ? "Walls/Devine mailing-list request context is loaded. Leave the best contact details here and this request will be routed through the CGU intake flow for drop alerts, listening-room updates, and collector unlock notices."
-        : prefill.contextId === "bong-tour-treatment-access"
-          ? "Bong Tour treatment access context is loaded. Use this route to introduce a new reader before the private gate opens, or confirm the email that should be approved."
-          : prefill.contextId === "bong-tour-intake"
-            ? "Bong Tour intake context is loaded. Leave the clearest soundtrack, production, or partnership note here so the screenplay world can route cleanly."
-      : "Use this intake to route booking asks, release-world collaborations, soundtrack conversations, and system builds through one clear entry point.";
+  function renderChoiceGrid(options: ContactChoiceOption[], value: string, onSelect: (nextValue: string) => void) {
+    return (
+      <div className="cg-contact__choice-grid">
+        {options.map((option) => {
+          const isActive = value === option.value;
+
+          return (
+            <button
+              key={option.value}
+              type="button"
+              className={`cg-contact__choice${isActive ? " cg-contact__choice--active" : ""}`}
+              onClick={() => onSelect(option.value)}
+              aria-pressed={isActive}
+            >
+              <span className="cg-contact__choice-label">{option.label}</span>
+              <span className="cg-contact__choice-description">{option.description}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+
+  function renderMultiChoiceGrid(options: ContactChoiceOption[], values: string[]) {
+    return (
+      <div className="cg-contact__choice-grid">
+        {options.map((option) => {
+          const isActive = values.includes(option.value);
+
+          return (
+            <button
+              key={option.value}
+              type="button"
+              className={`cg-contact__choice${isActive ? " cg-contact__choice--active" : ""}`}
+              onClick={() => handleToggleUpdatePreference(option.value)}
+              aria-pressed={isActive}
+            >
+              <span className="cg-contact__choice-label">{option.label}</span>
+              <span className="cg-contact__choice-description">{option.description}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+
+  function renderStepBody() {
+    if (activeStep.id === "intent") {
+      if (activeFlow.id === "general" || activeFlow.id === "walls-booking") {
+        return (
+          <>
+            <fieldset className="cg-contact__fieldset">
+              <legend className="cg-contact__legend">Choose the room</legend>
+              <p className="cg-contact__field-hint">Pick the lane that best fits the first move. You can still clarify the exact shape in the next step.</p>
+              {renderChoiceGrid(inquiryTypeCardOptions, form.inquiryType, (value) => {
+                if (value !== form.inquiryType) {
+                  void trackAnalyticsEvent("contact_guided_inquiry_type_selected", {
+                    contextId: prefill.contextId || "default",
+                    projectTitle: form.projectTitle.trim() || prefill.projectTitle || "none",
+                    inquiryType: value
+                  });
+                }
+
+                setSubmissionState("idle");
+                setFeedbackMessage("");
+                setForm((current) => ({ ...current, inquiryType: value }));
+              })}
+            </fieldset>
+
+            {activeFlow.id === "walls-booking" ? (
+              <div className="cg-contact__affirmation">
+                <strong>Walls/Devine booking route</strong>
+                <p>Use the option above if the room leans more toward listening, screening, or partnership than a standard live booking.</p>
+              </div>
+            ) : null}
+          </>
+        );
+      }
+
+      if (activeFlow.id === "walls-mailing") {
+        return (
+          <div className="cg-contact__affirmation-grid">
+            <article className="cg-contact__affirmation">
+              <strong>Signal route confirmed</strong>
+              <p>This request stays attached to Walls/Devine instead of getting flattened into a generic signup field.</p>
+            </article>
+            <article className="cg-contact__affirmation">
+              <strong>What happens next</strong>
+              <p>CGU reviews this route first, then uses the submitted inbox for future signal updates tied to Volume 1.</p>
+            </article>
+          </div>
+        );
+      }
+
+      if (activeFlow.id === "bong-treatment") {
+        return (
+          <div className="cg-contact__affirmation-grid">
+            <article className="cg-contact__affirmation">
+              <strong>Protected reading path</strong>
+              <p>The treatment stays behind the existing private gate until this reader request is reviewed and approved.</p>
+            </article>
+            <article className="cg-contact__affirmation">
+              <strong>Identity matters</strong>
+              <p>The email you submit here is the same identity that later enters the private gate if the reader is approved.</p>
+            </article>
+          </div>
+        );
+      }
+
+      return (
+        <div className="cg-contact__affirmation-grid">
+          <article className="cg-contact__affirmation">
+            <strong>Film-fit lane confirmed</strong>
+            <p>This path is for production, soundtrack, collector-world, or broader partnership conversations around Bong Tour.</p>
+          </article>
+          <article className="cg-contact__affirmation">
+            <strong>No scheduling layer first</strong>
+            <p>CGU captures the fit and note before deciding whether any later operational handoff is needed.</p>
+          </article>
+        </div>
+      );
+    }
+
+    if (activeStep.id === "project") {
+      return (
+        <>
+          <div className="cg-contact__field-row">
+            <div className="cg-contact__field">
+              <label htmlFor="contact-project-title">Project or release</label>
+              <input
+                id="contact-project-title"
+                name="projectTitle"
+                type="text"
+                placeholder="Walls/Devine, Bong Tour, or project name"
+                value={form.projectTitle}
+                onChange={handleFieldChange}
+              />
+            </div>
+
+            <div className="cg-contact__field">
+              <label htmlFor="contact-goal">Goal</label>
+              <select id="contact-goal" name="goal" value={form.goal} onChange={handleFieldChange}>
+                <option value="">Choose the lead move</option>
+                {goalOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="cg-contact__field-row">
+            <div className="cg-contact__field">
+              <label htmlFor="contact-surface">Surface</label>
+              <select id="contact-surface" name="surface" value={form.surface} onChange={handleFieldChange}>
+                <option value="">Choose the primary surface</option>
+                {surfaceOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="cg-contact__field">
+              <label htmlFor="contact-engagement">Engagement</label>
+              <select id="contact-engagement" name="engagement" value={form.engagement} onChange={handleFieldChange}>
+                <option value="">Choose the lead mode</option>
+                {engagementOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="cg-contact__field-row">
+            <div className="cg-contact__field">
+              <label htmlFor="contact-timeline">Timeline</label>
+              <select id="contact-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
+                <option value="">Choose timing</option>
+                {timelineOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="cg-contact__field">
+              <label htmlFor="contact-budget-range">Budget range</label>
+              <select id="contact-budget-range" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
+                <option value="">Choose a range</option>
+                {budgetRangeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="cg-contact__field cg-contact__field--full">
+            <label htmlFor="contact-brief">{activeFlow.noteLabel}</label>
+            <textarea
+              id="contact-brief"
+              name="brief"
+              rows={7}
+              placeholder={activeFlow.notePlaceholder}
+              value={form.brief}
+              onChange={handleFieldChange}
+              required
+            />
+          </div>
+        </>
+      );
+    }
+
+    if (activeStep.id === "contact") {
+      return (
+        <>
+          <div className="cg-contact__field-row">
+            <div className="cg-contact__field">
+              <label htmlFor="contact-name">Name</label>
+              <input
+                id="contact-name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                placeholder="Full name"
+                value={form.name}
+                onChange={handleFieldChange}
+                required
+              />
+            </div>
+
+            <div className="cg-contact__field">
+              <label htmlFor="contact-email">Email</label>
+              <input
+                id="contact-email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={handleFieldChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="cg-contact__field-row">
+            <div className="cg-contact__field">
+              <label htmlFor="contact-company">{activeFlow.companyLabel}</label>
+              <input
+                id="contact-company"
+                name="company"
+                type="text"
+                autoComplete="organization"
+                placeholder={activeFlow.companyPlaceholder}
+                value={form.company}
+                onChange={handleFieldChange}
+              />
+            </div>
+
+            <div className="cg-contact__field">
+              <label htmlFor="contact-contact-project-title">Project or release</label>
+              <input
+                id="contact-contact-project-title"
+                name="projectTitle"
+                type="text"
+                placeholder="Project, release, or film title"
+                value={form.projectTitle}
+                onChange={handleFieldChange}
+              />
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    if (activeStep.id === "details") {
+      if (activeFlow.id === "walls-mailing") {
+        return (
+          <>
+            <fieldset className="cg-contact__fieldset">
+              <legend className="cg-contact__legend">Choose the updates that matter</legend>
+              <p className="cg-contact__field-hint">Pick one or many. If you skip these, CGU treats this as a general request for Walls/Devine signal updates.</p>
+              {renderMultiChoiceGrid(mailingPreferenceOptions, routeDetails.updatePreferences)}
+            </fieldset>
+
+            <div className="cg-contact__field cg-contact__field--full">
+              <label htmlFor="contact-mailing-note">{activeFlow.noteLabel}</label>
+              <textarea
+                id="contact-mailing-note"
+                name="brief"
+                rows={6}
+                placeholder={activeFlow.notePlaceholder}
+                value={form.brief}
+                onChange={handleFieldChange}
+              />
+            </div>
+          </>
+        );
+      }
+
+      if (activeFlow.id === "walls-booking") {
+        return (
+          <>
+            <div className="cg-contact__field-row">
+              <div className="cg-contact__field">
+                <label htmlFor="contact-booking-location">City or location</label>
+                <input
+                  id="contact-booking-location"
+                  name="bookingLocation"
+                  type="text"
+                  placeholder="City, venue, or working location"
+                  value={routeDetails.bookingLocation}
+                  onChange={handleRouteDetailChange}
+                />
+              </div>
+
+              <div className="cg-contact__field">
+                <label htmlFor="contact-booking-timeline">Timeline</label>
+                <select id="contact-booking-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
+                  <option value="">Choose timing</option>
+                  {timelineOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="cg-contact__field-row">
+              <div className="cg-contact__field">
+                <label htmlFor="contact-booking-budget">Budget range</label>
+                <select id="contact-booking-budget" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
+                  <option value="">Choose a range</option>
+                  {budgetRangeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="cg-contact__field">
+                <label htmlFor="contact-booking-project-title">Project or release</label>
+                <input
+                  id="contact-booking-project-title"
+                  name="projectTitle"
+                  type="text"
+                  placeholder="Walls/Devine or event title"
+                  value={form.projectTitle}
+                  onChange={handleFieldChange}
+                />
+              </div>
+            </div>
+
+            <div className="cg-contact__field cg-contact__field--full">
+              <label htmlFor="contact-booking-note">{activeFlow.noteLabel}</label>
+              <textarea
+                id="contact-booking-note"
+                name="brief"
+                rows={7}
+                placeholder={activeFlow.notePlaceholder}
+                value={form.brief}
+                onChange={handleFieldChange}
+                required
+              />
+            </div>
+          </>
+        );
+      }
+
+      if (activeFlow.id === "bong-treatment") {
+        return (
+          <>
+            <div className="cg-contact__field-row">
+              <div className="cg-contact__field">
+                <label htmlFor="contact-treatment-relationship">Relationship to the project</label>
+                <input
+                  id="contact-treatment-relationship"
+                  name="relationshipToProject"
+                  type="text"
+                  placeholder="Producer, actor, partner, reader, press, or another direct link"
+                  value={routeDetails.relationshipToProject}
+                  onChange={handleRouteDetailChange}
+                />
+              </div>
+
+              <div className="cg-contact__field">
+                <label htmlFor="contact-treatment-project-title">Project or release</label>
+                <input
+                  id="contact-treatment-project-title"
+                  name="projectTitle"
+                  type="text"
+                  placeholder="Bong Tour"
+                  value={form.projectTitle}
+                  onChange={handleFieldChange}
+                />
+              </div>
+            </div>
+
+            <div className="cg-contact__field cg-contact__field--full">
+              <label htmlFor="contact-treatment-reason">Why this reader needs the private copy</label>
+              <textarea
+                id="contact-treatment-reason"
+                name="readerReason"
+                rows={6}
+                placeholder="Why this reader is being introduced and what the next conversation should unlock."
+                value={routeDetails.readerReason}
+                onChange={handleRouteDetailChange}
+                required
+              />
+            </div>
+
+            <div className="cg-contact__field cg-contact__field--full">
+              <label htmlFor="contact-treatment-note">{activeFlow.noteLabel}</label>
+              <textarea
+                id="contact-treatment-note"
+                name="brief"
+                rows={5}
+                placeholder={activeFlow.notePlaceholder}
+                value={form.brief}
+                onChange={handleFieldChange}
+              />
+            </div>
+          </>
+        );
+      }
+
+      return (
+        <>
+          <fieldset className="cg-contact__fieldset">
+            <legend className="cg-contact__legend">Choose the closest Bong Tour lane</legend>
+            <p className="cg-contact__field-hint">Pick the focus that best fits the first conversation. The full note can still span production, soundtrack, and collector-world context.</p>
+            {renderChoiceGrid(partnershipFocusOptions, routeDetails.partnershipFocus, (value) => {
+              setSubmissionState("idle");
+              setFeedbackMessage("");
+              setRouteDetails((current) => ({ ...current, partnershipFocus: value }));
+            })}
+          </fieldset>
+
+          <div className="cg-contact__field-row">
+            <div className="cg-contact__field">
+              <label htmlFor="contact-bong-timeline">Timeline</label>
+              <select id="contact-bong-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
+                <option value="">Choose timing</option>
+                {timelineOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="cg-contact__field">
+              <label htmlFor="contact-bong-budget">Budget range</label>
+              <select id="contact-bong-budget" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
+                <option value="">Choose a range</option>
+                {budgetRangeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="cg-contact__field cg-contact__field--full">
+            <label htmlFor="contact-bong-note">{activeFlow.noteLabel}</label>
+            <textarea
+              id="contact-bong-note"
+              name="brief"
+              rows={7}
+              placeholder={activeFlow.notePlaceholder}
+              value={form.brief}
+              onChange={handleFieldChange}
+              required
+            />
+          </div>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <div className="cg-contact__review-grid" aria-label="Guided intake review summary">
+          {reviewItems.map((item) => (
+            <article key={item.label} className="cg-contact__review-card">
+              <span className="cg-contact__review-label">{item.label}</span>
+              <strong className="cg-contact__review-value">{item.value}</strong>
+              <p className="cg-contact__review-description">{item.description}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="cg-contact__field cg-contact__field--full">
+          <label htmlFor="contact-routed-note">Routed note preview</label>
+          <div id="contact-routed-note" className="cg-contact__brief-preview">
+            {submissionBrief || "Add more detail in the previous steps to generate the routed note preview."}
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <SectionShell id="contact" labelledBy="contact-title" innerClassName="cg-contact__shell">
@@ -315,22 +1580,20 @@ export function ContactSection({ headingLevel = "h2" }: ContactSectionProps) {
           <div className="cg-contact__meta">
             <div className="cg-contact__slots" aria-label="Intake routing note">
               <span>Routing note</span>
-              <p>{contextNote}</p>
+              <p>{activeFlow.routingNote}</p>
             </div>
 
-            {(prefill.projectTitle || prefill.inquiryType) ? (
+            {(prefill.projectTitle || loadedRouteChip) ? (
               <div className="cg-contact__prefill" aria-label="Loaded contact context">
                 {prefill.projectTitle ? <span className="cg-contact__prefill-chip">{prefill.projectTitle}</span> : null}
-                {prefill.inquiryType ? (
-                  <span className="cg-contact__prefill-chip">{getOptionLabel(inquiryTypeOptions, prefill.inquiryType)}</span>
-                ) : null}
+                {loadedRouteChip ? <span className="cg-contact__prefill-chip">{loadedRouteChip}</span> : null}
               </div>
             ) : null}
 
             <ul className="cg-contact__summary" aria-label="What this intake captures">
-              <li>Inquiry type, timing, and range so the request lands in the right lane.</li>
-              <li>Project context and brief so the conversation can start from the real work instead of a blank inbox.</li>
-              <li>Direct contact details kept inside the CGU signal flow rather than a third-party form handoff.</li>
+              {activeFlow.summary.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
 
             <p>
@@ -340,164 +1603,69 @@ export function ContactSection({ headingLevel = "h2" }: ContactSectionProps) {
         </div>
 
         <form className="cg-contact__form" onSubmit={handleSubmit} noValidate aria-busy={submissionState === "submitting"}>
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-name">Name</label>
-              <input
-                id="contact-name"
-                name="name"
-                type="text"
-                autoComplete="name"
-                placeholder="Full name"
-                value={form.name}
-                onChange={handleFieldChange}
-                required
-              />
-            </div>
+          <div className="cg-contact__form-head">
+            <ol className="cg-contact__progress" aria-label="Guided intake steps">
+              {activeFlow.steps.map((step, index) => {
+                const isActive = index === currentStep;
+                const isComplete = index < currentStep;
 
-            <div className="cg-contact__field">
-              <label htmlFor="contact-email">Email</label>
-              <input
-                id="contact-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                value={form.email}
-                onChange={handleFieldChange}
-                required
-              />
-            </div>
-          </div>
+                return (
+                  <li
+                    key={step.id}
+                    className={`cg-contact__progress-step${isActive ? " cg-contact__progress-step--active" : ""}${isComplete ? " cg-contact__progress-step--complete" : ""}`}
+                    aria-current={isActive ? "step" : undefined}
+                  >
+                    <span className="cg-contact__progress-index">{index + 1}</span>
+                    <span className="cg-contact__progress-copy">
+                      <strong>{step.label}</strong>
+                      <small>{step.title}</small>
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
 
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-company">Company or context</label>
-              <input
-                id="contact-company"
-                name="company"
-                type="text"
-                autoComplete="organization"
-                placeholder="Studio, company, or context"
-                value={form.company}
-                onChange={handleFieldChange}
-              />
-            </div>
-
-            <div className="cg-contact__field">
-              <label htmlFor="contact-project-title">Project or release</label>
-              <input
-                id="contact-project-title"
-                name="projectTitle"
-                type="text"
-                placeholder="Walls/Devine, Bong Tour, or project name"
-                value={form.projectTitle}
-                onChange={handleFieldChange}
-              />
+            <div className="cg-contact__step-copy">
+              <span className="cg-contact__step-count">
+                Step {currentStep + 1} of {activeFlow.steps.length}
+              </span>
+              <h3 className="cg-contact__step-title">{activeStep.title}</h3>
+              <p className="cg-contact__step-description">{activeStep.description}</p>
+              <p className="cg-contact__trust-note">{activeFlow.trustNote}</p>
+              <p className="cg-contact__step-helper">{activeStep.helper}</p>
             </div>
           </div>
 
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-inquiry-type">Inquiry type</label>
-              <select id="contact-inquiry-type" name="inquiryType" value={form.inquiryType} onChange={handleFieldChange}>
-                <option value="">Choose the room</option>
-                {inquiryTypeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="cg-contact__field">
-              <label htmlFor="contact-timeline">Timeline</label>
-              <select id="contact-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
-                <option value="">Choose timing</option>
-                {timelineOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-goal">Goal</label>
-              <select id="contact-goal" name="goal" value={form.goal} onChange={handleFieldChange}>
-                <option value="">Choose the lead move</option>
-                {goalOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="cg-contact__field">
-              <label htmlFor="contact-surface">Surface</label>
-              <select id="contact-surface" name="surface" value={form.surface} onChange={handleFieldChange}>
-                <option value="">Choose the primary surface</option>
-                {surfaceOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="cg-contact__field-row">
-            <div className="cg-contact__field">
-              <label htmlFor="contact-engagement">Engagement</label>
-              <select id="contact-engagement" name="engagement" value={form.engagement} onChange={handleFieldChange}>
-                <option value="">Choose the lead mode</option>
-                {engagementOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="cg-contact__field">
-              <label htmlFor="contact-budget-range">Budget range</label>
-              <select id="contact-budget-range" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
-                <option value="">Choose a range</option>
-                {budgetRangeOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="cg-contact__field cg-contact__field--full">
-            <label htmlFor="contact-brief">Project note</label>
-            <textarea
-              id="contact-brief"
-              name="brief"
-              rows={6}
-              placeholder="Scope, room size, desired date, collaborators, links, or the exact conversation you want to have."
-              value={form.brief}
-              onChange={handleFieldChange}
-              required
-            />
-          </div>
+          <div className="cg-contact__step-panel">{renderStepBody()}</div>
 
           {feedbackMessage ? (
-            <p className={`cg-contact__form-status cg-contact__form-status--${submissionState === "success" ? "success" : "error"}`} role="status">
+            <p
+              className={`cg-contact__form-status cg-contact__form-status--${submissionState === "success" ? "success" : "error"}`}
+              role={submissionState === "error" ? "alert" : "status"}
+            >
               {feedbackMessage}
             </p>
           ) : null}
 
           <div className="cg-contact__footer">
-            <Button type="submit" className="cg-contact__submit" disabled={submissionState === "submitting"}>
-              {submissionState === "submitting" ? "Sending intake..." : "Send intake"}
-            </Button>
+            <div className="cg-contact__footer-actions">
+              {currentStep > 0 ? (
+                <Button type="button" variant="ghost" className="cg-contact__nav-button" onClick={handleBack}>
+                  Back
+                </Button>
+              ) : null}
+
+              {currentStep < activeFlow.steps.length - 1 ? (
+                <Button type="button" className="cg-contact__submit" onClick={handleContinue}>
+                  Continue
+                </Button>
+              ) : (
+                <Button type="submit" className="cg-contact__submit" disabled={submissionState === "submitting"}>
+                  {submissionState === "submitting" ? "Sending intake..." : "Send intake"}
+                </Button>
+              )}
+            </div>
+
             <span className="cg-contact__privacy">Your intelligence stays inside the core studio signal flow.</span>
           </div>
         </form>
