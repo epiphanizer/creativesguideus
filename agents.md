@@ -3,6 +3,7 @@
 - Always run `npm run build` before declaring a task complete.
 - Capture build outcomes in handoff notes when reporting status.
 - Keep UI adjustments accessible, checking contrast when adding effects.
+- Master state rule: `../sh_hub/docs/MASTER_STATE.md` is the canonical cross-repo architecture guide for `cgu_master`, `seanhalls_master`, `seanhalls_online`, `sh_hub`, and `appreesh_master`. Read it before changing repo boundaries, Firebase contracts, mirror behavior, intake routing, or shared admin ownership. If any of those change, update that document in the same task.
 - Use [app/admin/agents.md](app/admin/agents.md) before editing the hidden admin route, Firebase auth flow, or Firestore and Storage content contract.
 - Admin recommendation rule: when asked what to work on next for the CGU admin console, review the in-app backlog first. The console now hides any admin surface marked `pending` and parks it in backlog instead of the main workspace.
 - The public `/links` page now reads from Firestore `adminProjects/walls-devine/publicContent/linkHub` through the hidden admin. Keep that route, the admin editor, and `firestore.rules` in sync.
