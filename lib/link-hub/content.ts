@@ -4,6 +4,8 @@ import { albumLaunchCampaignWindow, june30LaunchDateLabel } from "@/lib/launch-s
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
 const defaultUpdatedAt = "";
+const legacyLinkHubTitle = "Jump Through The Active Rooms";
+const legacyLinkHubDescription = "A compact dispatch board for project worlds, direct studio routes, and the live surfaces orbiting Creatives Guide Us.";
 const wallsDevineSignalListHref = buildContactHref({
   pathname: "/contact",
   overrides: {
@@ -180,11 +182,12 @@ function ensureRequiredLinks(links: LinkHubLink[]) {
   ];
 
   requiredLinks.forEach((requiredLink) => {
-    const alreadyPresent = nextLinks.some(
+    const existingIndex = nextLinks.findIndex(
       (link) => link.id === requiredLink.id || link.href.replace(/\/$/, "") === requiredLink.href.replace(/\/$/, "")
     );
 
-    if (alreadyPresent) {
+    if (existingIndex >= 0) {
+      nextLinks = nextLinks.map((link, index) => (index === existingIndex ? normalizeLinkHubLink(requiredLink, index) : link));
       return;
     }
 
@@ -203,8 +206,14 @@ export function normalizeLinkHubContent(content?: Partial<LinkHubContent> | null
 
   return {
     eyebrow: typeof content?.eyebrow === "string" && content.eyebrow.trim() ? content.eyebrow.trim() : defaultLinkHubContent.eyebrow,
-    title: typeof content?.title === "string" && content.title.trim() ? content.title.trim() : defaultLinkHubContent.title,
-    description: typeof content?.description === "string" && content.description.trim() ? content.description.trim() : defaultLinkHubContent.description,
+    title:
+      typeof content?.title === "string" && content.title.trim() && content.title.trim() !== legacyLinkHubTitle
+        ? content.title.trim()
+        : defaultLinkHubContent.title,
+    description:
+      typeof content?.description === "string" && content.description.trim() && content.description.trim() !== legacyLinkHubDescription
+        ? content.description.trim()
+        : defaultLinkHubContent.description,
     updatedAt: typeof content?.updatedAt === "string" && content.updatedAt.trim() ? content.updatedAt.trim() : new Date().toISOString(),
     links
   } satisfies LinkHubContent;

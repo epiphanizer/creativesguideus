@@ -1,5 +1,10 @@
 import type { WallsDevineBookingBannerNote, WallsDevineCollectorHeroNote } from "@/lib/admin/types";
 
+const legacyWallsDevineCollectorBody =
+  "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine";
+const legacyWallsDevineMailingListHelper =
+  "Ask to receive Walls/Devine drop alerts, listening-room updates, and collector unlock notices. Until the dedicated list is live, this request routes through CGU intake.";
+
 export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote = {
   eyebrow: "Collector experience",
   title: "Walls/Devine Volume 1",
@@ -25,16 +30,22 @@ export const defaultWallsDevineBookingBannerNote: WallsDevineBookingBannerNote =
 };
 
 export function normalizeWallsDevineCollectorHeroNote(note?: Partial<WallsDevineCollectorHeroNote> | null): WallsDevineCollectorHeroNote {
+  const nextBody = typeof note?.body === "string" && note.body.trim() ? note.body.trim() : "";
+  const nextMailingListHelper = typeof note?.mailingListHelper === "string" && note.mailingListHelper.trim() ? note.mailingListHelper.trim() : "";
+
   return {
     eyebrow: typeof note?.eyebrow === "string" && note.eyebrow.trim() ? note.eyebrow.trim() : defaultWallsDevineCollectorHeroNote.eyebrow,
     title: typeof note?.title === "string" && note.title.trim() ? note.title.trim() : defaultWallsDevineCollectorHeroNote.title,
     salutation: typeof note?.salutation === "string" && note.salutation.trim() ? note.salutation.trim() : defaultWallsDevineCollectorHeroNote.salutation,
-    body: typeof note?.body === "string" && note.body.trim() ? note.body.trim() : defaultWallsDevineCollectorHeroNote.body,
+    body:
+      nextBody && nextBody !== legacyWallsDevineCollectorBody
+        ? nextBody
+        : defaultWallsDevineCollectorHeroNote.body,
     primaryCtaLabel: typeof note?.primaryCtaLabel === "string" && note.primaryCtaLabel.trim() ? note.primaryCtaLabel.trim() : defaultWallsDevineCollectorHeroNote.primaryCtaLabel,
     secondaryCtaLabel: typeof note?.secondaryCtaLabel === "string" && note.secondaryCtaLabel.trim() ? note.secondaryCtaLabel.trim() : defaultWallsDevineCollectorHeroNote.secondaryCtaLabel,
     mailingListHelper:
-      typeof note?.mailingListHelper === "string" && note.mailingListHelper.trim()
-        ? note.mailingListHelper.trim()
+      nextMailingListHelper && nextMailingListHelper !== legacyWallsDevineMailingListHelper
+        ? nextMailingListHelper
         : defaultWallsDevineCollectorHeroNote.mailingListHelper,
     signatureIntro: typeof note?.signatureIntro === "string" && note.signatureIntro.trim() ? note.signatureIntro.trim() : defaultWallsDevineCollectorHeroNote.signatureIntro,
     journalLabel: typeof note?.journalLabel === "string" && note.journalLabel.trim() ? note.journalLabel.trim() : defaultWallsDevineCollectorHeroNote.journalLabel,
