@@ -1,12 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import workModule from "@/data/work/module.json";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
+import { seanhallsWorkHref } from "@/lib/studio-links";
 
 const iconBySlug = {
   "world-cup-dreams": (
@@ -32,14 +31,13 @@ const iconBySlug = {
 } as const;
 
 const highlightProjects = workModule.studies
-  .filter((study) => Boolean(study.caseStudyPath && study.caseStudyUrl))
+  .filter((study) => Boolean(study.siteHref))
   .slice(0, 3)
   .map((study) => ({
     title: study.title,
     eyebrow: study.eyebrow,
     description: study.description,
     tags: study.tags,
-    caseHref: study.caseStudyPath,
     siteHref: study.siteHref,
     siteLabel: study.siteLabel,
     icon: iconBySlug[study.slug as keyof typeof iconBySlug]
@@ -81,17 +79,15 @@ const launchPrinciples = [
 ];
 
 export function WorkSection() {
-  const router = useRouter();
-
   return (
     <SectionShell id="work" labelledBy="work-title" innerClassName="cg-work">
       <div className="cg-split cg-work__layout">
         <div className="cg-split__lede">
           <SectionHeader
             id="work-title"
-            eyebrow="Client builds"
-            title="Published work with clearer proof"
-            description="These are the case studies that show how product, narrative, and score come together once the work leaves the whiteboard."
+            eyebrow="Selected work"
+            title="Portfolio proof lives quietly on Sean Halls"
+            description="CGU keeps the release worlds out front. Published portfolio proof sits on Sean Halls when someone asks for the broader build record."
             icon={
               <svg viewBox="0 0 24 24">
                 <path d="M4.5 15.5c2.5 0 4.5-2 6-5 1.5 3 3.5 5 6 5" />
@@ -102,16 +98,15 @@ export function WorkSection() {
             iconLabel="Creative release emblem"
           />
           <p>
-            The front page now points to work that can actually be opened, reviewed, and discussed. Each case study shows a different
-            version of the same discipline: make the product clearer, make the story legible, and give the release a rhythm people can follow.
+            The public CGU surface should not split attention with a separate proof archive. When portfolio context matters, it should route
+            outward quietly instead of competing with the live rooms.
           </p>
           <p>
-            Appreesh, Lead Me Guide Me, and World Cup Dreams are the strongest client-facing proof points in the current site, so they now carry
-            more weight in the homepage structure.
+            The shared module still preserves enough signal to syndicate selected projects elsewhere without turning this site into a case-study library.
           </p>
           <div className="cg-split__actions">
-            <Button as="a" href="/work">
-              Open Case Studies
+            <Button as="a" href={seanhallsWorkHref} target="_blank" rel="noreferrer">
+              Open Selected Work
             </Button>
           </div>
         </div>
@@ -148,8 +143,6 @@ export function WorkSection() {
               tags={project.tags}
               icon={project.icon}
               className="cg-work__card"
-              onClick={project.caseHref ? () => router.push(project.caseHref) : undefined}
-              ariaLabel={`Open case study for ${project.title}`}
               footer={
                 project.siteHref ? (
                   <a

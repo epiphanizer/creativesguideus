@@ -7,6 +7,7 @@ import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
 import { getLinkHubContent } from "@/lib/firebase/link-hub-public";
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
+import { seanhallsWorkHref } from "@/lib/studio-links";
 
 function isExternalHref(href: string) {
   return /^(https?:|mailto:|tel:)/i.test(href);
@@ -100,8 +101,10 @@ export function LinkHubLanding() {
 
               <div className="cg-link-hub__meta-links">
                 <Link href="/">Home</Link>
-                <Link href="/work">Work</Link>
                 <Link href="/contact">Contact</Link>
+                <a href={seanhallsWorkHref} target="_blank" rel="noreferrer">
+                  Selected work
+                </a>
               </div>
             </div>
           </div>

@@ -3,7 +3,7 @@
   "sourceRepo": "cgu_master",
   "sourceSiteName": "Creatives Guide Us",
   "sourceSiteUrl": "https://creativesguide.us",
-  "description": "Case-study summaries and outbound links maintained in cgu_master and syndicated into other properties.",
+  "description": "Work summaries and outbound links maintained in cgu_master for syndication into other properties, while public portfolio browsing lives on seanhalls_online.",
   "studies": [
     {
       "slug": "world-cup-dreams",
@@ -13,8 +13,8 @@
       "workIndexDescription": "Athlete-led WordPress system clarifying grant pathways and fueling donor momentum.",
       "tags": ["Nonprofit", "Donations", "Grant Programs", "Athlete Support", "Community"],
       "proof": ["14-week sprint", "WordPress", "$7M+ grants"],
-      "caseStudyPath": "/work/world-cup-dreams",
-      "caseStudyUrl": "https://creativesguide.us/work/world-cup-dreams",
+      "caseStudyPath": "",
+      "caseStudyUrl": "",
       "siteHref": "https://www.worldcupdreams.org",
       "siteLabel": "Visit worldcupdreams.org",
       "previewImageUrl": ""
@@ -27,8 +27,8 @@
       "workIndexDescription": "Gratitude protocol prototype with ritual-first product framing, Solana/Anchor mechanics, and a launch-ready brand kit.",
       "tags": ["Product", "Brand", "Protocol"],
       "proof": ["18-week build", "Next.js + Solana/Anchor", "Pilot-grade runtime"],
-      "caseStudyPath": "/work/appreesh",
-      "caseStudyUrl": "https://creativesguide.us/work/appreesh",
+      "caseStudyPath": "",
+      "caseStudyUrl": "",
       "siteHref": "https://appreesh.org",
       "siteLabel": "Visit appreesh.org",
       "previewImageUrl": ""
@@ -41,8 +41,8 @@
       "workIndexDescription": "SwiftUI scripture companion aligning daily meditations with choir rehearsal flows.",
       "tags": ["Product", "Music", "Story"],
       "proof": ["12-week beta", "SwiftUI iOS", "Product · UX · Score"],
-      "caseStudyPath": "/work/lead-me-guide-me",
-      "caseStudyUrl": "https://creativesguide.us/work/lead-me-guide-me",
+      "caseStudyPath": "",
+      "caseStudyUrl": "",
       "siteHref": "https://leadmeguideme.org",
       "siteLabel": "Visit leadmeguideme.org",
       "previewImageUrl": ""

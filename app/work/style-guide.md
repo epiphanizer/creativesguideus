@@ -8,7 +8,7 @@ The work module is a separate proof surface, not the emotional front door of the
 
 - Lead with concise proof and partner clarity.
 - Keep summary cards short enough to syndicate into other properties.
-- Preserve outbound links to live sites and links back to full case studies in `cgu_master`.
+- Preserve outbound links to live sites. Public portfolio browsing should hand off to `seanhalls_online`, not back into `cgu_master` case-study routes.
 
 ## Sharing Contract
 
@@ -20,4 +20,4 @@ The work module is a separate proof surface, not the emotional front door of the
 
 - Precise, legible, and measured.
 - More proof-oriented than the album or screenplay pages, but never generic agency-speak.
-- Keep technical detail in the case studies; keep the shared module concise.
+- Keep the shared module concise and syndicated-friendly; deeper proof belongs on the Sean Halls work surface, not as a competing CGU route.

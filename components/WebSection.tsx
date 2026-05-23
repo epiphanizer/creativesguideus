@@ -1,6 +1,5 @@
 import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
-import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
@@ -119,9 +118,6 @@ export function WebSection() {
             <ContactModalLink href={platformConversationHref} buttonVariant="primary">
               Forge Your Platform
             </ContactModalLink>
-            <Button as="a" href="/work" variant="ghost">
-              Review the Outcomes
-            </Button>
           </div>
         </div>
 

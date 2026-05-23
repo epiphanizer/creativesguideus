@@ -1,0 +1,1 @@
+export const seanhallsWorkHref = "https://seanhalls.online/work";
