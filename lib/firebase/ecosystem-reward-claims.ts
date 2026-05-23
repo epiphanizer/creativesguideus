@@ -71,8 +71,8 @@ export async function createEcosystemRewardClaim(input: EcosystemRewardClaimInpu
   const collectorId = normalizeCollectorId(input.collectorId);
   const walletAddress = normalizeWalletAddress(input.walletAddress);
 
-  if (!email && !collectorId && !walletAddress) {
-    throw new Error("Drop an email, Collector ID, or wallet so we can route the reward.");
+  if (!email) {
+    throw new Error("Drop your email so we can route this reward.");
   }
 
   if (email && !isValidEmail(email)) {

@@ -21,33 +21,40 @@ const gateways = [
     image: volOneImage,
     alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls",
-    external: false
+     external: false,
+     launchLabel: null,
+     launchDate: null,
+     launchNote: null
   },
   {
     eyebrow: "Screenplay portal",
-    descriptor: "Poster world · private gate · cue rooms",
+    descriptor: "Blackout preview · June 30 · cue rooms",
     title: "Bong Tour",
-    description: "Enter the poster world, private treatment gate, and cue rooms orbiting the record and score.",
+    description: "The portal is previewable now, but the official opening lands June 30. Poster world, private reading path, and cue rooms stay visible without pretending the launch is already here.",
     href: "/bong-tour",
-    entryLabel: "Enter Bong Tour",
-    entryMeta: "Poster World · Treatment Gate · Cue Rooms",
+    entryLabel: "Preview Bong Tour",
+    entryMeta: "Coming Soon · June 30 · Clickable preview",
     image: posterImage,
     alt: "Bong Tour poster artwork",
     tone: "bong",
-    external: false
+    external: false,
+    launchLabel: "Coming Soon",
+    launchDate: "June 30",
+    launchNote: "Clickable preview"
   },
   {
-    eyebrow: "Gratitude economy portal",
-    descriptor: "Tribute token · vault ledger · DAO charter",
+    eyebrow: "Cryptographic layer",
+    descriptor: "Blackout preview · June 30 · future airdrops",
     title: "Appreesh",
-    description: "On-chain appreciation. Send tributes, raise the heat, and let the good vibes flow.",
+    description: "CGU keeps the live reward path first. Appreesh stays wired as the future cryptographic layer, with the public blackout preview opening wider on June 30.",
     href: "https://appreesh.org",
-    entryLabel: "Enter Appreesh",
-    entryMeta: "Tribute · Heat · Vault · DAO",
-    imageSrc: "/appreesh.png",
-    alt: "Appreesh logo mark",
+    entryLabel: "Preview Appreesh",
+    entryMeta: "Coming Soon · June 30 · CGU reward bridge",
     tone: "appreesh",
-    external: true
+    external: true,
+    launchLabel: "Coming Soon",
+    launchDate: "June 30",
+    launchNote: "Clickable preview"
   }
 ] as const;
 
@@ -56,7 +63,8 @@ export default function HomePage() {
     <main className="cg-page cg-home-page" id="hero">
       <section className="cg-home-gate" aria-label="Featured project gateways">
         {gateways.map((gateway) => {
-          const portalClassName = `cg-home-gate__portal cg-home-gate__portal--${gateway.tone}`;
+          const portalClassName = `cg-home-gate__portal cg-home-gate__portal--${gateway.tone}${gateway.launchLabel ? " cg-home-gate__portal--prelaunch" : ""}`;
+          const hasVisualImage = "image" in gateway;
 
           const portalContent = (
             <>
@@ -73,24 +81,27 @@ export default function HomePage() {
 
               <div className="cg-home-gate__portal-stage">
                 <div className="cg-home-gate__portal-image-link" aria-hidden="true">
-                  {"imageSrc" in gateway ? (
-                    <Image
-                      src={gateway.imageSrc}
-                      alt={gateway.alt}
-                      width={160}
-                      height={160}
-                      priority
-                      className="cg-home-gate__portal-image"
-                    />
-                  ) : (
-                    <Image
-                      src={gateway.image}
-                      alt={gateway.alt}
-                      priority
-                      sizes="(max-width: 959px) 86vw, 40vw"
-                      className="cg-home-gate__portal-image"
-                    />
-                  )}
+                  <div className={`cg-home-gate__portal-visual${hasVisualImage ? "" : " cg-home-gate__portal-visual--placeholder"}`}>
+                    {"image" in gateway ? (
+                      <Image
+                        src={gateway.image}
+                        alt={gateway.alt}
+                        priority
+                        sizes="(max-width: 959px) 86vw, 40vw"
+                        className="cg-home-gate__portal-image"
+                      />
+                    ) : (
+                      <div className="cg-home-gate__portal-placeholder" />
+                    )}
+
+                    {gateway.launchLabel ? (
+                      <div className="cg-home-gate__portal-launch-mask">
+                        <span className="cg-home-gate__portal-launch-label">{gateway.launchLabel}</span>
+                        <strong className="cg-home-gate__portal-launch-date">{gateway.launchDate}</strong>
+                        <small className="cg-home-gate__portal-launch-note">{gateway.launchNote}</small>
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
 
                 <p className="cg-home-gate__portal-stage-copy">{gateway.description}</p>

@@ -32,8 +32,8 @@ const modernizationPath = [
 const techProofs = [
   {
     title: "Appreesh.org",
-    eyebrow: "Web3 gratitude economy",
-    summary: "Co-founded crypto-powered gifting platform—smart contracts, on-chain analytics, and community rituals."
+    eyebrow: "Prelaunch gratitude layer",
+    summary: "A ritual-first cryptographic layer staged toward June 30 while CGU keeps live reward capture and later airdrop routing ready."
   },
   {
     title: "Agentic release kits",
@@ -81,7 +81,7 @@ export function TechSection() {
               variant="ghost"
               className="cg-tech__cta"
             >
-              Explore Appreesh.org
+              Preview Appreesh.org
             </Button>
             <ContactModalLink href={systemsRoadmapHref} buttonVariant="secondary">
               Build Your Systems Roadmap

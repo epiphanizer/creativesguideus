@@ -103,7 +103,7 @@ export function EcosystemRewardClaimCard({ reward, source, unlocked, className }
               inputMode="email"
               autoCapitalize="none"
               spellCheck={false}
-              required={!collectorId.trim() && !walletAddress.trim()}
+              required
               disabled={submissionState === "submitting"}
             />
           </label>
@@ -119,7 +119,6 @@ export function EcosystemRewardClaimCard({ reward, source, unlocked, className }
               autoComplete="off"
               autoCapitalize="none"
               spellCheck={false}
-              required={!email.trim() && !walletAddress.trim()}
               disabled={submissionState === "submitting"}
             />
           </label>
