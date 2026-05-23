@@ -1,9 +1,9 @@
 import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
-import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { Tag } from "@/components/ui/Tag";
+import { albumLaunchCampaignWindow, june30LaunchDateLabel } from "@/lib/launch-state";
 
 const systemsRoadmapHref = buildContactHref({
   overrides: {
@@ -11,6 +11,17 @@ const systemsRoadmapHref = buildContactHref({
     goal: "systems",
     surface: "internal-platform",
     engagement: "systems-layer"
+  }
+});
+const appreeshPreviewHref = buildContactHref({
+  pathname: "/contact",
+  overrides: {
+    context: "appreesh-preview",
+    inquiryType: "mailing-list",
+    project: "Appreesh",
+    surface: "product-app",
+    sourceRoute: "/",
+    campaignWindow: albumLaunchCampaignWindow
   }
 });
 
@@ -31,9 +42,9 @@ const modernizationPath = [
 
 const techProofs = [
   {
-    title: "Appreesh.org",
+    title: "Appreesh preview",
     eyebrow: "Prelaunch gratitude layer",
-    summary: "A ritual-first cryptographic layer staged toward June 30 while CGU keeps live reward capture and later airdrop routing ready."
+    summary: `A ritual-first cryptographic layer staged toward ${june30LaunchDateLabel} while CGU keeps preview interest, launch-window routing, and the live reward path internal for now.`
   },
   {
     title: "Agentic release kits",
@@ -73,16 +84,9 @@ export function TechSection() {
             We migrate legacy stacks, prototype emerging tech, and weave automation so teams stay focused on commanding the market.
           </p>
           <div className="cg-tech__actions">
-            <Button
-              as="a"
-              href="https://appreesh.org"
-              target="_blank"
-              rel="noreferrer"
-              variant="ghost"
-              className="cg-tech__cta"
-            >
-              Preview Appreesh.org
-            </Button>
+            <ContactModalLink href={appreeshPreviewHref} buttonVariant="ghost">
+              Request Appreesh Notice
+            </ContactModalLink>
             <ContactModalLink href={systemsRoadmapHref} buttonVariant="secondary">
               Build Your Systems Roadmap
             </ContactModalLink>

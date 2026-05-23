@@ -34,6 +34,13 @@ service cloud.firestore {
           'timelineLabel',
           'budgetRange',
           'budgetRangeLabel',
+          'sourceRoute',
+          'campaignWindow',
+          'wantsWallsDevineUpdates',
+          'wantsBongTourLaunchNotice',
+          'wantsAppreeshLaunchNotice',
+          'joinedBeforeJune30',
+          'airdropCandidate',
           'createdAt',
           'updatedAt',
           'status',
@@ -93,6 +100,20 @@ service cloud.firestore {
           (request.resource.data.budgetRange is string && request.resource.data.budgetRange.size() <= 80)) &&
         (!request.resource.data.keys().hasAny(['budgetRangeLabel']) ||
           (request.resource.data.budgetRangeLabel is string && request.resource.data.budgetRangeLabel.size() <= 120)) &&
+        (!request.resource.data.keys().hasAny(['sourceRoute']) ||
+          (request.resource.data.sourceRoute is string && request.resource.data.sourceRoute.size() <= 240)) &&
+        (!request.resource.data.keys().hasAny(['campaignWindow']) ||
+          (request.resource.data.campaignWindow is string && request.resource.data.campaignWindow.size() <= 80)) &&
+        (!request.resource.data.keys().hasAny(['wantsWallsDevineUpdates']) ||
+          request.resource.data.wantsWallsDevineUpdates is bool) &&
+        (!request.resource.data.keys().hasAny(['wantsBongTourLaunchNotice']) ||
+          request.resource.data.wantsBongTourLaunchNotice is bool) &&
+        (!request.resource.data.keys().hasAny(['wantsAppreeshLaunchNotice']) ||
+          request.resource.data.wantsAppreeshLaunchNotice is bool) &&
+        (!request.resource.data.keys().hasAny(['joinedBeforeJune30']) ||
+          request.resource.data.joinedBeforeJune30 is bool) &&
+        (!request.resource.data.keys().hasAny(['airdropCandidate']) ||
+          request.resource.data.airdropCandidate is bool) &&
         request.resource.data.createdAt is string &&
         request.resource.data.createdAt.size() >= 20 &&
         request.resource.data.createdAt.size() <= 40 &&

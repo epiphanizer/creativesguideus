@@ -24,11 +24,17 @@ const routes: RouteCapture[] = [
   { id: "bong-tour", path: "/bong-tour" },
   { id: "bong-tour-treatment", path: "/bong-tour/treatment" },
   { id: "walls-devine", path: "/walls-devine" },
+  { id: "contact", path: "/contact" },
   {
     id: "contact-walls-devine-mailing-list",
     path: "/contact?context=walls-devine-mailing-list&inquiryType=mailing-list&project=Walls%2FDevine",
   },
+  {
+    id: "contact-bong-tour-treatment-access",
+    path: "/contact?context=bong-tour-treatment-access&inquiryType=partnership&project=Bong%20Tour",
+  },
   { id: "links", path: "/links" },
+  { id: "work", path: "/work" },
 ];
 
 const viewports: ViewportPreset[] = [

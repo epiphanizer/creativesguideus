@@ -1,73 +1,119 @@
 import type { LinkHubContent, LinkHubLink } from "@/lib/admin/types";
+import { buildContactHref } from "@/lib/contact-intake-routing";
+import { albumLaunchCampaignWindow, june30LaunchDateLabel } from "@/lib/launch-state";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
 const defaultUpdatedAt = "";
-const wallsDevineMailingListHref = `/contact?${new URLSearchParams({
-  context: "walls-devine-mailing-list",
-  inquiryType: "mailing-list",
-  project: "Walls/Devine"
-}).toString()}`;
+const wallsDevineSignalListHref = buildContactHref({
+  pathname: "/contact",
+  overrides: {
+    context: "walls-devine-mailing-list",
+    inquiryType: "mailing-list",
+    project: "Walls/Devine",
+    surface: "campaign-world",
+    sourceRoute: "/links",
+    campaignWindow: albumLaunchCampaignWindow
+  }
+});
+const appreeshPreviewHref = buildContactHref({
+  pathname: "/contact",
+  overrides: {
+    context: "appreesh-preview",
+    inquiryType: "mailing-list",
+    project: "Appreesh",
+    surface: "product-app",
+    sourceRoute: "/links",
+    campaignWindow: albumLaunchCampaignWindow
+  }
+});
 
-const defaultWallsDevineMailingListLink = {
+const defaultWallsDevineLink = {
+  id: "walls-devine",
+  eyebrow: "Collector experience",
+  title: "Walls/Devine Volume 1",
+  description: "Enter the listening room, release journals, collector path, and the live album world around Volume 1.",
+  href: "/walls-devine",
+  ctaLabel: "Enter Volume 1",
+  isFeatured: true,
+  isActive: true
+} satisfies LinkHubLink;
+
+const defaultWallsDevineSignalListLink = {
   id: "walls-devine-mailing-list",
   eyebrow: "Signal route",
-  title: "Walls/Devine Mailing List",
-  description: "Route drop alerts, listening-room updates, and collector unlock notices through the CGU intake flow.",
-  href: wallsDevineMailingListHref,
-  ctaLabel: "Join mailing list",
-  isFeatured: false,
+  title: "Join Volume 1 Signal List",
+  description: `Route listening-room updates, collector unlock notices, and the ${june30LaunchDateLabel} bridge through the CGU intake flow.`,
+  href: wallsDevineSignalListHref,
+  ctaLabel: "Join signal list",
+  isFeatured: true,
   isActive: true
 } satisfies LinkHubLink;
 
 const defaultWallsDevineMerchLink = {
   id: "walls-devine-merch-shop",
   eyebrow: "Merch shop",
-  title: "Walls/Devine Shop",
+  title: "Shop Volume 1 Merch",
   description: "Open the Fourthwall merch room for Volume 1 apparel, printed goods, and release-world objects.",
   href: wallsDevineMerchShopHref,
   ctaLabel: "Open merch shop",
-  isFeatured: true,
+  isFeatured: false,
   isActive: true
 } satisfies LinkHubLink;
 
+const defaultBongTourLink = {
+  id: "bong-tour",
+  eyebrow: "Screenplay portal",
+  title: "Bong Tour",
+  description: `Preview the poster, logline, and launch lane now. The private treatment opens ${june30LaunchDateLabel}.`,
+  href: "/bong-tour",
+  ctaLabel: "Preview Bong Tour",
+  isFeatured: false,
+  isActive: true
+} satisfies LinkHubLink;
+
+const defaultAppreeshPreviewLink = {
+  id: "appreesh-preview",
+  eyebrow: "Preview route",
+  title: "Appreesh",
+  description: `Queue the Appreesh preview lane inside CGU now. No external Appreesh handoff before ${june30LaunchDateLabel}.`,
+  href: appreeshPreviewHref,
+  ctaLabel: "Request Appreesh notice",
+  isFeatured: false,
+  isActive: true
+} satisfies LinkHubLink;
+
+const defaultContactLink = {
+  id: "contact",
+  eyebrow: "Direct route",
+  title: "Contact the Studio",
+  description: "Start a build, book a room, or ask for the cleanest next move.",
+  href: "/contact",
+  ctaLabel: "Open contact",
+  isFeatured: false,
+  isActive: true
+} satisfies LinkHubLink;
+
+const canonicalLinkOrder = [
+  "walls-devine",
+  "walls-devine-mailing-list",
+  "walls-devine-merch-shop",
+  "bong-tour",
+  "appreesh-preview",
+  "contact"
+] as const;
+
 export const defaultLinkHubContent: LinkHubContent = {
   eyebrow: "Signal routes",
-  title: "Jump Through The Active Rooms",
-  description: "A compact dispatch board for project worlds, direct studio routes, and the live surfaces orbiting Creatives Guide Us.",
+  title: "Jump Through The Live And Staged Rooms",
+  description: "A compact dispatch board for Volume 1 now, the June 30 openings next, and the calm studio route underneath them.",
   updatedAt: defaultUpdatedAt,
   links: [
-    {
-      id: "walls-devine",
-      eyebrow: "Collector experience",
-      title: "Walls/Devine Volume 1",
-      description: "Enter the listening room, release journals, and collector access around Volume 1.",
-      href: "/walls-devine",
-      ctaLabel: "Enter Volume 1",
-      isFeatured: true,
-      isActive: true
-    },
-    {
-      id: "bong-tour",
-      eyebrow: "Screenplay portal",
-      title: "Bong Tour",
-      description: "Step into the poster world, screenplay portal, and cue deck around the record and score.",
-      href: "/bong-tour",
-      ctaLabel: "Enter Bong Tour",
-      isFeatured: true,
-      isActive: true
-    },
-    defaultWallsDevineMailingListLink,
+    defaultWallsDevineLink,
+    defaultWallsDevineSignalListLink,
     defaultWallsDevineMerchLink,
-    {
-      id: "contact",
-      eyebrow: "Direct route",
-      title: "Contact The Studio",
-      description: "Start a build, book a room, or ask for the cleanest next move.",
-      href: "/contact",
-      ctaLabel: "Open contact",
-      isFeatured: false,
-      isActive: true
-    }
+    defaultBongTourLink,
+    defaultAppreeshPreviewLink,
+    defaultContactLink
   ]
 };
 
@@ -110,12 +156,28 @@ export function normalizeLinkHubLink(link: Partial<LinkHubLink> | null | undefin
   };
 }
 
+function orderCanonicalLinks(links: LinkHubLink[]) {
+  return [...links].sort((left, right) => {
+    const leftIndex = canonicalLinkOrder.indexOf(left.id as (typeof canonicalLinkOrder)[number]);
+    const rightIndex = canonicalLinkOrder.indexOf(right.id as (typeof canonicalLinkOrder)[number]);
+    const normalizedLeft = leftIndex === -1 ? Number.MAX_SAFE_INTEGER : leftIndex;
+    const normalizedRight = rightIndex === -1 ? Number.MAX_SAFE_INTEGER : rightIndex;
+
+    return normalizedLeft - normalizedRight;
+  });
+}
+
 function ensureRequiredLinks(links: LinkHubLink[]) {
   let nextLinks = [...links];
-  const wallsIndex = links.findIndex((link) => link.id === "walls-devine" || link.href === "/walls-devine");
 
-  const requiredLinks = [defaultWallsDevineMailingListLink, defaultWallsDevineMerchLink];
-  let insertedCount = 0;
+  const requiredLinks = [
+    defaultWallsDevineLink,
+    defaultWallsDevineSignalListLink,
+    defaultWallsDevineMerchLink,
+    defaultBongTourLink,
+    defaultAppreeshPreviewLink,
+    defaultContactLink
+  ];
 
   requiredLinks.forEach((requiredLink) => {
     const alreadyPresent = nextLinks.some(
@@ -126,17 +188,12 @@ function ensureRequiredLinks(links: LinkHubLink[]) {
       return;
     }
 
-    const insertionIndex = wallsIndex < 0 ? nextLinks.length : Math.min(wallsIndex + 1 + insertedCount, nextLinks.length);
+    const insertionIndex = nextLinks.length;
     const normalizedLink = normalizeLinkHubLink(requiredLink, insertionIndex);
-    nextLinks = [...nextLinks.slice(0, insertionIndex), normalizedLink, ...nextLinks.slice(insertionIndex)];
-    insertedCount += 1;
+    nextLinks = [...nextLinks, normalizedLink];
   });
 
-  if (wallsIndex < 0) {
-    return nextLinks;
-  }
-
-  return nextLinks;
+  return orderCanonicalLinks(nextLinks);
 }
 
 export function normalizeLinkHubContent(content?: Partial<LinkHubContent> | null): LinkHubContent {

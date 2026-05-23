@@ -12,6 +12,7 @@ import { songPostCards } from "@/components/walls-devine/content";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { buildContactHref } from "@/lib/contact-intake-routing";
+import { albumLaunchCampaignWindow } from "@/lib/launch-state";
 import type { EcosystemRewardId } from "@/lib/ecosystem/reward-catalog";
 import { getWallsDevineBookingBannerNote, getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
@@ -249,6 +250,17 @@ const wallsDevineBookingIntakeHref = buildContactHref({
     surface: "campaign-world"
   }
 });
+const wallsDevineSignalListHref = buildContactHref({
+  pathname: "/contact",
+  overrides: {
+    context: "walls-devine-mailing-list",
+    project: "Walls/Devine",
+    inquiryType: "mailing-list",
+    surface: "campaign-world",
+    sourceRoute: "/walls-devine",
+    campaignWindow: albumLaunchCampaignWindow
+  }
+});
 const wallsDevineListeningRoomHref = `#${wallsDevineListeningRoomAnchorId}`;
 
 export function WallsDevineLanding() {
@@ -385,7 +397,7 @@ export function WallsDevineLanding() {
               eyebrow={collectorHeroNote.eyebrow}
               title={collectorHeroNote.title}
               headingLevel="h1"
-              description="Start with Volume 1 in the listening room, move through the collector grid, and stay with the record as the journals and chapter tiles open."
+              description="Volume 1 is live now: start in the listening room, move through the collector grid, and join the signal list for the June 30 bridge into the next rooms."
             />
 
             <div className="wd-hero__gamification-strip" aria-label="Release details">
@@ -448,6 +460,19 @@ export function WallsDevineLanding() {
                     </Button>
                     <Button
                       as="a"
+                      href={wallsDevineSignalListHref}
+                      variant="secondary"
+                      className="wd-hero__signal-link"
+                      data-analytics-event="walls_devine_cta_click"
+                      data-analytics-param-source="walls_devine"
+                      data-analytics-param-cta="hero_signal_list"
+                      data-analytics-param-destination={wallsDevineSignalListHref}
+                      data-analytics-param-external="false"
+                    >
+                      Join the Volume 1 Signal List
+                    </Button>
+                    <Button
+                      as="a"
                       href={wallsDevineMerchShopHref}
                       variant="ghost"
                       className="wd-hero__signal-link wd-hero__signal-link--subdued"
@@ -462,6 +487,8 @@ export function WallsDevineLanding() {
                       {collectorHeroNote.secondaryCtaLabel}
                     </Button>
                   </div>
+
+                  <p className="wd-hero__signal-helper">{collectorHeroNote.mailingListHelper}</p>
 
                   <div className="wd-hero__grid-preview" aria-label="Collector grid preview">
                     <div className="wd-hero__grid-preview__tiles">

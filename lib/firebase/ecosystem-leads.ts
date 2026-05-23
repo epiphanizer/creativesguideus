@@ -39,6 +39,10 @@ function readOptionalLeadField(value: unknown) {
   return typeof value === "string" ? value : "";
 }
 
+function readOptionalLeadBoolean(value: unknown) {
+  return value === true;
+}
+
 function mapLeadDocument(id: string, data: Partial<Omit<EcosystemLead, "id">>) {
   return {
     id,
@@ -62,6 +66,13 @@ function mapLeadDocument(id: string, data: Partial<Omit<EcosystemLead, "id">>) {
     timelineLabel: readOptionalLeadField(data.timelineLabel),
     budgetRange: readOptionalLeadField(data.budgetRange),
     budgetRangeLabel: readOptionalLeadField(data.budgetRangeLabel),
+    sourceRoute: readOptionalLeadField(data.sourceRoute),
+    campaignWindow: readOptionalLeadField(data.campaignWindow),
+    wantsWallsDevineUpdates: readOptionalLeadBoolean(data.wantsWallsDevineUpdates),
+    wantsBongTourLaunchNotice: readOptionalLeadBoolean(data.wantsBongTourLaunchNotice),
+    wantsAppreeshLaunchNotice: readOptionalLeadBoolean(data.wantsAppreeshLaunchNotice),
+    joinedBeforeJune30: readOptionalLeadBoolean(data.joinedBeforeJune30),
+    airdropCandidate: readOptionalLeadBoolean(data.airdropCandidate),
     createdAt: typeof data.createdAt === "string" ? data.createdAt : "",
     updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : "",
     status: data.status === "new" ? data.status : "new",
@@ -106,6 +117,13 @@ export async function createEcosystemLead(input: EcosystemLeadInput) {
     timelineLabel: "",
     budgetRange: "",
     budgetRangeLabel: "",
+    sourceRoute: "",
+    campaignWindow: "",
+    wantsWallsDevineUpdates: false,
+    wantsBongTourLaunchNotice: false,
+    wantsAppreeshLaunchNotice: false,
+    joinedBeforeJune30: false,
+    airdropCandidate: false,
     createdAt: timestamp,
     updatedAt: timestamp,
     status: "new",

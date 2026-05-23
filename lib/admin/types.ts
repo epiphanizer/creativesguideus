@@ -268,6 +268,13 @@ export type EcosystemLead = {
   timelineLabel: string;
   budgetRange: string;
   budgetRangeLabel: string;
+  sourceRoute: string;
+  campaignWindow: string;
+  wantsWallsDevineUpdates: boolean;
+  wantsBongTourLaunchNotice: boolean;
+  wantsAppreeshLaunchNotice: boolean;
+  joinedBeforeJune30: boolean;
+  airdropCandidate: boolean;
   createdAt: string;
   updatedAt: string;
   status: EcosystemLeadStatus;

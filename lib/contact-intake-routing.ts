@@ -7,6 +7,8 @@ export type ContactRouteOverrides = {
   engagement?: string;
   timeline?: string;
   budgetRange?: string;
+  sourceRoute?: string;
+  campaignWindow?: string;
 };
 
 export type ContactPrefill = {
@@ -18,6 +20,8 @@ export type ContactPrefill = {
   engagement: string;
   timeline: string;
   budgetRange: string;
+  sourceRoute: string;
+  campaignWindow: string;
 };
 
 export const contactQueryKeys = [
@@ -30,7 +34,9 @@ export const contactQueryKeys = [
   "surface",
   "engagement",
   "timeline",
-  "budgetRange"
+  "budgetRange",
+  "sourceRoute",
+  "campaignWindow"
 ] as const;
 
 function toSearchParams(input?: string | URLSearchParams | { toString(): string }) {
@@ -55,6 +61,29 @@ export function normalizeQueryToken(value: string | null) {
     : "";
 }
 
+function normalizeRoutePath(value: string | null) {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  const normalized = value.trim();
+
+  if (!normalized) {
+    return "";
+  }
+
+  if (/^https?:\/\//i.test(normalized)) {
+    try {
+      const parsed = new URL(normalized);
+      return `${parsed.pathname}${parsed.search}`;
+    } catch {
+      return normalized;
+    }
+  }
+
+  return normalized;
+}
+
 export function buildContactPrefill(search: string | URLSearchParams | { toString(): string }): ContactPrefill {
   const params = toSearchParams(search);
 
@@ -66,7 +95,9 @@ export function buildContactPrefill(search: string | URLSearchParams | { toStrin
     surface: normalizeQueryToken(params.get("surface")),
     engagement: normalizeQueryToken(params.get("engagement")),
     timeline: normalizeQueryToken(params.get("timeline")),
-    budgetRange: normalizeQueryToken(params.get("budgetRange"))
+    budgetRange: normalizeQueryToken(params.get("budgetRange")),
+    sourceRoute: normalizeRoutePath(params.get("sourceRoute")),
+    campaignWindow: normalizeQueryToken(params.get("campaignWindow"))
   };
 }
 
@@ -116,7 +147,9 @@ export function buildContactHref({
     ["surface", overrides.surface],
     ["engagement", overrides.engagement],
     ["timeline", overrides.timeline],
-    ["budgetRange", overrides.budgetRange]
+    ["budgetRange", overrides.budgetRange],
+    ["sourceRoute", overrides.sourceRoute],
+    ["campaignWindow", overrides.campaignWindow]
   ];
 
   for (const [key, value] of entries) {

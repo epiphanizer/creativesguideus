@@ -46,7 +46,7 @@ export function LinkHubLanding() {
   }, []);
 
   const activeLinks = useMemo(
-    () => [...linkHub.links].filter((link) => link.isActive).sort((left, right) => Number(right.isFeatured) - Number(left.isFeatured)),
+    () => [...linkHub.links].filter((link) => link.isActive),
     [linkHub.links]
   );
   const featuredLinkCount = useMemo(() => activeLinks.filter((link) => link.isFeatured).length, [activeLinks]);

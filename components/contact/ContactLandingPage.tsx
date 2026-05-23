@@ -36,13 +36,13 @@ export function ContactLandingPage() {
           <div className="cg-contact-landing__copy">
             <p className="cg-contact-landing__eyebrow">Creatives Guide Us</p>
             <h1 id="contact-landing-title" className="cg-contact-landing__title">
-              Active project worlds first. The studio lane sits below.
+              Walls/Devine is live now. The studio lane stays calm underneath.
             </h1>
             <p className="cg-contact-landing__lede">
-              Walls/Devine and Bong Tour stay out front as the live public worlds. This page is the calmer studio layer underneath them: the place to reach the backbone behind the work, start a real conversation, and route the next move without losing context.
+              Walls/Devine is the active public world right now. Bong Tour and Appreesh are staged toward June 30. This page is the calmer studio layer underneath them: the place to reach the backbone behind the work, start a real conversation, and route the next move without losing context.
             </p>
             <p>
-              Use it for direct contact, broader CGU framing, and the connective tissue behind release planning, partnerships, systems builds, and the evolving Appreesh layer.
+              Use it for direct contact, broader CGU framing, and the connective tissue behind release planning, partnerships, systems builds, and the June 30 sequencing window.
             </p>
           </div>
 
@@ -66,7 +66,7 @@ export function ContactLandingPage() {
               headingLevel="h2"
               eyebrow="About us"
               title="A studio for sound, story, signal, and systems."
-              description="Creatives Guide Us supports active project worlds like Walls/Devine, Bong Tour, and Appreesh, then carries the framing, build, and operating structure underneath them."
+              description="Creatives Guide Us supports active worlds like Walls/Devine now, then stages Bong Tour and Appreesh into the next launch window while carrying the framing, build, and operating structure underneath them."
             />
             <p>
               The work can look like a release world, a film partnership, a narrative system, a product surface, or the operational infrastructure that keeps the whole thing from drifting apart. The point is not to separate those lanes too early. The point is to make the right one legible, then build from there.

@@ -5,6 +5,7 @@ import { type FormEvent, useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { buildContactHref } from "@/lib/contact-intake-routing";
+import { albumLaunchCampaignWindow, isBongTourPreview, june30LaunchDateLabel } from "@/lib/launch-state";
 
 type TreatmentPayload = {
   title: string;
@@ -24,16 +25,30 @@ const bongTourTreatmentTravelNotes = [
 
 const treatmentAccessHref = "/api/bong-tour/treatment/access";
 const treatmentContentHref = "/api/bong-tour/treatment/content";
+const wallsDevineSignalListHref = buildContactHref({
+  pathname: "/contact",
+  overrides: {
+    context: "walls-devine-mailing-list",
+    inquiryType: "mailing-list",
+    project: "Walls/Devine",
+    surface: "campaign-world",
+    sourceRoute: "/bong-tour/treatment",
+    campaignWindow: albumLaunchCampaignWindow
+  }
+});
 const bongTourContactHref = buildContactHref({
+  pathname: "/contact",
   overrides: {
     context: "bong-tour-treatment-access",
     project: "Bong Tour",
     inquiryType: "partnership",
     surface: "campaign-world",
-    engagement: "direction"
+    engagement: "direction",
+    sourceRoute: "/bong-tour/treatment",
+    campaignWindow: albumLaunchCampaignWindow
   }
 });
-const bongTourContactCtaLabel = "Request Private Reading Copy";
+const bongTourContactCtaLabel = isBongTourPreview ? "Request Post-Launch Access" : "Request Private Reading Copy";
 const approvedReaderChecklist = [
   "Use the same email already shared through CGU.",
   "Enter the current private password to unlock the treatment.",
@@ -43,6 +58,16 @@ const newReaderChecklist = [
   "Introduce the reader through the CGU contact route first.",
   "Leave enough context for why the treatment access is needed.",
   "Approved readers return here and use that same email at the gate."
+] as const;
+const previewAccessChecklist = [
+  `Use this route now if you need treatment access after ${june30LaunchDateLabel}.`,
+  "Leave enough context for the reader and the next conversation.",
+  `Approved readers return here with the same email after ${june30LaunchDateLabel}.`
+] as const;
+const previewSignalChecklist = [
+  "Walls/Devine remains the live public world right now.",
+  "Use the Volume 1 signal list if you want the June 30 bridge into Bong Tour.",
+  "No screenplay pages are exposed on this public route before the gate opens."
 ] as const;
 
 async function getResponseError(response: Response, fallbackMessage: string) {
@@ -90,7 +115,7 @@ export function BongTourTreatmentGate() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [treatment, setTreatment] = useState<TreatmentPayload | null>(null);
-  const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [isCheckingSession, setIsCheckingSession] = useState(!isBongTourPreview);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingTreatment, setIsLoadingTreatment] = useState(false);
@@ -99,6 +124,10 @@ export function BongTourTreatmentGate() {
   useBodyScrollLock(isModalOpen);
 
   useEffect(() => {
+    if (isBongTourPreview) {
+      return;
+    }
+
     let cancelled = false;
 
     async function checkExistingSession() {
@@ -222,6 +251,79 @@ export function BongTourTreatmentGate() {
   }
 
   const statusLabel = treatment ? "Unlocked" : isCheckingSession ? "Checking access" : "Locked";
+
+  if (isBongTourPreview) {
+    return (
+      <section className="bt-world bt-treatment" aria-labelledby={titleId}>
+        <div className="bt-treatment__shell">
+          <header className="bt-treatment__intro">
+            <p className="bt-section-header__eyebrow">Feature treatment preview</p>
+            <h1 id={titleId}>Bong Tour</h1>
+            <p id={descriptionId} className="bt-treatment__deck">
+              {bongTourTreatmentLogline}
+            </p>
+
+            <div className="bt-treatment__actions">
+              <Button as="a" href="/bong-tour" className="bt-button bt-button--outline">
+                Back to Bong Tour
+              </Button>
+              <Button as="a" href={bongTourContactHref} className="bt-button">
+                {bongTourContactCtaLabel}
+              </Button>
+              <Button as="a" href={wallsDevineSignalListHref} className="bt-button bt-button--outline">
+                Join the Volume 1 Signal List
+              </Button>
+            </div>
+
+            <p className="bt-treatment__meta-line">{`Private treatment opens ${june30LaunchDateLabel}. No screenplay pages are exposed on the public route before then.`}</p>
+          </header>
+
+          <article className="bt-treatment__lock-card">
+            <div className="bt-treatment__lock-grid">
+              <section className="bt-treatment__track">
+                <p className="bt-section-header__eyebrow">Post-launch access</p>
+                <h2>Line up the approved-reader route.</h2>
+                <p>{`Use the contact path now if you need treatment access after the gate opens on ${june30LaunchDateLabel}.`}</p>
+                <div className="bt-world__list-block">
+                  <ul>
+                    {previewAccessChecklist.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bt-treatment__track-actions">
+                  <Button as="a" href={bongTourContactHref} className="bt-button">
+                    {bongTourContactCtaLabel}
+                  </Button>
+                </div>
+              </section>
+
+              <section className="bt-treatment__track bt-treatment__track--secondary">
+                <p className="bt-section-header__eyebrow">Live bridge</p>
+                <h2>Use Volume 1 as the active world now.</h2>
+                <p>The signal list and listening room stay live while Bong Tour waits for the June 30 window.</p>
+                <div className="bt-world__list-block">
+                  <ul>
+                    {previewSignalChecklist.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bt-treatment__track-actions">
+                  <Button as="a" href="/walls-devine" className="bt-button">
+                    Open Walls/Devine
+                  </Button>
+                  <Button as="a" href={wallsDevineSignalListHref} className="bt-button bt-button--outline">
+                    Join the Volume 1 Signal List
+                  </Button>
+                </div>
+              </section>
+            </div>
+          </article>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="bt-world bt-treatment" aria-labelledby={titleId}>

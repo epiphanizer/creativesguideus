@@ -4,7 +4,7 @@ import { BongTourFeature } from "@/components/bong-tour/BongTourFeature";
 
 export const metadata: Metadata = {
   title: "Bong Tour | Creatives Guide Us",
-  description: "Explore the Bong Tour screenplay world, cue rooms, soundtrack bridge, collector reward layer, and request path for private treatment access."
+  description: "Preview the Bong Tour poster world, launch lane, and protected treatment posture while Walls/Devine carries the live bridge into June 30."
 };
 
 export default function BongTourPage() {

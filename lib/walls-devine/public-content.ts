@@ -4,11 +4,11 @@ export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote =
   eyebrow: "Collector experience",
   title: "Walls/Devine Volume 1",
   salutation: "Dear Collector,",
-  body: "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine",
+  body: "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us as Volume 1 lives in public now and the next rooms line up for June 30.\n\nWith gratitude,\nTerry Devine",
   primaryCtaLabel: "Open Listening Room",
   secondaryCtaLabel: "Shop Volume 1 Merch",
   mailingListHelper:
-    "Ask to receive Walls/Devine drop alerts, listening-room updates, and collector unlock notices. Until the dedicated list is live, this request routes through CGU intake.",
+    "Ask to join the Volume 1 Signal List for listening-room updates, collector unlock notices, merch drops, and the June 30 bridge into Bong Tour and Appreesh. Until the dedicated list is live, this request routes through CGU intake.",
   signatureIntro: "With Love From the Room,",
   journalLabel: "From the journals",
   updatedAt: "2026-05-16T00:00:00.000Z"
@@ -17,7 +17,7 @@ export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote =
 export const defaultWallsDevineBookingBannerNote: WallsDevineBookingBannerNote = {
   eyebrow: "Live booking",
   title: "Bring Walls/Devine into the room.",
-  description: "Use this lane for listening sessions, screenings, live bookings, and partnership conversations around Volume 1.",
+  description: "Use this lane for listening sessions, screenings, live bookings, and partnership conversations around the active Volume 1 world.",
   primaryCtaLabel: "Book Walls/Devine",
   secondaryCtaLabel: "Shop Volume 1 Merch",
   meta: "Listening sessions · Screenings · Partnerships",

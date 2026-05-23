@@ -4,7 +4,7 @@ import { BongTourTreatmentGate } from "@/components/bong-tour/BongTourTreatmentG
 
 export const metadata: Metadata = {
   title: "Bong Tour Treatment | Creatives Guide Us",
-  description: "Private Bong Tour treatment access for approved readers, collaborators, and soundtrack partners.",
+  description: "Preview the protected Bong Tour treatment route. No screenplay pages are exposed publicly before the June 30 gate opens.",
   robots: {
     index: false,
     follow: false

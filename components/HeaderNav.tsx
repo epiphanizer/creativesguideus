@@ -175,37 +175,39 @@ export function HeaderNav() {
           <span className="cg-header__menu-toggle-label">Menu</span>
         </button>
         <div className={["cg-header__menu", isMenuOpen ? "cg-header__menu--open" : ""].filter(Boolean).join(" ")}>
-          <nav className="cg-header__nav" aria-label="Primary" id="primary-navigation">
-            <ul className="cg-header__list">
-              {activeAnchors.map((anchor) => (
-                <li key={anchor.id ?? anchor.href ?? anchor.label} className="cg-header__item">
-                  <a
-                    href={anchor.id ? `#${anchor.id}` : anchor.href ?? "/"}
-                    className={[
-                      "cg-header__link",
-                      anchor.id && activeId === anchor.id ? "cg-header__link--active" : "",
-                      anchor.href && pathname === anchor.href ? "cg-header__link--active" : ""
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      if (anchor.id) {
-                        handleNavigate(anchor.id);
-                        return;
-                      }
+          {activeAnchors.length ? (
+            <nav className="cg-header__nav" aria-label="Primary" id="primary-navigation">
+              <ul className="cg-header__list">
+                {activeAnchors.map((anchor) => (
+                  <li key={anchor.id ?? anchor.href ?? anchor.label} className="cg-header__item">
+                    <a
+                      href={anchor.id ? `#${anchor.id}` : anchor.href ?? "/"}
+                      className={[
+                        "cg-header__link",
+                        anchor.id && activeId === anchor.id ? "cg-header__link--active" : "",
+                        anchor.href && pathname === anchor.href ? "cg-header__link--active" : ""
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        if (anchor.id) {
+                          handleNavigate(anchor.id);
+                          return;
+                        }
 
-                      if (anchor.href) {
-                        handleLinkNavigate(anchor.href);
-                      }
-                    }}
-                  >
-                    {anchor.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+                        if (anchor.href) {
+                          handleLinkNavigate(anchor.href);
+                        }
+                      }}
+                    >
+                      {anchor.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : null}
           <div className="cg-header__actions">
             {isWallsDevineRoute ? (
               <WallsDevineCollectorAccess

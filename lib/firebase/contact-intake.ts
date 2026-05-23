@@ -24,6 +24,13 @@ export type ContactIntakeInput = {
   timelineLabel?: string;
   budgetRange?: string;
   budgetRangeLabel?: string;
+  sourceRoute?: string;
+  campaignWindow?: string;
+  wantsWallsDevineUpdates?: boolean;
+  wantsBongTourLaunchNotice?: boolean;
+  wantsAppreeshLaunchNotice?: boolean;
+  joinedBeforeJune30?: boolean;
+  airdropCandidate?: boolean;
 };
 
 function getContactCollection() {
@@ -91,6 +98,13 @@ export async function createContactIntake(input: ContactIntakeInput) {
     timelineLabel: cleanString(input.timelineLabel, 120),
     budgetRange: cleanString(input.budgetRange, 80),
     budgetRangeLabel: cleanString(input.budgetRangeLabel, 120),
+    sourceRoute: cleanString(input.sourceRoute, 240),
+    campaignWindow: cleanString(input.campaignWindow, 80),
+    wantsWallsDevineUpdates: input.wantsWallsDevineUpdates === true,
+    wantsBongTourLaunchNotice: input.wantsBongTourLaunchNotice === true,
+    wantsAppreeshLaunchNotice: input.wantsAppreeshLaunchNotice === true,
+    joinedBeforeJune30: input.joinedBeforeJune30 === true,
+    airdropCandidate: input.airdropCandidate === true,
     createdAt: timestamp,
     updatedAt: timestamp,
     status: "new",

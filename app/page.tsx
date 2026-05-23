@@ -1,62 +1,107 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 
 import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
+import { albumLaunchCampaignWindow, cguLaunchState } from "@/lib/launch-state";
+import { seanhallsWorkHref } from "@/lib/studio-links";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
-const homeConversationHref = buildContactHref({});
+const homeConversationHref = buildContactHref({ pathname: "/contact" });
+const homeSignalListHref = buildContactHref({
+  pathname: "/contact",
+  overrides: {
+    context: "walls-devine-mailing-list",
+    inquiryType: "mailing-list",
+    project: "Walls/Devine",
+    surface: "campaign-world",
+    sourceRoute: "/",
+    campaignWindow: albumLaunchCampaignWindow
+  }
+});
+const homeAppreeshPreviewHref = buildContactHref({
+  pathname: "/contact",
+  overrides: {
+    context: "appreesh-preview",
+    inquiryType: "mailing-list",
+    project: "Appreesh",
+    surface: "product-app",
+    sourceRoute: "/",
+    campaignWindow: albumLaunchCampaignWindow
+  }
+});
 
-const gateways = [
+type HomeGateway = {
+  eyebrow: string;
+  descriptor: string;
+  title: string;
+  description: string;
+  href: string;
+  entryLabel: string;
+  entryMeta: string;
+  tone: "walls" | "bong" | "appreesh";
+  external: boolean;
+  isGated: boolean;
+  launchLabel: string | null;
+  launchDate: string | null;
+  launchNote: string | null;
+  image?: StaticImageData;
+  alt?: string;
+};
+
+const gateways: readonly HomeGateway[] = [
   {
     eyebrow: "Collector experience",
-    descriptor: "Collector room · player · journals · merch shop",
+    descriptor: `${cguLaunchState.wallsDevine.label} · player · journals · merch shop`,
     title: "Walls/Devine",
-    description: "Enter Volume 1 through the listening room, release journals, the private collector layer, and the merch route orbiting the record.",
+    description: "Volume 1 is the active public world now: listening room first, collector grid next, then the signal-list bridge into the June 30 expansion.",
     href: "/walls-devine",
     entryLabel: "Enter Volume 1",
-    entryMeta: "Player · Journals · Collector Access · Merch Shop",
+    entryMeta: "Live now · Player · Journals · Collector Access · Merch Shop",
     image: volOneImage,
     alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls",
-     external: false,
-     launchLabel: null,
-     launchDate: null,
-     launchNote: null
+    external: false,
+    isGated: false,
+    launchLabel: null,
+    launchDate: null,
+    launchNote: null
   },
   {
     eyebrow: "Screenplay portal",
-    descriptor: "Blackout preview · June 30 · cue rooms",
+    descriptor: cguLaunchState.bongTour.label,
     title: "Bong Tour",
-    description: "The portal is previewable now, but the official opening lands June 30. Poster world, private reading path, and cue rooms stay visible without pretending the launch is already here.",
+    description: "",
     href: "/bong-tour",
-    entryLabel: "Preview Bong Tour",
-    entryMeta: "Coming Soon · June 30 · Clickable preview",
+    entryLabel: `Bong Tour opens ${cguLaunchState.bongTour.launchDate}`,
+    entryMeta: `${cguLaunchState.bongTour.label} · Preview route stays staged`,
     image: posterImage,
     alt: "Bong Tour poster artwork",
     tone: "bong",
     external: false,
-    launchLabel: "Coming Soon",
-    launchDate: "June 30",
-    launchNote: "Clickable preview"
+    isGated: true,
+    launchLabel: "Opening",
+    launchDate: cguLaunchState.bongTour.launchDate,
+    launchNote: "Preview staged inside CGU"
   },
   {
     eyebrow: "Cryptographic layer",
-    descriptor: "Blackout preview · June 30 · future airdrops",
+    descriptor: cguLaunchState.appreesh.label,
     title: "Appreesh",
-    description: "CGU keeps the live reward path first. Appreesh stays wired as the future cryptographic layer, with the public blackout preview opening wider on June 30.",
-    href: "https://appreesh.org",
-    entryLabel: "Preview Appreesh",
-    entryMeta: "Coming Soon · June 30 · CGU reward bridge",
+    description: "",
+    href: homeAppreeshPreviewHref,
+    entryLabel: `Appreesh opens ${cguLaunchState.appreesh.launchDate}`,
+    entryMeta: `${cguLaunchState.appreesh.label} · No external handoff yet`,
     tone: "appreesh",
-    external: true,
-    launchLabel: "Coming Soon",
-    launchDate: "June 30",
-    launchNote: "Clickable preview"
+    external: false,
+    isGated: true,
+    launchLabel: "Opening",
+    launchDate: cguLaunchState.appreesh.launchDate,
+    launchNote: "Preview queued inside CGU"
   }
-] as const;
+];
 
 export default function HomePage() {
   return (
@@ -64,7 +109,8 @@ export default function HomePage() {
       <section className="cg-home-gate" aria-label="Featured project gateways">
         {gateways.map((gateway) => {
           const portalClassName = `cg-home-gate__portal cg-home-gate__portal--${gateway.tone}${gateway.launchLabel ? " cg-home-gate__portal--prelaunch" : ""}`;
-          const hasVisualImage = "image" in gateway;
+          const hasVisualImage = Boolean(gateway.image);
+          const isGated = gateway.isGated;
 
           const portalContent = (
             <>
@@ -82,10 +128,10 @@ export default function HomePage() {
               <div className="cg-home-gate__portal-stage">
                 <div className="cg-home-gate__portal-image-link" aria-hidden="true">
                   <div className={`cg-home-gate__portal-visual${hasVisualImage ? "" : " cg-home-gate__portal-visual--placeholder"}`}>
-                    {"image" in gateway ? (
+                    {gateway.image ? (
                       <Image
                         src={gateway.image}
-                        alt={gateway.alt}
+                        alt={gateway.alt ?? gateway.title}
                         priority
                         sizes="(max-width: 959px) 86vw, 40vw"
                         className="cg-home-gate__portal-image"
@@ -93,29 +139,41 @@ export default function HomePage() {
                     ) : (
                       <div className="cg-home-gate__portal-placeholder" />
                     )}
-
-                    {gateway.launchLabel ? (
-                      <div className="cg-home-gate__portal-launch-mask">
-                        <span className="cg-home-gate__portal-launch-label">{gateway.launchLabel}</span>
-                        <strong className="cg-home-gate__portal-launch-date">{gateway.launchDate}</strong>
-                        <small className="cg-home-gate__portal-launch-note">{gateway.launchNote}</small>
-                      </div>
-                    ) : null}
                   </div>
                 </div>
-
-                <p className="cg-home-gate__portal-stage-copy">{gateway.description}</p>
-
-                <div className="cg-home-gate__portal-entry" aria-hidden="true">
-                  <span className="cg-home-gate__portal-entry-label">{gateway.entryLabel}</span>
-                  <small className="cg-home-gate__portal-entry-meta">
-                    {gateway.entryMeta}
-                    {gateway.title === "Walls/Devine" ? ` · Shop: ${new URL(wallsDevineMerchShopHref).host}` : ""}
-                  </small>
-                </div>
               </div>
+
+              <p className="cg-home-gate__portal-stage-copy">{gateway.description}</p>
+
+              <div className="cg-home-gate__portal-entry" aria-hidden="true">
+                <span className="cg-home-gate__portal-entry-label">{gateway.entryLabel}</span>
+                <small className="cg-home-gate__portal-entry-meta">
+                  {gateway.entryMeta}
+                  {gateway.title === "Walls/Devine" ? ` · Shop: ${new URL(wallsDevineMerchShopHref).host}` : ""}
+                </small>
+              </div>
+
+              {gateway.launchLabel ? (
+                <div className="cg-home-gate__portal-launch-mask" aria-hidden="true">
+                  <span className="cg-home-gate__portal-launch-label">{gateway.launchLabel}</span>
+                  <strong className="cg-home-gate__portal-launch-date">{gateway.launchDate}</strong>
+                  <small className="cg-home-gate__portal-launch-note">{gateway.launchNote}</small>
+                </div>
+              ) : null}
             </>
           );
+
+          if (isGated) {
+            return (
+              <article
+                key={gateway.title}
+                className={portalClassName}
+                aria-label={gateway.entryLabel}
+              >
+                {portalContent}
+              </article>
+            );
+          }
 
           if (gateway.external) {
             return (
@@ -158,13 +216,75 @@ export default function HomePage() {
       <section className="cg-home-dispatch" aria-labelledby="cg-home-dispatch-title">
         <div className="cg-home-dispatch__copy">
           <p className="cg-home-dispatch__eyebrow">Creatives Guide Us</p>
-          <h1 id="cg-home-dispatch-title">Active project worlds first. The studio lane sits below.</h1>
-          <p>Use this section for direct contact and the broader CGU frame behind Walls/Devine, Bong Tour, and Appreesh.</p>
+          <h1 id="cg-home-dispatch-title">Walls/Devine is live now. Bong Tour and Appreesh open June 30.</h1>
+          <p>Volume 1 is the active public world. The next rooms stay staged behind the June 30 window, while studio proof remains one quiet click away.</p>
         </div>
 
+        <ol className="cg-home-dispatch__route-list" aria-label="Launch sequence routes">
+          <li>
+            <Link href="/walls-devine" className="cg-home-dispatch__route-link">
+              <span className="cg-home-dispatch__route-index">01</span>
+              <span className="cg-home-dispatch__route-copy">
+                <strong>Walls/Devine Volume 1</strong>
+                <small>Live now</small>
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link href={homeSignalListHref} scroll={false} className="cg-home-dispatch__route-link">
+              <span className="cg-home-dispatch__route-index">02</span>
+              <span className="cg-home-dispatch__route-copy">
+                <strong>Join Volume 1 Signal List</strong>
+                <small>Bridge into the June 30 window</small>
+              </span>
+            </Link>
+          </li>
+          <li>
+            <a href={wallsDevineMerchShopHref} target="_blank" rel="noreferrer" className="cg-home-dispatch__route-link">
+              <span className="cg-home-dispatch__route-index">03</span>
+              <span className="cg-home-dispatch__route-copy">
+                <strong>Shop Volume 1 Merch</strong>
+                <small>Fourthwall store</small>
+              </span>
+            </a>
+          </li>
+          <li>
+            <Link href="/bong-tour" className="cg-home-dispatch__route-link">
+              <span className="cg-home-dispatch__route-index">04</span>
+              <span className="cg-home-dispatch__route-copy">
+                <strong>Bong Tour</strong>
+                <small>Opening June 30</small>
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link href={homeAppreeshPreviewHref} scroll={false} className="cg-home-dispatch__route-link">
+              <span className="cg-home-dispatch__route-index">05</span>
+              <span className="cg-home-dispatch__route-copy">
+                <strong>Appreesh</strong>
+                <small>Opening June 30</small>
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link href="/contact" className="cg-home-dispatch__route-link">
+              <span className="cg-home-dispatch__route-index">06</span>
+              <span className="cg-home-dispatch__route-copy">
+                <strong>Contact the Studio</strong>
+                <small>Calm route beneath the active worlds</small>
+              </span>
+            </Link>
+          </li>
+        </ol>
+
         <nav className="cg-home-dispatch__actions" aria-label="Studio routes">
-          <ContactModalLink href={homeConversationHref}>Start a Conversation</ContactModalLink>
+          <ContactModalLink href={homeSignalListHref}>Join Volume 1 Signal List</ContactModalLink>
+          <ContactModalLink href={homeConversationHref} buttonVariant="ghost">Start a Conversation</ContactModalLink>
         </nav>
+
+        <p className="cg-home-dispatch__work-note">
+          Studio proof stays one click away at <a href={seanhallsWorkHref} target="_blank" rel="noreferrer">Selected work</a>.
+        </p>
       </section>
     </main>
   );
