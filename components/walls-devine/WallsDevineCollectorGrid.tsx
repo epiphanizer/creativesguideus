@@ -1393,13 +1393,13 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
                         unlocked={easterEggUnlocked}
                         className="wd-grid-modal__reward-claim"
                       />
-                    ) : (
-                      <section className={cx("wd-grid-modal__easter-egg", easterEggUnlocked && "wd-grid-modal__easter-egg--unlocked")}>
-                        <p className="wd-grid-modal__challenge-title">Easter egg</p>
-                        <h3>{easterEggUnlocked ? activeTile.easterEggTitle : "Locked until the challenge lands"}</h3>
-                        <p>{easterEggUnlocked ? activeTile.easterEggBody : "Beat the game to reveal the hidden note for this chapter."}</p>
+                    ) : easterEggUnlocked ? (
+                      <section className="wd-grid-modal__easter-egg wd-grid-modal__easter-egg--unlocked" aria-live="polite">
+                        <p className="wd-grid-modal__challenge-title">Hidden note</p>
+                        <h3>{activeTile.easterEggTitle}</h3>
+                        <p>{activeTile.easterEggBody}</p>
                       </section>
-                    )}
+                    ) : null}
 
                     <WallsDevineCollectorAccess
                       className="wd-grid-modal__signup"
