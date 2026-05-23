@@ -927,6 +927,14 @@
   text-align: center;
 }
 
+.wd-grid-section__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(108, 5, 8, 0.7);
+}
+
 .wd-grid-section__header h2 {
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -936,6 +944,28 @@
 
 .wd-grid-section__header p {
   color: rgba(27, 21, 21, 0.78);
+}
+
+.wd-grid-section__steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.55rem;
+  width: min(100%, 46rem);
+}
+
+.wd-grid-section__steps span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(156, 7, 5, 0.16);
+  background: rgba(255, 251, 248, 0.78);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(108, 5, 8, 0.76);
 }
 
 .wd-grid {

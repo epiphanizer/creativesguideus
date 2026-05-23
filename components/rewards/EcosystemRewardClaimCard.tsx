@@ -5,6 +5,7 @@ import { type FormEvent, useEffect, useId, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { useTopmostEscape } from "@/hooks/useTopmostEscape";
 import { cx } from "@/lib/cx";
 import type { EcosystemRewardDefinition } from "@/lib/ecosystem/reward-catalog";
 import { trackAnalyticsEvent } from "@/lib/firebase/analytics";
@@ -41,24 +42,7 @@ export function EcosystemRewardClaimCard({ reward, source, unlocked, className }
   }, []);
 
   useBodyScrollLock(airlockOpen);
-
-  useEffect(() => {
-    if (!airlockOpen) {
-      return;
-    }
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setAirlockOpen(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleEscape);
-
-    return () => {
-      window.removeEventListener("keydown", handleEscape);
-    };
-  }, [airlockOpen]);
+  useTopmostEscape(airlockOpen, () => setAirlockOpen(false));
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

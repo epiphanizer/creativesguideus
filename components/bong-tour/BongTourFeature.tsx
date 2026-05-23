@@ -162,39 +162,26 @@ const bongTourHeroSignals = [
   }
 ] as const;
 
-const bongTourRouteSteps = [
+const bongTourBridgeCards = [
   {
-    step: "01",
-    label: "Private reading path",
-    title: "Use the gate after the tone lands.",
-    description: "If the poster and cue rooms fit, the treatment page cleanly splits approved readers from new readers without putting screenplay pages on the public route.",
-    href: bongTourTreatmentHref,
-    ctaLabel: "Open the reader gate"
-  },
-  {
-    step: "02",
-    label: "Cue rooms",
-    title: "Hear the proof fast.",
-    description: "Open the score-led rooms to hear motion, tone, and companion-album logic before deeper story architecture is required.",
+    label: "Score bridge",
+    title: "Let the soundtrack prove motion first.",
+    description:
+      "Cue rooms do the proof work fast: they make tone, momentum, and the companion-world logic legible before anyone needs screenplay pages.",
     href: "#score-sketches",
     ctaLabel: "Enter cue rooms"
   },
   {
-    step: "03",
-    label: "After-hours archive",
-    title: "Treat collectibles like the return visit.",
-    description: "Artifacts and hidden rooms deepen the myth only after the poster world, cue proof, and private reading path have already landed.",
-    href: "#collector-grid",
-    ctaLabel: "Open the archive"
+    label: "Reader gate",
+    title: "Keep the pages private until the fit is real.",
+    description:
+      "The treatment stays behind the gate until the poster and cue world have already landed. Approved readers return through the protected path, and new readers request a private reading copy first.",
+    href: bongTourTreatmentHref,
+    ctaLabel: "Open the private reading path"
   }
 ] as const;
 
 const bongTourCollectorOverview = [
-  {
-    label: "Optional return layer",
-    title: "Let the pitch do the first work.",
-    description: "Keep artifacts downstream of the poster, cue rooms, and private reading path so the page never mistakes collectibles for proof."
-  },
   {
     label: "Artifact logic",
     title: "Objects over merch.",
@@ -1067,22 +1054,19 @@ export function BongTourFeature() {
 
         <section className="bt-bridge" aria-labelledby="bt-bridge-title">
           <header className="bt-section-header">
-            <p className="bt-section-header__eyebrow">Route guide</p>
-            <h2 id="bt-bridge-title">How the world opens</h2>
-            <p>Start at the poster, move through the cue rooms, then use the private reading path if the world fits. The archive stays optional so the pitch never gets buried under extra layers.</p>
+            <p className="bt-section-header__eyebrow">Experience bridge</p>
+            <h2 id="bt-bridge-title">Why the world opens this way</h2>
+            <p>The public route is disciplined on purpose: poster first, score proof second, private pages only after the fit is real. The archive stays downstream so the pitch can breathe on first pass.</p>
           </header>
 
           <div className="bt-bridge__grid">
-            {bongTourRouteSteps.map((step) => (
-              <article key={step.step} className="bt-bridge__card">
-                <div className="bt-bridge__card-head">
-                  <span className="bt-bridge__card-step">{step.step}</span>
-                  <span>{step.label}</span>
-                </div>
-                <strong>{step.title}</strong>
-                <p>{step.description}</p>
-                <a href={step.href} className="bt-bridge__card-link">
-                  {step.ctaLabel}
+            {bongTourBridgeCards.map((card) => (
+              <article key={card.label} className="bt-bridge__card">
+                <span>{card.label}</span>
+                <strong>{card.title}</strong>
+                <p>{card.description}</p>
+                <a href={card.href} className="bt-bridge__card-link">
+                  {card.ctaLabel}
                 </a>
               </article>
             ))}
@@ -1195,20 +1179,6 @@ export function BongTourFeature() {
               </li>
             ))}
           </ul>
-
-          <div className="bt-collectibles__collector-access">
-            <article className="bt-collectibles__collector-access-card">
-              <div className="bt-collectibles__collector-access-copy">
-                <span className="bt-collectibles__badge">After-hours route</span>
-                <h3>Want the artifact drawers and hidden clue rooms?</h3>
-                <p>Open the archive when Bong Tour needs a return visit, not a louder first impression. The live reward spine still resolves through Walls/Devine.</p>
-              </div>
-
-              <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(portalRooms.collector)}>
-                Enter the after-hours archive
-              </Button>
-            </article>
-          </div>
         </section>
 
         <section className="bt-finale" id="bong-tour-intake" aria-labelledby="bt-finale-title">
@@ -1469,16 +1439,8 @@ export function BongTourFeature() {
                               <p>{activeRoom.kicker}</p>
                             </article>
                             <article className="bt-room-modal__cue-note">
-                              <span>Campaign use</span>
+                              <span>Why it matters</span>
                               <p>{activeRoom.description}</p>
-                            </article>
-                            <article className="bt-room-modal__cue-note">
-                              <span>Unlock owner</span>
-                              <p>The Bong Tour secret game routes through the Walls/Devine collector grid so the shared Creatives Guide reward path stays attached to Volume 1.</p>
-                            </article>
-                            <article className="bt-room-modal__cue-note">
-                              <span>Highlight stack</span>
-                              <p>{activeCuePoster.highlights.join(" · ")}</p>
                             </article>
                           </div>
                         </section>

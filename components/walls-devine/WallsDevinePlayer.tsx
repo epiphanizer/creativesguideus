@@ -20,6 +20,7 @@ import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.p
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useTopmostEscape } from "@/hooks/useTopmostEscape";
 import type { SongPlatformLinks, SongPostCard } from "@/components/walls-devine/content";
 import { createListeningRoomVisit } from "@/lib/firebase/listening-room-visits";
 import {
@@ -1035,24 +1036,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   }, [isOpen]);
 
   useBodyScrollLock(isOpen);
-
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        collapsePlayer();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen]);
+  useTopmostEscape(isOpen, collapsePlayer);
 
   useEffect(() => {
     audioRef.current?.load();

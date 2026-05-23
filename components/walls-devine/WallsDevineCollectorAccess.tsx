@@ -5,6 +5,7 @@ import { type ReactNode, useEffect, useId, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { useTopmostEscape } from "@/hooks/useTopmostEscape";
 import { cx } from "@/lib/cx";
 
 import { EcosystemSignupForm } from "./EcosystemSignupForm";
@@ -71,24 +72,7 @@ export function WallsDevineCollectorAccess({
   }, []);
 
   useBodyScrollLock(isOpen);
-
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleEscape);
-
-    return () => {
-      window.removeEventListener("keydown", handleEscape);
-    };
-  }, [isOpen]);
+  useTopmostEscape(isOpen, () => setIsOpen(false));
 
   return (
     <>

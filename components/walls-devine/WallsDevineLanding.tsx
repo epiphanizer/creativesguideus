@@ -549,8 +549,15 @@ export function WallsDevineLanding() {
 
       <SectionShell id="walls-devine-grid" labelledBy="walls-devine-grid-title" className="wd-grid-shell" innerClassName="wd-grid-section">
         <header className="wd-grid-section__header">
+          <p className="wd-grid-section__eyebrow">Collector path</p>
           <h2 id="walls-devine-grid-title">The Collector Grid</h2>
-          <p>Start with the center object, then move through the eight chapter tiles around it. Each unlock points back to the record, the journals, or the room around Volume 1.</p>
+          <p>Open the cover first or tap any chapter tile. Every room loops you back into the record, the hidden note, and the next signal around Volume 1.</p>
+
+          <div className="wd-grid-section__steps" aria-label="Collector path steps">
+            <span>Tap a chapter tile</span>
+            <span>Clear the room challenge</span>
+            <span>Open the hidden note</span>
+          </div>
         </header>
 
         <WallsDevineCollectorGrid tiles={instagramGrid} />

@@ -9,6 +9,7 @@ import { FiLock } from "react-icons/fi";
 import { EcosystemRewardClaimCard } from "@/components/rewards/EcosystemRewardClaimCard";
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { useTopmostEscape } from "@/hooks/useTopmostEscape";
 import { cx } from "@/lib/cx";
 import { getEcosystemRewardDefinition } from "@/lib/ecosystem/reward-catalog";
 
@@ -1287,19 +1288,10 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
       return;
     }
 
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setActiveSlug(null);
-      }
-    };
-
     setEasterEggUnlocked(false);
-    window.addEventListener("keydown", handleEscape);
-
-    return () => {
-      window.removeEventListener("keydown", handleEscape);
-    };
   }, [activeTile]);
+
+  useTopmostEscape(Boolean(activeTile), () => setActiveSlug(null));
 
   return (
     <>
