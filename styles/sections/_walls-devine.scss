@@ -3178,7 +3178,9 @@
   align-items: center;
   justify-content: space-between;
   gap: clamp(0.85rem, 2vw, 1.4rem);
-  width: 100vw;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
   min-height: 5.25rem;
   padding: 0.8rem clamp(1rem, 3vw, 2rem) calc(0.8rem + env(safe-area-inset-bottom, 0px));
   border: 0;
@@ -3202,12 +3204,12 @@
 }
 
 .wd-player-dock__left {
-  flex: 0 1 22rem;
+  flex: 1 1 15rem;
 }
 
 .wd-player-dock__center {
   position: relative;
-  flex: 1 1 32rem;
+  flex: 1.35 1 24rem;
   display: flex;
   align-items: center;
   gap: 0.9rem;
@@ -3215,7 +3217,7 @@
 
 .wd-player-dock__right {
   position: relative;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
   display: flex;
   justify-content: flex-end;
 }
@@ -3446,8 +3448,9 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 0.55rem;
+  min-width: 0;
 }
 
 .wd-player-dock__button {
@@ -3653,6 +3656,27 @@
     left: 0;
     right: auto;
     width: min(100%, 26rem);
+  }
+}
+
+@media (max-width: 1180px) {
+  .wd-player-dock {
+    flex-wrap: wrap;
+  }
+
+  .wd-player-dock__left,
+  .wd-player-dock__center,
+  .wd-player-dock__right {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .wd-player-dock__right {
+    justify-content: flex-start;
+  }
+
+  .wd-player-dock__actions {
+    justify-content: flex-start;
   }
 }
 
@@ -5010,12 +5034,87 @@
   color: rgba(108, 5, 8, 1);
 }
 
+.wd-hero__collector-card {
+  width: 100%;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.wd-hero__collector-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 32rem;
+}
+
+.wd-hero__collector-button.cg-button {
+  width: 100%;
+  min-height: 3.15rem;
+  padding: 0.9rem 1.35rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.wd-hero__collector-button--primary.cg-button {
+  max-width: 32rem;
+  border: 1px solid rgba(126, 7, 5, 0.24);
+  background: linear-gradient(135deg, rgba(126, 7, 5, 0.96), rgba(179, 22, 18, 0.9));
+  box-shadow: 0 12px 24px rgba(87, 7, 11, 0.16);
+  color: rgba(255, 250, 245, 0.98);
+}
+
+.wd-hero__collector-button--primary.cg-button:hover,
+.wd-hero__collector-button--primary.cg-button:focus-visible {
+  background: linear-gradient(135deg, rgba(156, 7, 5, 0.98), rgba(202, 63, 59, 0.92));
+}
+
+.wd-hero__collector-secondary-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.wd-hero__collector-button--secondary.cg-button {
+  border: 1px solid rgba(156, 7, 5, 0.18);
+  background: rgba(255, 252, 249, 0.88);
+  box-shadow: 0 8px 18px rgba(87, 7, 11, 0.08);
+  color: rgba(108, 5, 8, 0.84);
+}
+
+.wd-hero__collector-button--secondary.cg-button:hover,
+.wd-hero__collector-button--secondary.cg-button:focus-visible {
+  border-color: rgba(156, 7, 5, 0.34);
+  background: rgba(253, 254, 254, 0.96);
+}
+
+.wd-hero__collector-button--ghost.cg-button {
+  background: rgba(253, 254, 254, 0.76);
+}
+
+.wd-hero__signal-helper {
+  width: 100%;
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: rgba(27, 21, 21, 0.74);
+  text-align: center;
+}
+
 /* ─── CRO Refactor: Mini Grid Preview Strip ─── */
 
 .wd-hero__grid-preview {
   display: grid;
   gap: 0.75rem;
   width: 100%;
+  justify-items: center;
   padding-top: 0.9rem;
   margin-top: 0.25rem;
   border-top: 1px solid rgba(156, 7, 5, 0.1);
@@ -5023,8 +5122,9 @@
 
 @media (min-width: 780px) {
   .wd-hero__grid-preview {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto auto;
     align-items: center;
+    justify-content: center;
   }
 }
 
@@ -5034,7 +5134,7 @@
   grid-auto-columns: 3.4rem;
   gap: 0.45rem;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
 }
 
 .wd-hero__grid-preview__tile {
@@ -5084,7 +5184,7 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  justify-self: start;
+  justify-self: center;
   gap: 0.22rem;
   transition: color var(--cg-transition-fade);
 }
@@ -5210,12 +5310,95 @@
 }
 
 @media (max-width: 720px) {
-  .wd-hero__letter-actions-row {
-    width: 100%;
+  .wd-hero__collector-secondary-row {
+    grid-template-columns: 1fr;
   }
 
   .wd-hero__letter-cta,
-  .wd-hero__signal-link--subdued {
+  .wd-hero__collector-button.cg-button {
     width: 100%;
   }
+}
+
+:root[data-theme="dark"] .wd-page {
+  --wd-red-980: #f6bbb8;
+  --wd-red-950: #f0a8a4;
+  --wd-red-800: #d7716e;
+  --wd-red-700: #ec9e99;
+  --wd-red-500: #f0b7b3;
+  --wd-red-300: #f6d9d7;
+  --wd-paper: #171010;
+  --wd-paper-soft: #231717;
+  --wd-paper-bright: #2c1c1b;
+  --wd-ink: #fff0ea;
+  --wd-ink-soft: #e4c6bb;
+  --wd-border: rgba(246, 217, 215, 0.16);
+  background:
+    linear-gradient(90deg, rgba(25, 18, 16, 0.96) 0 49.82%, rgba(214, 113, 110, 0.28) 49.82% 50.18%, rgba(18, 12, 12, 0.98) 50.18% 100%),
+    linear-gradient(0deg, transparent 0 14%, rgba(246, 217, 215, 0.08) 14% 14.28%, transparent 14.28% 68%, rgba(215, 113, 110, 0.1) 68% 68.28%, transparent 68.28% 100%),
+    linear-gradient(90deg, transparent 0 10%, rgba(246, 217, 215, 0.08) 10% 10.28%, transparent 10.28% 34%, rgba(240, 166, 93, 0.1) 34% 34.28%, transparent 34.28% 62%, rgba(215, 113, 110, 0.12) 62% 62.28%, transparent 62.28% 86%, rgba(246, 217, 215, 0.08) 86% 86.28%, transparent 86.28% 100%),
+    linear-gradient(180deg, #241514 0%, #110c0c 100%);
+}
+
+:root[data-theme="dark"] .wd-hero-shell,
+:root[data-theme="dark"] .wd-grid-shell,
+:root[data-theme="dark"] .wd-post-shell,
+:root[data-theme="dark"] .wd-booking-banner,
+:root[data-theme="dark"] .wd-hero__letter,
+:root[data-theme="dark"] .wd-hero__journal,
+:root[data-theme="dark"] .wd-player-dock,
+:root[data-theme="dark"] .wd-player-dock__apps-panel {
+  border-color: rgba(246, 217, 215, 0.14);
+  background:
+    radial-gradient(130% 120% at 0% 0%, rgba(255, 240, 234, 0.08), rgba(255, 240, 234, 0) 60%),
+    linear-gradient(150deg, rgba(33, 22, 22, 0.96), rgba(21, 14, 14, 0.92));
+  box-shadow: 0 22px 42px rgba(0, 0, 0, 0.28);
+}
+
+:root[data-theme="dark"] .wd-hero__showcase .cg-section-header__title,
+:root[data-theme="dark"] .wd-grid-section__header h2,
+:root[data-theme="dark"] .wd-booking-banner__title,
+:root[data-theme="dark"] .wd-player-dock__summary strong {
+  color: rgba(255, 240, 234, 0.96);
+}
+
+:root[data-theme="dark"] .wd-hero__showcase .cg-section-header__description,
+:root[data-theme="dark"] .wd-hero__letter-body,
+:root[data-theme="dark"] .wd-booking-banner__description,
+:root[data-theme="dark"] .wd-signal-helper,
+:root[data-theme="dark"] .wd-player-dock__summary p,
+:root[data-theme="dark"] .wd-player-dock__time {
+  color: rgba(244, 221, 214, 0.76);
+}
+
+:root[data-theme="dark"] .wd-hero__signal-helper,
+:root[data-theme="dark"] .wd-hero__grid-preview__cta,
+:root[data-theme="dark"] .wd-hero__letter-collapse-toggle,
+:root[data-theme="dark"] .wd-player-dock__summary span,
+:root[data-theme="dark"] .wd-player-dock__button,
+:root[data-theme="dark"] .wd-player-dock__share-note {
+  color: rgba(246, 217, 215, 0.74);
+}
+
+:root[data-theme="dark"] .wd-hero__collector-button--secondary.cg-button,
+:root[data-theme="dark"] .wd-player-dock__button,
+:root[data-theme="dark"] .wd-player-dock__transport-button,
+:root[data-theme="dark"] .wd-player-dock__share-platform,
+:root[data-theme="dark"] .wd-player-dock__icon-button {
+  border-color: rgba(246, 217, 215, 0.14);
+  background: rgba(255, 240, 234, 0.08);
+  color: rgba(255, 240, 234, 0.88);
+}
+
+:root[data-theme="dark"] .wd-hero__collector-button--secondary.cg-button:hover,
+:root[data-theme="dark"] .wd-hero__collector-button--secondary.cg-button:focus-visible,
+:root[data-theme="dark"] .wd-player-dock__button:hover,
+:root[data-theme="dark"] .wd-player-dock__button:focus-visible,
+:root[data-theme="dark"] .wd-player-dock__transport-button:hover,
+:root[data-theme="dark"] .wd-player-dock__transport-button:focus-visible,
+:root[data-theme="dark"] .wd-player-dock__share-platform:hover,
+:root[data-theme="dark"] .wd-player-dock__share-platform:focus-visible,
+:root[data-theme="dark"] .wd-player-dock__icon-button:hover,
+:root[data-theme="dark"] .wd-player-dock__icon-button:focus-visible {
+  background: rgba(255, 240, 234, 0.14);
 }

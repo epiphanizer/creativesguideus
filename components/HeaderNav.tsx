@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { FiMoon, FiSun } from "react-icons/fi";
 
 import { buildContactHref } from "@/lib/contact-intake-routing";
+import { cguThemeStorageKey, isCguThemeMode, type CguThemeMode } from "@/lib/theme";
 import { anchors } from "./nav/anchors";
 import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 import {
@@ -15,6 +17,33 @@ import {
 import { useActiveSection } from "../hooks/useActiveSection";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
+function readPreferredThemeMode(): CguThemeMode {
+  if (typeof window === "undefined") {
+    return "light";
+  }
+
+  try {
+    const storedTheme = window.localStorage.getItem(cguThemeStorageKey);
+
+    if (isCguThemeMode(storedTheme)) {
+      return storedTheme;
+    }
+  } catch {
+    // Ignore storage read issues and fall back to the system preference.
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function applyThemeMode(themeMode: CguThemeMode) {
+  if (typeof document === "undefined") {
+    return;
+  }
+
+  document.documentElement.dataset.theme = themeMode;
+  document.documentElement.style.colorScheme = themeMode;
+}
+
 export function HeaderNav() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const pathname = usePathname();
@@ -25,6 +54,7 @@ export function HeaderNav() {
   const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPlayerDismissed, setIsPlayerDismissed] = useState(false);
+  const [themeMode, setThemeMode] = useState<CguThemeMode>("light");
 
   const headerRoom = useMemo(() => {
     return {
@@ -140,6 +170,27 @@ export function HeaderNav() {
     };
   }, [isWallsDevineRoute]);
 
+  useEffect(() => {
+    const nextThemeMode = readPreferredThemeMode();
+    setThemeMode(nextThemeMode);
+    applyThemeMode(nextThemeMode);
+  }, []);
+
+  const handleThemeToggle = useCallback(() => {
+    setThemeMode((currentThemeMode) => {
+      const nextThemeMode = currentThemeMode === "dark" ? "light" : "dark";
+      applyThemeMode(nextThemeMode);
+
+      try {
+        window.localStorage.setItem(cguThemeStorageKey, nextThemeMode);
+      } catch {
+        // Ignore storage write issues and keep the in-memory theme.
+      }
+
+      return nextThemeMode;
+    });
+  }, []);
+
   return (
     <header className="cg-header" role="banner">
       <a className="cg-header__skip" href="#hero">
@@ -250,6 +301,17 @@ export function HeaderNav() {
                 Start a Conversation
               </button>
             )}
+
+            <button
+              type="button"
+              className="cg-header__theme-toggle"
+              aria-label={themeMode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              aria-pressed={themeMode === "dark"}
+              onClick={handleThemeToggle}
+            >
+              {themeMode === "dark" ? <FiSun aria-hidden="true" /> : <FiMoon aria-hidden="true" />}
+              <span>{themeMode === "dark" ? "Light Mode" : "Dark Mode"}</span>
+            </button>
 
             {isWallsDevineRoute ? (
               <button

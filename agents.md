@@ -12,9 +12,18 @@
 - Use [app/work/agents.md](app/work/agents.md) before editing the work module or its export contract to `seanhalls_online`.
 - Use each route's paired `style-guide.md` to preserve palette, typography, and cross-link behavior for modular marketing pages.
 
+## Current Launch Sequencing
+
+- Walls/Devine is the live public world and the primary reward/signal bridge.
+- Bong Tour stays in preview mode until June 30; the deeper cue-room and archive implementation should be preserved behind `lib/launch-state.ts`, not deleted.
+- Bong Tour treatment remains protected and public-facing copy should describe post-launch access until the June 30 window opens.
+- Appreesh stays preview-only inside CGU before June 30; do not reintroduce public CGU links to `appreesh.org` during that window.
+- Launch-window contact links should preserve `sourceRoute` and `campaignWindow` whenever they are part of the Walls/Devine, Bong Tour, or Appreesh sequencing flow.
+
 ## Friday Launch Status — Reference Only
 
 - Launch target was Sunday. Cross-repo launch-readiness notes are now consolidated into `../sh_hub/docs/MASTER_STATE.md`; keep the summary below as historical reference only.
+- This section is historical only. The current launch posture is the May 23 sequencing pass described above and in `../sh_hub/docs/MASTER_STATE.md`.
 - High-level features landed tonight:
 	- Walls/Devine listening room now uses one stable audio element across dock and modal, keeping playback continuity intact.
 	- Native WAV controls were restored in the listening room, and shareable song URLs plus listening-room analytics were wired into Firestore.

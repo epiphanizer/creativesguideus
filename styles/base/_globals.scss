@@ -785,14 +785,14 @@ p + ol {
   position: relative;
   background-color: var(--cg-color-canvas);
   background-image:
-    linear-gradient(90deg, rgba(244, 231, 206, 0.98) 0 49.65%, rgba(26, 19, 13, 0.86) 49.65% 50.35%, rgba(250, 250, 249, 0.99) 50.35% 100%),
-    linear-gradient(0deg, transparent 0 15%, rgba(26, 19, 13, 0.12) 15% 15.35%, transparent 15.35% 63%, rgba(26, 19, 13, 0.1) 63% 63.35%, transparent 63.35% 100%),
-    linear-gradient(90deg, transparent 0 10%, rgba(26, 19, 13, 0.14) 10% 10.35%, transparent 10.35% 31%, rgba(217, 106, 31, 0.22) 31% 31.35%, transparent 31.35% 69%, rgba(179, 22, 18, 0.18) 69% 69.35%, transparent 69.35% 88%, rgba(26, 19, 13, 0.12) 88% 88.35%, transparent 88.35% 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0 18%, transparent 18% 100%),
-    linear-gradient(135deg, rgba(217, 106, 31, 0.08) 0 14%, transparent 14% 100%),
-    linear-gradient(315deg, rgba(179, 22, 18, 0.08) 0 16%, transparent 16% 100%);
+    linear-gradient(90deg, var(--cg-theme-body-panel-left) 0 49.65%, var(--cg-theme-body-divider) 49.65% 50.35%, var(--cg-theme-body-panel-right) 50.35% 100%),
+    linear-gradient(0deg, transparent 0 15%, var(--cg-theme-body-line-strong) 15% 15.35%, transparent 15.35% 63%, var(--cg-theme-body-line-soft) 63% 63.35%, transparent 63.35% 100%),
+    linear-gradient(90deg, transparent 0 10%, var(--cg-theme-body-grid-ink) 10% 10.35%, transparent 10.35% 31%, var(--cg-theme-body-grid-ember) 31% 31.35%, transparent 31.35% 69%, var(--cg-theme-body-grid-red) 69% 69.35%, transparent 69.35% 88%, var(--cg-theme-body-line-strong) 88% 88.35%, transparent 88.35% 100%),
+    linear-gradient(180deg, var(--cg-theme-body-gloss) 0 18%, transparent 18% 100%),
+    linear-gradient(135deg, var(--cg-theme-body-ember-haze) 0 14%, transparent 14% 100%),
+    linear-gradient(315deg, var(--cg-theme-body-red-haze) 0 16%, transparent 16% 100%);
   background-blend-mode: normal, normal, normal, screen, normal, normal;
-  color: var(--cg-color-bong-ink);
+  color: var(--cg-theme-body-text);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -855,15 +855,15 @@ p + ol {
   z-index: 50;
   backdrop-filter: blur(var(--cg-header-blur));
   background:
-    linear-gradient(90deg, rgba(244, 231, 206, 0.9) 0 49.65%, rgba(250, 250, 249, 0.92) 50.35% 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.08));
-  border-bottom: 1px solid var(--cg-color-grid-line);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.36);
+    linear-gradient(90deg, var(--cg-theme-header-left) 0 49.65%, var(--cg-theme-header-right) 50.35% 100%),
+    linear-gradient(180deg, var(--cg-theme-header-overlay-top), var(--cg-theme-header-overlay-bottom));
+  border-bottom: 1px solid var(--cg-theme-header-border);
+  box-shadow: 0 1px 0 var(--cg-theme-header-shadow);
 }
 
 @supports not (backdrop-filter: blur(0)) {
   .cg-header {
-    background: linear-gradient(90deg, rgba(244, 231, 206, 0.98) 0 49.65%, rgba(250, 250, 249, 0.98) 50.35% 100%);
+    background: linear-gradient(90deg, var(--cg-theme-header-left) 0 49.65%, var(--cg-theme-header-right) 50.35% 100%);
   }
 
   .cg-web__content {
@@ -921,8 +921,8 @@ p + ol {
   padding: 0.4rem 0.8rem;
   border-radius: var(--cg-radius-md);
   border: 1px solid var(--cg-color-grid-line);
-  background: rgba(250, 250, 249, 0.84);
-  color: var(--cg-color-bong-ink);
+  background: var(--cg-theme-surface-translucent);
+  color: var(--cg-theme-body-text);
   font-size: var(--cg-type-body-sm);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -947,7 +947,7 @@ p + ol {
 .cg-header__menu-toggle:hover,
 .cg-header__menu-toggle:focus-visible {
   border-color: rgba(26, 19, 13, 0.32);
-  background: rgba(250, 250, 249, 0.95);
+  background: var(--cg-theme-surface-strong);
 }
 
 .cg-header__menu-toggle-icon {
@@ -992,9 +992,11 @@ p + ol {
 }
 
 .cg-header__actions {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--cg-space-2xs);
-  justify-items: end;
+  justify-content: flex-end;
+  align-items: center;
   flex-shrink: 0;
 }
 
@@ -1135,21 +1137,27 @@ p + ol {
   font-weight: 600;
   flex-shrink: 0;
   cursor: pointer;
-  transition: background var(--cg-transition-fade), border-color var(--cg-transition-fade);
+  transition: background var(--cg-transition-fade), border-color var(--cg-transition-fade), color var(--cg-transition-fade);
+}
+
+.cg-header__cta {
+  background: linear-gradient(135deg, var(--cg-theme-cta-start), var(--cg-theme-cta-end));
+  color: var(--cg-color-accent-text);
 }
 
 .cg-header__cta:hover,
 .cg-header__cta:focus-visible {
-  background: linear-gradient(135deg, var(--cg-color-bong-smoke), var(--cg-color-walls-red));
+  background: linear-gradient(135deg, var(--cg-theme-cta-hover-start), var(--cg-theme-cta-hover-end));
 }
 
-.cg-header__utility-button {
+.cg-header__utility-button,
+.cg-header__theme-toggle {
   padding: 0.38rem 0.78rem;
   min-width: 11.5rem;
   border-radius: 999px;
   border: 1px solid rgba(26, 19, 13, 0.14);
-  background: rgba(250, 250, 249, 0.74);
-  color: rgba(26, 19, 13, 0.84);
+  background: var(--cg-theme-surface-muted);
+  color: var(--cg-theme-body-text);
   font: inherit;
   font-size: 0.7rem;
   letter-spacing: 0.12em;
@@ -1158,10 +1166,26 @@ p + ol {
   transition: background var(--cg-transition-fade), border-color var(--cg-transition-fade);
 }
 
+.cg-header__theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.cg-header__theme-toggle svg {
+  width: 0.82rem;
+  height: 0.82rem;
+  flex-shrink: 0;
+}
+
 .cg-header__utility-button:hover,
-.cg-header__utility-button:focus-visible {
+.cg-header__utility-button:focus-visible,
+.cg-header__theme-toggle:hover,
+.cg-header__theme-toggle:focus-visible {
   border-color: rgba(156, 7, 5, 0.34);
-  background: rgba(253, 254, 254, 0.96);
+  background: var(--cg-theme-surface-strong);
 }
 
 
@@ -2045,11 +2069,12 @@ p + ol {
 
   .cg-header__actions {
     width: 100%;
-    justify-items: center;
+    justify-content: center;
     margin-left: 0;
   }
 
-  .cg-header__utility-button {
+  .cg-header__utility-button,
+  .cg-header__theme-toggle {
     width: auto;
     min-width: clamp(210px, 70vw, 280px);
   }
@@ -2172,6 +2197,10 @@ p + ol {
   }
 
   .cg-header__utility-button {
+    min-width: 0;
+  }
+
+  .cg-header__theme-toggle {
     min-width: 0;
   }
 }

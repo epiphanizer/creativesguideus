@@ -425,7 +425,7 @@ export function WallsDevineLanding() {
           <div className="wd-hero__copy">
 
             <div className="wd-hero__note-stack">
-              <div className="wd-hero__letter" aria-label="Personal collector note for Walls/Devine Volume 1">
+              <div className="wd-hero__letter wd-hero__collector-card" aria-label="Personal collector note for Walls/Devine Volume 1">
                 <p className="wd-hero__letter-kicker">{collectorHeroNote.salutation}</p>
                 <div className="wd-hero__letter-body-collapse">
                   <p className="wd-hero__letter-body">
@@ -443,26 +443,27 @@ export function WallsDevineLanding() {
                   </button>
                 )}
 
-                <div className="wd-hero__letter-actions" aria-label="Walls Devine quick actions">
-                  <div className="wd-hero__letter-actions-row">
-                    <Button
-                      as="a"
-                      href={wallsDevineListeningRoomHref}
-                      className="wd-hero__letter-cta wd-hero__letter-cta--primary-pulse"
-                      onClick={handleListeningRoomShortcut}
-                      data-analytics-event="walls_devine_cta_click"
-                      data-analytics-param-source="walls_devine"
-                      data-analytics-param-cta="hero_listening_room"
-                      data-analytics-param-destination="listening_room"
-                      data-analytics-param-external="false"
-                    >
-                      {collectorHeroNote.primaryCtaLabel}
-                    </Button>
+                <div className="wd-hero__letter-actions wd-hero__collector-actions" aria-label="Walls Devine quick actions">
+                  <Button
+                    as="a"
+                    href={wallsDevineListeningRoomHref}
+                    className="wd-hero__letter-cta wd-hero__collector-button wd-hero__collector-button--primary wd-hero__letter-cta--primary-pulse"
+                    onClick={handleListeningRoomShortcut}
+                    data-analytics-event="walls_devine_cta_click"
+                    data-analytics-param-source="walls_devine"
+                    data-analytics-param-cta="hero_listening_room"
+                    data-analytics-param-destination="listening_room"
+                    data-analytics-param-external="false"
+                  >
+                    {collectorHeroNote.primaryCtaLabel}
+                  </Button>
+
+                  <div className="wd-hero__collector-secondary-row">
                     <Button
                       as="a"
                       href={wallsDevineSignalListHref}
                       variant="secondary"
-                      className="wd-hero__signal-link"
+                      className="wd-hero__signal-link wd-hero__collector-button wd-hero__collector-button--secondary"
                       data-analytics-event="walls_devine_cta_click"
                       data-analytics-param-source="walls_devine"
                       data-analytics-param-cta="hero_signal_list"
@@ -475,7 +476,7 @@ export function WallsDevineLanding() {
                       as="a"
                       href={wallsDevineMerchShopHref}
                       variant="ghost"
-                      className="wd-hero__signal-link wd-hero__signal-link--subdued"
+                      className="wd-hero__signal-link wd-hero__collector-button wd-hero__collector-button--secondary wd-hero__collector-button--ghost"
                       target="_blank"
                       rel="noreferrer"
                       data-analytics-event="walls_devine_cta_click"
