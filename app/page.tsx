@@ -41,7 +41,7 @@ type HomeGateway = {
   href: string;
   entryLabel: string;
   entryMeta: string;
-  tone: "walls" | "bong" | "appreesh";
+  tone: "walls" | "bong" | "appreesh" | "cache";
   external: boolean;
   isGated: boolean;
   launchLabel: string | null;
@@ -100,6 +100,21 @@ const gateways: readonly HomeGateway[] = [
     launchLabel: "Opening",
     launchDate: cguLaunchState.appreesh.launchDate,
     launchNote: "Preview queued inside CGU"
+  },
+  {
+    eyebrow: "New series",
+    descriptor: cguLaunchState.cache.label,
+    title: "Cache",
+    description: "",
+    href: "/cache",
+    entryLabel: "Cache · Coming soon",
+    entryMeta: `${cguLaunchState.cache.label} · Details opening soon`,
+    tone: "cache",
+    external: false,
+    isGated: true,
+    launchLabel: "Coming",
+    launchDate: "Soon",
+    launchNote: "Access infrastructure live"
   }
 ];
 
@@ -216,8 +231,8 @@ export default function HomePage() {
       <section className="cg-home-dispatch" aria-labelledby="cg-home-dispatch-title">
         <div className="cg-home-dispatch__copy">
           <p className="cg-home-dispatch__eyebrow">Creatives Guide Us</p>
-          <h1 id="cg-home-dispatch-title">Walls/Devine is live now. Bong Tour and Appreesh open June 30.</h1>
-          <p>Volume 1 is the active public world. The next rooms stay staged behind the June 30 window, while studio proof remains one quiet click away.</p>
+          <h1 id="cg-home-dispatch-title">Walls/Devine is live now. Bong Tour, Appreesh, and Cache follow.</h1>
+          <p>Volume 1 is the active public world. The next rooms stay staged behind the June 30 window, while Cache and studio proof remain one quiet click away.</p>
         </div>
 
         <ol className="cg-home-dispatch__route-list" aria-label="Launch sequence routes">
@@ -267,8 +282,17 @@ export default function HomePage() {
             </Link>
           </li>
           <li>
-            <Link href="/contact" className="cg-home-dispatch__route-link">
+            <Link href="/cache" className="cg-home-dispatch__route-link">
               <span className="cg-home-dispatch__route-index">06</span>
+              <span className="cg-home-dispatch__route-copy">
+                <strong>Cache</strong>
+                <small>Coming soon</small>
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link href="/contact" className="cg-home-dispatch__route-link">
+              <span className="cg-home-dispatch__route-index">07</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Contact the Studio</strong>
                 <small>Calm route beneath the active worlds</small>

@@ -18,5 +18,5 @@ JW
 
 Resolve
 from Walls/Devine Vol. 1
-June 1st, all platforms.
+June 28, all platforms.
 Link in bio.

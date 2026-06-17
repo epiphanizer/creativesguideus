@@ -31,6 +31,7 @@ export const firebaseAdminPaths = {
   rewardClaimsCollection: "rewardClaims",
   listeningRoomVisitsCollection: "listeningRoomVisits",
   wallsDevineProjectId: "walls-devine",
+  cacheProjectId: "cache",
   collectorHeroNoteDocId: "collectorHeroNote",
   bookingBannerNoteDocId: "bookingBannerNote",
   linkHubDocId: "linkHub",

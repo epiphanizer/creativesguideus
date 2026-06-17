@@ -34,7 +34,7 @@ Terry Devine
 
 Joint Queen
 from Walls/Devine Vol. 1
-June 4, all platforms.
+July 4, all platforms.
 Link in bio.
 
 
@@ -62,7 +62,7 @@ Terry Devine
 
 Stash Daddy
 from Walls/Devine Vol. 1
-June 4, all platforms.
+July 4, all platforms.
 Link in bio.
 
 
@@ -98,7 +98,7 @@ John Walls
 
 Space Cruiser
 from Walls/Devine Vol. 1
-June 4, all platforms.
+July 4, all platforms.
 Link in bio.
 
 
@@ -120,7 +120,7 @@ John Walls
 
 Home
 from Walls/Devine Vol. 1
-June 4, all platforms.
+July 4, all platforms.
 Link in bio.
 
 
@@ -151,7 +151,7 @@ Terry Devine
 
 Decay
 from Walls/Devine Vol. 1
-June 4, all platforms.
+July 4, all platforms.
 Link in bio.
 
 
@@ -172,7 +172,7 @@ JW
 
 Resolve
 from Walls/Devine Vol. 1
-June 1st, all platforms.
+June 28, all platforms.
 Link in bio.
 
 
@@ -212,7 +212,7 @@ John Walls
 
 Poetry
 from Walls/Devine Vol. 1
-June 4, all platforms.
+July 4, all platforms.
 Link in bio.
 
 
@@ -238,7 +238,6 @@ Terry Devine
 
 Gratitude
 from Walls/Devine Vol. 1
-June 4, all platforms.
+July 4, all platforms.
 Link in bio.
-
 

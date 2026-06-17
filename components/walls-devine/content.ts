@@ -113,7 +113,7 @@ export const songPostCards: SongPostCard[] = [
     title: "Resolve",
     duration: "3:15",
     audioFileName: "6 - Resolve.wav",
-    phase: "Lead single · May 24",
+    phase: "Lead single · June 28",
     hook: "The ignition track that lights the campaign fuse.",
     caption: "Resolve lands first and sets the terms for everything that follows.",
     storySummary:

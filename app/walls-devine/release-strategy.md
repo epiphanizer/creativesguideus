@@ -10,7 +10,7 @@ Use:
 For marketing and captions, use:
 
 - Walls & Devine: Volume 1
-- Out 06/04/26
+- Out 07/04/26
 
 This keeps Spotify metadata clean while preserving a strong campaign phrase and room for future volumes.
 
@@ -29,7 +29,7 @@ What matters in practice:
 ### Phase 1: Lead Single
 
 - Release: Resolve
-- Date: May 24, 2026
+- Date: June 28, 2026
 - Role: Pre-album ignition and campaign spark
 
 Checklist:
@@ -41,7 +41,7 @@ Checklist:
 ### Phase 2: Album
 
 - Release: Volume 1
-- Date: June 4, 2026
+- Date: July 4, 2026
 - Role: Main launch moment
 
 Track list:
@@ -63,8 +63,8 @@ Pitch strategy:
 ### Phase 3: Instrumentals
 
 - Release: Volume 1: Instrumentals
-- Target date: July 10, 2026
-- Role: Second-wave campaign and sync-friendly package
+- Target date: July 4, 2026
+- Role: Companion release package and sync-friendly set
 
 Notes:
 
@@ -75,19 +75,19 @@ Notes:
 ## Suggested Campaign Rhythm
 
 - Now: Upload Resolve single and finalize assets.
-- May 17 to May 18: Submit Spotify for Artists pitch for Resolve.
-- May 24: Resolve release day.
-- May 24 to June 3: Daily or near-daily 9-grid story posts.
-- June 4: Volume 1 release day.
-- June 4 to June 18: Push album focus track (Poetry recommended).
-- July 10: Volume 1: Instrumentals release day.
+- June 20 to June 21: Submit Spotify for Artists pitch for Resolve.
+- June 28: Resolve release day.
+- June 28 to July 3: Daily or near-daily 9-grid story posts.
+- July 4: Volume 1 release day.
+- July 4 to July 18: Push album focus track (Poetry recommended).
+- July 4: Volume 1: Instrumentals release day.
 
 ## Metadata Standards
 
 - Primary artist: Walls & Devine
 - Album title: Volume 1
 - Campaign phrase: Walls & Devine: Volume 1
-- Date phrase: Out 06/04/26
+- Date phrase: Out 07/04/26
 
 ## Why This Works
 
@@ -97,4 +97,4 @@ The sequence frames a clean trilogy:
 - Volume 1: the record
 - Volume 1: Instrumentals: the world behind the songs
 
-It provides distinct audience moments without compressing three releases into one short attention window.
+It frames Resolve as the spark, then lands the full July 4 release window with both the main record and its instrumental companion set.

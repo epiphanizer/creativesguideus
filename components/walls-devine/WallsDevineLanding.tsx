@@ -405,7 +405,7 @@ export function WallsDevineLanding() {
               <span className="wd-hero__gamification-strip__dot" aria-hidden="true">·</span>
               <span>8 collector challenges</span>
               <span className="wd-hero__gamification-strip__dot" aria-hidden="true">·</span>
-              <span>June 4</span>
+              <span>July 4</span>
             </div>
 
             <figure className="wd-hero__cover">

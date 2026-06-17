@@ -20,5 +20,5 @@ John Walls
 
 Home
 from Walls/Devine Vol. 1
-June 4, all platforms.
+July 4, all platforms.
 Link in bio.

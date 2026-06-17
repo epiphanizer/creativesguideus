@@ -1,0 +1,167 @@
+// Cache series feature styles — minimal preview/lock-out layout.
+// Mirrors the bong-tour feature structure but simplified.
+
+.cache-page {
+  --cache-ink: #bae6fd;
+  --cache-ink-soft: rgba(186, 230, 253, 0.68);
+  --cache-bg: #080c16;
+  --cache-bg-soft: #0d1628;
+  --cache-border: rgba(147, 197, 253, 0.16);
+  --cache-panel-pad: clamp(2rem, 5vw, 4rem);
+}
+
+.cache-world {
+  min-height: calc(100svh - var(--cg-header-height));
+  background: var(--cache-bg);
+  color: var(--cache-ink);
+}
+
+.cache-world__shell {
+  width: min(100%, 80rem);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vh, 4rem) var(--cache-panel-pad);
+  display: grid;
+  gap: clamp(2rem, 4vh, 3rem);
+}
+
+.cache-section-header__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cache-ink-soft);
+}
+
+.cache-world__intro {
+  display: grid;
+  gap: clamp(0.75rem, 1.5vh, 1.1rem);
+  max-width: 52rem;
+}
+
+.cache-world__intro h1 {
+  margin: 0;
+  font-size: clamp(3rem, 6vw + 1rem, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--cache-ink);
+}
+
+.cache-world__deck {
+  margin: 0;
+  max-width: 42ch;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.58;
+  color: var(--cache-ink-soft);
+}
+
+.cache-world__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  padding-top: clamp(0.5rem, 1vh, 0.75rem);
+}
+
+.cache-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: 999px;
+  border: 1px solid var(--cache-ink);
+  background: var(--cache-ink);
+  color: var(--cache-bg);
+  text-decoration: none;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+.cache-button:hover,
+.cache-button:focus-visible {
+  background: rgba(186, 230, 253, 0.88);
+  border-color: rgba(186, 230, 253, 0.88);
+}
+
+.cache-button--outline {
+  background: transparent;
+  color: var(--cache-ink);
+}
+
+.cache-button--outline:hover,
+.cache-button--outline:focus-visible {
+  background: rgba(186, 230, 253, 0.1);
+  border-color: rgba(186, 230, 253, 0.55);
+}
+
+.cache-world__meta-line {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: rgba(186, 230, 253, 0.45);
+}
+
+// Lock card — two-track layout
+
+.cache-world__lock-card {
+  border: 1px solid var(--cache-border);
+  border-radius: var(--cg-radius-lg);
+  background: rgba(147, 197, 253, 0.04);
+  overflow: hidden;
+}
+
+.cache-world__lock-grid {
+  display: grid;
+  gap: 0;
+}
+
+.cache-world__track {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  display: grid;
+  gap: clamp(0.75rem, 1.4vh, 1rem);
+  align-content: start;
+}
+
+.cache-world__track + .cache-world__track {
+  border-top: 1px solid var(--cache-border);
+}
+
+.cache-world__track h2 {
+  margin: 0;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--cache-ink);
+}
+
+.cache-world__track p {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  line-height: 1.58;
+  color: var(--cache-ink-soft);
+}
+
+.cache-world__track-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding-top: 0.35rem;
+}
+
+.cache-world__track--secondary {
+  background: rgba(147, 197, 253, 0.03);
+}
+
+@media (min-width: 720px) {
+  .cache-world__lock-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cache-world__track + .cache-world__track {
+    border-top: 0;
+    border-left: 1px solid var(--cache-border);
+  }
+}
