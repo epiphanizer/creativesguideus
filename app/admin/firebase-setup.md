@@ -11,6 +11,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - Booking routing sync: Firestore `bookingRoutingTasks/{targetId}` stores Google Calendar-ready hold and confirmed routing dates for the booking engine.
 - Public note copy: Firestore `adminProjects/walls-devine/publicContent/collectorHeroNote` stores the editable hero eyebrow, hero title, collector note, hero CTA labels, signoff line, and journal label shown on the public Volume 1 hero.
 - Public booking banner: Firestore `adminProjects/walls-devine/publicContent/bookingBannerNote` stores the editable booking and merch banner eyebrow, title, description, CTA labels, and meta copy shown below the collector grid.
+- Public upcoming shows: Firestore `adminProjects/walls-devine/publicContent/upcomingShows` stores the editable upcoming-shows section shown beneath the booking banner on the public Walls/Devine page.
 - Public jump-link hub: Firestore `adminProjects/walls-devine/publicContent/linkHub` stores the editable Linktree-style links page at `/links`.
 - Web analytics: Google/Firebase Analytics can capture route changes plus key CTA events when the Firebase project is linked to a GA4 web stream and `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` is set in the site environment.
 - Lead capture: Firestore `ecosystemLeads/{leadId}` stores public collector-list signups plus richer guided-intake booking leads from the site experience.
@@ -57,6 +58,7 @@ This route no longer uses the old local cookie bypass. The hidden admin now depe
 - `adminProjects/walls-devine`
 - `adminProjects/walls-devine/publicContent/collectorHeroNote`
 - `adminProjects/walls-devine/publicContent/bookingBannerNote`
+- `adminProjects/walls-devine/publicContent/upcomingShows`
 - `adminProjects/walls-devine/publicContent/linkHub`
 - `adminProjects/walls-devine/privateContent/bongTourTreatment`
 - `adminProjects/walls-devine/privateContentAccessLogs/{logId}`
@@ -144,16 +146,17 @@ firebase deploy --only functions,firestore:rules,firestore:indexes,storage
 3. Toggle a release checklist item and verify `adminProjects/walls-devine` updates.
 4. Edit the collector note in `/admin`, refresh `/walls-devine`, and confirm the public hero note updates from Firestore.
 5. Edit the link hub in `/admin`, refresh `/links`, and confirm the public link page updates from Firestore.
-6. Submit one collector signup or guided booking intake from the public site and verify a document appears in `ecosystemLeads` with the richer booking fields when applicable.
-7. Confirm the booking engine in `/admin` shows the seeded August-November windows and target list.
-8. Save one Instagram draft and one journal entry, then verify Firestore documents appear under `adminProjects/walls-devine/markdownFiles/...`.
-9. Refresh `/admin` and confirm the remote content loads without re-bootstrap.
-10. Create a `releaseTasks/{taskId}` document with `summary`, `description`, `start`, `end`, and `gCalEventId: null`, then confirm the outbound Functions sync creates a Google Calendar event and writes the returned `gCalEventId` back into Firestore.
-11. Create or update a booking target with `status: "hold"` or `status: "confirmed"` plus routing dates, then confirm `bookingRoutingTasks/{targetId}` is created and the outbound Functions sync creates a tagged Google Calendar event.
-12. Update either synced Google Calendar event and confirm the webhook maps back into the correct Firestore document through `extendedProperties.private.firestoreId` and `extendedProperties.private.syncCollection`.
-13. Beat the Joint Queen reward flow, submit an email or Collector ID, and confirm the collector doc and reward claim doc appear in Firestore.
-14. Beat the Volume 1 secret-game flow, open the wallet airlock, submit a Solana wallet, and confirm the wallet-aware reward claim doc appears in Firestore with `distribution_mode: "airdrop"`.
-15. Retry that same Volume 1 airlock with the same wallet and confirm the claim is rejected because the wallet already cleared that unlock.
-16. Deploy Functions and confirm the trigger writes a `rewardDispatchLogs/{claimId}` document and flips `rewardClaims/{claimId}.status` to `distributed`.
-17. Open the site with the GA DebugView or Realtime panel running and confirm `home_gateway_click`, `link_hub_link_click`, `walls_devine_cta_click`, `reward_airlock_open`, and reward claim events appear after interaction.
-18. Open `/bong-tour/treatment`, confirm the modal appears before any treatment text, verify an unknown email is denied, then verify a known email plus the current password loads the treatment from Firestore.
+6. Edit the upcoming shows panel in `/admin`, refresh `/walls-devine`, and confirm the show list updates from Firestore.
+7. Submit one collector signup or guided booking intake from the public site and verify a document appears in `ecosystemLeads` with the richer booking fields when applicable.
+8. Confirm the booking engine in `/admin` shows the seeded August-November windows and target list.
+9. Save one Instagram draft and one journal entry, then verify Firestore documents appear under `adminProjects/walls-devine/markdownFiles/...`.
+10. Refresh `/admin` and confirm the remote content loads without re-bootstrap.
+11. Create a `releaseTasks/{taskId}` document with `summary`, `description`, `start`, `end`, and `gCalEventId: null`, then confirm the outbound Functions sync creates a Google Calendar event and writes the returned `gCalEventId` back into Firestore.
+12. Create or update a booking target with `status: "hold"` or `status: "confirmed"` plus routing dates, then confirm `bookingRoutingTasks/{targetId}` is created and the outbound Functions sync creates a tagged Google Calendar event.
+13. Update either synced Google Calendar event and confirm the webhook maps back into the correct Firestore document through `extendedProperties.private.firestoreId` and `extendedProperties.private.syncCollection`.
+14. Beat the Joint Queen reward flow, submit an email or Collector ID, and confirm the collector doc and reward claim doc appear in Firestore.
+15. Beat the Volume 1 secret-game flow, open the wallet airlock, submit a Solana wallet, and confirm the wallet-aware reward claim doc appears in Firestore with `distribution_mode: "airdrop"`.
+16. Retry that same Volume 1 airlock with the same wallet and confirm the claim is rejected because the wallet already cleared that unlock.
+17. Deploy Functions and confirm the trigger writes a `rewardDispatchLogs/{claimId}` document and flips `rewardClaims/{claimId}.status` to `distributed`.
+18. Open the site with the GA DebugView or Realtime panel running and confirm `home_gateway_click`, `link_hub_link_click`, `walls_devine_cta_click`, `reward_airlock_open`, and reward claim events appear after interaction.
+19. Open `/bong-tour/treatment`, confirm the modal appears before any treatment text, verify an unknown email is denied, then verify a known email plus the current password loads the treatment from Firestore.
