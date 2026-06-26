@@ -10,17 +10,6 @@ import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
 const homeConversationHref = buildContactHref({ pathname: "/contact" });
-const homeSignalListHref = buildContactHref({
-  pathname: "/contact",
-  overrides: {
-    context: "walls-devine-mailing-list",
-    inquiryType: "mailing-list",
-    project: "Walls/Devine",
-    surface: "campaign-world",
-    sourceRoute: "/",
-    campaignWindow: albumLaunchCampaignWindow
-  }
-});
 const homeAppreeshPreviewHref = buildContactHref({
   pathname: "/contact",
   overrides: {
@@ -56,7 +45,7 @@ const gateways: readonly HomeGateway[] = [
     eyebrow: "Collector experience",
     descriptor: `${cguLaunchState.wallsDevine.label} · player · journals · merch shop`,
     title: "Walls/Devine",
-    description: "Volume 1 is the active public world now: listening room first, collector grid next, then the signal-list bridge into the July 11 expansion.",
+    description: "Volume 1 is live now: enter the Listening Room, move through the collector grid, and stay inside the expanding release world.",
     href: "/walls-devine",
     entryLabel: "Enter Volume 1",
     entryMeta: "Live now · Player · Journals · Collector Access · Merch Shop",
@@ -246,17 +235,8 @@ export default function HomePage() {
             </Link>
           </li>
           <li>
-            <Link href={homeSignalListHref} scroll={false} className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">02</span>
-              <span className="cg-home-dispatch__route-copy">
-                <strong>Join Volume 1 Signal List</strong>
-                <small>Bridge into the July 11 window</small>
-              </span>
-            </Link>
-          </li>
-          <li>
             <a href={wallsDevineMerchShopHref} target="_blank" rel="noreferrer" className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">03</span>
+              <span className="cg-home-dispatch__route-index">02</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Shop Volume 1 Merch</strong>
                 <small>Fourthwall store</small>
@@ -265,7 +245,7 @@ export default function HomePage() {
           </li>
           <li>
             <Link href="/bong-tour" className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">04</span>
+              <span className="cg-home-dispatch__route-index">03</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Bong Tour</strong>
                 <small>Opening July 11</small>
@@ -274,7 +254,7 @@ export default function HomePage() {
           </li>
           <li>
             <Link href={homeAppreeshPreviewHref} scroll={false} className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">05</span>
+              <span className="cg-home-dispatch__route-index">04</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Appreesh</strong>
                 <small>Opening July 11</small>
@@ -283,7 +263,7 @@ export default function HomePage() {
           </li>
           <li>
             <Link href="/cache" className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">06</span>
+              <span className="cg-home-dispatch__route-index">05</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Cache</strong>
                 <small>Coming soon</small>
@@ -292,7 +272,7 @@ export default function HomePage() {
           </li>
           <li>
             <Link href="/contact" className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">07</span>
+              <span className="cg-home-dispatch__route-index">06</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Contact the Studio</strong>
                 <small>Calm route beneath the active worlds</small>
@@ -302,7 +282,6 @@ export default function HomePage() {
         </ol>
 
         <nav className="cg-home-dispatch__actions" aria-label="Studio routes">
-          <ContactModalLink href={homeSignalListHref}>Join Volume 1 Signal List</ContactModalLink>
           <ContactModalLink href={homeConversationHref} buttonVariant="ghost">Start a Conversation</ContactModalLink>
         </nav>
 

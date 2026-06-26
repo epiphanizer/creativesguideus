@@ -28,19 +28,19 @@ export function HeaderNav() {
 
   const headerRoom = useMemo(() => {
     return {
-      buttonLabel: "Signal Room",
+      buttonLabel: "Collector Access",
       source: "header-nav-walls-devine",
-      interest: "Walls Devine collector signal list",
-      cardTitle: "Enter The Signal Room",
+      interest: "Walls Devine collector access",
+      cardTitle: "Open Collector Access",
       cardDescription: "Get the shortest route to first-listen links, journal fragments, hidden-room passwords, and release-night signals.",
       benefits: ["First-listen links", "Studio-journal fragments", "Hidden-room passwords"],
       modalEyebrow: "Collector access",
-      modalTitle: "Enter The Signal Room",
+      modalTitle: "Open Collector Access",
       modalDescription: "Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update.",
       submitLabel: "Get collector access",
       successMessage: "You are in. Watch your inbox for the next room opening, journal fragment, and collector signal.",
       note: "High-signal only. Used for first listens, hidden-room access, and artifact drops.",
-      roomOverlayScript: "The Signal Room",
+      roomOverlayScript: "Collector Access",
       roomOverlaySubtitle: "Private collector access"
     };
   }, []);

@@ -25,17 +25,6 @@ const bongTourTreatmentTravelNotes = [
 
 const treatmentAccessHref = "/api/bong-tour/treatment/access";
 const treatmentContentHref = "/api/bong-tour/treatment/content";
-const wallsDevineSignalListHref = buildContactHref({
-  pathname: "/contact",
-  overrides: {
-    context: "walls-devine-mailing-list",
-    inquiryType: "mailing-list",
-    project: "Walls/Devine",
-    surface: "campaign-world",
-    sourceRoute: "/bong-tour/treatment",
-    campaignWindow: albumLaunchCampaignWindow
-  }
-});
 const bongTourContactHref = buildContactHref({
   pathname: "/contact",
   overrides: {
@@ -66,7 +55,7 @@ const previewAccessChecklist = [
 ] as const;
 const previewSignalChecklist = [
   "Walls/Devine remains the live public world right now.",
-  "Use the Volume 1 signal list if you want the July 11 bridge into Bong Tour.",
+  "Use Walls/Devine for the live score world while the reader gate is staged.",
   "No screenplay pages are exposed on this public route before the gate opens."
 ] as const;
 
@@ -270,8 +259,8 @@ export function BongTourTreatmentGate() {
               <Button as="a" href={bongTourContactHref} className="bt-button">
                 {bongTourContactCtaLabel}
               </Button>
-              <Button as="a" href={wallsDevineSignalListHref} className="bt-button bt-button--outline">
-                Join the Volume 1 Signal List
+              <Button as="a" href="/walls-devine" className="bt-button bt-button--outline">
+                Open Walls/Devine
               </Button>
             </div>
 
@@ -301,7 +290,7 @@ export function BongTourTreatmentGate() {
               <section className="bt-treatment__track bt-treatment__track--secondary">
                 <p className="bt-section-header__eyebrow">Live bridge</p>
                 <h2>Use Volume 1 as the active world now.</h2>
-                <p>The signal list and listening room stay live while Bong Tour waits for the July 11 window.</p>
+                <p>The Listening Room and collector world stay live while Bong Tour waits for the July 11 window.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {previewSignalChecklist.map((item) => (
@@ -312,9 +301,6 @@ export function BongTourTreatmentGate() {
                 <div className="bt-treatment__track-actions">
                   <Button as="a" href="/walls-devine" className="bt-button">
                     Open Walls/Devine
-                  </Button>
-                  <Button as="a" href={wallsDevineSignalListHref} className="bt-button bt-button--outline">
-                    Join the Volume 1 Signal List
                   </Button>
                 </div>
               </section>
@@ -459,7 +445,7 @@ export function BongTourTreatmentGate() {
 
                 <article className="bt-treatment__modal-guide">
                   <span>Need access?</span>
-                  <p>Open the contact route first so the request stays inside the private CGU intake flow.</p>
+                  <p>Open the contact route first so we can review access and follow up directly.</p>
                 </article>
               </div>
 

@@ -250,17 +250,6 @@ const wallsDevineBookingIntakeHref = buildContactHref({
     surface: "campaign-world"
   }
 });
-const wallsDevineSignalListHref = buildContactHref({
-  pathname: "/contact",
-  overrides: {
-    context: "walls-devine-mailing-list",
-    project: "Walls/Devine",
-    inquiryType: "mailing-list",
-    surface: "campaign-world",
-    sourceRoute: "/walls-devine",
-    campaignWindow: albumLaunchCampaignWindow
-  }
-});
 const wallsDevineListeningRoomHref = `#${wallsDevineListeningRoomAnchorId}`;
 
 export function WallsDevineLanding() {
@@ -460,19 +449,6 @@ export function WallsDevineLanding() {
                   <div className="wd-hero__collector-secondary-row">
                     <Button
                       as="a"
-                      href={wallsDevineSignalListHref}
-                      variant="secondary"
-                      className="wd-hero__signal-link wd-hero__collector-button wd-hero__collector-button--secondary"
-                      data-analytics-event="walls_devine_cta_click"
-                      data-analytics-param-source="walls_devine"
-                      data-analytics-param-cta="hero_signal_list"
-                      data-analytics-param-destination={wallsDevineSignalListHref}
-                      data-analytics-param-external="false"
-                    >
-                      Join the Volume 1 Signal List
-                    </Button>
-                    <Button
-                      as="a"
                       href={wallsDevineMerchShopHref}
                       variant="ghost"
                       className="wd-hero__signal-link wd-hero__collector-button wd-hero__collector-button--secondary wd-hero__collector-button--ghost"
@@ -487,8 +463,6 @@ export function WallsDevineLanding() {
                       {collectorHeroNote.secondaryCtaLabel}
                     </Button>
                   </div>
-
-                  <p className="wd-hero__signal-helper">{collectorHeroNote.mailingListHelper}</p>
 
                   <div className="wd-hero__grid-preview" aria-label="Collector grid preview">
                     <div className="wd-hero__grid-preview__tiles">
@@ -578,7 +552,7 @@ export function WallsDevineLanding() {
         <header className="wd-grid-section__header">
           <p className="wd-grid-section__eyebrow">Collector path</p>
           <h2 id="walls-devine-grid-title">The Collector Grid</h2>
-          <p>Open the cover first or tap any chapter tile. Every room loops you back into the record, the hidden note, and the next signal around Volume 1.</p>
+          <p>Open the cover first or tap any chapter tile. Each room loops you back into the record and the next chapter of Volume 1.</p>
 
           <div className="wd-grid-section__steps" aria-label="Collector path steps">
             <span>Tap a chapter tile</span>

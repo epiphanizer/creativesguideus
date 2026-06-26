@@ -6,17 +6,6 @@ import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 const defaultUpdatedAt = "";
 const legacyLinkHubTitle = "Jump Through The Active Rooms";
 const legacyLinkHubDescription = "A compact dispatch board for project worlds, direct studio routes, and the live surfaces orbiting Creatives Guide Us.";
-const wallsDevineSignalListHref = buildContactHref({
-  pathname: "/contact",
-  overrides: {
-    context: "walls-devine-mailing-list",
-    inquiryType: "mailing-list",
-    project: "Walls/Devine",
-    surface: "campaign-world",
-    sourceRoute: "/links",
-    campaignWindow: albumLaunchCampaignWindow
-  }
-});
 const appreeshPreviewHref = buildContactHref({
   pathname: "/contact",
   overrides: {
@@ -36,17 +25,6 @@ const defaultWallsDevineLink = {
   description: "Enter the listening room, release journals, collector path, and the live album world around Volume 1.",
   href: "/walls-devine",
   ctaLabel: "Enter Volume 1",
-  isFeatured: true,
-  isActive: true
-} satisfies LinkHubLink;
-
-const defaultWallsDevineSignalListLink = {
-  id: "walls-devine-mailing-list",
-  eyebrow: "Signal route",
-  title: "Join Volume 1 Signal List",
-  description: `Route listening-room updates, collector unlock notices, and the ${june30LaunchDateLabel} bridge through the CGU intake flow.`,
-  href: wallsDevineSignalListHref,
-  ctaLabel: "Join signal list",
   isFeatured: true,
   isActive: true
 } satisfies LinkHubLink;
@@ -97,7 +75,6 @@ const defaultContactLink = {
 
 const canonicalLinkOrder = [
   "walls-devine",
-  "walls-devine-mailing-list",
   "walls-devine-merch-shop",
   "bong-tour",
   "appreesh-preview",
@@ -105,13 +82,12 @@ const canonicalLinkOrder = [
 ] as const;
 
 export const defaultLinkHubContent: LinkHubContent = {
-  eyebrow: "Signal routes",
+  eyebrow: "Project routes",
   title: "Jump Through The Live And Staged Rooms",
-  description: "A compact dispatch board for Volume 1 now, the July 11 openings next, and the calm studio route underneath them.",
+  description: "A compact dispatch board for Volume 1 now, the July 11 openings next, and a direct studio route beneath them.",
   updatedAt: defaultUpdatedAt,
   links: [
     defaultWallsDevineLink,
-    defaultWallsDevineSignalListLink,
     defaultWallsDevineMerchLink,
     defaultBongTourLink,
     defaultAppreeshPreviewLink,
@@ -174,7 +150,6 @@ function ensureRequiredLinks(links: LinkHubLink[]) {
 
   const requiredLinks = [
     defaultWallsDevineLink,
-    defaultWallsDevineSignalListLink,
     defaultWallsDevineMerchLink,
     defaultBongTourLink,
     defaultAppreeshPreviewLink,

@@ -108,17 +108,6 @@ function buildWallsDevineListeningRoomHref(playerTarget: string) {
 
 const wallsDevineCollectorGridHref = "/walls-devine#walls-devine-grid-title";
 const bongTourTreatmentHref = "/bong-tour/treatment";
-const bongTourSignalListHref = buildContactHref({
-  pathname: "/contact",
-  overrides: {
-    context: "walls-devine-mailing-list",
-    project: "Walls/Devine",
-    inquiryType: "mailing-list",
-    surface: "campaign-world",
-    sourceRoute: "/bong-tour",
-    campaignWindow: albumLaunchCampaignWindow
-  }
-});
 const bongTourContactHref = buildContactHref({
   pathname: "/contact",
   overrides: {
@@ -1033,9 +1022,6 @@ export function BongTourFeature() {
               <p className="bt-hero__positioning">Walls/Devine carries the live soundtrack and collector signal now. Bong Tour stays short on purpose until the treatment gate and deeper rooms open on July 11.</p>
 
               <div className="bt-hero__cta">
-                <Button as="a" href={bongTourSignalListHref} className="bt-button">
-                  Join the Volume 1 Signal List
-                </Button>
                 <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                   Start a Launch Conversation
                 </Button>
@@ -1059,7 +1045,7 @@ export function BongTourFeature() {
                 <article className="bt-hero__signal-card">
                   <span>Live bridge</span>
                   <strong>Walls/Devine carries the active score world now.</strong>
-                  <p>Use Volume 1 and its signal list as the live path while Bong Tour keeps the public route tight.</p>
+                  <p>Use Volume 1 as the live path while Bong Tour keeps the public route tight.</p>
                 </article>
                 <article className="bt-hero__signal-card">
                   <span>Private treatment</span>
@@ -1093,19 +1079,19 @@ export function BongTourFeature() {
               </a>
             </article>
             <article className="bt-bridge__card">
-              <span>Signal bridge</span>
-              <strong>Use the Volume 1 signal list as the bridge.</strong>
-              <p>The July 11 expansion routes through the same inbox path so the live world and the staged worlds stay connected.</p>
-              <a href={bongTourSignalListHref} className="bt-bridge__card-link">
-                Join the signal list
-              </a>
-            </article>
-            <article className="bt-bridge__card">
               <span>Partner lane</span>
               <strong>Start the film-fit conversation now.</strong>
               <p>Production, soundtrack, and partnership context can route now without opening the full treatment or archive stack early.</p>
               <a href={bongTourContactHref} className="bt-bridge__card-link">
                 Start a launch conversation
+              </a>
+            </article>
+            <article className="bt-bridge__card">
+              <span>Next window</span>
+              <strong>Preview the protected treatment path.</strong>
+              <p>The private reader gate opens July 11. Poster and premise stay public until then.</p>
+              <a href={bongTourTreatmentHref} className="bt-bridge__card-link">
+                Open treatment preview
               </a>
             </article>
           </div>
@@ -1139,11 +1125,11 @@ export function BongTourFeature() {
         <section className="bt-finale" id="bong-tour-intake" aria-labelledby="bt-finale-title">
           <div className="bt-finale__body">
             <h2 id="bt-finale-title">Want to be in the next window?</h2>
-            <p>Use the signal list if you want the July 11 bridge through the live album world, or open a launch conversation if the film fit is already clear.</p>
+            <p>Use the launch conversation route now, or open Walls/Devine to stay inside the live score world while July 11 approaches.</p>
 
             <div className="bt-finale__actions">
-              <Button as="a" href={bongTourSignalListHref} className="bt-button">
-                Join the Volume 1 Signal List
+              <Button as="a" href="/walls-devine" className="bt-button">
+                Open Walls/Devine
               </Button>
               <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                 Start a Launch Conversation

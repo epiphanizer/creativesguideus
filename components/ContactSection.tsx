@@ -110,7 +110,7 @@ const inquiryTypeCardOptions: ContactChoiceOption[] = [
   {
     value: "mailing-list",
     label: "Mailing list",
-    description: "Route signal updates, drop alerts, and collector unlock notices through the studio intake."
+    description: "Get release updates, drop alerts, and collector unlock notices."
   },
   {
     value: "screening",
@@ -283,14 +283,13 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
   if (flowId === "walls-mailing") {
     return {
       id: flowId,
-      routingNote:
-        "Walls/Devine signal-list context is loaded. This stays inside the CGU intake flow while Volume 1 remains live and the July 11 bridge is staged.",
+      routingNote: "Walls/Devine updates request loaded for the active Volume 1 world.",
       summary: [
-        "Walls/Devine stays live now while Bong Tour and Appreesh remain staged toward July 11.",
-        "Your email becomes the Volume 1 signal anchor for updates tied to the live album world and the July 11 bridge.",
-        "Requests are reviewed manually until the dedicated list wiring is ready."
+        "Walls/Devine is live now while Bong Tour and Appreesh stage toward July 11.",
+        "Your email anchors future Volume 1 updates tied to the live album world.",
+        "Each request is reviewed and routed by the studio team."
       ],
-      trustNote: "This is a signal-list request, not an instant subscription. CGU reviews it first, then routes the right Volume 1 updates back to this inbox.",
+      trustNote: "This is a reviewed updates request. The studio follows up with the right Volume 1 notes for this inbox.",
       noteLabel: "Optional note",
       notePlaceholder: "How did you find Volume 1, and what kind of update should reach you first?",
       companyLabel: "Company or context",
@@ -299,9 +298,9 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
         {
           id: "intent",
           label: "Confirm request",
-          title: "Join the Volume 1 Signal List",
-          description: `This is the Walls/Devine request path for the live album world and the ${june30LaunchDateLabel} bridge into the next rooms.`,
-          helper: "You are not entering a third-party newsletter flow here. CGU keeps the request attached to Volume 1."
+          title: "Request Volume 1 updates",
+          description: `This route keeps you close to the live album world and the ${june30LaunchDateLabel} expansion window.`,
+          helper: "The request stays attached to Walls/Devine so follow-up can stay specific."
         },
         {
           id: "contact",
@@ -315,14 +314,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           label: "Update preferences",
           title: "Choose the signals that matter",
           description: "Pick the signal types you actually want, then add any note that helps the studio route this cleanly.",
-          helper: `If you skip this step, CGU treats it as a general request for Walls/Devine and ${june30LaunchDateLabel} bridge updates.`
+          helper: `If you skip this step, we treat it as a general request for Walls/Devine and ${june30LaunchDateLabel} updates.`
         },
         {
           id: "review",
           label: "Review",
           title: "Review the routed request",
           description: "Confirm the contact lane, then send it into the studio signal flow.",
-          helper: "This request is reviewed manually before any future mailing or unlock updates are sent."
+          helper: "The team reviews each request before future updates are sent."
         }
       ]
     };
@@ -534,7 +533,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
       "Direct contact details stay inside the CGU signal flow rather than a third-party form handoff."
     ],
     trustNote:
-      "This is the main CGU intake route. The guided flow keeps enough signal intact that the next move can be obvious without turning into a scheduling widget.",
+      "This is the main CGU contact route. The guided flow keeps the next move clear without adding noise.",
     noteLabel: "Project note",
     notePlaceholder: "Scope, desired move, collaborators, links, or the exact conversation you want to have.",
     companyLabel: "Company or context",
@@ -609,7 +608,7 @@ function buildSubmissionBrief(flowId: ContactFlowId, form: ContactFormState, rou
     const selectedPreferences = formatOptionLabels(routeDetails.updatePreferences, mailingPreferenceOptions);
 
     return [
-      "Request: Walls/Devine Volume 1 signal-list updates routed through CGU intake.",
+      "Request: Walls/Devine Volume 1 updates.",
       `Requested updates: ${selectedPreferences.length ? selectedPreferences.join(", ") : "General Volume 1 signal updates"}.`,
       trimmedBrief ? `Note: ${trimmedBrief}` : ""
     ]
@@ -672,7 +671,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
     return [
       {
         label: "Request",
-        value: "Volume 1 signal-list request",
+        value: "Volume 1 updates request",
         description: selectedPreferences
       },
       {
@@ -683,7 +682,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       {
         label: "Project",
         value: form.projectTitle.trim() || "Walls/Devine",
-        description: `Routed through CGU while Walls/Devine stays live and the ${june30LaunchDateLabel} bridge is staged.`
+        description: `Walls/Devine stays live while the ${june30LaunchDateLabel} bridge is staged.`
       },
       {
         label: "Next move",

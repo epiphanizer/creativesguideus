@@ -3,7 +3,7 @@ import type { WallsDevineBookingBannerNote, WallsDevineCollectorHeroNote } from 
 const legacyWallsDevineCollectorBody =
   "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine";
 const legacyWallsDevineMailingListHelper =
-  "Ask to receive Walls/Devine drop alerts, listening-room updates, and collector unlock notices. Until the dedicated list is live, this request routes through CGU intake.";
+  "Stay close to Walls/Devine for drop alerts, collector unlocks, and new chapter openings.";
 
 export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote = {
   eyebrow: "Collector experience",
@@ -12,8 +12,7 @@ export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote =
   body: "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us as Volume 1 lives in public now and the next rooms line up for July 11.\n\nWith gratitude,\nTerry Devine",
   primaryCtaLabel: "Open Listening Room",
   secondaryCtaLabel: "Shop Volume 1 Merch",
-  mailingListHelper:
-    "Ask to join the Volume 1 Signal List for listening-room updates, collector unlock notices, merch drops, and the July 11 bridge into Bong Tour and Appreesh. Until the dedicated list is live, this request routes through CGU intake.",
+  mailingListHelper: "Stay close to Walls/Devine for collector unlocks, merch drops, and new chapter openings.",
   signatureIntro: "With Love From the Room,",
   journalLabel: "From the journals",
   updatedAt: "2026-05-16T00:00:00.000Z"

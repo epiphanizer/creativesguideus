@@ -1409,8 +1409,8 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
                       cardTitle={`Keep ${activeTile.title} open`}
                       cardDescription="Get the next hidden note, return entry, and collector signal for this chapter without waiting for the public recap."
                       benefits={["Hidden-room returns", "Chapter-specific signals"]}
-                      triggerLabel="Enter The Signal Room"
-                      modalTitle="Enter The Signal Room"
+                      triggerLabel="Open Collector Access"
+                      modalTitle="Open Collector Access"
                       modalDescription={`Drop your email for ${activeTile.title} updates, return signals, journal fragments, and collector-only access.`}
                       submitLabel="Join this chapter"
                       successMessage={`You are in for ${activeTile.title}. Watch your inbox for the next signal, hidden note, and room opening.`}

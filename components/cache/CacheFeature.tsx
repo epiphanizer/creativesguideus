@@ -15,18 +15,6 @@ const cacheContactHref = buildContactHref({
   }
 });
 
-const wallsDevineSignalListHref = buildContactHref({
-  pathname: "/contact",
-  overrides: {
-    context: "walls-devine-mailing-list",
-    inquiryType: "mailing-list",
-    project: "Walls/Devine",
-    surface: "campaign-world",
-    sourceRoute: "/cache",
-    campaignWindow: albumLaunchCampaignWindow
-  }
-});
-
 export function CacheFeature() {
   if (!isCachePreview) {
     // Gate UI placeholder — wire up when content is ready.
@@ -57,8 +45,8 @@ export function CacheFeature() {
             <Link href={cacheContactHref} className="cache-button">
               Request Early Access
             </Link>
-            <Link href={wallsDevineSignalListHref} className="cache-button cache-button--outline">
-              Join the Volume 1 Signal List
+            <Link href="/walls-devine" className="cache-button cache-button--outline">
+              Open Walls/Devine
             </Link>
           </div>
 
@@ -81,13 +69,10 @@ export function CacheFeature() {
             <section className="cache-world__track cache-world__track--secondary">
               <p className="cache-section-header__eyebrow">Active world</p>
               <h2>Walls/Devine carries the live bridge now.</h2>
-              <p>Volume 1 is open. Join the signal list to stay connected through the July 11 window and into what comes next.</p>
+              <p>Volume 1 is open now. Enter the Listening Room and collector grid while Cache queues for launch.</p>
               <div className="cache-world__track-actions">
                 <Link href="/walls-devine" className="cache-button">
                   Open Walls/Devine
-                </Link>
-                <Link href={wallsDevineSignalListHref} className="cache-button cache-button--outline">
-                  Join the Volume 1 Signal List
                 </Link>
               </div>
             </section>
