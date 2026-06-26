@@ -4,7 +4,17 @@ import { type FormEvent, type ReactNode, useEffect, useMemo, useState, useTransi
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 
 import { buildBookingLeadMatches, defaultBookingBoard } from "@/lib/admin/booking-engine";
-import type { AdminAudioAnalysis, AdminMarkdownCollection, BookingTargetStatus, EcosystemLead, LinkHubContent, ListeningRoomVisit, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
+import type {
+  AdminAudioAnalysis,
+  AdminMarkdownCollection,
+  BookingTargetStatus,
+  EcosystemLead,
+  LinkHubContent,
+  ListeningRoomVisit,
+  ReleasePlanChecklistItem,
+  WallsDevineAdminData,
+  WallsDevineUpcomingShow
+} from "@/lib/admin/types";
 import {
   deleteFirebaseAdminMarkdownFile,
   getAdminUserProfile,
@@ -19,6 +29,7 @@ import {
   updateFirebaseAdminMarkdownFile,
   updateFirebaseCollectorHeroNote,
   updateFirebaseLinkHub,
+  updateFirebaseUpcomingShowsNote,
   updateFirebaseReleasePlanItem,
   type AdminUserProfile
 } from "@/lib/firebase/admin-content";
@@ -27,7 +38,11 @@ import { firebaseAdminPaths } from "@/lib/firebase/config";
 import { getEcosystemLeads } from "@/lib/firebase/ecosystem-leads";
 import { getListeningRoomVisits } from "@/lib/firebase/listening-room-visits";
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
-import { defaultWallsDevineBookingBannerNote, defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import {
+  defaultWallsDevineBookingBannerNote,
+  defaultWallsDevineCollectorHeroNote,
+  defaultWallsDevineUpcomingShowsNote
+} from "@/lib/walls-devine/public-content";
 import { cx } from "@/lib/cx";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -42,6 +57,7 @@ type ContentSource = "pending" | "firebase" | "bootstrap";
 
 const collectorHeroNoteSaveKey = "collectorHeroNote";
 const bookingBannerNoteSaveKey = "bookingBannerNote";
+const upcomingShowsSaveKey = "upcomingShows";
 const linkHubSaveKey = "linkHub";
 const bookingTargetSaveKeyPrefix = "bookingTarget";
 
@@ -115,6 +131,56 @@ function buildInitialMarkdownContent(title: string, content: string) {
   }
 
   return `# ${trimmedTitle}\n\n${trimmedContent}\n`;
+}
+
+function formatUpcomingShowsForEditor(shows: WallsDevineUpcomingShow[]) {
+  return shows
+    .map((show) => [show.dateLabel, show.city, show.venue, show.status, show.href].map((segment) => segment.trim()).join(" | "))
+    .join("\n");
+}
+
+function parseUpcomingShowsFromEditor(rawShows: string) {
+  const lines = rawShows
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const shows: WallsDevineUpcomingShow[] = [];
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index] ?? "";
+    const segments = line.split("|").map((segment) => segment.trim());
+
+    if (segments.length < 3) {
+      return {
+        shows: [],
+        error: `Line ${index + 1} must include at least Date | City | Venue.`
+      };
+    }
+
+    const [dateLabel = "", city = "", venue = "", status = "", href = ""] = segments;
+
+    if (!dateLabel || !city || !venue) {
+      return {
+        shows: [],
+        error: `Line ${index + 1} is missing required Date, City, or Venue values.`
+      };
+    }
+
+    shows.push({
+      id: `show-${index + 1}`,
+      dateLabel,
+      city,
+      venue,
+      status: status || "TBA",
+      href
+    });
+  }
+
+  return {
+    shows,
+    error: ""
+  };
 }
 
 function getFirebaseErrorMessage(error: unknown) {
@@ -510,6 +576,7 @@ const fallbackAdminData: WallsDevineAdminData = {
   journalEntries: [],
   collectorHeroNote: defaultWallsDevineCollectorHeroNote,
   bookingBannerNote: defaultWallsDevineBookingBannerNote,
+  upcomingShowsNote: defaultWallsDevineUpcomingShowsNote,
   linkHub: defaultLinkHubContent,
   storageBacked: false,
   contentBackend: "bootstrap",
@@ -1446,6 +1513,56 @@ export function AdminConsole() {
       setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "success" }));
     } catch (error) {
       setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "error" }));
+      setPanelError(getFirebaseErrorMessage(error));
+    }
+  }
+
+  async function handleUpcomingShowsSave(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!adminData) {
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const eyebrow = String(formData.get("eyebrow") ?? "").trim();
+    const title = String(formData.get("title") ?? "").trim();
+    const description = String(formData.get("description") ?? "").trim();
+    const emptyState = String(formData.get("emptyState") ?? "").trim();
+    const showsManifest = String(formData.get("showsManifest") ?? "").trim();
+    const { shows, error } = parseUpcomingShowsFromEditor(showsManifest);
+
+    if (!eyebrow || !title || !description || !emptyState) {
+      setPanelError("The upcoming shows panel needs an eyebrow, title, description, and empty-state note before it can be saved.");
+      setSaveStates((current) => ({ ...current, [upcomingShowsSaveKey]: "error" }));
+      return;
+    }
+
+    if (error) {
+      setPanelError(error);
+      setSaveStates((current) => ({ ...current, [upcomingShowsSaveKey]: "error" }));
+      return;
+    }
+
+    setPanelError("");
+    setSaveStates((current) => ({ ...current, [upcomingShowsSaveKey]: "saving" }));
+
+    try {
+      const nextNote = await updateFirebaseUpcomingShowsNote({
+        eyebrow,
+        title,
+        description,
+        emptyState,
+        shows
+      });
+
+      startTransition(() => {
+        setAdminData((current) => (current ? { ...current, upcomingShowsNote: nextNote } : current));
+      });
+
+      setSaveStates((current) => ({ ...current, [upcomingShowsSaveKey]: "success" }));
+    } catch (error) {
+      setSaveStates((current) => ({ ...current, [upcomingShowsSaveKey]: "error" }));
       setPanelError(getFirebaseErrorMessage(error));
     }
   }
@@ -2388,6 +2505,96 @@ export function AdminConsole() {
                 {saveStates[bookingBannerNoteSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
                 {saveStates[bookingBannerNoteSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
                 {saveStates[bookingBannerNoteSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this banner.</p> : null}
+              </div>
+            </form>
+          </article>
+
+          <article className="cg-admin__panel cg-admin__release-note-card">
+            <div className="cg-admin__file-head">
+              <div>
+                <h3>Public upcoming shows</h3>
+                <p>This feeds the upcoming-shows block beneath booking on the public Walls/Devine page.</p>
+              </div>
+              <p className="cg-admin__path-note">
+                Firestore: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.publicContentCollection}/{firebaseAdminPaths.upcomingShowsDocId}
+              </p>
+            </div>
+
+            <form onSubmit={handleUpcomingShowsSave} className="cg-admin__editor-form">
+              <div className="cg-admin__editor-split">
+                <label className="cg-admin__editor-field">
+                  <span>Eyebrow</span>
+                  <input
+                    name="eyebrow"
+                    type="text"
+                    className="cg-admin__editor-input"
+                    defaultValue={adminViewData.upcomingShowsNote.eyebrow}
+                    placeholder="Upcoming shows"
+                    required
+                  />
+                </label>
+                <div className="cg-admin__stack">
+                  <span className="cg-admin__editor-field-label">Last updated</span>
+                  <p className="cg-admin__path-note">{new Date(adminViewData.upcomingShowsNote.updatedAt).toLocaleString()}</p>
+                </div>
+              </div>
+
+              <label className="cg-admin__editor-field">
+                <span>Title</span>
+                <input
+                  name="title"
+                  type="text"
+                  className="cg-admin__editor-input"
+                  defaultValue={adminViewData.upcomingShowsNote.title}
+                  placeholder="Where Walls/Devine lands next"
+                  required
+                />
+              </label>
+
+              <label className="cg-admin__editor-field">
+                <span>Description</span>
+                <textarea
+                  name="description"
+                  className="cg-admin__editor-textarea"
+                  rows={3}
+                  defaultValue={adminViewData.upcomingShowsNote.description}
+                  placeholder="Optional intro line above the show list."
+                  required
+                />
+              </label>
+
+              <label className="cg-admin__editor-field">
+                <span>Empty-state message</span>
+                <input
+                  name="emptyState"
+                  type="text"
+                  className="cg-admin__editor-input"
+                  defaultValue={adminViewData.upcomingShowsNote.emptyState}
+                  placeholder="No public dates are posted right now."
+                  required
+                />
+              </label>
+
+              <label className="cg-admin__editor-field">
+                <span>Shows manifest (one per line)</span>
+                <textarea
+                  name="showsManifest"
+                  className="cg-admin__editor-textarea"
+                  rows={6}
+                  defaultValue={formatUpcomingShowsForEditor(adminViewData.upcomingShowsNote.shows)}
+                  placeholder="Aug 15, 2026 | Atlanta, GA | Terminal West | On sale | https://tickets.example.com"
+                />
+              </label>
+
+              <p className="cg-admin__helper">Format: Date | City, ST | Venue | Status | URL. Status and URL are optional.</p>
+
+              <div className="cg-admin__editor-actions">
+                <Button type="submit" variant="secondary" size="sm" disabled={saveStates[upcomingShowsSaveKey] === "saving"}>
+                  Save upcoming shows
+                </Button>
+                {saveStates[upcomingShowsSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
+                {saveStates[upcomingShowsSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
+                {saveStates[upcomingShowsSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save upcoming shows.</p> : null}
               </div>
             </form>
           </article>

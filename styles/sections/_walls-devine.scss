@@ -420,6 +420,111 @@
   box-shadow: none;
 }
 
+.wd-upcoming-shows {
+  margin-top: clamp(1rem, 2.4vw, 1.6rem);
+  display: grid;
+  gap: 0.9rem;
+  width: 100%;
+  padding: clamp(1rem, 2.5vw, 1.4rem) clamp(1.1rem, 2.8vw, 1.9rem);
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  background: rgba(247, 245, 240, 0.64);
+}
+
+.wd-upcoming-shows__head {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.wd-upcoming-shows__eyebrow {
+  margin: 0;
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(108, 5, 8, 0.76);
+}
+
+.wd-upcoming-shows__title {
+  margin: 0;
+  font-family: "Cormorant Garamond", var(--cg-font-serif);
+  font-size: clamp(1.3rem, 1.8vw, 1.7rem);
+  line-height: 1.12;
+  color: var(--wd-ink);
+}
+
+.wd-upcoming-shows__description,
+.wd-upcoming-shows__empty {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(27, 21, 21, 0.74);
+}
+
+.wd-upcoming-shows__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.wd-upcoming-shows__item {
+  display: grid;
+  gap: 0.28rem;
+  padding-top: 0.72rem;
+  border-top: 1px solid rgba(17, 17, 17, 0.11);
+}
+
+.wd-upcoming-shows__line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.85rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.wd-upcoming-shows__date,
+.wd-upcoming-shows__city,
+.wd-upcoming-shows__venue,
+.wd-upcoming-shows__status {
+  margin: 0;
+}
+
+.wd-upcoming-shows__date {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.66);
+}
+
+.wd-upcoming-shows__city,
+.wd-upcoming-shows__venue {
+  font-size: 0.95rem;
+  color: rgba(17, 17, 17, 0.88);
+}
+
+.wd-upcoming-shows__status {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.58);
+}
+
+.wd-upcoming-shows__link {
+  width: fit-content;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(17, 17, 17, 0.84);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.3);
+}
+
+.wd-upcoming-shows__link:hover,
+.wd-upcoming-shows__link:focus-visible {
+  color: #111;
+  border-bottom-color: rgba(17, 17, 17, 0.55);
+}
+
 @media (min-width: 980px) {
   .wd-booking-banner {
     grid-template-columns: minmax(0, 1fr);

@@ -304,7 +304,7 @@ service cloud.firestore {
     }
 
     match /adminProjects/walls-devine/publicContent/{docId} {
-      allow read: if docId == 'collectorHeroNote' || docId == 'linkHub';
+      allow read: if docId == 'collectorHeroNote' || docId == 'linkHub' || docId == 'upcomingShows';
       allow write: if isAdmin();
     }
 

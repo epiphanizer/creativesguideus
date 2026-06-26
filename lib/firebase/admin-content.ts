@@ -12,14 +12,17 @@ import type {
   ReleasePlan,
   WallsDevineAdminData,
   WallsDevineBookingBannerNote,
-  WallsDevineCollectorHeroNote
+  WallsDevineCollectorHeroNote,
+  WallsDevineUpcomingShowsNote
 } from "@/lib/admin/types";
 import { defaultLinkHubContent, normalizeLinkHubContent } from "@/lib/link-hub/content";
 import {
   defaultWallsDevineBookingBannerNote,
   defaultWallsDevineCollectorHeroNote,
+  defaultWallsDevineUpcomingShowsNote,
   normalizeWallsDevineBookingBannerNote,
-  normalizeWallsDevineCollectorHeroNote
+  normalizeWallsDevineCollectorHeroNote,
+  normalizeWallsDevineUpcomingShowsNote
 } from "@/lib/walls-devine/public-content";
 
 import { firebaseDb, firebaseStorage } from "./client";
@@ -103,6 +106,14 @@ function getLinkHubDocRef() {
   }
 
   return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.linkHubDocId);
+}
+
+function getUpcomingShowsDocRef() {
+  if (!firebaseDb) {
+    throw new Error("Firestore is not initialized for this Firebase project.");
+  }
+
+  return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.upcomingShowsDocId);
 }
 
 function getMarkdownFileId(collectionName: AdminMarkdownCollection, slug: string) {
@@ -438,6 +449,16 @@ async function getLinkHubFromFirestore() {
   return normalizeLinkHubContent(snapshot.data() as Partial<LinkHubContent>);
 }
 
+async function getUpcomingShowsFromFirestore() {
+  const snapshot = await getDoc(getUpcomingShowsDocRef());
+
+  if (!snapshot.exists()) {
+    return defaultWallsDevineUpcomingShowsNote;
+  }
+
+  return normalizeWallsDevineUpcomingShowsNote(snapshot.data() as Partial<WallsDevineUpcomingShowsNote>);
+}
+
 function updateMarkdownCollection(
   files: AdminMarkdownFile[],
   nextFile: AdminMarkdownFile
@@ -481,9 +502,10 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
   try {
     let { instagramDrafts, journalEntries } = await readFirestoreMarkdownCollections();
     let markdownInitialized = Boolean(projectData?.[firebaseAdminPaths.markdownInitializedField]);
-    const [collectorHeroNote, bookingBannerNote, linkHub, bookingRoutingTasks] = await Promise.all([
+    const [collectorHeroNote, bookingBannerNote, upcomingShowsNote, linkHub, bookingRoutingTasks] = await Promise.all([
       getCollectorHeroNoteFromFirestore(),
       getBookingBannerNoteFromFirestore(),
+      getUpcomingShowsFromFirestore(),
       getLinkHubFromFirestore(),
       readBookingRoutingTasks()
     ]);
@@ -506,6 +528,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
       journalEntries,
       collectorHeroNote,
       bookingBannerNote,
+      upcomingShowsNote,
       linkHub,
       storageBacked: true,
       contentBackend: "firestore",
@@ -520,6 +543,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
       journalEntries: [],
       collectorHeroNote: defaultWallsDevineCollectorHeroNote,
       bookingBannerNote: defaultWallsDevineBookingBannerNote,
+      upcomingShowsNote: defaultWallsDevineUpcomingShowsNote,
       linkHub: defaultLinkHubContent,
       storageBacked: false,
       contentBackend: "bootstrap",
@@ -578,6 +602,16 @@ export async function updateFirebaseBookingBannerNote(note: Partial<WallsDevineB
   });
 
   await setDoc(getBookingBannerNoteDocRef(), nextNote, { merge: true });
+  return nextNote;
+}
+
+export async function updateFirebaseUpcomingShowsNote(note: Partial<WallsDevineUpcomingShowsNote>) {
+  const nextNote = normalizeWallsDevineUpcomingShowsNote({
+    ...note,
+    updatedAt: new Date().toISOString()
+  });
+
+  await setDoc(getUpcomingShowsDocRef(), nextNote, { merge: true });
   return nextNote;
 }
 
@@ -664,6 +698,15 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
       getLinkHubDocRef(),
       normalizeLinkHubContent({
         ...seedData.linkHub,
+        updatedAt: new Date().toISOString()
+      }),
+      { merge: true }
+    );
+
+    batch.set(
+      getUpcomingShowsDocRef(),
+      normalizeWallsDevineUpcomingShowsNote({
+        ...seedData.upcomingShowsNote,
         updatedAt: new Date().toISOString()
       }),
       { merge: true }

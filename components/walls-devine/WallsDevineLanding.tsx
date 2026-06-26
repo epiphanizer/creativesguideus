@@ -13,7 +13,11 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { buildContactHref } from "@/lib/contact-intake-routing";
 import { albumLaunchCampaignWindow } from "@/lib/launch-state";
 import type { EcosystemRewardId } from "@/lib/ecosystem/reward-catalog";
-import { getWallsDevineBookingBannerNote, getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
+import {
+  getWallsDevineBookingBannerNote,
+  getWallsDevineCollectorHeroNote,
+  getWallsDevineUpcomingShowsNote
+} from "@/lib/firebase/walls-devine-public";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 import {
   openWallsDevineListeningRoomShortcut,
@@ -21,7 +25,11 @@ import {
   wallsDevineListeningRoomAnchorId,
   wallsDevinePlayerDismissedChangeEventName
 } from "@/lib/wallsDevinePlayerBridge";
-import { defaultWallsDevineBookingBannerNote, defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import {
+  defaultWallsDevineBookingBannerNote,
+  defaultWallsDevineCollectorHeroNote,
+  defaultWallsDevineUpcomingShowsNote
+} from "@/lib/walls-devine/public-content";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
 import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
@@ -226,6 +234,7 @@ export function WallsDevineLanding() {
   const [isPlayerDismissed, setIsPlayerDismissed] = useState(false);
   const [collectorHeroNote, setCollectorHeroNote] = useState(defaultWallsDevineCollectorHeroNote);
   const [bookingBannerNote, setBookingBannerNote] = useState(defaultWallsDevineBookingBannerNote);
+  const [upcomingShowsNote, setUpcomingShowsNote] = useState(defaultWallsDevineUpcomingShowsNote);
   const prefersReducedMotion = usePrefersReducedMotion();
   const collectorHeroBody = collectorHeroNote.body.trim() === defaultWallsDevineCollectorHeroNote.body.trim() ? heartfeltCollectorHeroBody : collectorHeroNote.body;
 
@@ -242,10 +251,15 @@ export function WallsDevineLanding() {
   useEffect(() => {
     let isActive = true;
 
-    void Promise.all([getWallsDevineCollectorHeroNote(), getWallsDevineBookingBannerNote()]).then(([note, banner]) => {
+    void Promise.all([
+      getWallsDevineCollectorHeroNote(),
+      getWallsDevineBookingBannerNote(),
+      getWallsDevineUpcomingShowsNote()
+    ]).then(([note, banner, shows]) => {
       if (isActive) {
         setCollectorHeroNote(note);
         setBookingBannerNote(banner);
+        setUpcomingShowsNote(shows);
       }
     });
 
@@ -428,18 +442,6 @@ export function WallsDevineLanding() {
             <div className="wd-booking-banner__action">
               <Button
                 as="a"
-                href={wallsDevineBookingIntakeHref}
-                className="wd-booking-banner__button"
-                data-analytics-event="walls_devine_cta_click"
-                data-analytics-param-source="walls_devine"
-                data-analytics-param-cta="booking_banner_book"
-                data-analytics-param-destination={wallsDevineBookingIntakeHref}
-                data-analytics-param-external="false"
-              >
-                {bookingBannerNote.primaryCtaLabel}
-              </Button>
-              <Button
-                as="a"
                 href={wallsDevineMerchShopHref}
                 variant="secondary"
                 className="wd-booking-banner__button wd-booking-banner__button--secondary"
@@ -453,8 +455,52 @@ export function WallsDevineLanding() {
               >
                 {bookingBannerNote.secondaryCtaLabel}
               </Button>
+              <Button
+                as="a"
+                href={wallsDevineBookingIntakeHref}
+                className="wd-booking-banner__button"
+                data-analytics-event="walls_devine_cta_click"
+                data-analytics-param-source="walls_devine"
+                data-analytics-param-cta="booking_banner_book"
+                data-analytics-param-destination={wallsDevineBookingIntakeHref}
+                data-analytics-param-external="false"
+              >
+                {bookingBannerNote.primaryCtaLabel}
+              </Button>
               <p className="wd-booking-banner__meta">{bookingBannerNote.meta}</p>
             </div>
+          </section>
+
+          <section className="wd-upcoming-shows" aria-labelledby="walls-devine-upcoming-shows-title">
+            <div className="wd-upcoming-shows__head">
+              <p className="wd-upcoming-shows__eyebrow">{upcomingShowsNote.eyebrow}</p>
+              <h3 id="walls-devine-upcoming-shows-title" className="wd-upcoming-shows__title">{upcomingShowsNote.title}</h3>
+              <p className="wd-upcoming-shows__description">{upcomingShowsNote.description}</p>
+            </div>
+
+            {upcomingShowsNote.shows.length ? (
+              <ul className="wd-upcoming-shows__list">
+                {upcomingShowsNote.shows.map((show) => (
+                  <li key={show.id} className="wd-upcoming-shows__item">
+                    <div className="wd-upcoming-shows__line">
+                      <p className="wd-upcoming-shows__date">{show.dateLabel}</p>
+                      <p className="wd-upcoming-shows__city">{show.city}</p>
+                    </div>
+                    <div className="wd-upcoming-shows__line">
+                      <p className="wd-upcoming-shows__venue">{show.venue}</p>
+                      <p className="wd-upcoming-shows__status">{show.status}</p>
+                    </div>
+                    {show.href ? (
+                      <a href={show.href} target="_blank" rel="noreferrer" className="wd-upcoming-shows__link">
+                        Details
+                      </a>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="wd-upcoming-shows__empty">{upcomingShowsNote.emptyState}</p>
+            )}
           </section>
         </div>
       </SectionShell>
