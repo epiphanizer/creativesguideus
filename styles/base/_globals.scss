@@ -870,7 +870,7 @@ p + ol {
   z-index: 50;
   backdrop-filter: blur(var(--cg-header-blur));
   background:
-    linear-gradient(90deg, rgba(244, 231, 206, 0.9) 0 49.65%, rgba(250, 250, 249, 0.92) 50.35% 100%),
+    linear-gradient(90deg, rgba(250, 250, 249, 0.92) 0 49.65%, rgba(244, 231, 206, 0.9) 50.35% 100%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.08));
   border-bottom: 1px solid var(--cg-color-grid-line);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.36);
@@ -878,7 +878,7 @@ p + ol {
 
 @supports not (backdrop-filter: blur(0)) {
   .cg-header {
-    background: linear-gradient(90deg, rgba(244, 231, 206, 0.98) 0 49.65%, rgba(250, 250, 249, 0.98) 50.35% 100%);
+    background: linear-gradient(90deg, rgba(250, 250, 249, 0.98) 0 49.65%, rgba(244, 231, 206, 0.98) 50.35% 100%);
   }
 
   .cg-web__content {
@@ -2387,14 +2387,24 @@ html {
     position: fixed;
     inset: 0 0 auto 0;
     z-index: 120;
+    background:
+      linear-gradient(90deg, rgba(250, 250, 249, 0.98) 0 72%, rgba(244, 231, 206, 0.98) 72% 100%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.08));
   }
 
   .cg-header__inner {
-    grid-template-columns: minmax(0, 1fr) auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     min-height: 60px;
     height: 60px;
     padding: 0 clamp(var(--cg-space-sm), 4vw, var(--cg-space-md));
     gap: var(--cg-space-sm);
+  }
+
+  .cg-header__identity {
+    justify-self: start;
+    margin-right: auto;
   }
 
   .cg-header__copy {
@@ -2410,9 +2420,22 @@ html {
     width: 44px;
     height: 44px;
     padding: 0;
-    border-radius: var(--cg-radius-sm);
-    grid-column: auto;
-    grid-row: 1;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    justify-self: auto;
+  }
+
+  .cg-header__menu-toggle,
+  .cg-header__menu-toggle:hover,
+  .cg-header__menu-toggle:focus-visible,
+  .cg-header__menu-toggle--open,
+  .cg-header__menu-toggle--open:hover,
+  .cg-header__menu-toggle--open:focus-visible {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
   }
 
   .cg-header__menu-toggle-label {
