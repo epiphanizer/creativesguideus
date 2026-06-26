@@ -532,8 +532,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
       "Project context and a real note keep the conversation anchored to the work instead of a blank inbox.",
       "Direct contact details stay inside the CGU signal flow rather than a third-party form handoff."
     ],
-    trustNote:
-      "This is the main CGU contact route. The guided flow keeps the next move clear without adding noise.",
+    trustNote: "Open a new engagement.",
     noteLabel: "Project note",
     notePlaceholder: "Scope, desired move, collaborators, links, or the exact conversation you want to have.",
     companyLabel: "Company or context",
@@ -541,31 +540,31 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     steps: [
       {
         id: "intent",
-        label: "Confirm intent",
-        title: "Choose the right room",
-        description: "Pick the closest lane so the request enters the studio with the right shape.",
-        helper: "You do not need perfect information yet. The goal is to keep the first move legible."
+        label: "Select the lane",
+        title: "Choose the room",
+        description: "Pick the lane that best matches your project.",
+        helper: "Select the lane that fits the work."
       },
       {
         id: "project",
-        label: "Project shape",
-        title: "Describe the project shape",
-        description: "Add the core project details so the request can be routed without guesswork.",
-        helper: "Goal, surface, engagement, timing, and range are all helpful, but the project note carries the most weight."
+        label: "Scope and timing",
+        title: "Outline scope and timing",
+        description: "Define the project scope and timing.",
+        helper: "Keep the brief direct."
       },
       {
         id: "contact",
         label: "Contact details",
-        title: "Anchor the reply path",
-        description: "Use the best inbox and context so the conversation can continue cleanly.",
-        helper: "If there is no company yet, leave the working context that best explains the lane."
+        title: "Add your contact details",
+        description: "Share the best contact path for this project.",
+        helper: "Include your studio or company context when relevant."
       },
       {
         id: "review",
-        label: "Review",
-        title: "Review the routed intake",
-        description: "Confirm the lane, contact path, and project note before sending it into CGU.",
-        helper: "This stays inside the studio signal flow until the next move is clear."
+        label: "Send the brief",
+        title: "Send the brief",
+        description: "Review the details, then send.",
+        helper: ""
       }
     ]
   };
@@ -580,7 +579,7 @@ function buildDisplayInquiryLabel(flowId: ContactFlowId, inquiryType: string) {
     return "Appreesh preview route";
   }
 
-  return getOptionLabel(inquiryTypeOptions, inquiryType) || "Guided intake";
+  return getOptionLabel(inquiryTypeOptions, inquiryType) || "Studio contact";
 }
 
 function buildInterestLabel(flowId: ContactFlowId, inquiryTypeLabel: string) {
@@ -592,7 +591,7 @@ function buildInterestLabel(flowId: ContactFlowId, inquiryTypeLabel: string) {
     return "Appreesh preview";
   }
 
-  return inquiryTypeLabel || "Guided intake";
+  return inquiryTypeLabel || "Studio contact";
 }
 
 function buildSubmissionBrief(flowId: ContactFlowId, form: ContactFormState, routeDetails: RouteDetailsState) {
@@ -1544,7 +1543,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
   const formContent = (
     <form className="cg-contact__form" onSubmit={handleSubmit} noValidate aria-busy={submissionState === "submitting"}>
       <HeadingTag id="contact-title" className="cg-contact__sr-only">
-        Guided intake
+        Studio Contact
       </HeadingTag>
 
       <div className="cg-contact__form-head">
@@ -1554,8 +1553,6 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         />
 
         <GuidedIntakeStepHeader
-          currentStep={currentStep}
-          totalSteps={activeFlow.steps.length}
           title={activeStep.title}
           description={activeStep.description}
           trustNote={activeFlow.trustNote}

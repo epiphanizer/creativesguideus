@@ -7,8 +7,6 @@ type GuidedIntakeProgressStep = {
 };
 
 type GuidedIntakeStepHeaderProps = {
-  currentStep: number;
-  totalSteps: number;
   title: string;
   description: string;
   trustNote: string;
@@ -64,7 +62,6 @@ export function GuidedIntakeProgress({ steps, currentStep }: { steps: GuidedInta
             className={`cg-contact__progress-step${isActive ? " cg-contact__progress-step--active" : ""}${isComplete ? " cg-contact__progress-step--complete" : ""}`}
             aria-current={isActive ? "step" : undefined}
           >
-            <span className="cg-contact__progress-index">{index + 1}</span>
             <span className="cg-contact__progress-copy">
               <strong>{step.label}</strong>
               <small>{step.title}</small>
@@ -76,16 +73,13 @@ export function GuidedIntakeProgress({ steps, currentStep }: { steps: GuidedInta
   );
 }
 
-export function GuidedIntakeStepHeader({ currentStep, totalSteps, title, description, trustNote, helper }: GuidedIntakeStepHeaderProps) {
+export function GuidedIntakeStepHeader({ title, description, trustNote, helper }: GuidedIntakeStepHeaderProps) {
   return (
     <div className="cg-contact__step-copy">
-      <span className="cg-contact__step-count">
-        Step {currentStep + 1} of {totalSteps}
-      </span>
       <h3 className="cg-contact__step-title">{title}</h3>
       <p className="cg-contact__step-description">{description}</p>
       <p className="cg-contact__trust-note">{trustNote}</p>
-      <p className="cg-contact__step-helper">{helper}</p>
+      {helper ? <p className="cg-contact__step-helper">{helper}</p> : null}
     </div>
   );
 }
