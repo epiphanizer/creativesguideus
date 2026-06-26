@@ -2493,7 +2493,7 @@ export function AdminConsole() {
                   type="text"
                   className="cg-admin__editor-input"
                   defaultValue={adminViewData.bookingBannerNote.meta}
-                  placeholder="Listening events · Performance · Partnerships · Fourthwall merch shop"
+                  placeholder="Live Music · Events ·"
                   required
                 />
               </label>
