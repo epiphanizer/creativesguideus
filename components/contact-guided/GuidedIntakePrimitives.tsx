@@ -77,8 +77,8 @@ export function GuidedIntakeStepHeader({ title, description, trustNote, helper }
   return (
     <div className="cg-contact__step-copy">
       <h3 className="cg-contact__step-title">{title}</h3>
-      <p className="cg-contact__step-description">{description}</p>
-      <p className="cg-contact__trust-note">{trustNote}</p>
+      {description ? <p className="cg-contact__step-description">{description}</p> : null}
+      {trustNote ? <p className="cg-contact__trust-note">{trustNote}</p> : null}
       {helper ? <p className="cg-contact__step-helper">{helper}</p> : null}
     </div>
   );

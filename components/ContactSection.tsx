@@ -312,7 +312,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
         {
           id: "details",
           label: "Update preferences",
-          title: "Choose the signals that matter",
+          title: "What updates do you want?",
           description: "Pick the signal types you actually want, then add any note that helps the studio route this cleanly.",
           helper: `If you skip this step, we treat it as a general request for Walls/Devine and ${june30LaunchDateLabel} updates.`
         },
@@ -347,7 +347,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
         {
           id: "intent",
           label: "Confirm intent",
-          title: "Choose the booking lane",
+          title: "What kind of booking is this?",
           description: "Pick the closest room so CGU routes the ask to the right side of the release world.",
           helper: "You can keep this inside the Walls/Devine lane even if the ask spans live performance, listening, screening, or partnership."
         },
@@ -460,7 +460,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "details",
           label: "Partnership details",
           title: "Describe the fit",
-          description: "Choose the lane that fits best, add timing if you have it, and leave the clearest note you can.",
+          description: "Select the lane that fits best, add timing if you have it, and leave the clearest note you can.",
           helper: "Production, soundtrack, and collector-world context can all live together here without losing the film signal."
         },
         {
@@ -532,7 +532,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
       "Project context and a real note keep the conversation anchored to the work instead of a blank inbox.",
       "Direct contact details stay inside the CGU signal flow rather than a third-party form handoff."
     ],
-    trustNote: "Open a new engagement.",
+    trustNote: "",
     noteLabel: "Project note",
     notePlaceholder: "Scope, desired move, collaborators, links, or the exact conversation you want to have.",
     companyLabel: "Company or context",
@@ -541,7 +541,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
       {
         id: "intent",
         label: "Select the lane",
-        title: "Choose the room",
+        title: "What are you looking for?",
         description: "Pick the lane that best matches your project.",
         helper: "Select the lane that fits the work."
       },
@@ -549,8 +549,8 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
         id: "project",
         label: "Scope and timing",
         title: "Outline scope and timing",
-        description: "Define the project scope and timing.",
-        helper: "Keep the brief direct."
+        description: "",
+        helper: ""
       },
       {
         id: "contact",
@@ -819,7 +819,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
 
 function validateStep(flow: ContactFlow, stepId: GuidedStepId, form: ContactFormState, routeDetails: RouteDetailsState) {
   if (stepId === "intent" && (flow.id === "general" || flow.id === "walls-booking") && !form.inquiryType) {
-    return "Choose the closest room before continuing.";
+    return "What are you looking for? Select a lane to continue.";
   }
 
   if (stepId === "project" && flow.id === "general" && !form.brief.trim()) {
@@ -841,7 +841,7 @@ function validateStep(flow: ContactFlow, stepId: GuidedStepId, form: ContactForm
 
     if (flow.id === "bong-partnership") {
       if (!routeDetails.partnershipFocus) {
-        return "Choose the closest Bong Tour lane before continuing.";
+        return "What kind of Bong Tour conversation is this? Select a lane to continue.";
       }
 
       if (!form.brief.trim()) {
@@ -1062,8 +1062,8 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         return (
           <>
             <fieldset className="cg-contact__fieldset">
-              <legend className="cg-contact__legend">Choose the room</legend>
-              <p className="cg-contact__field-hint">Pick the lane that best fits the first move. You can still clarify the exact shape in the next step.</p>
+              <legend className="cg-contact__legend">What are you looking for?</legend>
+              <p className="cg-contact__field-hint">Select the lane that best matches your request.</p>
               <GuidedIntakeChoiceGrid
                 options={inquiryTypeCardOptions}
                 value={form.inquiryType}
@@ -1169,7 +1169,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
 
             <GuidedIntakeField label="Goal" htmlFor="contact-goal">
               <select id="contact-goal" name="goal" value={form.goal} onChange={handleFieldChange}>
-                <option value="">Choose the lead move</option>
+                <option value="">What is the goal?</option>
                 {goalOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1182,7 +1182,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <GuidedIntakeFieldRow>
             <GuidedIntakeField label="Surface" htmlFor="contact-surface">
               <select id="contact-surface" name="surface" value={form.surface} onChange={handleFieldChange}>
-                <option value="">Choose the primary surface</option>
+                <option value="">What is the surface?</option>
                 {surfaceOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1193,7 +1193,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
 
             <GuidedIntakeField label="Engagement" htmlFor="contact-engagement">
               <select id="contact-engagement" name="engagement" value={form.engagement} onChange={handleFieldChange}>
-                <option value="">Choose the lead mode</option>
+                <option value="">What is the engagement?</option>
                 {engagementOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1206,7 +1206,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <GuidedIntakeFieldRow>
             <GuidedIntakeField label="Timeline" htmlFor="contact-timeline">
               <select id="contact-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
-                <option value="">Choose timing</option>
+                <option value="">When do you need this?</option>
                 {timelineOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1217,7 +1217,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
 
             <GuidedIntakeField label="Budget range" htmlFor="contact-budget-range">
               <select id="contact-budget-range" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
-                <option value="">Choose a range</option>
+                <option value="">What is the budget range?</option>
                 {budgetRangeOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1306,7 +1306,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         return (
           <>
             <fieldset className="cg-contact__fieldset">
-              <legend className="cg-contact__legend">Choose the updates that matter</legend>
+              <legend className="cg-contact__legend">What updates do you want?</legend>
               <p className="cg-contact__field-hint">Pick one or many. If you skip these, CGU treats this as a general request for Volume 1 signal updates.</p>
               <GuidedIntakeChoiceGrid
                 options={mailingPreferenceOptions}
@@ -1346,7 +1346,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
 
               <GuidedIntakeField label="Timeline" htmlFor="contact-booking-timeline">
                 <select id="contact-booking-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
-                  <option value="">Choose timing</option>
+                  <option value="">When do you need this?</option>
                   {timelineOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -1359,7 +1359,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
             <GuidedIntakeFieldRow>
               <GuidedIntakeField label="Budget range" htmlFor="contact-booking-budget">
                 <select id="contact-booking-budget" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
-                  <option value="">Choose a range</option>
+                  <option value="">What is the budget range?</option>
                   {budgetRangeOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -1466,7 +1466,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
       return (
         <>
           <fieldset className="cg-contact__fieldset">
-            <legend className="cg-contact__legend">Choose the closest Bong Tour lane</legend>
+            <legend className="cg-contact__legend">What kind of Bong Tour conversation is this?</legend>
             <p className="cg-contact__field-hint">Pick the focus that best fits the first conversation. The full note can still span production, soundtrack, and collector-world context.</p>
             <GuidedIntakeChoiceGrid
               options={partnershipFocusOptions}
@@ -1482,7 +1482,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <GuidedIntakeFieldRow>
             <GuidedIntakeField label="Timeline" htmlFor="contact-bong-timeline">
               <select id="contact-bong-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
-                <option value="">Choose timing</option>
+                <option value="">When do you need this?</option>
                 {timelineOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1493,7 +1493,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
 
             <GuidedIntakeField label="Budget range" htmlFor="contact-bong-budget">
               <select id="contact-bong-budget" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
-                <option value="">Choose a range</option>
+                <option value="">What is the budget range?</option>
                 {budgetRangeOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
