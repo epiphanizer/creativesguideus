@@ -1376,22 +1376,22 @@
 .bt-treatment__modal-copy h2 {
   margin: 0;
   font-family: "Cormorant Garamond", var(--cg-font-serif, serif);
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-weight: 500;
+  letter-spacing: 0.025em;
   color: var(--bt-text);
 }
 
 .bt-treatment__intro h1 {
-  font-size: clamp(2.6rem, 4.8vw, 4.6rem);
-  line-height: 0.96;
+  font-size: clamp(2rem, 3.6vw, 3.35rem);
+  line-height: 1.06;
 }
 
 .bt-treatment__deck {
   margin: 0;
   max-width: 46rem;
   color: rgba(52, 40, 29, 0.88);
-  font-size: clamp(1rem, 0.72vw + 0.84rem, 1.16rem);
-  line-height: 1.72;
+  font-size: clamp(0.98rem, 0.45vw + 0.9rem, 1.08rem);
+  line-height: 1.6;
 }
 
 .bt-treatment__meta-line,

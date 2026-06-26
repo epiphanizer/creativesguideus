@@ -34,15 +34,15 @@
   --cg-font-serif: "Libre Baskerville", "Georgia", "Times New Roman", serif;
   --cg-font-mono: "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
 
-  --cg-type-display: clamp(3.25rem, 6vw, 5rem);
-  --cg-type-hero: clamp(2.5rem, 5vw, 3.75rem);
-  --cg-type-title: clamp(1.75rem, 3vw, 2.5rem);
-  --cg-type-subtitle: clamp(1.25rem, 2vw, 1.75rem);
-  --cg-type-body-lg: 1.125rem;
+  --cg-type-display: clamp(2.7rem, 4.8vw, 4.2rem);
+  --cg-type-hero: clamp(2.15rem, 3.8vw, 3.05rem);
+  --cg-type-title: clamp(1.5rem, 2.25vw, 2.1rem);
+  --cg-type-subtitle: clamp(1.12rem, 1.5vw, 1.42rem);
+  --cg-type-body-lg: clamp(1.02rem, 0.45vw + 0.94rem, 1.12rem);
   --cg-type-body: 1rem;
   --cg-type-body-sm: 0.875rem;
-  --cg-type-tight: 1.2;
-  --cg-type-relaxed: 1.6;
+  --cg-type-tight: 1.12;
+  --cg-type-relaxed: 1.58;
 
   --cg-space-3xs: 0.18rem;
   --cg-space-2xs: 0.25rem;

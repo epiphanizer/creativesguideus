@@ -1250,13 +1250,14 @@ p + ol {
 }
 
 .cg-hero .cg-section-header__title {
-  font-size: clamp(2.4rem, 4.6vw, 3.1rem);
-  letter-spacing: -0.01em;
+  font-size: clamp(2rem, 3.3vw, 2.7rem);
+  letter-spacing: -0.02em;
 }
 
 .cg-hero .cg-section-header__description {
   color: var(--cg-color-ink-500);
-  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  font-size: clamp(1rem, 0.7vw + 0.92rem, 1.1rem);
+  line-height: 1.58;
   max-width: 48ch;
 }
 
@@ -1437,11 +1438,13 @@ p + ol {
   font-size: var(--cg-type-body-lg);
   max-width: 52ch;
   color: var(--cg-color-ink-600);
+  line-height: var(--cg-type-relaxed);
 }
 
 .cg-section__body {
   max-width: 60ch;
   color: var(--cg-color-ink-500);
+  line-height: var(--cg-type-relaxed);
 }
 
 .cg-section-header {
@@ -1496,7 +1499,10 @@ p + ol {
 
 .cg-section-header__title {
   font-size: var(--cg-type-title);
-  font-variation-settings: "wght" 620;
+  font-weight: 500;
+  font-variation-settings: "wght" 500;
+  line-height: 1.12;
+  letter-spacing: -0.028em;
 }
 
 .cg-section--hero .cg-section-header__title {
@@ -1506,12 +1512,14 @@ p + ol {
 .cg-section-header__subtitle {
   font-size: var(--cg-type-subtitle);
   color: var(--cg-color-ink-400);
+  line-height: 1.28;
 }
 
 .cg-section-header__description {
   font-size: var(--cg-type-body-lg);
   color: var(--cg-color-ink-500);
   max-width: 62ch;
+  line-height: var(--cg-type-relaxed);
 }
 
 .cg-section-header__actions {
@@ -2318,7 +2326,8 @@ h1,
  h5,
  h6 {
   font-family: var(--cg-font-serif);
-  letter-spacing: -0.02em;
+  font-weight: 500;
+  letter-spacing: -0.025em;
   line-height: var(--cg-type-tight);
 }
 

@@ -87,7 +87,8 @@
 .wd-hero__showcase .cg-section-header__title {
   color: var(--wd-ink);
   text-transform: uppercase;
-  letter-spacing: 0.02em;
+  font-weight: 500;
+  letter-spacing: 0.015em;
   margin: 1rem 0;
 }
 
@@ -97,7 +98,8 @@
 
 .wd-hero__showcase .cg-section-header__description {
   max-width: 39ch;
-  font-size: clamp(1rem, 1vw + 0.78rem, 1.12rem);
+  font-size: clamp(0.98rem, 0.45vw + 0.9rem, 1.06rem);
+  line-height: 1.58;
   color: rgba(27, 21, 21, 0.86);
 }
 

@@ -9,10 +9,10 @@
   --cg-home-copy-gap: clamp(0.35rem, 0.8vh, 0.65rem);
   --cg-home-stage-gap: clamp(0.85rem, 1.5vh, 1.1rem);
   --cg-home-head-bottom-gap: clamp(0.65rem, 1.4vh, 1rem);
-  --cg-home-title-walls: clamp(58px, 5.4vw, 82px);
-  --cg-home-title-bong: clamp(62px, 5.8vw, 88px);
-  --cg-home-title-appreesh: clamp(54px, 5vw, 78px);
-  --cg-home-title-cache: clamp(58px, 5.4vw, 84px);
+  --cg-home-title-walls: clamp(3rem, 4.3vw, 4.2rem);
+  --cg-home-title-bong: clamp(3.1rem, 4.5vw, 4.35rem);
+  --cg-home-title-appreesh: clamp(2.8rem, 3.9vw, 3.9rem);
+  --cg-home-title-cache: clamp(2.95rem, 4.2vw, 4.1rem);
   --cg-home-body-max: 34ch;
   --cg-home-visual-frame-max-h: clamp(310px, 42vh, 430px);
   --cg-home-visual-image-max-h: clamp(330px, 46vh, 520px);
@@ -32,6 +32,7 @@
   display: grid;
   gap: clamp(0.75rem, 1.8vw, 1.05rem);
   padding: clamp(1.2rem, 2.8vw, 1.75rem) clamp(var(--cg-space-md), 3vw, var(--cg-space-xl)) clamp(1.4rem, 3vw, 1.9rem);
+  box-sizing: border-box;
   border-top: 1px solid rgba(70, 53, 42, 0.14);
   background: linear-gradient(180deg, rgba(255, 250, 244, 0.22), rgba(255, 250, 244, 0.9));
 }
@@ -53,17 +54,20 @@
 .cg-home-dispatch__copy h1 {
   margin: 0;
   max-width: 18ch;
-  font-size: clamp(1.8rem, 3vw + 1rem, 3.4rem);
-  line-height: 0.98;
-  letter-spacing: -0.05em;
+  font-size: clamp(1.65rem, 2vw + 1rem, 2.7rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
   color: rgba(26, 19, 13, 0.92);
+  overflow-wrap: anywhere;
 }
 
 .cg-home-dispatch__copy p:last-child {
   margin: 0;
   max-width: 48ch;
+  font-size: clamp(0.98rem, 0.35vw + 0.92rem, 1.08rem);
   color: rgba(26, 19, 13, 0.72);
-  line-height: 1.58;
+  line-height: 1.56;
 }
 
 .cg-home-dispatch__route-list {
@@ -128,6 +132,7 @@
   justify-content: center;
   min-height: 2.4rem;
   padding: 0 1rem;
+  box-sizing: border-box;
   border-radius: 999px;
   border: 1px solid rgba(70, 53, 42, 0.16);
   background: rgba(255, 250, 242, 0.84);
@@ -205,6 +210,7 @@
   gap: clamp(0.45rem, 1vh, 0.75rem);
   min-height: calc(100svh - var(--cg-home-header-height));
   padding: var(--cg-home-panel-top-pad) var(--cg-home-panel-side-pad) var(--cg-home-panel-bottom-pad);
+  box-sizing: border-box;
   color: inherit;
   text-decoration: none;
   overflow: hidden;
@@ -319,6 +325,7 @@
   font-size: 0.63rem;
   letter-spacing: 0.16em;
   color: rgba(26, 19, 13, 0.58);
+  overflow-wrap: anywhere;
 }
 
 .cg-home-gate__portal-copy {
@@ -333,9 +340,11 @@
 .cg-home-gate__portal-copy h2 {
   margin: 0;
   max-width: 100%;
-  line-height: 0.9;
-  letter-spacing: -0.055em;
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .cg-home-gate__portal--walls .cg-home-gate__portal-copy h2 {
@@ -363,8 +372,8 @@
 .cg-home-gate__portal-stage-copy {
   margin: clamp(0.35rem, 0.9vh, 0.6rem) 0 clamp(0.95rem, 1.8vh, 1.4rem);
   max-width: min(32ch, var(--cg-home-body-max));
-  font-size: clamp(0.98rem, 0.55vw + 0.9rem, 1.08rem);
-  line-height: 1.46;
+  font-size: clamp(0.96rem, 0.3vw + 0.92rem, 1.02rem);
+  line-height: 1.56;
   letter-spacing: -0.015em;
   color: rgba(26, 19, 13, 0.74);
   text-align: center;
@@ -537,6 +546,7 @@
   justify-self: center;
   align-self: end;
   padding: 0.78rem 1.25rem 0.72rem;
+  box-sizing: border-box;
   border-radius: 999px;
   border: 1px solid rgba(70, 24, 16, 0.2);
   background: rgba(255, 250, 242, 0.72);
@@ -556,6 +566,7 @@
   font-size: 0.63rem;
   letter-spacing: 0.12em;
   color: rgba(26, 19, 13, 0.62);
+  overflow-wrap: anywhere;
 }
 
 .cg-home-gate__portal--walls .cg-home-gate__portal-entry-label {
@@ -781,6 +792,11 @@
     padding-inline: clamp(var(--cg-space-md), 5vw, var(--cg-space-lg));
   }
 
+  .cg-home-dispatch__copy h1 {
+    font-size: clamp(1.5rem, 7vw, 2.1rem);
+    line-height: 1.08;
+  }
+
   .cg-home-dispatch__actions {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -797,11 +813,92 @@
 
   .cg-home-gate__portal-stage-copy {
     max-width: 31ch;
-    font-size: clamp(0.95rem, 4.4vw, 1.04rem);
-    line-height: 1.38;
+    font-size: clamp(0.92rem, 4vw, 0.98rem);
+    line-height: 1.5;
   }
 
   .cg-home-gate__portal-entry {
     padding-inline: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .cg-home-page {
+    --cg-home-panel-top-pad: clamp(1.35rem, 6vw, 1.9rem);
+    --cg-home-panel-side-pad: clamp(0.95rem, 4vw, 1.15rem);
+    --cg-home-panel-bottom-pad: clamp(1.15rem, 5vw, 1.5rem);
+    --cg-home-head-gap: 0.65rem;
+    --cg-home-head-bottom-gap: 0.7rem;
+    --cg-home-title-walls: clamp(2.35rem, 10.8vw, 3rem);
+    --cg-home-title-bong: clamp(2.45rem, 11.2vw, 3.1rem);
+    --cg-home-title-appreesh: clamp(2.1rem, 9.8vw, 2.75rem);
+    --cg-home-title-cache: clamp(2.2rem, 10.2vw, 2.85rem);
+  }
+
+  .cg-home-dispatch {
+    gap: 0.7rem;
+    padding: 1rem clamp(0.95rem, 4vw, 1.1rem) 1.2rem;
+  }
+
+  .cg-home-dispatch__copy {
+    gap: 0.42rem;
+  }
+
+  .cg-home-dispatch__copy h1 {
+    max-width: 12ch;
+      font-size: clamp(1.35rem, 6.4vw, 1.75rem);
+      letter-spacing: -0.03em;
+  }
+
+  .cg-home-dispatch__copy p:last-child,
+  .cg-home-dispatch__work-note {
+    font-size: 0.92rem;
+      line-height: 1.56;
+  }
+
+  .cg-home-dispatch__route-link {
+    gap: 0.65rem;
+    padding: 0.72rem 0.8rem;
+  }
+
+  .cg-home-dispatch__route-copy strong {
+    font-size: 0.92rem;
+  }
+
+  .cg-home-dispatch__route-copy small {
+    font-size: 0.74rem;
+    line-height: 1.35;
+  }
+
+  .cg-home-dispatch__actions a {
+    width: 100%;
+    min-height: 2.25rem;
+    padding-inline: 0.85rem;
+    text-align: center;
+  }
+
+  .cg-home-gate__portal-meta span,
+  .cg-home-gate__portal-entry-label,
+  .cg-home-gate__portal-entry-meta,
+  .cg-home-gate__portal-launch-label,
+  .cg-home-gate__portal-launch-note {
+    letter-spacing: 0.14em;
+  }
+
+  .cg-home-gate__portal-copy h2 {
+      line-height: 1.04;
+  }
+
+  .cg-home-gate__portal-stage-copy {
+    max-width: 28ch;
+    margin-bottom: 0.95rem;
+      font-size: clamp(0.88rem, 3.8vw, 0.95rem);
+      line-height: 1.5;
+  }
+
+  .cg-home-gate__portal-entry {
+    width: 100%;
+    padding: 0.7rem 0.85rem 0.68rem;
+    border-radius: calc(var(--cg-radius-xl) * 0.95);
   }
 }
