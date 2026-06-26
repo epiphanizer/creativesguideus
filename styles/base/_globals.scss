@@ -2483,7 +2483,7 @@ html {
   .cg-header__menu-overlay {
     position: fixed;
     inset: 0;
-    z-index: 119;
+    z-index: 140;
     background: rgba(10, 10, 10, 0.42);
     opacity: 0;
     pointer-events: none;
@@ -2498,29 +2498,53 @@ html {
 
   .cg-header__menu {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: min(82vw, 320px);
+    inset: 0;
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
     gap: var(--cg-space-sm);
-    padding: calc(60px + var(--cg-space-sm)) var(--cg-space-sm) var(--cg-space-sm);
+    padding: calc(60px + var(--cg-space-md)) clamp(var(--cg-space-sm), 5vw, var(--cg-space-xl)) var(--cg-space-md);
     margin: 0;
     border-radius: 0;
     border: none;
-    border-left: 1px solid rgba(15, 15, 15, 0.1);
     background: rgba(250, 250, 249, 0.99);
-    box-shadow: -14px 0 24px rgba(10, 10, 10, 0.16);
-    transform: translateX(100%);
-    transition: transform 220ms ease;
+    box-shadow: none;
+    transform: translateY(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 200ms ease, opacity 180ms ease;
     overflow-y: auto;
   }
 
   .cg-header__menu.cg-header__menu--open {
-    transform: translateX(0);
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .cg-header__menu-close {
+    position: absolute;
+    top: 0.5rem;
+    right: clamp(var(--cg-space-sm), 4vw, var(--cg-space-md));
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: rgba(26, 19, 13, 0.8);
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .cg-header__menu-close:hover,
+  .cg-header__menu-close:focus-visible {
+    color: rgba(26, 19, 13, 1);
   }
 
   .cg-header__nav,
@@ -2554,11 +2578,19 @@ html {
     justify-items: stretch;
   }
 
+  .cg-header__nav {
+    margin-top: var(--cg-space-xs);
+  }
+
   .cg-header__cta,
   .cg-header__utility-button {
     min-width: 44px;
     min-height: 44px;
     width: 100%;
+  }
+
+  .cg-app-chrome-body {
+    padding-top: 60px;
   }
 
   body.cg-menu-open {

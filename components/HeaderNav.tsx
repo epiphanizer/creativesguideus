@@ -92,6 +92,22 @@ export function HeaderNav() {
   }, [isMenuOpen]);
 
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    };
+
+    if (isMenuOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [closeMenu, isMenuOpen]);
+
+  useEffect(() => {
     if (!isWallsDevineRoute) {
       setIsPlayerDismissed(false);
       return;
@@ -148,13 +164,27 @@ export function HeaderNav() {
         <div
           id="primary-navigation-overlay"
           className={["cg-header__menu-overlay", isMenuOpen ? "cg-header__menu-overlay--open" : ""].filter(Boolean).join(" ")}
+          aria-hidden={!isMenuOpen}
           onClick={(event) => {
             if (event.target === event.currentTarget) {
               closeMenu();
             }
           }}
         >
-          <div className={["cg-header__menu", isMenuOpen ? "cg-header__menu--open" : ""].filter(Boolean).join(" ")}>
+          <div
+            className={["cg-header__menu", isMenuOpen ? "cg-header__menu--open" : ""].filter(Boolean).join(" ")}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site navigation"
+          >
+            <button
+              type="button"
+              className="cg-header__menu-close"
+              aria-label="Close navigation"
+              onClick={closeMenu}
+            >
+              <span aria-hidden="true">X</span>
+            </button>
             {activeAnchors.length ? (
               <nav className="cg-header__nav" aria-label="Primary" id="primary-navigation">
                 <ul className="cg-header__list">
