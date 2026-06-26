@@ -19,7 +19,7 @@
   --cg-home-visual-frame-pad: clamp(0.5rem, 1vw, 0.875rem);
   position: relative;
   display: grid;
-  gap: clamp(0.8rem, 2vw, 1.5rem);
+  gap: clamp(0.55rem, 1.6vw, 1.1rem);
   min-height: calc(100svh - var(--cg-home-header-height));
   padding: 0;
   background: transparent;
@@ -835,6 +835,19 @@
     --cg-home-title-cache: clamp(2.2rem, 10.2vw, 2.85rem);
   }
 
+  .cg-home-gate {
+    gap: 0;
+  }
+
+  .cg-home-gate__portal {
+    gap: 0.45rem;
+    padding-block: 1.1rem 1rem;
+  }
+
+  .cg-home-gate__portal-head {
+    margin-bottom: 0.5rem;
+  }
+
   .cg-home-dispatch {
     gap: 0.7rem;
     padding: 1rem clamp(0.95rem, 4vw, 1.1rem) 1.2rem;
@@ -859,6 +872,10 @@
   .cg-home-dispatch__route-link {
     gap: 0.65rem;
     padding: 0.72rem 0.8rem;
+  }
+
+  .cg-home-dispatch__route-list {
+    gap: 0.5rem;
   }
 
   .cg-home-dispatch__route-copy strong {
@@ -891,7 +908,7 @@
 
   .cg-home-gate__portal-stage-copy {
     max-width: 28ch;
-    margin-bottom: 0.95rem;
+    margin-bottom: 0.72rem;
       font-size: clamp(0.88rem, 3.8vw, 0.95rem);
       line-height: 1.5;
   }

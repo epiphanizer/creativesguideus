@@ -284,10 +284,10 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        "Walls/Devine signal-list context is loaded. This stays inside the CGU intake flow while Volume 1 remains live and the June 30 bridge is staged.",
+        "Walls/Devine signal-list context is loaded. This stays inside the CGU intake flow while Volume 1 remains live and the July 11 bridge is staged.",
       summary: [
-        "Walls/Devine stays live now while Bong Tour and Appreesh remain staged toward June 30.",
-        "Your email becomes the Volume 1 signal anchor for updates tied to the live album world and the June 30 bridge.",
+        "Walls/Devine stays live now while Bong Tour and Appreesh remain staged toward July 11.",
+        "Your email becomes the Volume 1 signal anchor for updates tied to the live album world and the July 11 bridge.",
         "Requests are reviewed manually until the dedicated list wiring is ready."
       ],
       trustNote: "This is a signal-list request, not an instant subscription. CGU reviews it first, then routes the right Volume 1 updates back to this inbox.",
@@ -430,7 +430,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Bong Tour preview context is loaded. Leave the clearest production, soundtrack, or partnership note here so the June 30 launch path can route cleanly.`,
+        `Bong Tour preview context is loaded. Leave the clearest production, soundtrack, or partnership note here so the July 11 launch path can route cleanly.`,
       summary: [
         `Production, soundtrack, collector-world, and partnership signals stay attached to the film while the public route is still in preview before ${june30LaunchDateLabel}.`,
         "The intake leads with fit and context instead of a scheduling-first experience.",

@@ -81,7 +81,7 @@ export function CacheFeature() {
             <section className="cache-world__track cache-world__track--secondary">
               <p className="cache-section-header__eyebrow">Active world</p>
               <h2>Walls/Devine carries the live bridge now.</h2>
-              <p>Volume 1 is open. Join the signal list to stay connected through the June 30 window and into what comes next.</p>
+              <p>Volume 1 is open. Join the signal list to stay connected through the July 11 window and into what comes next.</p>
               <div className="cache-world__track-actions">
                 <Link href="/walls-devine" className="cache-button">
                   Open Walls/Devine

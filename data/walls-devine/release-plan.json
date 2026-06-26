@@ -3,15 +3,15 @@
   "summary": "File-backed checklist and release guidance for Volume 1. This is the source of truth for the rollout sequence until Firebase-backed content management is added.",
   "updatedAt": "2026-06-07T00:00:00.000Z",
   "lockedDates": [
-    { "label": "Album release", "value": "July 4, 2026" },
+    { "label": "Album release", "value": "July 21, 2026" },
     { "label": "Lead single target", "value": "June 28, 2026" },
-    { "label": "Instrumental target", "value": "July 4, 2026" }
+    { "label": "Instrumental target", "value": "July 21, 2026" }
   ],
   "guidance": [
-    "Keep July 4, 2026 as the album release date.",
+    "Keep July 21, 2026 as the album release date.",
     "Release Resolve before the album only if it can be uploaded immediately and pitched in Spotify for Artists with at least 7 days lead time.",
     "When Resolve appears on the album, preserve the same ISRC, identical audio file, and identical metadata where possible.",
-    "Treat the instrumental edition as a distinct companion release package even if it lands inside the same July 4 campaign window."
+    "Treat the instrumental edition as a distinct companion release package even if it lands inside the same July 21 campaign window."
   ],
   "metadataStandards": [
     { "label": "Artist", "value": "Walls & Devine" },
@@ -70,38 +70,38 @@
     {
       "id": "calendar-album-release",
       "phase": "Phase 2 — Album",
-      "date": "July 4",
+      "date": "July 21",
       "action": "Volume 1 album release",
       "purpose": "Main launch",
-      "start": "2026-07-04T00:00:00.000Z",
-      "end": "2026-07-04T23:59:59.000Z"
+      "start": "2026-07-21T00:00:00.000Z",
+      "end": "2026-07-21T23:59:59.000Z"
     },
     {
       "id": "calendar-album-focus-window",
       "phase": "Phase 2 — Album",
-      "date": "July 4–July 18",
+      "date": "July 21–August 4",
       "action": "Push album focus track",
       "purpose": "Keep album alive after release day",
-      "start": "2026-07-04T09:00:00.000Z",
-      "end": "2026-07-18T18:00:00.000Z"
+      "start": "2026-07-21T09:00:00.000Z",
+      "end": "2026-08-04T18:00:00.000Z"
     },
     {
       "id": "calendar-instrumental-release",
       "phase": "Phase 3 — Instrumentals",
-      "date": "July 4",
+      "date": "July 21",
       "action": "Volume 1: Instrumentals release",
       "purpose": "Companion release package",
-      "start": "2026-07-04T00:00:00.000Z",
-      "end": "2026-07-04T23:59:59.000Z"
+      "start": "2026-07-21T00:00:00.000Z",
+      "end": "2026-07-21T23:59:59.000Z"
     },
     {
       "id": "calendar-instrumental-pitch-window",
       "phase": "Phase 3 — Instrumentals",
-      "date": "July 4 onward",
+      "date": "July 21 onward",
       "action": "Pitch instrumental and sync angle",
       "purpose": "Extend the world behind the songs",
-      "start": "2026-07-04T09:00:00.000Z",
-      "end": "2026-07-11T18:00:00.000Z"
+      "start": "2026-07-21T09:00:00.000Z",
+      "end": "2026-07-28T18:00:00.000Z"
     }
   ],
   "checklist": [
@@ -179,13 +179,13 @@
       "id": "album-upload",
       "phase": "Phase 2 — Album",
       "title": "Upload Volume 1 album in DistroKid",
-      "dueDate": "Before July 4",
+      "dueDate": "Before July 21",
       "completed": false,
       "notes": "Track list: Joint Queen, Stash Daddy, Space Cruiser, Home, Decay, Resolve, Poetry, Gratitude.",
       "summary": "Upload Volume 1 album",
       "description": "Build the full album release in DistroKid and confirm final sequencing, metadata, and credits.",
       "start": "2026-06-22T09:00:00.000Z",
-      "end": "2026-07-02T18:00:00.000Z",
+      "end": "2026-07-19T18:00:00.000Z",
       "gCalEventId": null,
       "syncSource": "seed"
     },
@@ -199,7 +199,7 @@
       "summary": "Choose album focus track for Spotify pitch",
       "description": "Pick the album track to pitch once the album is live in Spotify for Artists.",
       "start": "2026-06-27T09:00:00.000Z",
-      "end": "2026-07-03T12:00:00.000Z",
+      "end": "2026-07-20T12:00:00.000Z",
       "gCalEventId": null,
       "syncSource": "seed"
     },
@@ -207,13 +207,13 @@
       "id": "album-launch-window",
       "phase": "Phase 2 — Album",
       "title": "Run post-release focus window for album",
-      "dueDate": "July 4–July 18",
+      "dueDate": "July 21–August 4",
       "completed": false,
       "notes": "Keep the album alive after release day instead of moving immediately into the next upload.",
       "summary": "Run post-release focus window for album",
       "description": "Sustain album attention with a focused post-release window before moving to instrumentals.",
-      "start": "2026-07-04T09:00:00.000Z",
-      "end": "2026-07-18T18:00:00.000Z",
+      "start": "2026-07-21T09:00:00.000Z",
+      "end": "2026-08-04T18:00:00.000Z",
       "gCalEventId": null,
       "syncSource": "seed"
     },
@@ -221,13 +221,13 @@
       "id": "instrumental-title-lock",
       "phase": "Phase 3 — Instrumentals",
       "title": "Lock instrumental release naming",
-      "dueDate": "Before July 4",
+      "dueDate": "Before July 21",
       "completed": false,
       "notes": "Preferred title: Volume 1: Instrumentals.",
       "summary": "Lock instrumental release naming",
       "description": "Confirm the instrumental release title and naming system before rollout prep starts.",
       "start": "2026-06-29T09:00:00.000Z",
-      "end": "2026-07-02T12:00:00.000Z",
+      "end": "2026-07-19T12:00:00.000Z",
       "gCalEventId": null,
       "syncSource": "seed"
     },
@@ -240,8 +240,8 @@
       "notes": "Instrumentals are separate recordings and should not reuse the vocal ISRCs.",
       "summary": "Assign new ISRCs to instrumental recordings",
       "description": "Prepare new ISRCs for the instrumental masters before the upload window opens.",
-      "start": "2026-07-01T09:00:00.000Z",
-      "end": "2026-07-03T12:00:00.000Z",
+      "start": "2026-07-14T09:00:00.000Z",
+      "end": "2026-07-20T12:00:00.000Z",
       "gCalEventId": null,
       "syncSource": "seed"
     },
@@ -249,13 +249,13 @@
       "id": "instrumental-upload",
       "phase": "Phase 3 — Instrumentals",
       "title": "Upload Volume 1: Instrumentals",
-      "dueDate": "Target July 4",
+      "dueDate": "Target July 21",
       "completed": false,
       "notes": "Mark tracks as instrumental in DistroKid and use clean version info formatting.",
       "summary": "Upload Volume 1: Instrumentals",
-      "description": "Create the instrumental release in DistroKid and confirm instrumental metadata before July 4.",
-      "start": "2026-07-03T09:00:00.000Z",
-      "end": "2026-07-04T12:00:00.000Z",
+      "description": "Create the instrumental release in DistroKid and confirm instrumental metadata before July 21.",
+      "start": "2026-07-20T09:00:00.000Z",
+      "end": "2026-07-21T12:00:00.000Z",
       "gCalEventId": null,
       "syncSource": "seed"
     }

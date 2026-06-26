@@ -1016,7 +1016,7 @@ export function BongTourFeature() {
               <p className="bt-hero__eyebrow">Screenplay portal preview</p>
               <h1>Bong Tour</h1>
 
-              <p className="bt-hero__descriptor">A cult-comedy feature staged behind the live Walls/Devine world until the June 30 launch window opens the deeper route.</p>
+              <p className="bt-hero__descriptor">A cult-comedy feature staged behind the live Walls/Devine world until the July 11 launch window opens the deeper route.</p>
 
               <div className="bt-hero__modules" aria-label="Bong Tour preview modules">
                 <span>Poster artifact</span>
@@ -1030,7 +1030,7 @@ export function BongTourFeature() {
                 <p>{bongTourPremise}</p>
               </div>
 
-              <p className="bt-hero__positioning">Walls/Devine carries the live soundtrack and collector signal now. Bong Tour stays short on purpose until the treatment gate and deeper rooms open on June 30.</p>
+              <p className="bt-hero__positioning">Walls/Devine carries the live soundtrack and collector signal now. Bong Tour stays short on purpose until the treatment gate and deeper rooms open on July 11.</p>
 
               <div className="bt-hero__cta">
                 <Button as="a" href={bongTourSignalListHref} className="bt-button">
@@ -1044,7 +1044,7 @@ export function BongTourFeature() {
                 </Button>
               </div>
 
-              <p className="bt-hero__route">Poster first. Launch conversation now. Private treatment and deeper score rooms unlock after June 30.</p>
+              <p className="bt-hero__route">Poster first. Launch conversation now. Private treatment and deeper score rooms unlock after July 11.</p>
 
               <div className="bt-hero__meta" aria-label="Bong Tour quick facts">
                 {bongTourHeroFacts.map((fact) => (
@@ -1079,7 +1079,7 @@ export function BongTourFeature() {
         <section className="bt-bridge" aria-labelledby="bt-bridge-title">
           <header className="bt-section-header">
             <p className="bt-section-header__eyebrow">Launch sequence</p>
-            <h2 id="bt-bridge-title">What stays live before June 30</h2>
+            <h2 id="bt-bridge-title">What stays live before July 11</h2>
             <p>The public route is intentionally narrow right now: poster, premise, and partner-fit lane here; live music-world proof and collector signal inside Walls/Devine.</p>
           </header>
 
@@ -1095,7 +1095,7 @@ export function BongTourFeature() {
             <article className="bt-bridge__card">
               <span>Signal bridge</span>
               <strong>Use the Volume 1 signal list as the bridge.</strong>
-              <p>The June 30 expansion routes through the same inbox path so the live world and the staged worlds stay connected.</p>
+              <p>The July 11 expansion routes through the same inbox path so the live world and the staged worlds stay connected.</p>
               <a href={bongTourSignalListHref} className="bt-bridge__card-link">
                 Join the signal list
               </a>
@@ -1139,7 +1139,7 @@ export function BongTourFeature() {
         <section className="bt-finale" id="bong-tour-intake" aria-labelledby="bt-finale-title">
           <div className="bt-finale__body">
             <h2 id="bt-finale-title">Want to be in the next window?</h2>
-            <p>Use the signal list if you want the June 30 bridge through the live album world, or open a launch conversation if the film fit is already clear.</p>
+            <p>Use the signal list if you want the July 11 bridge through the live album world, or open a launch conversation if the film fit is already clear.</p>
 
             <div className="bt-finale__actions">
               <Button as="a" href={bongTourSignalListHref} className="bt-button">

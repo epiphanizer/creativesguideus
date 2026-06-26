@@ -524,6 +524,7 @@
   position: relative;
   z-index: 1;
   padding: clamp(var(--cg-space-xl), 5vw, var(--cg-space-4xl)) clamp(var(--cg-space-lg), 4vw, var(--cg-space-3xl));
+  box-sizing: border-box;
 }
 
 .bt-stage > section + section {
@@ -734,6 +735,7 @@
 .bt-finale__body,
 .bt-room-modal__signup-shell {
   border: 1px solid var(--bt-border);
+  box-sizing: border-box;
   box-shadow: 0 20px 42px rgba(62, 40, 12, 0.08);
 }
 
@@ -811,7 +813,7 @@
 .bt-hero__signal-card strong {
   font-family: "Cormorant Garamond", var(--cg-font-serif, serif);
   font-size: clamp(1.45rem, 2vw, 1.9rem);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--bt-text);
 }
@@ -866,7 +868,7 @@
 .bt-world__story-card strong {
   font-family: "Cormorant Garamond", var(--cg-font-serif, serif);
   font-size: clamp(1.3rem, 1.5vw + 0.85rem, 1.9rem);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.02;
   letter-spacing: 0.03em;
   color: var(--bt-text);
@@ -2928,5 +2930,138 @@
   .bt-room-modal__panel,
   .bt-treatment__modal-panel {
     padding: clamp(var(--cg-space-md), 5vw, var(--cg-space-lg));
+  }
+}
+
+@media (max-width: 420px) {
+  .bt-stage > section {
+    padding: 1.1rem 0.85rem 1.25rem;
+  }
+
+  .bt-hero {
+    min-height: auto;
+  }
+
+  .bt-hero__layout,
+  .bt-hero__content,
+  .bt-section-header,
+  .bt-finale__body,
+  .bt-music__poster,
+  .bt-bridge__card,
+  .bt-collectibles__overview-card,
+  .bt-collectibles__tile,
+  .bt-world__panel {
+    gap: 0.8rem;
+  }
+
+  .bt-hero__poster-frame {
+    width: min(100%, 258px);
+    max-height: clamp(280px, 48vh, 360px);
+    padding: 0.5rem;
+    transform: none;
+  }
+
+  .bt-hero__poster figcaption {
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    line-height: 1.45;
+  }
+
+  .bt-hero h1 {
+    font-size: clamp(2.2rem, 12vw, 3rem);
+    line-height: 0.98;
+    letter-spacing: 0.04em;
+  }
+
+  .bt-hero__descriptor,
+  .bt-hero__positioning,
+  .bt-bridge__card p,
+  .bt-section-header > p:not(.bt-section-header__eyebrow),
+  .bt-finale__body > p,
+  .bt-music__lede,
+  .bt-collectibles__teaser,
+  .bt-treatment__lead {
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .bt-hero__route {
+    font-size: 0.72rem;
+    line-height: 1.5;
+    letter-spacing: 0.07em;
+  }
+
+  .bt-hero__modules {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+    margin-top: 0.2rem;
+  }
+
+  .bt-hero__modules span {
+    min-height: 1.85rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.11em;
+  }
+
+  .bt-hero__meta,
+  .bt-hero__signal-strip,
+  .bt-bridge__grid,
+  .bt-collectibles__overview,
+  .bt-music__grid,
+  .bt-collectibles__grid {
+    gap: 0.7rem;
+  }
+
+  .bt-hero__meta,
+  .bt-hero__signal-strip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bt-hero__meta-item,
+  .bt-hero__signal-card,
+  .bt-bridge__card,
+  .bt-collectibles__overview-card,
+  .bt-finale__body,
+  .bt-world__panel,
+  .bt-music__poster,
+  .bt-collectibles__tile {
+    padding: 0.95rem 0.85rem;
+  }
+
+  .bt-hero__meta-value,
+  .bt-hero__signal-card strong,
+  .bt-bridge__card strong,
+  .bt-world__panel h3,
+  .bt-world__story-card strong,
+  .bt-collectibles__overview-card strong {
+    line-height: 1.08;
+  }
+
+  .bt-section-header h2,
+  .bt-finale__body h2 {
+    font-size: clamp(1.45rem, 8vw, 1.9rem);
+    line-height: 1.08;
+  }
+
+  .bt-music__poster {
+    grid-template-rows: minmax(210px, auto) 1fr;
+  }
+
+  .bt-music__visual {
+    min-height: 210px;
+    padding: 0.8rem;
+  }
+
+  .bt-music__marquee {
+    min-height: 6.3rem;
+  }
+
+  .bt-music__marquee h3 {
+    font-size: clamp(1.25rem, 7vw, 1.7rem);
+  }
+
+  .bt-finale__body {
+    width: 100%;
+    padding: 1rem 0.85rem;
   }
 }

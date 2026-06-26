@@ -66,7 +66,7 @@ const previewAccessChecklist = [
 ] as const;
 const previewSignalChecklist = [
   "Walls/Devine remains the live public world right now.",
-  "Use the Volume 1 signal list if you want the June 30 bridge into Bong Tour.",
+  "Use the Volume 1 signal list if you want the July 11 bridge into Bong Tour.",
   "No screenplay pages are exposed on this public route before the gate opens."
 ] as const;
 
@@ -301,7 +301,7 @@ export function BongTourTreatmentGate() {
               <section className="bt-treatment__track bt-treatment__track--secondary">
                 <p className="bt-section-header__eyebrow">Live bridge</p>
                 <h2>Use Volume 1 as the active world now.</h2>
-                <p>The signal list and listening room stay live while Bong Tour waits for the June 30 window.</p>
+                <p>The signal list and listening room stay live while Bong Tour waits for the July 11 window.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {previewSignalChecklist.map((item) => (

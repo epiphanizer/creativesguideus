@@ -413,6 +413,7 @@
   gap: clamp(var(--cg-space-md), 2.4vw, var(--cg-space-xl));
   width: 100%;
   padding: clamp(1.2rem, 2.8vw, 1.8rem) clamp(1.3rem, 3vw, 2.2rem);
+  box-sizing: border-box;
   border: 1px solid rgba(156, 7, 5, 0.18);
   border-radius: calc(var(--cg-radius-lg) * 0.88);
   background:
@@ -482,7 +483,7 @@
   color: rgba(255, 250, 245, 0.96);
   font: inherit;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
@@ -5319,5 +5320,145 @@
   .wd-hero__letter-cta,
   .wd-hero__collector-button.cg-button {
     width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .wd-page {
+    --wd-hero-top-pad: 0.9rem;
+    --wd-hero-bottom-pad: 0.8rem;
+    --wd-hero-x-pad: 0.8rem;
+    --wd-collector-title-size: clamp(2.2rem, 12vw, 2.95rem);
+    --wd-collector-title-lh: 0.98;
+    --wd-collector-copy-size: 0.95rem;
+  }
+
+  .wd-page .cg-section {
+    padding-block: clamp(1.35rem, 8vw, 1.9rem);
+  }
+
+  .wd-page .cg-section__inner {
+    padding-inline: 0.8rem;
+  }
+
+  .wd-hero {
+    gap: 0.6rem;
+  }
+
+  .wd-hero__layout,
+  .wd-hero__showcase,
+  .wd-hero__copy,
+  .wd-hero__note-stack {
+    gap: 0.7rem;
+  }
+
+  .wd-hero__showcase .cg-section-header__title {
+    margin: 0.55rem 0 0.35rem;
+  }
+
+  .wd-hero__showcase .cg-section-header__description {
+    max-width: 100%;
+    line-height: 1.52;
+  }
+
+  .wd-hero__gamification-strip {
+    gap: 0.25rem 0.5rem;
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    justify-content: center;
+  }
+
+  .wd-hero__gamification-strip > span:not(.wd-hero__gamification-strip__dot) {
+    white-space: normal;
+  }
+
+  .wd-hero__cover {
+    gap: 0.55rem;
+  }
+
+  .wd-hero__cover-frame {
+    width: min(100%, 270px);
+    padding: 0.55rem;
+    transform: none;
+  }
+
+  .wd-hero__cover-signature {
+    width: min(100%, 18rem);
+    padding-top: 0.35rem;
+    gap: 0.1rem;
+  }
+
+  .wd-hero__letter,
+  .wd-hero__journal,
+  .wd-hero__collector-card {
+    padding: 1rem 0.9rem;
+    gap: 0.85rem;
+  }
+
+  .wd-hero__letter-body,
+  .wd-hero__signal-helper,
+  .wd-booking-banner__description,
+  .wd-grid-section__header p {
+    line-height: 1.54;
+  }
+
+  .wd-hero__collector-actions {
+    gap: 0.9rem;
+    max-width: none;
+  }
+
+  .wd-hero__collector-secondary-row {
+    gap: 0.7rem;
+  }
+
+  .wd-hero__collector-button.cg-button,
+  .wd-booking-banner__button.cg-button {
+    width: 100%;
+    min-height: 2.9rem;
+    padding: 0.76rem 0.9rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+  }
+
+  .wd-hero__grid-preview {
+    gap: 0.6rem;
+    padding-top: 0.7rem;
+  }
+
+  .wd-hero__grid-preview__tiles {
+    grid-auto-columns: 2.75rem;
+    gap: 0.35rem;
+  }
+
+  .wd-hero__grid-preview__tile {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .wd-grid-section__header {
+    gap: 0.6rem;
+  }
+
+  .wd-grid-section__steps {
+    gap: 0.35rem;
+  }
+
+  .wd-grid-section__steps span {
+    width: 100%;
+  }
+
+  .wd-booking-banner {
+    gap: 0.85rem;
+    padding: 0.95rem 0.85rem;
+  }
+
+  .wd-booking-banner__action {
+    gap: 0.55rem;
+    justify-items: stretch;
+  }
+
+  .wd-booking-banner__meta {
+    font-size: 0.66rem;
+    line-height: 1.45;
   }
 }

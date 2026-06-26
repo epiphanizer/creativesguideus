@@ -39,10 +39,10 @@ export function ContactLandingPage() {
               Walls/Devine is live now. The studio lane stays calm underneath.
             </h1>
             <p className="cg-contact-landing__lede">
-              Walls/Devine is the active public world right now. Bong Tour and Appreesh are staged toward June 30. This page is the calmer studio layer underneath them: the place to reach the backbone behind the work, start a real conversation, and route the next move without losing context.
+              Walls/Devine is the active public world right now. Bong Tour and Appreesh are staged toward July 11. This page is the calmer studio layer underneath them: the place to reach the backbone behind the work, start a real conversation, and route the next move without losing context.
             </p>
             <p>
-              Use it for direct contact, broader CGU framing, and the connective tissue behind release planning, partnerships, systems builds, and the June 30 sequencing window.
+              Use it for direct contact, broader CGU framing, and the connective tissue behind release planning, partnerships, systems builds, and the July 11 sequencing window.
             </p>
           </div>
 

@@ -397,7 +397,6 @@ export function WallsDevineLanding() {
               eyebrow={collectorHeroNote.eyebrow}
               title={collectorHeroNote.title}
               headingLevel="h1"
-              description="Volume 1 is live now: start in the listening room, move through the collector grid, and join the signal list for the June 30 bridge into the next rooms."
             />
 
             <div className="wd-hero__gamification-strip" aria-label="Release details">
@@ -405,7 +404,7 @@ export function WallsDevineLanding() {
               <span className="wd-hero__gamification-strip__dot" aria-hidden="true">·</span>
               <span>8 collector challenges</span>
               <span className="wd-hero__gamification-strip__dot" aria-hidden="true">·</span>
-              <span>July 4</span>
+              <span>July 21</span>
             </div>
 
             <figure className="wd-hero__cover">

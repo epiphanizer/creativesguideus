@@ -7,8 +7,14 @@ type LaunchStage = {
 };
 
 export const albumLaunchCampaignWindow = "album-launch";
-export const june30LaunchDateIso = "2026-06-30";
-export const june30LaunchDateLabel = "June 30";
+export const albumReleaseDateIso = "2026-07-21";
+export const albumReleaseDateLabel = "July 21";
+export const bongTourLaunchDateIso = "2026-07-11";
+export const bongTourLaunchDateLabel = "July 11";
+
+// Backward-compatible aliases retained while date references are migrated.
+export const june30LaunchDateIso = bongTourLaunchDateIso;
+export const june30LaunchDateLabel = bongTourLaunchDateLabel;
 
 export const cguLaunchState = {
   wallsDevine: {

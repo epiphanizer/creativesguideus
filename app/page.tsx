@@ -56,7 +56,7 @@ const gateways: readonly HomeGateway[] = [
     eyebrow: "Collector experience",
     descriptor: `${cguLaunchState.wallsDevine.label} · player · journals · merch shop`,
     title: "Walls/Devine",
-    description: "Volume 1 is the active public world now: listening room first, collector grid next, then the signal-list bridge into the June 30 expansion.",
+    description: "Volume 1 is the active public world now: listening room first, collector grid next, then the signal-list bridge into the July 11 expansion.",
     href: "/walls-devine",
     entryLabel: "Enter Volume 1",
     entryMeta: "Live now · Player · Journals · Collector Access · Merch Shop",
@@ -232,7 +232,7 @@ export default function HomePage() {
         <div className="cg-home-dispatch__copy">
           <p className="cg-home-dispatch__eyebrow">Creatives Guide Us</p>
           <h1 id="cg-home-dispatch-title">Walls/Devine is live now. Bong Tour, Appreesh, and Cache follow.</h1>
-          <p>Volume 1 is the active public world. The next rooms stay staged behind the June 30 window, while Cache and studio proof remain one quiet click away.</p>
+          <p>Volume 1 is the active public world. The next rooms stay staged behind the July 11 window, while Cache and studio proof remain one quiet click away.</p>
         </div>
 
         <ol className="cg-home-dispatch__route-list" aria-label="Launch sequence routes">
@@ -250,7 +250,7 @@ export default function HomePage() {
               <span className="cg-home-dispatch__route-index">02</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Join Volume 1 Signal List</strong>
-                <small>Bridge into the June 30 window</small>
+                <small>Bridge into the July 11 window</small>
               </span>
             </Link>
           </li>
@@ -268,7 +268,7 @@ export default function HomePage() {
               <span className="cg-home-dispatch__route-index">04</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Bong Tour</strong>
-                <small>Opening June 30</small>
+                <small>Opening July 11</small>
               </span>
             </Link>
           </li>
@@ -277,7 +277,7 @@ export default function HomePage() {
               <span className="cg-home-dispatch__route-index">05</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Appreesh</strong>
-                <small>Opening June 30</small>
+                <small>Opening July 11</small>
               </span>
             </Link>
           </li>

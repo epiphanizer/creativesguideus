@@ -440,6 +440,19 @@
   gap: var(--cg-space-md);
 }
 
+@media (max-width: 420px) {
+  .cg-footer {
+    margin-top: clamp(var(--cg-space-3xl), 14vw, var(--cg-space-4xl));
+    padding: clamp(var(--cg-space-xl), 9vw, var(--cg-space-2xl)) 0;
+  }
+
+  .cg-footer__links {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: center;
+  }
+}
+
 .cg-footer__link {
   font-family: var(--cg-font-mono, var(--cg-font-sans));
   font-size: var(--cg-type-body);
@@ -1134,6 +1147,8 @@ p + ol {
   font-family: var(--cg-font-sans);
   font-weight: 600;
   flex-shrink: 0;
+  box-sizing: border-box;
+  max-width: 100%;
   cursor: pointer;
   transition: background var(--cg-transition-fade), border-color var(--cg-transition-fade);
 }
@@ -1800,6 +1815,12 @@ p + ol {
   border-radius: var(--cg-radius-md);
   font-weight: 600;
   letter-spacing: 0.02em;
+  line-height: 1.2;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: center;
   transition: transform var(--cg-transition-move), background var(--cg-transition-fade),
     color var(--cg-transition-fade);
 }
@@ -2045,10 +2066,10 @@ p + ol {
     justify-self: center;
     align-self: center;
     margin-top: clamp(var(--cg-space-xs), 2vw, var(--cg-space-sm));
-    width: auto;
-    min-width: clamp(238px, 72vw, 320px);
+    width: min(100%, 20rem);
+    min-width: 0;
     font-size: var(--cg-type-body);
-    padding: clamp(0.85rem, 3vw, 1rem) clamp(1.6rem, 8vw, 2.4rem);
+    padding: clamp(0.8rem, 3vw, 0.95rem) clamp(1.1rem, 5vw, 1.6rem);
   }
 
   .cg-header__actions {
@@ -2058,8 +2079,8 @@ p + ol {
   }
 
   .cg-header__utility-button {
-    width: auto;
-    min-width: clamp(210px, 70vw, 280px);
+    width: min(100%, 18rem);
+    min-width: 0;
   }
 
   .cg-header__wordmark {
@@ -2298,6 +2319,47 @@ p + ol {
     grid-template-columns: 1fr;
   }
 
+
+@media (max-width: 420px) {
+  .cg-header__inner {
+    gap: 0.8rem;
+    min-height: auto;
+    padding: 1.15rem 0.95rem 1rem;
+  }
+
+  .cg-header__menu {
+    padding-inline: 0.8rem;
+  }
+
+  .cg-header__menu.cg-header__menu--open {
+    padding: 0.7rem 0.8rem 0.8rem;
+  }
+
+  .cg-header__list {
+    gap: 0.4rem;
+  }
+
+  .cg-header__link {
+    padding: 0.55rem 0;
+    letter-spacing: 0.14em;
+  }
+
+  .cg-header__cta,
+  .cg-header__utility-button,
+  .cg-button {
+    width: 100%;
+  }
+
+  .cg-button--md {
+    font-size: 0.96rem;
+    padding: 0.74rem 1rem;
+  }
+
+  .cg-button--sm {
+    font-size: 0.82rem;
+    padding: 0.58rem 0.82rem;
+  }
+}
   .cg-work__notes {
     grid-template-columns: 1fr;
   }

@@ -107,7 +107,7 @@ const canonicalLinkOrder = [
 export const defaultLinkHubContent: LinkHubContent = {
   eyebrow: "Signal routes",
   title: "Jump Through The Live And Staged Rooms",
-  description: "A compact dispatch board for Volume 1 now, the June 30 openings next, and the calm studio route underneath them.",
+  description: "A compact dispatch board for Volume 1 now, the July 11 openings next, and the calm studio route underneath them.",
   updatedAt: defaultUpdatedAt,
   links: [
     defaultWallsDevineLink,
