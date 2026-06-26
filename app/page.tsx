@@ -47,8 +47,8 @@ const gateways: readonly HomeGateway[] = [
     title: "Walls/Devine",
     description: "Volume 1 is live now: enter the Listening Room, move through the collector grid, and stay inside the expanding release world.",
     href: "/walls-devine",
-    entryLabel: "Enter Volume 1",
-    entryMeta: "Live now · Player · Journals · Collector Access · Merch Shop",
+    entryLabel: "Embark on Volume 1",
+    entryMeta: "",
     image: volOneImage,
     alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls",
@@ -151,10 +151,12 @@ export default function HomePage() {
 
               <div className="cg-home-gate__portal-entry" aria-hidden="true">
                 <span className="cg-home-gate__portal-entry-label">{gateway.entryLabel}</span>
-                <small className="cg-home-gate__portal-entry-meta">
-                  {gateway.entryMeta}
-                  {gateway.title === "Walls/Devine" ? ` · Shop: ${new URL(wallsDevineMerchShopHref).host}` : ""}
-                </small>
+                {gateway.entryMeta ? (
+                  <small className="cg-home-gate__portal-entry-meta">
+                    {gateway.entryMeta}
+                    {gateway.title === "Walls/Devine" ? ` · Shop: ${new URL(wallsDevineMerchShopHref).host}` : ""}
+                  </small>
+                ) : null}
               </div>
 
               {gateway.launchLabel ? (
