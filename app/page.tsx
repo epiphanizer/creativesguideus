@@ -197,12 +197,7 @@ export default function HomePage() {
         })}
       </section>
 
-      <section className="cg-home-dispatch" aria-labelledby="cg-home-dispatch-title">
-        <div className="cg-home-dispatch__copy">
-          <p className="cg-home-dispatch__eyebrow">Creatives Guide Us</p>
-          <h1 id="cg-home-dispatch-title">Walls/Devine is live now. Bong Tour, Appreesh, and Cache follow.</h1>
-          <p>Volume 1 is the active public world. The next rooms stay staged behind the July 11 window, while Cache and studio proof remain one quiet click away.</p>
-        </div>
+      <section className="cg-home-dispatch" aria-label="Studio routes">
 
         <ol className="cg-home-dispatch__route-list" aria-label="Launch sequence routes">
           <li>
@@ -263,11 +258,8 @@ export default function HomePage() {
 
         <nav className="cg-home-dispatch__actions" aria-label="Studio routes">
           <ContactModalLink href={homeConversationHref} buttonVariant="ghost">Start a Conversation</ContactModalLink>
+          <a href={seanhallsWorkHref} target="_blank" rel="noreferrer">Selected Work</a>
         </nav>
-
-        <p className="cg-home-dispatch__work-note">
-          Studio proof stays one click away at <a href={seanhallsWorkHref} target="_blank" rel="noreferrer">Selected work</a>.
-        </p>
       </section>
     </main>
   );
