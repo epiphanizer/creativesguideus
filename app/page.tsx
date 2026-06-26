@@ -33,9 +33,6 @@ type HomeGateway = {
   tone: "walls" | "bong" | "appreesh" | "cache";
   external: boolean;
   isGated: boolean;
-  launchLabel: string | null;
-  launchDate: string | null;
-  launchNote: string | null;
   image?: StaticImageData;
   alt?: string;
 };
@@ -53,10 +50,7 @@ const gateways: readonly HomeGateway[] = [
     alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls",
     external: false,
-    isGated: false,
-    launchLabel: null,
-    launchDate: null,
-    launchNote: null
+    isGated: false
   },
   {
     eyebrow: "Screenplay portal",
@@ -70,10 +64,7 @@ const gateways: readonly HomeGateway[] = [
     alt: "Bong Tour poster artwork",
     tone: "bong",
     external: false,
-    isGated: true,
-    launchLabel: "Opening",
-    launchDate: cguLaunchState.bongTour.launchDate,
-    launchNote: "Preview staged inside CGU"
+    isGated: true
   },
   {
     eyebrow: "Cryptographic layer",
@@ -85,10 +76,7 @@ const gateways: readonly HomeGateway[] = [
     entryMeta: `${cguLaunchState.appreesh.label} · No external handoff yet`,
     tone: "appreesh",
     external: false,
-    isGated: true,
-    launchLabel: "Opening",
-    launchDate: cguLaunchState.appreesh.launchDate,
-    launchNote: "Preview queued inside CGU"
+    isGated: true
   },
   {
     eyebrow: "New series",
@@ -100,10 +88,7 @@ const gateways: readonly HomeGateway[] = [
     entryMeta: `${cguLaunchState.cache.label} · Details opening soon`,
     tone: "cache",
     external: false,
-    isGated: true,
-    launchLabel: "Coming",
-    launchDate: "Soon",
-    launchNote: "Access infrastructure live"
+    isGated: true
   }
 ];
 
@@ -112,7 +97,7 @@ export default function HomePage() {
     <main className="cg-page cg-home-page" id="hero">
       <section className="cg-home-gate" aria-label="Featured project gateways">
         {gateways.map((gateway) => {
-          const portalClassName = `cg-home-gate__portal cg-home-gate__portal--${gateway.tone}${gateway.launchLabel ? " cg-home-gate__portal--prelaunch" : ""}`;
+          const portalClassName = `cg-home-gate__portal cg-home-gate__portal--${gateway.tone}`;
           const hasVisualImage = Boolean(gateway.image);
           const isGated = gateway.isGated;
 
@@ -159,13 +144,6 @@ export default function HomePage() {
                 ) : null}
               </div>
 
-              {gateway.launchLabel ? (
-                <div className="cg-home-gate__portal-launch-mask" aria-hidden="true">
-                  <span className="cg-home-gate__portal-launch-label">{gateway.launchLabel}</span>
-                  <strong className="cg-home-gate__portal-launch-date">{gateway.launchDate}</strong>
-                  <small className="cg-home-gate__portal-launch-note">{gateway.launchNote}</small>
-                </div>
-              ) : null}
             </>
           );
 
