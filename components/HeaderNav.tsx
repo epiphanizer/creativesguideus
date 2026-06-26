@@ -22,7 +22,7 @@ export function HeaderNav() {
   const router = useRouter();
   const activeAnchors = useMemo(() => anchors, []);
   const anchorIds = useMemo(() => activeAnchors.flatMap((anchor) => (anchor.id ? [anchor.id] : [])), [activeAnchors]);
-  const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
+  const { activeId } = useActiveSection(anchorIds);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPlayerDismissed, setIsPlayerDismissed] = useState(false);
 
@@ -48,43 +48,6 @@ export function HeaderNav() {
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
   }, []);
-
-  const scrollToAnchor = useCallback(
-    (anchorId: string) => {
-      const target = document.getElementById(anchorId);
-      if (!target) {
-        return;
-      }
-
-      manuallySetActiveId(anchorId);
-      target.scrollIntoView({
-        behavior: prefersReducedMotion ? "auto" : "smooth",
-        block: "start"
-      });
-    },
-    [manuallySetActiveId, prefersReducedMotion]
-  );
-
-  const handleNavigate = useCallback(
-    (anchorId: string) => {
-      if (pathname !== "/") {
-        router.push(`/#${anchorId}`);
-      } else {
-        scrollToAnchor(anchorId);
-      }
-
-      closeMenu();
-    },
-    [closeMenu, pathname, router, scrollToAnchor]
-  );
-
-  const handleLinkNavigate = useCallback(
-    (href: string) => {
-      router.push(href);
-      closeMenu();
-    },
-    [closeMenu, router]
-  );
 
   const handleHomeNavigate = useCallback(() => {
     if (pathname !== "/") {
@@ -119,6 +82,14 @@ export function HeaderNav() {
   useEffect(() => {
     closeMenu();
   }, [closeMenu, pathname]);
+
+  useEffect(() => {
+    document.body.classList.toggle("cg-menu-open", isMenuOpen);
+
+    return () => {
+      document.body.classList.remove("cg-menu-open");
+    };
+  }, [isMenuOpen]);
 
   useEffect(() => {
     if (!isWallsDevineRoute) {
@@ -163,7 +134,7 @@ export function HeaderNav() {
           type="button"
           className={["cg-header__menu-toggle", isMenuOpen ? "cg-header__menu-toggle--open" : ""].filter(Boolean).join(" ")}
           aria-expanded={isMenuOpen}
-          aria-controls="primary-navigation"
+          aria-controls="primary-navigation-overlay"
           aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
           onClick={() => setIsMenuOpen((prev) => !prev)}
         >
@@ -174,41 +145,40 @@ export function HeaderNav() {
           </span>
           <span className="cg-header__menu-toggle-label">Menu</span>
         </button>
-        <div className={["cg-header__menu", isMenuOpen ? "cg-header__menu--open" : ""].filter(Boolean).join(" ")}>
-          {activeAnchors.length ? (
-            <nav className="cg-header__nav" aria-label="Primary" id="primary-navigation">
-              <ul className="cg-header__list">
-                {activeAnchors.map((anchor) => (
-                  <li key={anchor.id ?? anchor.href ?? anchor.label} className="cg-header__item">
-                    <a
-                      href={anchor.id ? `#${anchor.id}` : anchor.href ?? "/"}
-                      className={[
-                        "cg-header__link",
-                        anchor.id && activeId === anchor.id ? "cg-header__link--active" : "",
-                        anchor.href && pathname === anchor.href ? "cg-header__link--active" : ""
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        if (anchor.id) {
-                          handleNavigate(anchor.id);
-                          return;
-                        }
-
-                        if (anchor.href) {
-                          handleLinkNavigate(anchor.href);
-                        }
-                      }}
-                    >
-                      {anchor.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ) : null}
-          <div className="cg-header__actions">
+        <div
+          id="primary-navigation-overlay"
+          className={["cg-header__menu-overlay", isMenuOpen ? "cg-header__menu-overlay--open" : ""].filter(Boolean).join(" ")}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              closeMenu();
+            }
+          }}
+        >
+          <div className={["cg-header__menu", isMenuOpen ? "cg-header__menu--open" : ""].filter(Boolean).join(" ")}>
+            {activeAnchors.length ? (
+              <nav className="cg-header__nav" aria-label="Primary" id="primary-navigation">
+                <ul className="cg-header__list">
+                  {activeAnchors.map((anchor) => (
+                    <li key={anchor.id ?? anchor.href ?? anchor.label} className="cg-header__item">
+                      <a
+                        href={anchor.id ? (pathname === "/" ? `#${anchor.id}` : `/#${anchor.id}`) : anchor.href ?? "/"}
+                        className={[
+                          "cg-header__link",
+                          anchor.id && pathname === "/" && activeId === anchor.id ? "cg-header__link--active" : "",
+                          anchor.href && pathname === anchor.href ? "cg-header__link--active" : ""
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                        onClick={closeMenu}
+                      >
+                        {anchor.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ) : null}
+            <div className="cg-header__actions">
             {isWallsDevineRoute ? (
               <WallsDevineCollectorAccess
                 source={headerRoom.source}
@@ -261,6 +231,7 @@ export function HeaderNav() {
                 Listening Room
               </button>
             ) : null}
+            </div>
           </div>
         </div>
       </div>
