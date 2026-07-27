@@ -41,12 +41,12 @@ const bongTourContactCtaLabel = isBongTourPreview ? "Request Post-Launch Access"
 const approvedReaderChecklist = [
   "Use the same email already shared through CGU.",
   "Enter the current private password to unlock the treatment.",
-  "The screenplay copy stays out of the initial page response until the gate passes."
+  "The screenplay is shared privately once access is confirmed."
 ] as const;
 const newReaderChecklist = [
   "Introduce the reader through the CGU contact route first.",
   "Leave enough context for why the treatment access is needed.",
-  "Approved readers return here and use that same email at the gate."
+  "Approved readers return here with that same email once access is ready."
 ] as const;
 const previewAccessChecklist = [
   `Use this route now if you need treatment access after ${bongTourLaunchDateLabel}.`,
@@ -55,8 +55,8 @@ const previewAccessChecklist = [
 ] as const;
 const previewSignalChecklist = [
   `Walls/Devine opens ${wallsDevineLaunchDateLabel}.`,
-  "Use Walls/Devine for the first score-world bridge while the reader gate is staged.",
-  "No screenplay pages are exposed on this public route before the gate opens."
+  "Use Walls/Devine for the first soundtrack chapter while the screenplay remains private.",
+  "The poster and premise stay public until treatment access opens."
 ] as const;
 
 async function getResponseError(response: Response, fallbackMessage: string) {
@@ -219,7 +219,7 @@ export function BongTourTreatmentGate() {
 
       await loadTreatmentContent();
     } catch {
-      setFeedbackMessage("Could not open the treatment gate right now.");
+      setFeedbackMessage("Could not open the treatment right now.");
     } finally {
       setIsSubmitting(false);
     }
@@ -334,7 +334,7 @@ export function BongTourTreatmentGate() {
               </Button>
             ) : (
               <Button type="button" className="bt-button" onClick={() => setIsModalOpen(true)} disabled={isCheckingSession}>
-                Open Approved-Reader Gate
+                Open Approved Reader Access
               </Button>
             )}
           </div>
@@ -386,8 +386,8 @@ export function BongTourTreatmentGate() {
             <div className="bt-treatment__lock-grid">
               <section className="bt-treatment__track">
                 <p className="bt-section-header__eyebrow">Already approved?</p>
-                <h2>Open the private gate.</h2>
-                <p>Use the email already on file with CGU plus the current password to read the screenplay world.</p>
+                <h2>Open the private treatment.</h2>
+                <p>Use the email already on file with CGU plus the current password to read the screenplay.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {approvedReaderChecklist.map((item) => (
@@ -397,7 +397,7 @@ export function BongTourTreatmentGate() {
                 </div>
                 <div className="bt-treatment__track-actions">
                   <Button type="button" className="bt-button" onClick={() => setIsModalOpen(true)} disabled={isCheckingSession}>
-                    Open Treatment Gate
+                    Open Treatment
                   </Button>
                 </div>
               </section>
@@ -405,7 +405,7 @@ export function BongTourTreatmentGate() {
               <section className="bt-treatment__track bt-treatment__track--secondary">
                 <p className="bt-section-header__eyebrow">Need access?</p>
                 <h2>Introduce the reader first.</h2>
-                <p>New readers should route through contact so the treatment stays private, attributable, and out of the public page payload.</p>
+                <p>New readers should start with contact so we can review access and follow up directly.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {newReaderChecklist.map((item) => (
@@ -427,13 +427,13 @@ export function BongTourTreatmentGate() {
           <div className="bt-treatment__modal" role="presentation">
             <div className="bt-treatment__modal-backdrop" onClick={() => setIsModalOpen(false)} />
             <div className="bt-treatment__modal-panel" role="dialog" aria-modal="true" aria-labelledby={`${titleId}-modal`} aria-describedby={`${descriptionId}-modal`}>
-              <button type="button" className="bt-treatment__modal-close" onClick={() => setIsModalOpen(false)} aria-label="Close treatment gate">
+              <button type="button" className="bt-treatment__modal-close" onClick={() => setIsModalOpen(false)} aria-label="Close treatment access">
                 Close
               </button>
 
               <div className="bt-treatment__modal-copy">
                 <p className="bt-section-header__eyebrow">Private reading copy</p>
-                <h2 id={`${titleId}-modal`}>Use the approved-reader gate.</h2>
+                <h2 id={`${titleId}-modal`}>Use the approved-reader access.</h2>
                 <p id={`${descriptionId}-modal`}>Approved readers enter the email already on file plus the current password. New readers should start with contact first.</p>
               </div>
 
@@ -482,7 +482,7 @@ export function BongTourTreatmentGate() {
 
                 <div className="bt-treatment__modal-actions">
                   <Button type="submit" className="bt-button" disabled={isSubmitting || isLoadingTreatment}>
-                    {isSubmitting || isLoadingTreatment ? "Checking access" : "Open Treatment Gate"}
+                    {isSubmitting || isLoadingTreatment ? "Checking access" : "Open Treatment"}
                   </Button>
                   <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                     {bongTourContactCtaLabel}

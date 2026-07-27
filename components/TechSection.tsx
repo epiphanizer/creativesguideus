@@ -3,7 +3,7 @@ import { buildContactHref } from "@/lib/contact-intake-routing";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { Tag } from "@/components/ui/Tag";
-import { albumLaunchCampaignWindow, appreeshLaunchDateLabel, launchSequenceDateRangeLabel } from "@/lib/launch-state";
+import { albumLaunchCampaignWindow, appreeshLaunchDateLabel } from "@/lib/launch-state";
 
 const systemsRoadmapHref = buildContactHref({
   overrides: {
@@ -42,14 +42,14 @@ const modernizationPath = [
 
 const techProofs = [
   {
-    title: "Appreesh preview",
-    eyebrow: "Prelaunch gratitude layer",
-    summary: `A ritual-first cryptographic layer staged toward ${appreeshLaunchDateLabel} while CGU keeps preview interest, launch-window routing, and the ${launchSequenceDateRangeLabel} sequence aligned.`
+    title: "Appreesh",
+    eyebrow: `Opening ${appreeshLaunchDateLabel}`,
+    summary: `A ritual-first cryptographic layer built to turn gratitude into a living digital experience on ${appreeshLaunchDateLabel}.`
   },
   {
     title: "Agentic release kits",
     eyebrow: "Automation",
-    summary: "Composable pipelines that transform briefs into staged deploys, soundtrack cues, and newsletter drops."
+    summary: "Composable systems that turn briefs into launches, soundtrack moments, and newsletter drops."
   },
   {
     title: "Hybrid stack guidance",

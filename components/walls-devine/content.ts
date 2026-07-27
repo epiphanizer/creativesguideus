@@ -83,15 +83,15 @@ export const songPostCards: SongPostCard[] = [
     trackNumber: 4,
     title: "Conviction",
     duration: "TBA",
-    phase: "Placeholder · September 1 rollout",
-    hook: "A pressure line held in reserve until the release world opens.",
-    caption: "Conviction is the placeholder chapter: a hard-edged promise of what still has not been heard.",
+    phase: "September 1 chapter",
+    hook: "A pressure line held in reserve until the record opens.",
+    caption: "Conviction is the sealed fourth chapter: a hard-edged promise of what still has not been heard.",
     storySummary:
-      "Conviction sits in the grid as an announced but unreleased song, holding the fourth chapter open until Volume 1 launches on September 1. The copy should make it feel deliberate: a statement of nerve, discipline, and forward motion instead of a missing asset.",
+      "Conviction holds the fourth chapter in place until Volume 1 opens on September 1, turning the title into a statement of nerve, discipline, and forward motion.",
     visualThread: "Red-thread geometry, steel diagonals, and sealed typography that reads like a vow under pressure.",
     journalSlug: "conviction",
-    makingNote: "Starter copy only for now. Keep the slot visible as a release-world promise until the final arrangement and artwork are ready.",
-    technicalNote: "Placeholder entry. Audio, final credits, and platform destinations remain intentionally unpublished until launch.",
+    makingNote: "Conviction keeps the fourth chapter visible until the full track arrives on September 1.",
+    technicalNote: "No audio yet. Full credits and platform links arrive with the September 1 release.",
     isPlaceholder: true
   },
   {

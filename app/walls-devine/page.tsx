@@ -4,7 +4,7 @@ import WallsDevineLanding from "@/components/walls-devine/WallsDevineLanding";
 
 export const metadata: Metadata = {
   title: "Walls/Devine Volume 1 | Creatives Guide Us",
-  description: "Preview the Walls/Devine Volume 1 listening room, collector grid, booking lane, merch storefront, and CGU signal path ahead of the September 1 opening."
+  description: "Enter the Walls/Devine Volume 1 listening room, journals, merch, and collector pieces ahead of the September 1 opening."
 };
 
 export default function WallsDevinePage() {

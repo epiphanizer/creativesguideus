@@ -1,15 +1,11 @@
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 
-import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
 import { albumLaunchCampaignWindow, cguLaunchState } from "@/lib/launch-state";
-import { seanhallsWorkHref } from "@/lib/studio-links";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
-import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
-const homeConversationHref = buildContactHref({ pathname: "/contact" });
 const homeAppreeshPreviewHref = buildContactHref({
   pathname: "/contact",
   overrides: {
@@ -40,12 +36,12 @@ type HomeGateway = {
 const gateways: readonly HomeGateway[] = [
   {
     eyebrow: "Release world preview",
-    descriptor: `${cguLaunchState.wallsDevine.label} · collector grid · listening room · merch shop`,
+    descriptor: `${cguLaunchState.wallsDevine.label} · listening room · journals · merch`,
     title: "Walls/Devine",
-    description: `Volume 1 opens ${cguLaunchState.wallsDevine.launchDate}: preview the collector grid, listening-room framing, and release-world objects before the full handoff.`,
+    description: `Volume 1 opens ${cguLaunchState.wallsDevine.launchDate}. Step into the music, the imagery, and the first objects from the record.`,
     href: "/walls-devine",
     entryLabel: `Walls/Devine opens ${cguLaunchState.wallsDevine.launchDate}`,
-    entryMeta: `${cguLaunchState.wallsDevine.label} · Release-world preview`,
+    entryMeta: `${cguLaunchState.wallsDevine.label} · Music, journals, merch`,
     image: volOneImage,
     alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls",
@@ -56,10 +52,10 @@ const gateways: readonly HomeGateway[] = [
     eyebrow: "Cryptographic layer",
     descriptor: cguLaunchState.appreesh.label,
     title: "Appreesh",
-    description: `The gratitude layer stays inside CGU until ${cguLaunchState.appreesh.launchDate}, then opens its own lane with no early external handoff.`,
+    description: `Appreesh opens ${cguLaunchState.appreesh.launchDate}. Join the list for first access to its gratitude-driven experience.`,
     href: homeAppreeshPreviewHref,
     entryLabel: `Appreesh opens ${cguLaunchState.appreesh.launchDate}`,
-    entryMeta: `${cguLaunchState.appreesh.label} · Preview route remains internal`,
+    entryMeta: `${cguLaunchState.appreesh.label} · Early notice available`,
     tone: "appreesh",
     external: false,
     isGated: true
@@ -68,10 +64,10 @@ const gateways: readonly HomeGateway[] = [
     eyebrow: "Screenplay portal",
     descriptor: cguLaunchState.bongTour.label,
     title: "Bong Tour",
-    description: `Poster route, premise, and treatment gate stay staged until ${cguLaunchState.bongTour.launchDate}, when the deeper film path opens.`,
+    description: `A cult-comedy feature and score world opening ${cguLaunchState.bongTour.launchDate}. Start with the poster, the premise, and the first signal.`,
     href: "/bong-tour",
     entryLabel: `Bong Tour opens ${cguLaunchState.bongTour.launchDate}`,
-    entryMeta: `${cguLaunchState.bongTour.label} · Preview route stays staged`,
+    entryMeta: `${cguLaunchState.bongTour.label} · Film preview`,
     image: posterImage,
     alt: "Bong Tour poster artwork",
     tone: "bong",
@@ -82,10 +78,10 @@ const gateways: readonly HomeGateway[] = [
     eyebrow: "New series",
     descriptor: cguLaunchState.cache.label,
     title: "Cache",
-    description: `The series stays dark through the rest of 2026 while groundwork continues toward its ${cguLaunchState.cache.launchDate} opening.`,
+    description: `A new CGU series arriving in ${cguLaunchState.cache.launchDate}. Ask for early access before the full reveal.`,
     href: "/cache",
     entryLabel: `Cache opens ${cguLaunchState.cache.launchDate}`,
-    entryMeta: `${cguLaunchState.cache.label} · Public details stay staged`,
+    entryMeta: `${cguLaunchState.cache.label} · Early access`,
     tone: "cache",
     external: false,
     isGated: true
@@ -137,10 +133,7 @@ export default function HomePage() {
               <div className="cg-home-gate__portal-entry" aria-hidden="true">
                 <span className="cg-home-gate__portal-entry-label">{gateway.entryLabel}</span>
                 {gateway.entryMeta ? (
-                  <small className="cg-home-gate__portal-entry-meta">
-                    {gateway.entryMeta}
-                    {gateway.title === "Walls/Devine" ? ` · Shop: ${new URL(wallsDevineMerchShopHref).host}` : ""}
-                  </small>
+                  <small className="cg-home-gate__portal-entry-meta">{gateway.entryMeta}</small>
                 ) : null}
               </div>
 
@@ -197,70 +190,6 @@ export default function HomePage() {
         })}
       </section>
 
-      <section className="cg-home-dispatch" aria-label="Studio routes">
-
-        <ol className="cg-home-dispatch__route-list" aria-label="Launch sequence routes">
-          <li>
-            <Link href="/walls-devine" className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">01</span>
-              <span className="cg-home-dispatch__route-copy">
-                <strong>Walls/Devine Volume 1</strong>
-                <small>Opening September 1</small>
-              </span>
-            </Link>
-          </li>
-          <li>
-            <a href={wallsDevineMerchShopHref} target="_blank" rel="noreferrer" className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">02</span>
-              <span className="cg-home-dispatch__route-copy">
-                <strong>Shop Volume 1 Merch</strong>
-                <small>Fourthwall store</small>
-              </span>
-            </a>
-          </li>
-          <li>
-            <Link href={homeAppreeshPreviewHref} scroll={false} className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">03</span>
-              <span className="cg-home-dispatch__route-copy">
-                <strong>Appreesh</strong>
-                <small>Opening September 11</small>
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/bong-tour" className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">04</span>
-              <span className="cg-home-dispatch__route-copy">
-                <strong>Bong Tour</strong>
-                <small>Opening November 4</small>
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/cache" className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">05</span>
-              <span className="cg-home-dispatch__route-copy">
-                <strong>Cache</strong>
-                <small>Opening 2027</small>
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/contact" className="cg-home-dispatch__route-link">
-              <span className="cg-home-dispatch__route-index">06</span>
-              <span className="cg-home-dispatch__route-copy">
-                <strong>Contact the Studio</strong>
-                <small>Calm route beneath the active worlds</small>
-              </span>
-            </Link>
-          </li>
-        </ol>
-
-        <nav className="cg-home-dispatch__actions" aria-label="Studio routes">
-          <ContactModalLink href={homeConversationHref} buttonVariant="ghost">Start a Conversation</ContactModalLink>
-          <a href={seanhallsWorkHref} target="_blank" rel="noreferrer">Selected Work</a>
-        </nav>
-      </section>
     </main>
   );
 }

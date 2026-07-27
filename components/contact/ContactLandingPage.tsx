@@ -39,10 +39,10 @@ export function ContactLandingPage() {
               Walls/Devine opens September 1. The studio lane stays calm underneath.
             </h1>
             <p className="cg-contact-landing__lede">
-              Walls/Devine opens first on September 1. Appreesh follows on September 11, and Bong Tour holds November 4 for the deeper film gate. This page is the calmer studio layer underneath them: the place to reach the backbone behind the work, start a real conversation, and route the next move without losing context.
+              Walls/Devine opens first on September 1. Appreesh follows on September 11, and Bong Tour arrives on November 4. This page is the calmer studio layer underneath them: the place to reach the team behind the work, start a real conversation, and make the next move feel easy.
             </p>
             <p>
-              Use it for direct contact, broader CGU framing, and the connective tissue behind release planning, partnerships, systems builds, and the September-to-November sequencing window.
+              Use it for direct contact, partnerships, systems builds, and the conversations that connect this season of work.
             </p>
           </div>
 

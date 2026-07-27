@@ -127,7 +127,7 @@ const inquiryTypeCardOptions: ContactChoiceOption[] = [
   {
     value: "performance",
     label: "Performance",
-    description: "Open a staged performance or live activation conversation without losing the project context."
+    description: "Ask about a live activation, performance, or event around the work."
   },
   {
     value: "partnership",
@@ -199,7 +199,7 @@ const partnershipFocusOptions: ContactChoiceOption[] = [
   {
     value: "soundtrack",
     label: "Soundtrack",
-    description: "Music direction, soundtrack expansion, or release-world collaboration around the score."
+    description: "Music direction, soundtrack expansion, or score collaboration."
   },
   {
     value: "collector-world",
@@ -387,14 +387,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Bong Tour treatment access context is loaded. Use this route to line up post-launch reader access before the private gate opens on ${bongTourLaunchDateLabel}.`,
+        `Use this route to request Bong Tour treatment access ahead of the ${bongTourLaunchDateLabel} opening.`,
       summary: [
-        `The private treatment stays off the public route until the gate opens on ${bongTourLaunchDateLabel}.`,
-        "The submitted email becomes the identity that later enters the protected reader gate.",
-        "Reader context and access reason remain tied to the film instead of a generic inbox ask."
+        `The private treatment opens on ${bongTourLaunchDateLabel}.`,
+        "Use the email you want us to contact when access is available.",
+        "Tell us why the screenplay matters to you so we can follow up in the right way."
       ],
       trustNote:
-        `This does not grant instant access. CGU reviews the reader request first, then approved readers return here with the same email after ${bongTourLaunchDateLabel}.`,
+        `This request does not unlock the treatment immediately. We review it first and follow up as access opens around ${bongTourLaunchDateLabel}.`,
       noteLabel: "Additional context",
       notePlaceholder: "Any extra context around the reader, the relationship, or the conversation this should unlock.",
       companyLabel: "Role or company",
@@ -404,29 +404,29 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "intent",
           label: "Confirm request",
           title: "Request post-launch treatment access",
-          description: `This route is for new-reader treatment access after the ${bongTourLaunchDateLabel} launch window opens, not an instant unlock.`,
-          helper: "The screenplay copy stays behind the protected gate until launch and review are both in place."
+          description: `This route is for readers who want access when the treatment opens on ${bongTourLaunchDateLabel}.`,
+          helper: "Leave the clearest request you can and we will follow up from there."
         },
         {
           id: "contact",
           label: "Contact details",
           title: "Anchor the reader identity",
-          description: "Use the exact email the reader should later use inside the private gate.",
-          helper: "Role or company context helps the review, but the submitted email is the key identity."
+          description: "Use the best email for the reader or the person requesting access.",
+          helper: "Role or company context helps us respond with the right next step."
         },
         {
           id: "details",
           label: "Reader details",
           title: "Describe the reader fit",
           description: "Leave the relationship to the project and why this reader needs the private copy.",
-          helper: "A concise reason is enough. The goal is to protect the treatment while keeping approvals legible."
+          helper: "A concise reason is enough. Help us understand the fit."
         },
         {
           id: "review",
           label: "Review",
           title: "Review the reader request",
           description: "Confirm the reader identity and access note before sending it into the review lane.",
-          helper: `Approved readers later return to the protected gate with this same email after ${bongTourLaunchDateLabel}.`
+          helper: `We will reply here as treatment access opens around ${bongTourLaunchDateLabel}.`
         }
       ]
     };
@@ -438,12 +438,12 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
       routingNote:
         `Bong Tour preview context is loaded. Leave the clearest production, soundtrack, or partnership note here so the ${bongTourLaunchDateLabel} launch path can route cleanly.`,
       summary: [
-        `Production, soundtrack, collector-world, and partnership signals stay attached to the film while the public route is still in preview before ${bongTourLaunchDateLabel}.`,
+        `Production, soundtrack, collector-world, and partnership interest can start here before ${bongTourLaunchDateLabel}.`,
         "The intake leads with fit and context instead of a scheduling-first experience.",
-        "CGU can route the ask cleanly without losing the preview-state context."
+        "We can reply with the clearest next step once we understand the fit."
       ],
       trustNote:
-        "This is the film-fit lane. CGU captures the right signal first, then decides what the next operational move should be after launch sequencing is clear.",
+        "This is the film-fit lane for production, soundtrack, and partnership conversations around Bong Tour.",
       noteLabel: "Partnership note",
       notePlaceholder: "What you see, the fit you want to explore, and the clearest next move around Bong Tour.",
       companyLabel: "Role or company",
@@ -454,7 +454,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           label: "Confirm intent",
           title: "Open the Bong Tour launch lane",
           description: "This route is for production, soundtrack, collector-world, or broader partnership conversations around Bong Tour.",
-          helper: "The intake starts with fit and context, not a calendar handoff or a public treatment gate."
+          helper: "Tell us what you want to explore and we will route it from there."
         },
         {
           id: "contact",
@@ -485,14 +485,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Appreesh preview context is loaded. This route captures launch-window interest without sending anyone off CGU before ${appreeshLaunchDateLabel}.`,
+        `Appreesh opens ${appreeshLaunchDateLabel}. Leave your info here if you want the first notice.`,
       summary: [
-        `Appreesh stays queued inside the CGU rollout until ${appreeshLaunchDateLabel}.`,
-        "The submitted inbox becomes the preview-notice lane tied to the current album launch window.",
-        "Internal launch flags stay attached to this lead for later routing without being exposed publicly."
+        `Appreesh opens on ${appreeshLaunchDateLabel}.`,
+        "We will use this inbox for first access notes and launch updates.",
+        "Add context if you want to tell us why Appreesh matters to you."
       ],
       trustNote:
-        "This is a preview-interest route. CGU keeps it internal until the launch window opens.",
+        "This is the easiest way to hear first when Appreesh opens.",
       noteLabel: "Optional note",
       notePlaceholder: "If helpful, say how Appreesh connects to your interest in Walls/Devine, Bong Tour, or the wider release world.",
       companyLabel: "Company or context",
@@ -502,14 +502,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "intent",
           label: "Confirm request",
           title: "Queue the Appreesh preview lane",
-          description: `This route holds Appreesh interest inside CGU until the ${appreeshLaunchDateLabel} opening.`,
-          helper: "CGU does not send this traffic to the external Appreesh site before launch."
+          description: `This route signs you up for Appreesh news ahead of the ${appreeshLaunchDateLabel} opening.`,
+          helper: "You are in the right place if you want early notice when Appreesh arrives."
         },
         {
           id: "contact",
           label: "Contact details",
           title: "Anchor the inbox",
-          description: "Use the best email for the launch-window notice so the preview route stays tied to the right person.",
+          description: "Use the best email for launch notes and first access updates.",
           helper: "Add working context if this interest is tied to a collaborator, publication, or partner lane."
         },
         {
@@ -517,14 +517,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           label: "Context note",
           title: "Add any useful context",
           description: "Leave an optional note if there is a specific Appreesh angle, bridge, or follow-up that matters.",
-          helper: "This note stays internal to CGU and helps route the launch-window follow-up later."
+          helper: "Use this note if there is a specific angle or follow-up you want us to remember."
         },
         {
           id: "review",
           label: "Review",
           title: "Review the preview route",
           description: "Confirm the inbox and note before sending this Appreesh preview request into CGU.",
-          helper: `This request stays internal until Appreesh opens on ${appreeshLaunchDateLabel}.`
+          helper: `We will follow up here as Appreesh opens on ${appreeshLaunchDateLabel}.`
         }
       ]
     };
@@ -533,11 +533,11 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
   return {
     id: "general",
     routingNote:
-      "Use this intake to route booking asks, release-world collaborations, soundtrack conversations, and system builds through one clear entry point.",
+      "Use this form for bookings, collaborations, soundtrack work, and systems builds.",
     summary: [
-      "Inquiry type, timing, and range stay visible so the request lands in the right lane.",
-      "Project context and a real note keep the conversation anchored to the work instead of a blank inbox.",
-      "Direct contact details stay inside the CGU signal flow rather than a third-party form handoff."
+      "Inquiry type, timing, and range help us respond clearly.",
+      "Project context and a real note help us start in the right place.",
+      "Direct contact details keep the conversation personal from the first reply."
     ],
     trustNote: "",
     noteLabel: "Project note",
@@ -688,7 +688,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       {
         label: "Project",
         value: form.projectTitle.trim() || "Walls/Devine",
-        description: `Walls/Devine opens ${wallsDevineLaunchDateLabel} while the ${launchSequenceDateRangeLabel} sequence is staged.`
+        description: `Walls/Devine opens ${wallsDevineLaunchDateLabel} as the first chapter in the ${launchSequenceDateRangeLabel} sequence.`
       },
       {
         label: "Next move",
@@ -738,12 +738,12 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       {
         label: "Project",
         value: form.projectTitle.trim() || "Bong Tour",
-        description: `Access is reviewed manually before the protected gate opens on ${bongTourLaunchDateLabel}.`
+        description: `Treatment access requests are reviewed ahead of the ${bongTourLaunchDateLabel} opening.`
       },
       {
         label: "Next move",
         value: "Reader review",
-        description: `Approved readers later use this same email inside the private gate after ${bongTourLaunchDateLabel}.`
+        description: `We will follow up here as treatment access opens around ${bongTourLaunchDateLabel}.`
       }
     ];
   }
@@ -1119,12 +1119,12 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         return (
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
-              <strong>Protected reading path</strong>
-              <p>{`The treatment stays behind the private gate until the ${bongTourLaunchDateLabel} launch window opens and this reader request is reviewed.`}</p>
+              <strong>Treatment request received</strong>
+              <p>{`The Bong Tour treatment opens ${bongTourLaunchDateLabel}. We will review this request and follow up as access becomes available.`}</p>
             </article>
             <article className="cg-contact__affirmation">
-              <strong>Identity matters</strong>
-              <p>{`The email you submit here is the same identity that later enters the private gate if the reader is approved after ${bongTourLaunchDateLabel}.`}</p>
+              <strong>Watch this inbox</strong>
+              <p>{`We will use the email you submitted here for the next step if treatment access opens after ${bongTourLaunchDateLabel}.`}</p>
             </article>
           </div>
         );
@@ -1134,12 +1134,12 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         return (
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
-              <strong>Preview lane confirmed</strong>
-              <p>{`Appreesh stays queued inside CGU until ${appreeshLaunchDateLabel}, so this route captures interest without an external handoff.`}</p>
+              <strong>You’re on the list</strong>
+              <p>{`Appreesh opens ${appreeshLaunchDateLabel}. We will use this inbox for the first notice.`}</p>
             </article>
             <article className="cg-contact__affirmation">
               <strong>What happens next</strong>
-              <p>CGU keeps the preview signal internal and uses the submitted inbox for launch-window follow-up later.</p>
+              <p>We will follow up here with launch updates and first-access details.</p>
             </article>
           </div>
         );
