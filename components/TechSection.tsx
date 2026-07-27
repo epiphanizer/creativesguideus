@@ -3,7 +3,7 @@ import { buildContactHref } from "@/lib/contact-intake-routing";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { Tag } from "@/components/ui/Tag";
-import { albumLaunchCampaignWindow, june30LaunchDateLabel } from "@/lib/launch-state";
+import { albumLaunchCampaignWindow, appreeshLaunchDateLabel, launchSequenceDateRangeLabel } from "@/lib/launch-state";
 
 const systemsRoadmapHref = buildContactHref({
   overrides: {
@@ -44,7 +44,7 @@ const techProofs = [
   {
     title: "Appreesh preview",
     eyebrow: "Prelaunch gratitude layer",
-    summary: `A ritual-first cryptographic layer staged toward ${june30LaunchDateLabel} while CGU keeps preview interest, launch-window routing, and the live reward path internal for now.`
+    summary: `A ritual-first cryptographic layer staged toward ${appreeshLaunchDateLabel} while CGU keeps preview interest, launch-window routing, and the ${launchSequenceDateRangeLabel} sequence aligned.`
   },
   {
     title: "Agentic release kits",

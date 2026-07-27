@@ -22,7 +22,7 @@ Terry Devine
 
 Joint Queen
 from Walls/Devine Vol. 1
-July 4, all platforms.
+September 1, all platforms.
 Link in bio.
 
 
@@ -49,7 +49,7 @@ Terry Devine
 
 Stash Daddy
 from Walls/Devine Vol. 1
-July 4, all platforms.
+September 1, all platforms.
 Link in bio.
 
 
@@ -85,29 +85,21 @@ John Walls
 
 Space Cruiser
 from Walls/Devine Vol. 1
-July 4, all platforms.
+September 1, all platforms.
 Link in bio.
 
 
-Home (Sean)
+Conviction
 
-Having gone through every drug as fast as humanly possible in a race to destroy my life in Los Angeles, circa 2021-2023, I found myself yearning for the simpler grounds and estates of Salt Lake City. I really didn’t want to leave Los Angeles, as I quite enjoyed the drugs, however, a simpler life beckoned: one I imagined might contain a family, dogs, a nine to five, and hell, even a fence. I might even sand it and stain it myself. “For pride!” I thought, before doing so.
+Volume 1 has one chapter still under wraps. Conviction is that pressure point: the track that keeps its cards close until the September 1 opening makes the whole sequence legible.
 
-I’ve never lived a simple life. I don’t traditionally take pride in building fences. I chose certain, horribly toxic paths simply for “kicks” or artistic inspiration. I’ve done some crazy, and (depending on who is doing the forgiving) unforgivable things in my time. I think we all have. You know who doesn’t give a shit about any of that? Home. 
+It is not filler and it is not a missing file pretending to be a song. It is a deliberate placeholder in the release world, the moment where the title lands first and the sound follows when the room is ready.
 
-I came back from Los Angeles to my house in Salt Lake about three years ago, today, at the time of this writing. I’ve always appreciated roughing it, and this return turned out no different. There was no furniture, as renters had moved their material items away. There was only really a table that my mother had given the house years earlier, and a few other small pieces of furniture. I slept on the floor that night and, fascinatingly, my nervous system reset in a way I did not imagine possible. Home. I was finally, finally, home. 
+The word says what the chapter needs to say right now: nerve, motion, and a refusal to dilute the charge just because the rollout shifted. Conviction stays public as a promise until the final arrangement, artwork, and listening-room handoff are ready to open.
 
-I was paid a visit by my former bandmate @swingomusic, who had been exploring a few of his own songs. Having no drugs in my system, I managed to remember to hit record. I captured his guitar without a click, and it was a one-take which remains the case in the final recording. It’s actually a song he had written for himself called “Entropy Swing” if I recall correctly. I was showing him some techniques within Abelton using his guitar track with filters as a de-facto sitar / synth layer.  I laid down a one-take vocal as well over it, and then put it away for two years. I opened it, in the proper spirit, as a lesson in Abelton with Terry in December 2024. It was my production lesson-giving song for a while and it just started gathering up beautiful parts. Finally, I connected with my sister @freyachurros to add the finishing touches to what became a rather spiritual song by the end of it, at least to me. 
-
-Over the past few years, I’ve spent a lot of time immersing in a yoga practice to substitute for my former vices. I’ve learned to take a lot of those inward lessons with me, and my hope in sharing this song, that I sing to myself now, is that you find your home in life, and not only that, but that you may also find a way to learn how to take it with you.
-
-Your Homie,
-
-John Walls
-
-Home
+Conviction
 from Walls/Devine Vol. 1
-July 4, all platforms.
+September 1, all platforms.
 Link in bio.
 
 
@@ -138,7 +130,7 @@ Terry Devine
 
 Decay
 from Walls/Devine Vol. 1
-July 4, all platforms.
+September 1, all platforms.
 Link in bio.
 
 
@@ -199,7 +191,7 @@ John Walls
 
 Poetry
 from Walls/Devine Vol. 1
-July 4, all platforms.
+September 1, all platforms.
 Link in bio.
 
 
@@ -225,6 +217,6 @@ Terry Devine
 
 Gratitude
 from Walls/Devine Vol. 1
-July 4, all platforms.
+September 1, all platforms.
 Link in bio.
 

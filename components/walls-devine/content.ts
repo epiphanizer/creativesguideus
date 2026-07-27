@@ -12,7 +12,7 @@ export type SongPostCard = {
   trackNumber: number;
   title: string;
   duration: string;
-  audioFileName: string;
+  audioFileName?: string;
   phase: string;
   hook: string;
   caption: string;
@@ -21,6 +21,7 @@ export type SongPostCard = {
   journalSlug: string;
   makingNote: string;
   technicalNote: string;
+  isPlaceholder?: boolean;
   platformLinks?: SongPlatformLinks;
   bongTourCueId?: string;
   bongTourContext?: string;
@@ -80,18 +81,18 @@ export const songPostCards: SongPostCard[] = [
   },
   {
     trackNumber: 4,
-    title: "Home",
-    duration: "2:10",
-    audioFileName: "4 - Home.wav",
-    phase: "Album week",
-    hook: "Grounded warmth in the middle of electric weather.",
-    caption: "Home turns the loud world inward and makes the myth personal.",
+    title: "Conviction",
+    duration: "TBA",
+    phase: "Placeholder · September 1 rollout",
+    hook: "A pressure line held in reserve until the release world opens.",
+    caption: "Conviction is the placeholder chapter: a hard-edged promise of what still has not been heard.",
     storySummary:
-      "Home is tied to John's move back to Salt Lake and the nervous-system relief of finally landing somewhere honest after a destructive stretch in Los Angeles. The finished track keeps that reset energy intact, with family and one-take performances holding the center.",
-    visualThread: "Pathways, porch glow, and note trails that echo writing-side symbols.",
-    journalSlug: "home",
-    makingNote: "Tracked as a quieter session break and kept the first vocal take for emotional honesty.",
-    technicalNote: "Minimal chain: acoustic layers, low-noise room mic, and gentle tape saturation for warmth."
+      "Conviction sits in the grid as an announced but unreleased song, holding the fourth chapter open until Volume 1 launches on September 1. The copy should make it feel deliberate: a statement of nerve, discipline, and forward motion instead of a missing asset.",
+    visualThread: "Red-thread geometry, steel diagonals, and sealed typography that reads like a vow under pressure.",
+    journalSlug: "conviction",
+    makingNote: "Starter copy only for now. Keep the slot visible as a release-world promise until the final arrangement and artwork are ready.",
+    technicalNote: "Placeholder entry. Audio, final credits, and platform destinations remain intentionally unpublished until launch.",
+    isPlaceholder: true
   },
   {
     trackNumber: 5,

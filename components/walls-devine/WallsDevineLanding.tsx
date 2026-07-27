@@ -11,7 +11,7 @@ import { songPostCards } from "@/components/walls-devine/content";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { buildContactHref } from "@/lib/contact-intake-routing";
-import { albumLaunchCampaignWindow } from "@/lib/launch-state";
+import { albumLaunchCampaignWindow, wallsDevineLaunchDateLabel } from "@/lib/launch-state";
 import type { EcosystemRewardId } from "@/lib/ecosystem/reward-catalog";
 import {
   getWallsDevineBookingBannerNote,
@@ -32,7 +32,7 @@ import {
 } from "@/lib/walls-devine/public-content";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
-import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
+import convictionPlaceholderImage from "@/app/walls-devine/assets/instagram/4.home.png";
 import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
 import poetryImage from "@/app/walls-devine/assets/instagram/7.poetry.png";
 import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
@@ -122,19 +122,19 @@ const instagramGrid: GridTile[] = [
     tokenLabel: "orbit"
   }),
   withSongStory({
-    slug: "home",
-    title: "Home",
+    slug: "conviction",
+    title: "Conviction",
     role: "Song 04",
-    image: homeImage,
-    playerTarget: "home",
-    teaser: "The quiet middle chapter where the myth comes back to earth.",
-    challengeLabel: "Porch pattern",
-    challengePrompt: "Replay the porch lights before the house goes dark.",
-    easterEggTitle: "Landing signal",
-    easterEggBody: "Home holds the nervous-system reset of finally landing somewhere honest. The hidden note is that its power comes from keeping the first truthful take intact.",
-    interest: "Home collector list",
+    image: convictionPlaceholderImage,
+    playerTarget: "conviction",
+    teaser: "A sealed fourth chapter held in public by title alone.",
+    challengeLabel: "Pressure pattern",
+    challengePrompt: "Replay the pressure marks before the chapter clears.",
+    easterEggTitle: "Reserved pressure",
+    easterEggBody: "Conviction stays named before it is heard. The hidden note is that the slot exists to signal nerve and forward motion, not absence.",
+    interest: "Conviction collector list",
     gameMode: "porch-lights",
-    tokenLabel: "glow"
+    tokenLabel: "mark"
   }),
   {
     slug: "volume-1",
@@ -218,7 +218,7 @@ const instagramGrid: GridTile[] = [
 ];
 
 const heartfeltCollectorHeroBody =
-  "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine";
+  "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us as Volume 1 opens on September 1 and the next rooms line up through the fall.\n\nWith gratitude,\nTerry Devine";
 const wallsDevineBookingIntakeHref = buildContactHref({
   overrides: {
     context: "walls-devine-booking",
@@ -309,7 +309,7 @@ export function WallsDevineLanding() {
               <span className="wd-hero__gamification-strip__dot" aria-hidden="true">·</span>
               <span>8 collector challenges</span>
               <span className="wd-hero__gamification-strip__dot" aria-hidden="true">·</span>
-              <span>July 21</span>
+              <span>{wallsDevineLaunchDateLabel}</span>
             </div>
 
             <figure className="wd-hero__cover">

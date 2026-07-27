@@ -1,6 +1,6 @@
 import type { LinkHubContent, LinkHubLink } from "@/lib/admin/types";
 import { buildContactHref } from "@/lib/contact-intake-routing";
-import { albumLaunchCampaignWindow, june30LaunchDateLabel } from "@/lib/launch-state";
+import { albumLaunchCampaignWindow, appreeshLaunchDateLabel, bongTourLaunchDateLabel } from "@/lib/launch-state";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
 const defaultUpdatedAt = "";
@@ -44,7 +44,7 @@ const defaultBongTourLink = {
   id: "bong-tour",
   eyebrow: "Screenplay portal",
   title: "Bong Tour",
-  description: `Preview the poster, logline, and launch lane now. The private treatment opens ${june30LaunchDateLabel}.`,
+  description: `Preview the poster, logline, and launch lane now. The private treatment opens ${bongTourLaunchDateLabel}.`,
   href: "/bong-tour",
   ctaLabel: "Preview Bong Tour",
   isFeatured: false,
@@ -55,7 +55,7 @@ const defaultAppreeshPreviewLink = {
   id: "appreesh-preview",
   eyebrow: "Preview route",
   title: "Appreesh",
-  description: `Queue the Appreesh preview lane inside CGU now. No external Appreesh handoff before ${june30LaunchDateLabel}.`,
+  description: `Queue the Appreesh preview lane inside CGU now. No external Appreesh handoff before ${appreeshLaunchDateLabel}.`,
   href: appreeshPreviewHref,
   ctaLabel: "Request Appreesh notice",
   isFeatured: false,
@@ -76,21 +76,21 @@ const defaultContactLink = {
 const canonicalLinkOrder = [
   "walls-devine",
   "walls-devine-merch-shop",
-  "bong-tour",
   "appreesh-preview",
+  "bong-tour",
   "contact"
 ] as const;
 
 export const defaultLinkHubContent: LinkHubContent = {
   eyebrow: "Project routes",
   title: "Jump Through The Live And Staged Rooms",
-  description: "A compact dispatch board for Volume 1 now, the July 11 openings next, and a direct studio route beneath them.",
+  description: "A compact dispatch board for Walls/Devine on September 1, Appreesh on September 11, Bong Tour on November 4, and a direct studio route beneath them.",
   updatedAt: defaultUpdatedAt,
   links: [
     defaultWallsDevineLink,
     defaultWallsDevineMerchLink,
-    defaultBongTourLink,
     defaultAppreeshPreviewLink,
+    defaultBongTourLink,
     defaultContactLink
   ]
 };

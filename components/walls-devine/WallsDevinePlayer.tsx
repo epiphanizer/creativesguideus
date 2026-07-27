@@ -11,7 +11,7 @@ import { SiApplemusic, SiBandcamp, SiSoundcloud, SiSpotify, SiTidal, SiYoutubemu
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
-import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
+import convictionPlaceholderImage from "@/app/walls-devine/assets/instagram/4.home.png";
 import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
 import poetryImage from "@/app/walls-devine/assets/instagram/7.poetry.png";
 import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
@@ -81,7 +81,7 @@ const trackPosterImages: Record<number, StaticImageData> = {
   1: jointQueenImage,
   2: stashDaddyImage,
   3: spaceCruiserImage,
-  4: homeImage,
+  4: convictionPlaceholderImage,
   5: decayImage,
   6: resolveImage,
   7: poetryImage,
@@ -135,6 +135,10 @@ function buildListeningRoomShareUrl(origin: string, track: SongPostCard) {
 }
 
 function buildListeningRoomShareText(track: SongPostCard) {
+  if (track.isPlaceholder) {
+    return `Preview the placeholder chapter "${track.title}" in the Walls/Devine Volume 1 Listening Room. ${track.hook}`;
+  }
+
   return `Listen to "${track.title}" in the Walls/Devine Volume 1 Listening Room. ${track.hook}`;
 }
 
@@ -214,6 +218,10 @@ const streamingPlatformCatalog: Array<{
 ];
 
 function buildListeningRoomStreamingLinks(track: SongPostCard) {
+  if (track.isPlaceholder || !track.audioFileName?.trim()) {
+    return [];
+  }
+
   const encodedQuery = encodeURIComponent(`${track.title} Walls Devine Volume 1`);
 
   return streamingPlatformCatalog.map((platform) => {
@@ -625,7 +633,11 @@ function formatPlaybackTime(totalSeconds: number) {
   return `${minutes}:${seconds}`;
 }
 
-function getTrackAudioSrc(fileName: string) {
+function getTrackAudioSrc(fileName?: string) {
+  if (!fileName?.trim()) {
+    return null;
+  }
+
   return `/walls-devine/releases/volume1/${encodeURIComponent(fileName)}`;
 }
 
@@ -690,6 +702,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const titleId = useId();
   const activeTrack = tracks[activeIndex] ?? tracks[0];
   const activeSrc = getTrackAudioSrc(activeTrack.audioFileName);
+  const hasPlayableAudio = Boolean(activeSrc);
   const activePosterImage = trackPosterImages[activeTrack.trackNumber] ?? volOneImage;
   const activePosterAlt = `${activeTrack.title} cover artwork`;
   const activeTrackMeta = `Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase} · ${activeTrack.duration}`;
@@ -1039,7 +1052,19 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   useTopmostEscape(isOpen, collapsePlayer);
 
   useEffect(() => {
-    audioRef.current?.load();
+    const audioElement = audioRef.current;
+
+    if (!audioElement) {
+      return;
+    }
+
+    if (!activeSrc) {
+      audioElement.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    audioElement.load();
   }, [activeSrc]);
 
   useEffect(() => {
@@ -1196,7 +1221,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   async function playCurrentTrack() {
     const audioElement = audioRef.current;
 
-    if (!audioElement) {
+    if (!audioElement || !activeSrc) {
       return;
     }
 
@@ -1210,7 +1235,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   async function togglePlayback() {
     const audioElement = audioRef.current;
 
-    if (!audioElement) {
+    if (!audioElement || !activeSrc) {
       return;
     }
 
@@ -1300,7 +1325,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
     const audioElement = audioRef.current;
     const nextTime = Number(event.target.value);
 
-    if (!audioElement || Number.isNaN(nextTime)) {
+    if (!audioElement || !activeSrc || Number.isNaN(nextTime)) {
       return;
     }
 
@@ -1346,9 +1371,9 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                     <audio
                       ref={audioRef}
                       preload="metadata"
-                      src={activeSrc}
+                      src={activeSrc ?? undefined}
                       className="wd-player-audio"
-                      controls={isOpen}
+                      controls={isOpen && hasPlayableAudio}
                       controlsList="nodownload noplaybackrate"
                     >
                       Your browser does not support audio playback.
@@ -1374,7 +1399,8 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                       onClick={() => {
                         void togglePlayback();
                       }}
-                      aria-label={isPlaying ? `Pause ${activeTrack.title}` : `Play ${activeTrack.title}`}
+                      aria-label={hasPlayableAudio ? (isPlaying ? `Pause ${activeTrack.title}` : `Play ${activeTrack.title}`) : `${activeTrack.title} audio is not available yet`}
+                      disabled={!hasPlayableAudio}
                     >
                       {isPlaying ? <FiPause aria-hidden="true" /> : <FiPlay aria-hidden="true" />}
                     </button>
@@ -1391,6 +1417,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                           className="wd-player-dock__progress-input"
                           aria-label={`Seek through ${activeTrack.title}`}
                           onChange={handleProgressChange}
+                          disabled={!hasPlayableAudio}
                           style={{ "--wd-player-progress": `${progressPercent}%` } as CSSProperties}
                         />
                         <span className="wd-player-dock__time">{durationSeconds > 0 ? formatPlaybackTime(durationSeconds) : activeTrack.duration}</span>
@@ -1457,25 +1484,31 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                           </div>
                         </div>
 
-                        <div id="wd-player-dock-share-platforms" className="wd-player-dock__share-platforms" aria-label={`Open ${activeTrack.title} on music platforms`}>
-                          {activeStreamingLinks.map((platform) => (
-                            <a
-                              key={platform.key}
-                              className="wd-player-dock__share-platform"
-                              href={platform.href}
-                              target="_blank"
-                              rel="noreferrer"
-                              aria-label={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}
-                              title={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}
-                            >
-                              <platform.Icon aria-hidden="true" focusable="false" />
-                              <span className="wd-visually-hidden">{platform.shortLabel}</span>
-                            </a>
-                          ))}
-                        </div>
+                        {activeStreamingLinks.length ? (
+                          <div id="wd-player-dock-share-platforms" className="wd-player-dock__share-platforms" aria-label={`Open ${activeTrack.title} on music platforms`}>
+                            {activeStreamingLinks.map((platform) => (
+                              <a
+                                key={platform.key}
+                                className="wd-player-dock__share-platform"
+                                href={platform.href}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}
+                                title={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}
+                              >
+                                <platform.Icon aria-hidden="true" focusable="false" />
+                                <span className="wd-visually-hidden">{platform.shortLabel}</span>
+                              </a>
+                            ))}
+                          </div>
+                        ) : null}
 
                         <p className="wd-player-dock__share-note">
-                          {hasDirectStreamingLinks ? "Direct song links are live where they have already been mapped." : "Platform chips currently open search results. They will switch to direct song pages as platform URLs are added."}
+                          {!hasPlayableAudio
+                            ? "Placeholder track. Streaming links go live when the song is released."
+                            : hasDirectStreamingLinks
+                              ? "Direct song links are live where they have already been mapped."
+                              : "Platform chips currently open search results. They will switch to direct song pages as platform URLs are added."}
                         </p>
                       </div>
                     ) : null}
@@ -1530,7 +1563,7 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                             <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--top">
                               Track {formatTrackNumber(activeTrack.trackNumber)}
                             </span>
-                            <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--bottom">{activeTrack.duration} · WAV</span>
+                            <span className="wd-player-modal__visualizer-badge wd-player-modal__visualizer-badge--bottom">{hasPlayableAudio ? `${activeTrack.duration} · WAV` : "Placeholder · No audio yet"}</span>
                             <div className="wd-player-modal__visualizer-core">
                               <div className="wd-player-modal__art-frame">
                                 <Image src={activePosterImage} alt={activePosterAlt} sizes="(max-width: 960px) 78vw, 420px" />
@@ -1539,8 +1572,12 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                           </div>
 
                           <div className="wd-player-modal__audio-wrap">
-                            <span className="wd-player-modal__audio-label">WAV player</span>
-                            <div ref={modalAudioSlotRef} className="wd-player-modal__audio-slot" />
+                            <span className="wd-player-modal__audio-label">{hasPlayableAudio ? "WAV player" : "Placeholder note"}</span>
+                            {hasPlayableAudio ? (
+                              <div ref={modalAudioSlotRef} className="wd-player-modal__audio-slot" />
+                            ) : (
+                              <p className="wd-player-modal__meta">Audio unlocks with the release. Use the journal entry and collector copy for the starter note.</p>
+                            )}
                           </div>
                         </div>
 
@@ -1581,14 +1618,16 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                             </div>
                           </div>
 
-                          <div className="wd-player-modal__share-platforms" aria-label="Open current track on music platforms">
-                            {activeStreamingLinks.map((platform) => (
-                              <a key={platform.key} className="wd-player-modal__share-platform" href={platform.href} target="_blank" rel="noreferrer" aria-label={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`} title={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}>
-                                <platform.Icon aria-hidden="true" focusable="false" />
-                                <span className="wd-visually-hidden">{platform.shortLabel}</span>
-                              </a>
-                            ))}
-                          </div>
+                          {activeStreamingLinks.length ? (
+                            <div className="wd-player-modal__share-platforms" aria-label="Open current track on music platforms">
+                              {activeStreamingLinks.map((platform) => (
+                                <a key={platform.key} className="wd-player-modal__share-platform" href={platform.href} target="_blank" rel="noreferrer" aria-label={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`} title={platform.isDirect ? `Open on ${platform.label}` : `Search ${platform.label}`}>
+                                  <platform.Icon aria-hidden="true" focusable="false" />
+                                  <span className="wd-visually-hidden">{platform.shortLabel}</span>
+                                </a>
+                              ))}
+                            </div>
+                          ) : null}
 
                           {activeSocialShareLinks ? (
                             <div className="wd-player-modal__share-platforms" aria-label="Share to social and messaging platforms">

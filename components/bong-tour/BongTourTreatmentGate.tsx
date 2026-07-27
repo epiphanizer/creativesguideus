@@ -5,7 +5,7 @@ import { type FormEvent, useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { buildContactHref } from "@/lib/contact-intake-routing";
-import { albumLaunchCampaignWindow, isBongTourPreview, june30LaunchDateLabel } from "@/lib/launch-state";
+import { albumLaunchCampaignWindow, bongTourLaunchDateLabel, isBongTourPreview, wallsDevineLaunchDateLabel } from "@/lib/launch-state";
 
 type TreatmentPayload = {
   title: string;
@@ -49,13 +49,13 @@ const newReaderChecklist = [
   "Approved readers return here and use that same email at the gate."
 ] as const;
 const previewAccessChecklist = [
-  `Use this route now if you need treatment access after ${june30LaunchDateLabel}.`,
+  `Use this route now if you need treatment access after ${bongTourLaunchDateLabel}.`,
   "Leave enough context for the reader and the next conversation.",
-  `Approved readers return here with the same email after ${june30LaunchDateLabel}.`
+  `Approved readers return here with the same email after ${bongTourLaunchDateLabel}.`
 ] as const;
 const previewSignalChecklist = [
-  "Walls/Devine remains the live public world right now.",
-  "Use Walls/Devine for the live score world while the reader gate is staged.",
+  `Walls/Devine opens ${wallsDevineLaunchDateLabel}.`,
+  "Use Walls/Devine for the first score-world bridge while the reader gate is staged.",
   "No screenplay pages are exposed on this public route before the gate opens."
 ] as const;
 
@@ -264,7 +264,7 @@ export function BongTourTreatmentGate() {
               </Button>
             </div>
 
-            <p className="bt-treatment__meta-line">{`Private treatment opens ${june30LaunchDateLabel}. No screenplay pages are exposed on the public route before then.`}</p>
+            <p className="bt-treatment__meta-line">{`Private treatment opens ${bongTourLaunchDateLabel}. No screenplay pages are exposed on the public route before then.`}</p>
           </header>
 
           <article className="bt-treatment__lock-card">
@@ -272,7 +272,7 @@ export function BongTourTreatmentGate() {
               <section className="bt-treatment__track">
                 <p className="bt-section-header__eyebrow">Post-launch access</p>
                 <h2>Line up the approved-reader route.</h2>
-                <p>{`Use the contact path now if you need treatment access after the gate opens on ${june30LaunchDateLabel}.`}</p>
+                <p>{`Use the contact path now if you need treatment access after the gate opens on ${bongTourLaunchDateLabel}.`}</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {previewAccessChecklist.map((item) => (
@@ -289,8 +289,8 @@ export function BongTourTreatmentGate() {
 
               <section className="bt-treatment__track bt-treatment__track--secondary">
                 <p className="bt-section-header__eyebrow">Live bridge</p>
-                <h2>Use Volume 1 as the active world now.</h2>
-                <p>The Listening Room and collector world stay live while Bong Tour waits for the July 11 window.</p>
+                <h2>Use Volume 1 as the first release world.</h2>
+                <p>{`Walls/Devine opens ${wallsDevineLaunchDateLabel} and carries the first score-world bridge while Bong Tour waits for ${bongTourLaunchDateLabel}.`}</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {previewSignalChecklist.map((item) => (

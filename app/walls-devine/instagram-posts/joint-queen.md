@@ -26,5 +26,5 @@ Terry Devine
 
 Joint Queen
 from Walls/Devine Vol. 1
-July 4, all platforms.
+September 1, all platforms.
 Link in bio.

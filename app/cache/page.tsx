@@ -4,7 +4,7 @@ import { CacheFeature } from "@/components/cache/CacheFeature";
 
 export const metadata: Metadata = {
   title: "Cache | Creatives Guide Us",
-  description: "A new series from Creatives Guide Us. Coming soon — request early access through the studio contact route."
+  description: "A new series from Creatives Guide Us opening in 2027. Request early access through the studio contact route."
 };
 
 export default function CachePage() {

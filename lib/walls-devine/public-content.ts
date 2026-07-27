@@ -11,13 +11,13 @@ const legacyWallsDevineMailingListHelper =
   "Stay close to Walls/Devine for drop alerts, collector unlocks, and new chapter openings.";
 
 export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote = {
-  eyebrow: "Collector experience",
+  eyebrow: "Collector preview",
   title: "Walls/Devine Volume 1",
   salutation: "Dear Collector,",
-  body: "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us as Volume 1 lives in public now and the next rooms line up for July 11.\n\nWith gratitude,\nTerry Devine",
+  body: "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us as Volume 1 opens on September 1 and the next rooms line up through the fall.\n\nWith gratitude,\nTerry Devine",
   primaryCtaLabel: "Open Listening Room",
   secondaryCtaLabel: "Shop Volume 1 Merch",
-  mailingListHelper: "Stay close to Walls/Devine for collector unlocks, merch drops, and new chapter openings.",
+  mailingListHelper: "Stay close to Walls/Devine for collector unlocks, merch drops, and the September 1 opening.",
   signatureIntro: "With Love From the Room,",
   journalLabel: "From the journals",
   updatedAt: "2026-05-16T00:00:00.000Z"
@@ -26,7 +26,7 @@ export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote =
 export const defaultWallsDevineBookingBannerNote: WallsDevineBookingBannerNote = {
   eyebrow: "Live booking",
   title: "Bring Walls/Devine into the room.",
-  description: "Use this lane for listening sessions, screenings, live bookings, and partnership conversations around the active Volume 1 world.",
+  description: "Use this lane for listening sessions, screenings, release-week bookings, and partnership conversations around the September 1 Volume 1 opening.",
   primaryCtaLabel: "Book Walls/Devine",
   secondaryCtaLabel: "Shop Volume 1 Merch",
   meta: "Live Music · Events ·",

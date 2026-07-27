@@ -1,10 +1,10 @@
 # Bong Tour Agent Notes
 
 - Scope: This route owns the Bong Tour screenplay preview world, including [app/bong-tour/page.tsx](app/bong-tour/page.tsx), [app/bong-tour/treatment/page.tsx](app/bong-tour/treatment/page.tsx), [components/bong-tour/BongTourFeature.tsx](components/bong-tour/BongTourFeature.tsx), [components/bong-tour/BongTourTreatmentGate.tsx](components/bong-tour/BongTourTreatmentGate.tsx), [styles/sections/_bong-feature.scss](styles/sections/_bong-feature.scss), [app/bong-tour/assets](app/bong-tour/assets), and the launch switch in [lib/launch-state.ts](lib/launch-state.ts).
-- Page role: Before June 30, treat Bong Tour like a stylized preview companion portal for a film property. It should feel intentional and premium, but clearly staged rather than fully opened.
+- Page role: Before November 4, treat Bong Tour like a stylized preview companion portal for a film property. It should feel intentional and premium, but clearly staged rather than fully opened.
 - Visual rule: Pull from the poster and the story world: warm parchment, saffron glow, smoke green, motel-night shadow, and controlled film-grain texture.
 - Narrative rule: Before launch, poster first, launch-sequence second, treatment posture third. Only surface the deeper cue-world and archive layers when the launch-state switch allows it.
-- Cross-link rule: Walls Devine is the live soundtrack world now. Keep direct pathways into [app/walls-devine/page.tsx](app/walls-devine/page.tsx) and the Volume 1 signal-list bridge whenever Bong Tour needs an active public handoff.
+- Cross-link rule: Walls Devine opens September 1 as the first soundtrack world. Keep direct pathways into [app/walls-devine/page.tsx](app/walls-devine/page.tsx) and the Volume 1 signal-list bridge whenever Bong Tour needs an active public handoff.
 - Asset rule: Bong Tour media now lives in [app/bong-tour/assets](app/bong-tour/assets). Keep future posters, stills, and social crops grouped there.
 - Edit rule: Preserve the deeper cue-room and archive implementation behind the launch-state branch so it can be reactivated later instead of being rewritten from scratch.
-- Avoid: implying that the private treatment is already open before June 30, burying the Walls/Devine bridge, monochrome pitch-deck blandness, startup UI patterns, or random neon without thematic grounding.
+- Avoid: implying that the private treatment is already open before November 4, burying the Walls/Devine bridge, monochrome pitch-deck blandness, startup UI patterns, or random neon without thematic grounding.

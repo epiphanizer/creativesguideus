@@ -7,33 +7,43 @@ type LaunchStage = {
 };
 
 export const albumLaunchCampaignWindow = "album-launch";
-export const albumReleaseDateIso = "2026-07-21";
-export const albumReleaseDateLabel = "July 21";
-export const bongTourLaunchDateIso = "2026-07-11";
-export const bongTourLaunchDateLabel = "July 11";
+export const wallsDevineLaunchDateIso = "2026-09-01";
+export const wallsDevineLaunchDateLabel = "September 1";
+export const appreeshLaunchDateIso = "2026-09-11";
+export const appreeshLaunchDateLabel = "September 11";
+export const bongTourLaunchDateIso = "2026-11-04";
+export const bongTourLaunchDateLabel = "November 4";
+export const cacheLaunchYearLabel = "2027";
+export const launchSequenceSeasonLabel = "Fall 2026";
+export const launchSequenceDateRangeLabel = `${wallsDevineLaunchDateLabel} to ${bongTourLaunchDateLabel}`;
+
+export const albumReleaseDateIso = wallsDevineLaunchDateIso;
+export const albumReleaseDateLabel = wallsDevineLaunchDateLabel;
 
 // Backward-compatible aliases retained while date references are migrated.
-export const june30LaunchDateIso = bongTourLaunchDateIso;
-export const june30LaunchDateLabel = bongTourLaunchDateLabel;
+export const june30LaunchDateIso = wallsDevineLaunchDateIso;
+export const june30LaunchDateLabel = launchSequenceSeasonLabel;
 
 export const cguLaunchState = {
   wallsDevine: {
-    status: "live",
-    label: "Live now"
+    status: "preview",
+    label: `Opening ${wallsDevineLaunchDateLabel}`,
+    launchDate: wallsDevineLaunchDateLabel
   },
   bongTour: {
     status: "preview",
-    label: `Opening ${june30LaunchDateLabel}`,
-    launchDate: june30LaunchDateLabel
+    label: `Opening ${bongTourLaunchDateLabel}`,
+    launchDate: bongTourLaunchDateLabel
   },
   appreesh: {
     status: "preview",
-    label: `Opening ${june30LaunchDateLabel}`,
-    launchDate: june30LaunchDateLabel
+    label: `Opening ${appreeshLaunchDateLabel}`,
+    launchDate: appreeshLaunchDateLabel
   },
   cache: {
     status: "preview",
-    label: "Coming soon"
+    label: `Opening ${cacheLaunchYearLabel}`,
+    launchDate: cacheLaunchYearLabel
   }
 } satisfies {
   wallsDevine: LaunchStage;
@@ -42,10 +52,23 @@ export const cguLaunchState = {
   cache: LaunchStage;
 };
 
+export const isWallsDevinePreview = cguLaunchState.wallsDevine.status === "preview";
 export const isBongTourPreview = cguLaunchState.bongTour.status === "preview";
 export const isAppreeshPreview = cguLaunchState.appreesh.status === "preview";
 export const isCachePreview = cguLaunchState.cache.status === "preview";
 
+export function isBeforeWallsDevineLaunchCutoff(value = new Date()) {
+  return value.getTime() < new Date(`${wallsDevineLaunchDateIso}T00:00:00.000Z`).getTime();
+}
+
+export function isBeforeAppreeshLaunchCutoff(value = new Date()) {
+  return value.getTime() < new Date(`${appreeshLaunchDateIso}T00:00:00.000Z`).getTime();
+}
+
+export function isBeforeBongTourLaunchCutoff(value = new Date()) {
+  return value.getTime() < new Date(`${bongTourLaunchDateIso}T00:00:00.000Z`).getTime();
+}
+
 export function isBeforeJune30LaunchCutoff(value = new Date()) {
-  return value.getTime() < new Date(`${june30LaunchDateIso}T00:00:00.000Z`).getTime();
+  return isBeforeWallsDevineLaunchCutoff(value);
 }

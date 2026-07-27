@@ -1,6 +1,6 @@
 # Creatives Guide Us
 
-CGU is the live Walls/Devine release-world, the staged Bong Tour and Appreesh June 30 preview layer, and the hidden Firebase-backed admin repo for Creatives Guide Us.
+CGU is the staged Walls/Devine release-world opening September 1, the Appreesh preview lane for September 11, the Bong Tour preview lane for November 4, and the hidden Firebase-backed admin repo for Creatives Guide Us.
 
 ## Cross-Repo Guide
 
@@ -10,6 +10,6 @@ Read and update that document whenever a task changes shared Firebase contracts,
 
 ## Current Launch Sequence
 
-- Walls/Devine is the live public world now.
-- Bong Tour is a preview companion portal until the June 30 launch window opens the deeper route.
-- Appreesh stays preview-only inside CGU before June 30; CGU does not hand public traffic outward to `appreesh.org` during that window.
+- Walls/Devine opens the first public CGU release world on September 1.
+- Bong Tour is a preview companion portal until the November 4 launch window opens the deeper route.
+- Appreesh stays preview-only inside CGU before September 11; CGU does not hand public traffic outward to `appreesh.org` during that window.

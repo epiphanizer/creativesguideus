@@ -39,13 +39,13 @@ type HomeGateway = {
 
 const gateways: readonly HomeGateway[] = [
   {
-    eyebrow: "Collector experience",
-    descriptor: `${cguLaunchState.wallsDevine.label} · player · journals · merch shop`,
+    eyebrow: "Release world preview",
+    descriptor: `${cguLaunchState.wallsDevine.label} · collector grid · listening room · merch shop`,
     title: "Walls/Devine",
-    description: "Volume 1 is live now: enter the Listening Room, move through the collector grid, and stay inside the expanding release world.",
+    description: `Volume 1 opens ${cguLaunchState.wallsDevine.launchDate}: preview the collector grid, listening-room framing, and release-world objects before the full handoff.`,
     href: "/walls-devine",
-    entryLabel: "Embark on Volume 1",
-    entryMeta: "",
+    entryLabel: `Walls/Devine opens ${cguLaunchState.wallsDevine.launchDate}`,
+    entryMeta: `${cguLaunchState.wallsDevine.label} · Release-world preview`,
     image: volOneImage,
     alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls",
@@ -53,10 +53,22 @@ const gateways: readonly HomeGateway[] = [
     isGated: false
   },
   {
+    eyebrow: "Cryptographic layer",
+    descriptor: cguLaunchState.appreesh.label,
+    title: "Appreesh",
+    description: `The gratitude layer stays inside CGU until ${cguLaunchState.appreesh.launchDate}, then opens its own lane with no early external handoff.`,
+    href: homeAppreeshPreviewHref,
+    entryLabel: `Appreesh opens ${cguLaunchState.appreesh.launchDate}`,
+    entryMeta: `${cguLaunchState.appreesh.label} · Preview route remains internal`,
+    tone: "appreesh",
+    external: false,
+    isGated: true
+  },
+  {
     eyebrow: "Screenplay portal",
     descriptor: cguLaunchState.bongTour.label,
     title: "Bong Tour",
-    description: "",
+    description: `Poster route, premise, and treatment gate stay staged until ${cguLaunchState.bongTour.launchDate}, when the deeper film path opens.`,
     href: "/bong-tour",
     entryLabel: `Bong Tour opens ${cguLaunchState.bongTour.launchDate}`,
     entryMeta: `${cguLaunchState.bongTour.label} · Preview route stays staged`,
@@ -67,25 +79,13 @@ const gateways: readonly HomeGateway[] = [
     isGated: true
   },
   {
-    eyebrow: "Cryptographic layer",
-    descriptor: cguLaunchState.appreesh.label,
-    title: "Appreesh",
-    description: "",
-    href: homeAppreeshPreviewHref,
-    entryLabel: `Appreesh opens ${cguLaunchState.appreesh.launchDate}`,
-    entryMeta: `${cguLaunchState.appreesh.label} · No external handoff yet`,
-    tone: "appreesh",
-    external: false,
-    isGated: true
-  },
-  {
     eyebrow: "New series",
     descriptor: cguLaunchState.cache.label,
     title: "Cache",
-    description: "",
+    description: `The series stays dark through the rest of 2026 while groundwork continues toward its ${cguLaunchState.cache.launchDate} opening.`,
     href: "/cache",
-    entryLabel: "Cache · Coming soon",
-    entryMeta: `${cguLaunchState.cache.label} · Details opening soon`,
+    entryLabel: `Cache opens ${cguLaunchState.cache.launchDate}`,
+    entryMeta: `${cguLaunchState.cache.label} · Public details stay staged`,
     tone: "cache",
     external: false,
     isGated: true
@@ -205,7 +205,7 @@ export default function HomePage() {
               <span className="cg-home-dispatch__route-index">01</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Walls/Devine Volume 1</strong>
-                <small>Live now</small>
+                <small>Opening September 1</small>
               </span>
             </Link>
           </li>
@@ -219,20 +219,20 @@ export default function HomePage() {
             </a>
           </li>
           <li>
-            <Link href="/bong-tour" className="cg-home-dispatch__route-link">
+            <Link href={homeAppreeshPreviewHref} scroll={false} className="cg-home-dispatch__route-link">
               <span className="cg-home-dispatch__route-index">03</span>
               <span className="cg-home-dispatch__route-copy">
-                <strong>Bong Tour</strong>
-                <small>Opening July 11</small>
+                <strong>Appreesh</strong>
+                <small>Opening September 11</small>
               </span>
             </Link>
           </li>
           <li>
-            <Link href={homeAppreeshPreviewHref} scroll={false} className="cg-home-dispatch__route-link">
+            <Link href="/bong-tour" className="cg-home-dispatch__route-link">
               <span className="cg-home-dispatch__route-index">04</span>
               <span className="cg-home-dispatch__route-copy">
-                <strong>Appreesh</strong>
-                <small>Opening July 11</small>
+                <strong>Bong Tour</strong>
+                <small>Opening November 4</small>
               </span>
             </Link>
           </li>
@@ -241,7 +241,7 @@ export default function HomePage() {
               <span className="cg-home-dispatch__route-index">05</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Cache</strong>
-                <small>Coming soon</small>
+                <small>Opening 2027</small>
               </span>
             </Link>
           </li>

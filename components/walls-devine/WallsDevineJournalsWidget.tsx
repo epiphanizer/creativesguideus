@@ -23,9 +23,9 @@ const collectorLetterQuotes: readonly CollectorLetterQuote[] = [
     text: "Poetry is the inward core of Volume 1: language first, ornament second."
   },
   {
-    source: "Home",
-    author: "John Walls",
-    text: "Home is the grounded chapter that lets the project breathe between heavier passages."
+    source: "Conviction",
+    author: "Terry Devine",
+    text: "Conviction stays in the grid as a deliberate hold: pressure, nerve, and a promise that the chapter is coming intact."
   },
   {
     source: "Decay",

@@ -14,7 +14,14 @@ import {
   GuidedIntakeStepHeader
 } from "@/components/contact-guided/GuidedIntakePrimitives";
 import { buildContactPrefill, type ContactPrefill } from "@/lib/contact-intake-routing";
-import { albumLaunchCampaignWindow, isBeforeJune30LaunchCutoff, june30LaunchDateLabel } from "@/lib/launch-state";
+import {
+  albumLaunchCampaignWindow,
+  appreeshLaunchDateLabel,
+  bongTourLaunchDateLabel,
+  isBeforeWallsDevineLaunchCutoff,
+  launchSequenceDateRangeLabel,
+  wallsDevineLaunchDateLabel
+} from "@/lib/launch-state";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { Button } from "@/components/ui/Button";
 
@@ -283,10 +290,10 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
   if (flowId === "walls-mailing") {
     return {
       id: flowId,
-      routingNote: "Walls/Devine updates request loaded for the active Volume 1 world.",
+      routingNote: "Walls/Devine updates request loaded for the Volume 1 rollout.",
       summary: [
-        "Walls/Devine is live now while Bong Tour and Appreesh stage toward July 11.",
-        "Your email anchors future Volume 1 updates tied to the live album world.",
+        `Walls/Devine opens ${wallsDevineLaunchDateLabel} while Appreesh and Bong Tour follow later in the fall sequence.`,
+        `Your email anchors future Volume 1 updates tied to the ${wallsDevineLaunchDateLabel} release world.`,
         "Each request is reviewed and routed by the studio team."
       ],
       trustNote: "This is a reviewed updates request. The studio follows up with the right Volume 1 notes for this inbox.",
@@ -299,7 +306,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "intent",
           label: "Confirm request",
           title: "Request Volume 1 updates",
-          description: `This route keeps you close to the live album world and the ${june30LaunchDateLabel} expansion window.`,
+          description: `This route keeps you close to the Volume 1 rollout and the ${wallsDevineLaunchDateLabel} opening.`,
           helper: "The request stays attached to Walls/Devine so follow-up can stay specific."
         },
         {
@@ -314,7 +321,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           label: "Update preferences",
           title: "What updates do you want?",
           description: "Pick the signal types you actually want, then add any note that helps the studio route this cleanly.",
-          helper: `If you skip this step, we treat it as a general request for Walls/Devine and ${june30LaunchDateLabel} updates.`
+          helper: `If you skip this step, we treat it as a general request for Walls/Devine and ${wallsDevineLaunchDateLabel} rollout updates.`
         },
         {
           id: "review",
@@ -331,14 +338,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        "Walls/Devine booking context is loaded. Leave the room type, timing, and booking note here so it stays attached to the live Volume 1 world.",
+        "Walls/Devine booking context is loaded. Leave the room type, timing, and booking note here so it stays attached to the Volume 1 rollout.",
       summary: [
-        "The booking lane stays attached to the live release world instead of dropping into a generic calendar flow.",
+        `The booking lane stays attached to the ${wallsDevineLaunchDateLabel} release world instead of dropping into a generic calendar flow.`,
         "Inquiry type, timing, and room note remain visible to booking-fit review in admin.",
         "Direct contact details stay inside CGU rather than being handed off to a third-party scheduler."
       ],
       trustNote:
-        "This route is for listening sessions, screenings, live bookings, and partnership-adjacent room asks around the active Walls/Devine release.",
+        `This route is for listening sessions, screenings, live bookings, and partnership-adjacent room asks around the ${wallsDevineLaunchDateLabel} Walls/Devine opening.`,
       noteLabel: "Room note",
       notePlaceholder: "Room size, event type, desired date, collaborators, press angle, or the exact booking context.",
       companyLabel: "Company or context",
@@ -380,14 +387,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Bong Tour treatment access context is loaded. Use this route to line up post-launch reader access before the private gate opens on ${june30LaunchDateLabel}.`,
+        `Bong Tour treatment access context is loaded. Use this route to line up post-launch reader access before the private gate opens on ${bongTourLaunchDateLabel}.`,
       summary: [
-        `The private treatment stays off the public route until the gate opens on ${june30LaunchDateLabel}.`,
+        `The private treatment stays off the public route until the gate opens on ${bongTourLaunchDateLabel}.`,
         "The submitted email becomes the identity that later enters the protected reader gate.",
         "Reader context and access reason remain tied to the film instead of a generic inbox ask."
       ],
       trustNote:
-        `This does not grant instant access. CGU reviews the reader request first, then approved readers return here with the same email after ${june30LaunchDateLabel}.`,
+        `This does not grant instant access. CGU reviews the reader request first, then approved readers return here with the same email after ${bongTourLaunchDateLabel}.`,
       noteLabel: "Additional context",
       notePlaceholder: "Any extra context around the reader, the relationship, or the conversation this should unlock.",
       companyLabel: "Role or company",
@@ -397,7 +404,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "intent",
           label: "Confirm request",
           title: "Request post-launch treatment access",
-          description: `This route is for new-reader treatment access after the ${june30LaunchDateLabel} launch window opens, not an instant unlock.`,
+          description: `This route is for new-reader treatment access after the ${bongTourLaunchDateLabel} launch window opens, not an instant unlock.`,
           helper: "The screenplay copy stays behind the protected gate until launch and review are both in place."
         },
         {
@@ -419,7 +426,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           label: "Review",
           title: "Review the reader request",
           description: "Confirm the reader identity and access note before sending it into the review lane.",
-          helper: `Approved readers later return to the protected gate with this same email after ${june30LaunchDateLabel}.`
+          helper: `Approved readers later return to the protected gate with this same email after ${bongTourLaunchDateLabel}.`
         }
       ]
     };
@@ -429,9 +436,9 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Bong Tour preview context is loaded. Leave the clearest production, soundtrack, or partnership note here so the July 11 launch path can route cleanly.`,
+        `Bong Tour preview context is loaded. Leave the clearest production, soundtrack, or partnership note here so the ${bongTourLaunchDateLabel} launch path can route cleanly.`,
       summary: [
-        `Production, soundtrack, collector-world, and partnership signals stay attached to the film while the public route is still in preview before ${june30LaunchDateLabel}.`,
+        `Production, soundtrack, collector-world, and partnership signals stay attached to the film while the public route is still in preview before ${bongTourLaunchDateLabel}.`,
         "The intake leads with fit and context instead of a scheduling-first experience.",
         "CGU can route the ask cleanly without losing the preview-state context."
       ],
@@ -478,9 +485,9 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Appreesh preview context is loaded. This route captures launch-window interest without sending anyone off CGU before ${june30LaunchDateLabel}.`,
+        `Appreesh preview context is loaded. This route captures launch-window interest without sending anyone off CGU before ${appreeshLaunchDateLabel}.`,
       summary: [
-        `Appreesh stays queued inside the CGU rollout until ${june30LaunchDateLabel}.`,
+        `Appreesh stays queued inside the CGU rollout until ${appreeshLaunchDateLabel}.`,
         "The submitted inbox becomes the preview-notice lane tied to the current album launch window.",
         "Internal launch flags stay attached to this lead for later routing without being exposed publicly."
       ],
@@ -495,7 +502,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "intent",
           label: "Confirm request",
           title: "Queue the Appreesh preview lane",
-          description: `This route holds Appreesh interest inside CGU until the ${june30LaunchDateLabel} opening.`,
+          description: `This route holds Appreesh interest inside CGU until the ${appreeshLaunchDateLabel} opening.`,
           helper: "CGU does not send this traffic to the external Appreesh site before launch."
         },
         {
@@ -517,7 +524,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           label: "Review",
           title: "Review the preview route",
           description: "Confirm the inbox and note before sending this Appreesh preview request into CGU.",
-          helper: `This request stays internal until Appreesh opens on ${june30LaunchDateLabel}.`
+          helper: `This request stays internal until Appreesh opens on ${appreeshLaunchDateLabel}.`
         }
       ]
     };
@@ -681,7 +688,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       {
         label: "Project",
         value: form.projectTitle.trim() || "Walls/Devine",
-        description: `Walls/Devine stays live while the ${june30LaunchDateLabel} bridge is staged.`
+        description: `Walls/Devine opens ${wallsDevineLaunchDateLabel} while the ${launchSequenceDateRangeLabel} sequence is staged.`
       },
       {
         label: "Next move",
@@ -731,12 +738,12 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       {
         label: "Project",
         value: form.projectTitle.trim() || "Bong Tour",
-        description: `Access is reviewed manually before the protected gate opens on ${june30LaunchDateLabel}.`
+        description: `Access is reviewed manually before the protected gate opens on ${bongTourLaunchDateLabel}.`
       },
       {
         label: "Next move",
         value: "Reader review",
-        description: `Approved readers later use this same email inside the private gate after ${june30LaunchDateLabel}.`
+        description: `Approved readers later use this same email inside the private gate after ${bongTourLaunchDateLabel}.`
       }
     ];
   }
@@ -771,7 +778,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       {
         label: "Request",
         value: "Appreesh preview notice",
-        description: `Held inside CGU until the ${june30LaunchDateLabel} opening.`
+        description: `Held inside CGU until the ${appreeshLaunchDateLabel} opening.`
       },
       {
         label: "Contact",
@@ -994,11 +1001,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
       const engagementLabel = getOptionLabel(engagementOptions, form.engagement);
       const timelineLabel = getOptionLabel(timelineOptions, form.timeline);
       const budgetRangeLabel = getOptionLabel(budgetRangeOptions, form.budgetRange);
-      const joinedBeforeJune30 = prefill.campaignWindow === albumLaunchCampaignWindow && isBeforeJune30LaunchCutoff();
+      const joinedBeforeWallsDevineLaunch = prefill.campaignWindow === albumLaunchCampaignWindow && isBeforeWallsDevineLaunchCutoff();
       const wantsWallsDevineUpdates = activeFlow.id === "walls-mailing";
       const wantsBongTourLaunchNotice = activeFlow.id === "bong-treatment" || activeFlow.id === "bong-partnership";
       const wantsAppreeshLaunchNotice = activeFlow.id === "appreesh-preview";
-      const airdropCandidate = joinedBeforeJune30 && (wantsWallsDevineUpdates || wantsAppreeshLaunchNotice);
+      const airdropCandidate = joinedBeforeWallsDevineLaunch && (wantsWallsDevineUpdates || wantsAppreeshLaunchNotice);
 
       await createContactIntake({
         name: form.name,
@@ -1026,7 +1033,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         wantsWallsDevineUpdates,
         wantsBongTourLaunchNotice,
         wantsAppreeshLaunchNotice,
-        joinedBeforeJune30,
+        joinedBeforeJune30: joinedBeforeWallsDevineLaunch,
         airdropCandidate
       });
 
@@ -1098,11 +1105,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
               <strong>Signal route confirmed</strong>
-              <p>This request stays attached to the live Walls/Devine route instead of getting flattened into a generic signup field.</p>
+              <p>This request stays attached to the Walls/Devine rollout instead of getting flattened into a generic signup field.</p>
             </article>
             <article className="cg-contact__affirmation">
               <strong>What happens next</strong>
-              <p>{`CGU reviews this route first, then uses the submitted inbox for future Volume 1 and ${june30LaunchDateLabel} bridge updates.`}</p>
+              <p>{`CGU reviews this route first, then uses the submitted inbox for future Volume 1 and ${wallsDevineLaunchDateLabel} rollout updates.`}</p>
             </article>
           </div>
         );
@@ -1113,11 +1120,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
               <strong>Protected reading path</strong>
-              <p>{`The treatment stays behind the private gate until the ${june30LaunchDateLabel} launch window opens and this reader request is reviewed.`}</p>
+              <p>{`The treatment stays behind the private gate until the ${bongTourLaunchDateLabel} launch window opens and this reader request is reviewed.`}</p>
             </article>
             <article className="cg-contact__affirmation">
               <strong>Identity matters</strong>
-              <p>{`The email you submit here is the same identity that later enters the private gate if the reader is approved after ${june30LaunchDateLabel}.`}</p>
+              <p>{`The email you submit here is the same identity that later enters the private gate if the reader is approved after ${bongTourLaunchDateLabel}.`}</p>
             </article>
           </div>
         );
@@ -1128,7 +1135,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
               <strong>Preview lane confirmed</strong>
-              <p>{`Appreesh stays queued inside CGU until ${june30LaunchDateLabel}, so this route captures interest without an external handoff.`}</p>
+              <p>{`Appreesh stays queued inside CGU until ${appreeshLaunchDateLabel}, so this route captures interest without an external handoff.`}</p>
             </article>
             <article className="cg-contact__affirmation">
               <strong>What happens next</strong>

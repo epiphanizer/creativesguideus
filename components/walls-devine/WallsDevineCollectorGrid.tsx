@@ -1215,7 +1215,7 @@ function CollectorChallenge({ tile, onUnlock }: { tile: CollectorGridTile; onUnl
 }
 
 export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProps) {
-  const liveTileSlug = "resolve";
+  const previewTileSlug = "resolve";
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
   const [easterEggUnlocked, setEasterEggUnlocked] = useState(false);
@@ -1297,8 +1297,8 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
     <>
       <ol className="wd-grid" aria-label="Walls/Devine release grid">
         {tiles.map((tile) => {
-          const isLive = tile.slug === liveTileSlug;
-          const isLocked = !tile.center && !isLive;
+          const isPreview = tile.slug === previewTileSlug;
+          const isLocked = !tile.center && !isPreview;
 
           return (
             <li
@@ -1307,17 +1307,17 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
                 "wd-grid__tile",
                 `wd-grid__tile--${tile.slug}`,
                 tile.center && "wd-grid__tile--center",
-                isLive && "wd-grid__tile--live",
+                isPreview && "wd-grid__tile--live",
                 isLocked && "wd-grid__tile--locked"
               )}
             >
               <button type="button" className="wd-grid__trigger" aria-label={`Open ${tile.title}`} onClick={() => setActiveSlug(tile.slug)}>
                 <figure className="wd-grid__figure">
                   <div className="wd-grid__image-wrap">
-                    {isLive ? (
-                      <span className="wd-grid__live-badge" aria-label="Live now">
+                    {isPreview ? (
+                      <span className="wd-grid__live-badge" aria-label="Preview track">
                         <span className="wd-grid__live-badge__dot" aria-hidden="true" />
-                        LIVE
+                        PREVIEW
                       </span>
                     ) : (
                       getTileBadgeLabel(tile) ? <span className="wd-grid__badge">{getTileBadgeLabel(tile)}</span> : null

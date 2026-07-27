@@ -10,7 +10,7 @@ Use:
 For marketing and captions, use:
 
 - Walls & Devine: Volume 1
-- Out 07/04/26
+- Out 09/01/26
 
 This keeps Spotify metadata clean while preserving a strong campaign phrase and room for future volumes.
 
@@ -41,7 +41,7 @@ Checklist:
 ### Phase 2: Album
 
 - Release: Volume 1
-- Date: July 4, 2026
+- Date: September 1, 2026
 - Role: Main launch moment
 
 Track list:
@@ -49,7 +49,7 @@ Track list:
 1. Joint Queen
 2. Stash Daddy
 3. Space Cruiser
-4. Home
+4. Conviction
 5. Decay
 6. Resolve
 7. Poetry
@@ -63,7 +63,7 @@ Pitch strategy:
 ### Phase 3: Instrumentals
 
 - Release: Volume 1: Instrumentals
-- Target date: July 4, 2026
+- Target date: September 1, 2026
 - Role: Companion release package and sync-friendly set
 
 Notes:
@@ -78,16 +78,16 @@ Notes:
 - June 20 to June 21: Submit Spotify for Artists pitch for Resolve.
 - June 28: Resolve release day.
 - June 28 to July 3: Daily or near-daily 9-grid story posts.
-- July 4: Volume 1 release day.
-- July 4 to July 18: Push album focus track (Poetry recommended).
-- July 4: Volume 1: Instrumentals release day.
+- September 1: Volume 1 release day.
+- September 1 to September 15: Push album focus track (Poetry recommended).
+- September 1: Volume 1: Instrumentals release day.
 
 ## Metadata Standards
 
 - Primary artist: Walls & Devine
 - Album title: Volume 1
 - Campaign phrase: Walls & Devine: Volume 1
-- Date phrase: Out 07/04/26
+- Date phrase: Out 09/01/26
 
 ## Why This Works
 
@@ -97,4 +97,4 @@ The sequence frames a clean trilogy:
 - Volume 1: the record
 - Volume 1: Instrumentals: the world behind the songs
 
-It frames Resolve as the spark, then lands the full July 4 release window with both the main record and its instrumental companion set.
+It frames Resolve as the spark, then lands the full September 1 release window with both the main record and its instrumental companion set.

@@ -14,10 +14,10 @@
 
 ## Current Launch Sequencing
 
-- Walls/Devine is the live public world and the primary reward/signal bridge.
-- Bong Tour stays in preview mode until June 30; the deeper cue-room and archive implementation should be preserved behind `lib/launch-state.ts`, not deleted.
-- Bong Tour treatment remains protected and public-facing copy should describe post-launch access until the June 30 window opens.
-- Appreesh stays preview-only inside CGU before June 30; do not reintroduce public CGU links to `appreesh.org` during that window.
+- Walls/Devine opens September 1 and becomes the primary reward/signal bridge once public.
+- Bong Tour stays in preview mode until November 4; the deeper cue-room and archive implementation should be preserved behind `lib/launch-state.ts`, not deleted.
+- Bong Tour treatment remains protected and public-facing copy should describe post-launch access until the November 4 window opens.
+- Appreesh stays preview-only inside CGU before September 11; do not reintroduce public CGU links to `appreesh.org` during that window.
 - Launch-window contact links should preserve `sourceRoute` and `campaignWindow` whenever they are part of the Walls/Devine, Bong Tour, or Appreesh sequencing flow.
 
 ## Friday Launch Status — Reference Only
