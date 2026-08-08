@@ -1,29 +1,9 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, setDoc, writeBatch } from "firebase/firestore";
 import { getBytes, listAll, ref } from "firebase/storage";
 
-import { defaultBookingBoard, isBookingRoutingStatus, normalizeBookingBoard } from "@/lib/admin/booking-engine";
-import type {
-  AdminMarkdownCollection,
-  AdminMarkdownFile,
-  BookingBoard,
-  BookingRoutingTaskDocument,
-  BookingTarget,
-  LinkHubContent,
-  ReleasePlan,
-  WallsDevineAdminData,
-  WallsDevineBookingBannerNote,
-  WallsDevineCollectorHeroNote,
-  WallsDevineUpcomingShowsNote
-} from "@/lib/admin/types";
+import type { AdminMarkdownCollection, AdminMarkdownFile, LinkHubContent, ReleasePlan, WallsDevineAdminData, WallsDevineCollectorHeroNote } from "@/lib/admin/types";
 import { defaultLinkHubContent, normalizeLinkHubContent } from "@/lib/link-hub/content";
-import {
-  defaultWallsDevineBookingBannerNote,
-  defaultWallsDevineCollectorHeroNote,
-  defaultWallsDevineUpcomingShowsNote,
-  normalizeWallsDevineBookingBannerNote,
-  normalizeWallsDevineCollectorHeroNote,
-  normalizeWallsDevineUpcomingShowsNote
-} from "@/lib/walls-devine/public-content";
+import { defaultWallsDevineCollectorHeroNote, normalizeWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 
 import { firebaseDb, firebaseStorage } from "./client";
 import { firebaseAdminPaths } from "./config";
@@ -68,22 +48,6 @@ function getMarkdownCollectionRef() {
   return collection(getProjectDoc(), firebaseAdminPaths.markdownCollection);
 }
 
-function getBookingRoutingTasksCollectionRef() {
-  if (!firebaseDb) {
-    throw new Error("Firestore is not initialized for this Firebase project.");
-  }
-
-  return collection(firebaseDb, firebaseAdminPaths.bookingRoutingTasksCollection);
-}
-
-function getBookingRoutingTaskDocRef(targetId: string) {
-  if (!firebaseDb) {
-    throw new Error("Firestore is not initialized for this Firebase project.");
-  }
-
-  return doc(firebaseDb, firebaseAdminPaths.bookingRoutingTasksCollection, targetId);
-}
-
 function getCollectorHeroNoteDocRef() {
   if (!firebaseDb) {
     throw new Error("Firestore is not initialized for this Firebase project.");
@@ -92,28 +56,12 @@ function getCollectorHeroNoteDocRef() {
   return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.collectorHeroNoteDocId);
 }
 
-function getBookingBannerNoteDocRef() {
-  if (!firebaseDb) {
-    throw new Error("Firestore is not initialized for this Firebase project.");
-  }
-
-  return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.bookingBannerNoteDocId);
-}
-
 function getLinkHubDocRef() {
   if (!firebaseDb) {
     throw new Error("Firestore is not initialized for this Firebase project.");
   }
 
   return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.linkHubDocId);
-}
-
-function getUpcomingShowsDocRef() {
-  if (!firebaseDb) {
-    throw new Error("Firestore is not initialized for this Firebase project.");
-  }
-
-  return doc(getProjectDoc(), firebaseAdminPaths.publicContentCollection, firebaseAdminPaths.upcomingShowsDocId);
 }
 
 function getMarkdownFileId(collectionName: AdminMarkdownCollection, slug: string) {
@@ -156,71 +104,6 @@ function getMarkdownPreview(content: string) {
 
 function normalizeMarkdown(content: string) {
   return content.trimEnd() ? `${content.trimEnd()}\n` : "";
-}
-
-function normalizeString(value: unknown, fallback = "") {
-  return typeof value === "string" ? value.trim() : fallback;
-}
-
-function normalizeBookingRoutingTask(value: Partial<BookingRoutingTaskDocument> | undefined, fallbackTarget?: BookingTarget) {
-  const marketFallback = fallbackTarget ? `${fallbackTarget.city}, ${fallbackTarget.state}` : "";
-  const inferredStatus = isBookingRoutingStatus(value?.status)
-    ? value.status
-    : isBookingRoutingStatus(fallbackTarget?.status)
-      ? fallbackTarget.status
-      : "hold";
-
-  return {
-    id: normalizeString(value?.id, fallbackTarget?.id ?? ""),
-    targetId: normalizeString(value?.targetId, fallbackTarget?.id ?? ""),
-    targetName: normalizeString(value?.targetName, fallbackTarget?.name ?? ""),
-    market: normalizeString(value?.market, marketFallback),
-    city: normalizeString(value?.city, fallbackTarget?.city ?? ""),
-    state: normalizeString(value?.state, fallbackTarget?.state ?? ""),
-    status: inferredStatus,
-    summary: normalizeString(value?.summary),
-    description: normalizeString(value?.description),
-    start: normalizeString(value?.start, fallbackTarget?.routingStart ?? ""),
-    end: normalizeString(value?.end, fallbackTarget?.routingEnd ?? ""),
-    notes: normalizeString(value?.notes, fallbackTarget?.notes ?? ""),
-    gCalEventId: typeof value?.gCalEventId === "string" ? value.gCalEventId : fallbackTarget?.routingGCalEventId ?? null,
-    syncSource: typeof value?.syncSource === "string" ? value.syncSource : fallbackTarget?.routingSyncSource,
-    updatedAt: normalizeString(value?.updatedAt)
-  } satisfies BookingRoutingTaskDocument;
-}
-
-async function readBookingRoutingTasks() {
-  const snapshot = await getDocs(getBookingRoutingTasksCollectionRef());
-  return snapshot.docs.map((taskDoc) => normalizeBookingRoutingTask(taskDoc.data() as Partial<BookingRoutingTaskDocument>, undefined));
-}
-
-function mergeBookingRoutingTasks(board: BookingBoard, routingTasks: BookingRoutingTaskDocument[]) {
-  if (!routingTasks.length) {
-    return board;
-  }
-
-  const tasksByTargetId = new Map(routingTasks.map((task) => [task.targetId, task]));
-
-  return normalizeBookingBoard({
-    ...board,
-    targets: board.targets.map((target) => {
-      const routingTask = tasksByTargetId.get(target.id);
-
-      if (!routingTask) {
-        return target;
-      }
-
-      return {
-        ...target,
-        status: routingTask.status,
-        notes: routingTask.notes || target.notes,
-        routingStart: routingTask.start,
-        routingEnd: routingTask.end,
-        routingGCalEventId: routingTask.gCalEventId,
-        routingSyncSource: routingTask.syncSource
-      } satisfies BookingTarget;
-    })
-  });
 }
 
 function createFirestoreMarkdownPayload(
@@ -395,25 +278,6 @@ async function saveReleasePlan(plan: ReleasePlan) {
   return nextPlan;
 }
 
-async function saveBookingBoard(board: BookingBoard) {
-  const nextBookingBoard = normalizeBookingBoard({
-    ...board,
-    updatedAt: board.updatedAt || new Date().toISOString()
-  });
-
-  await setDoc(
-    getProjectDoc(),
-    {
-      projectId: firebaseAdminPaths.wallsDevineProjectId,
-      updatedAt: nextBookingBoard.updatedAt,
-      [firebaseAdminPaths.bookingBoardField]: nextBookingBoard
-    },
-    { merge: true }
-  );
-
-  return nextBookingBoard;
-}
-
 async function getReleasePlanFromFirestore() {
   const projectSnapshot = await getDoc(getProjectDoc());
   return projectSnapshot.data()?.[firebaseAdminPaths.releasePlanField] as ReleasePlan | undefined;
@@ -429,16 +293,6 @@ async function getCollectorHeroNoteFromFirestore() {
   return normalizeWallsDevineCollectorHeroNote(snapshot.data() as Partial<WallsDevineCollectorHeroNote>);
 }
 
-async function getBookingBannerNoteFromFirestore() {
-  const snapshot = await getDoc(getBookingBannerNoteDocRef());
-
-  if (!snapshot.exists()) {
-    return defaultWallsDevineBookingBannerNote;
-  }
-
-  return normalizeWallsDevineBookingBannerNote(snapshot.data() as Partial<WallsDevineBookingBannerNote>);
-}
-
 async function getLinkHubFromFirestore() {
   const snapshot = await getDoc(getLinkHubDocRef());
 
@@ -447,16 +301,6 @@ async function getLinkHubFromFirestore() {
   }
 
   return normalizeLinkHubContent(snapshot.data() as Partial<LinkHubContent>);
-}
-
-async function getUpcomingShowsFromFirestore() {
-  const snapshot = await getDoc(getUpcomingShowsDocRef());
-
-  if (!snapshot.exists()) {
-    return defaultWallsDevineUpcomingShowsNote;
-  }
-
-  return normalizeWallsDevineUpcomingShowsNote(snapshot.data() as Partial<WallsDevineUpcomingShowsNote>);
 }
 
 function updateMarkdownCollection(
@@ -492,8 +336,6 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
   const projectSnapshot = await getDoc(getProjectDoc());
   const projectData = projectSnapshot.data() ?? null;
   const releasePlan = projectData?.[firebaseAdminPaths.releasePlanField] as ReleasePlan | undefined;
-  const bookingBoard = normalizeBookingBoard(projectData?.[firebaseAdminPaths.bookingBoardField] as Partial<BookingBoard> | undefined);
-  const bookingBoardInitialized = Boolean(projectData?.[firebaseAdminPaths.bookingBoardField]);
 
   if (!releasePlan) {
     return null;
@@ -502,14 +344,7 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
   try {
     let { instagramDrafts, journalEntries } = await readFirestoreMarkdownCollections();
     let markdownInitialized = Boolean(projectData?.[firebaseAdminPaths.markdownInitializedField]);
-    const [collectorHeroNote, bookingBannerNote, upcomingShowsNote, linkHub, bookingRoutingTasks] = await Promise.all([
-      getCollectorHeroNoteFromFirestore(),
-      getBookingBannerNoteFromFirestore(),
-      getUpcomingShowsFromFirestore(),
-      getLinkHubFromFirestore(),
-      readBookingRoutingTasks()
-    ]);
-    const mergedBookingBoard = mergeBookingRoutingTasks(bookingBoard, bookingRoutingTasks);
+    const [collectorHeroNote, linkHub] = await Promise.all([getCollectorHeroNoteFromFirestore(), getLinkHubFromFirestore()]);
 
     if (!markdownInitialized && !instagramDrafts.length && !journalEntries.length) {
       const migratedContent = await migrateLegacyStorageMarkdownContent();
@@ -523,50 +358,26 @@ export async function getFirebaseWallsDevineAdminData(): Promise<WallsDevineAdmi
 
     return {
       plan: releasePlan,
-      bookingBoard: mergedBookingBoard,
       instagramDrafts,
       journalEntries,
       collectorHeroNote,
-      bookingBannerNote,
-      upcomingShowsNote,
       linkHub,
       storageBacked: true,
       contentBackend: "firestore",
-      markdownInitialized: markdownInitialized || instagramDrafts.length > 0 || journalEntries.length > 0,
-      bookingBoardInitialized
+      markdownInitialized: markdownInitialized || instagramDrafts.length > 0 || journalEntries.length > 0
     } satisfies WallsDevineAdminData;
   } catch {
     return {
       plan: releasePlan,
-      bookingBoard,
       instagramDrafts: [],
       journalEntries: [],
       collectorHeroNote: defaultWallsDevineCollectorHeroNote,
-      bookingBannerNote: defaultWallsDevineBookingBannerNote,
-      upcomingShowsNote: defaultWallsDevineUpcomingShowsNote,
       linkHub: defaultLinkHubContent,
       storageBacked: false,
       contentBackend: "bootstrap",
-      markdownInitialized: false,
-      bookingBoardInitialized
+      markdownInitialized: false
     } satisfies WallsDevineAdminData;
   }
-}
-
-export async function updateFirebaseBookingBoard(board: BookingBoard) {
-  return saveBookingBoard(board);
-}
-
-export async function upsertFirebaseBookingRoutingTask(task: BookingRoutingTaskDocument) {
-  const nextTask = normalizeBookingRoutingTask(task);
-
-  await setDoc(getBookingRoutingTaskDocRef(nextTask.targetId), nextTask, { merge: true });
-
-  return nextTask;
-}
-
-export async function deleteFirebaseBookingRoutingTask(targetId: string) {
-  await deleteDoc(getBookingRoutingTaskDocRef(targetId));
 }
 
 export async function updateFirebaseReleasePlanItem(itemId: string, completed: boolean) {
@@ -592,26 +403,6 @@ export async function updateFirebaseCollectorHeroNote(note: Partial<WallsDevineC
   });
 
   await setDoc(getCollectorHeroNoteDocRef(), nextNote, { merge: true });
-  return nextNote;
-}
-
-export async function updateFirebaseBookingBannerNote(note: Partial<WallsDevineBookingBannerNote>) {
-  const nextNote = normalizeWallsDevineBookingBannerNote({
-    ...note,
-    updatedAt: new Date().toISOString()
-  });
-
-  await setDoc(getBookingBannerNoteDocRef(), nextNote, { merge: true });
-  return nextNote;
-}
-
-export async function updateFirebaseUpcomingShowsNote(note: Partial<WallsDevineUpcomingShowsNote>) {
-  const nextNote = normalizeWallsDevineUpcomingShowsNote({
-    ...note,
-    updatedAt: new Date().toISOString()
-  });
-
-  await setDoc(getUpcomingShowsDocRef(), nextNote, { merge: true });
   return nextNote;
 }
 
@@ -664,10 +455,6 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
     ...seedData.plan,
     updatedAt: new Date().toISOString()
   });
-  const nextBookingBoard = normalizeBookingBoard({
-    ...seedData.bookingBoard,
-    updatedAt: new Date().toISOString()
-  });
 
   try {
     if (!firebaseDb) {
@@ -679,8 +466,7 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
     batch.set(
       getProjectDoc(),
       {
-        [firebaseAdminPaths.markdownInitializedField]: true,
-        [firebaseAdminPaths.bookingBoardField]: nextBookingBoard
+        [firebaseAdminPaths.markdownInitializedField]: true
       },
       { merge: true }
     );
@@ -698,15 +484,6 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
       getLinkHubDocRef(),
       normalizeLinkHubContent({
         ...seedData.linkHub,
-        updatedAt: new Date().toISOString()
-      }),
-      { merge: true }
-    );
-
-    batch.set(
-      getUpcomingShowsDocRef(),
-      normalizeWallsDevineUpcomingShowsNote({
-        ...seedData.upcomingShowsNote,
         updatedAt: new Date().toISOString()
       }),
       { merge: true }
@@ -731,22 +508,18 @@ export async function seedFirebaseWallsDevineAdminData(seedData: WallsDevineAdmi
     return {
       ...seedData,
       plan: nextPlan,
-      bookingBoard: nextBookingBoard,
       storageBacked: false,
       contentBackend: "bootstrap",
-      markdownInitialized: false,
-      bookingBoardInitialized: false
+      markdownInitialized: false
     } satisfies WallsDevineAdminData;
   }
 
   return {
     ...seedData,
     plan: nextPlan,
-    bookingBoard: nextBookingBoard,
     storageBacked: false,
     contentBackend: "bootstrap",
-    markdownInitialized: false,
-    bookingBoardInitialized: false
+    markdownInitialized: false
   } satisfies WallsDevineAdminData;
 }
 

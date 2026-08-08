@@ -3,27 +3,16 @@
 - Always run `npm run build` before declaring a task complete.
 - Capture build outcomes in handoff notes when reporting status.
 - Keep UI adjustments accessible, checking contrast when adding effects.
-- Master state rule: `../sh_hub/docs/MASTER_STATE.md` is the canonical cross-repo architecture guide for `cgu_master`, `seanhalls_master`, `seanhalls_online`, `sh_hub`, and `appreesh_master`. Read it before changing repo boundaries, Firebase contracts, mirror behavior, intake routing, or shared admin ownership. If any of those change, update that document in the same task.
 - Use [app/admin/agents.md](app/admin/agents.md) before editing the hidden admin route, Firebase auth flow, or Firestore and Storage content contract.
-- Admin recommendation rule: when asked what to work on next for the CGU admin console, review the in-app backlog first. The console now hides any admin surface marked `pending` and parks it in backlog instead of the main workspace.
 - The public `/links` page now reads from Firestore `adminProjects/walls-devine/publicContent/linkHub` through the hidden admin. Keep that route, the admin editor, and `firestore.rules` in sync.
 - If a CGU change touches canonical billing, prepared invoices, timekeeping, or token usage semantics, review sibling repo `../sh_hub` first; those concerns now live there, not in public-route code.
 - Use [app/walls-devine/agents.md](app/walls-devine/agents.md) and [app/bong-tour/agents.md](app/bong-tour/agents.md) for route-specific experience rules before editing those landing pages.
 - Use [app/work/agents.md](app/work/agents.md) before editing the work module or its export contract to `seanhalls_online`.
 - Use each route's paired `style-guide.md` to preserve palette, typography, and cross-link behavior for modular marketing pages.
 
-## Current Launch Sequencing
-
-- Walls/Devine opens September 1 and becomes the primary reward/signal bridge once public.
-- Bong Tour stays in preview mode until November 4; the deeper cue-room and archive implementation should be preserved behind `lib/launch-state.ts`, not deleted.
-- Bong Tour treatment remains protected and public-facing copy should describe post-launch access until the November 4 window opens.
-- Appreesh stays preview-only inside CGU before September 11; do not reintroduce public CGU links to `appreesh.org` during that window.
-- Launch-window contact links should preserve `sourceRoute` and `campaignWindow` whenever they are part of the Walls/Devine, Bong Tour, or Appreesh sequencing flow.
-
 ## Friday Launch Status — Reference Only
 
-- Launch target was Sunday. Cross-repo launch-readiness notes are now consolidated into `../sh_hub/docs/MASTER_STATE.md`; keep the summary below as historical reference only.
-- This section is historical only. The current launch posture is the May 23 sequencing pass described above and in `../sh_hub/docs/MASTER_STATE.md`.
+- Launch target is Sunday. Detailed handoff lives in [launch-weekend-handoff.md](launch-weekend-handoff.md).
 - High-level features landed tonight:
 	- Walls/Devine listening room now uses one stable audio element across dock and modal, keeping playback continuity intact.
 	- Native WAV controls were restored in the listening room, and shareable song URLs plus listening-room analytics were wired into Firestore.

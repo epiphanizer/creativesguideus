@@ -9,31 +9,9 @@ export type ReleasePlanMetadata = {
 };
 
 export type ReleasePlanCalendarItem = {
-  id?: string;
-  phase?: string;
   date: string;
   action: string;
   purpose: string;
-  start?: string;
-  end?: string;
-};
-
-export type ReleaseTaskSyncSource = "admin-ui" | "calendar-sync" | "gcal-webhook" | "seed";
-
-export type BookingRoutingStatus = "hold" | "confirmed";
-
-export type ReleaseTaskDocument = {
-  id: string;
-  phase: string;
-  summary: string;
-  description: string;
-  start: string;
-  end: string;
-  completed: boolean;
-  notes: string;
-  gCalEventId: string | null;
-  syncSource?: ReleaseTaskSyncSource;
-  updatedAt?: string;
 };
 
 export type ReleasePlanChecklistItem = {
@@ -43,13 +21,6 @@ export type ReleasePlanChecklistItem = {
   dueDate: string;
   completed: boolean;
   notes: string;
-  summary?: string;
-  description?: string;
-  start?: string;
-  end?: string;
-  gCalEventId?: string | null;
-  syncSource?: ReleaseTaskSyncSource;
-  updatedAt?: string;
 };
 
 export type ReleasePlan = {
@@ -66,43 +37,8 @@ export type ReleasePlan = {
 };
 
 export type WallsDevineCollectorHeroNote = {
-  eyebrow: string;
-  title: string;
   salutation: string;
   body: string;
-  primaryCtaLabel: string;
-  secondaryCtaLabel: string;
-  mailingListHelper: string;
-  signatureIntro: string;
-  journalLabel: string;
-  updatedAt: string;
-};
-
-export type WallsDevineBookingBannerNote = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  primaryCtaLabel: string;
-  secondaryCtaLabel: string;
-  meta: string;
-  updatedAt: string;
-};
-
-export type WallsDevineUpcomingShow = {
-  id: string;
-  dateLabel: string;
-  city: string;
-  venue: string;
-  status: string;
-  href: string;
-};
-
-export type WallsDevineUpcomingShowsNote = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  emptyState: string;
-  shows: WallsDevineUpcomingShow[];
   updatedAt: string;
 };
 
@@ -123,109 +59,6 @@ export type LinkHubContent = {
   description: string;
   updatedAt: string;
   links: LinkHubLink[];
-};
-
-export type BookingTargetCategory = "venue" | "radio" | "podcast" | "festival" | "press";
-
-export type BookingTargetStatus = "seeded" | "researching" | "outreach-ready" | "contacted" | "in-conversation" | "hold" | "confirmed";
-
-export type BookingTargetPriority = "critical" | "high" | "medium";
-
-export type BookingContactMethod = "email" | "form" | "web" | "instagram" | "phone";
-
-export type BookingContactResearchStatus = "verified" | "partial" | "pending";
-
-export type BookingBoardGoal = {
-  title: string;
-  summary: string;
-  lockByDate: string;
-  bookThroughMonths: string[];
-  priorityMarkets: string[];
-  successMetric: string;
-  nextMoves: string[];
-};
-
-export type BookingAvailabilityWindow = {
-  id: string;
-  label: string;
-  startDate: string;
-  endDate: string;
-  market: string;
-  city: string;
-  state: string;
-  purpose: string;
-  bookingTypes: string[];
-  notes: string;
-};
-
-export type BookingTargetContact = {
-  label: string;
-  role: string;
-  method: BookingContactMethod;
-  value: string;
-  sourceUrl: string;
-  note: string;
-  verifiedAt: string;
-};
-
-export type BookingTarget = {
-  id: string;
-  name: string;
-  category: BookingTargetCategory;
-  city: string;
-  state: string;
-  status: BookingTargetStatus;
-  priority: BookingTargetPriority;
-  targetWindowId: string;
-  desiredOutcome: string;
-  fitNote: string;
-  notes: string;
-  sourceUrl: string;
-  contactStatus: BookingContactResearchStatus;
-  contacts: BookingTargetContact[];
-  tags: string[];
-  routingStart?: string;
-  routingEnd?: string;
-  routingGCalEventId?: string | null;
-  routingSyncSource?: ReleaseTaskSyncSource;
-};
-
-export type BookingRoutingTaskDocument = {
-  id: string;
-  targetId: string;
-  targetName: string;
-  market: string;
-  city: string;
-  state: string;
-  status: BookingRoutingStatus;
-  summary: string;
-  description: string;
-  start: string;
-  end: string;
-  notes: string;
-  gCalEventId: string | null;
-  syncSource?: ReleaseTaskSyncSource;
-  updatedAt?: string;
-};
-
-export type BookingProspect = {
-  id: string;
-  label: string;
-  market: string;
-  targetWindowId: string;
-  types: string[];
-  rationale: string;
-  searchHints: string[];
-  notes: string;
-  sourceUrl: string;
-};
-
-export type BookingBoard = {
-  updatedAt: string;
-  goal: BookingBoardGoal;
-  availability: BookingAvailabilityWindow[];
-  targets: BookingTarget[];
-  prospects: BookingProspect[];
 };
 
 export type AdminMarkdownFile = {
@@ -270,29 +103,6 @@ export type EcosystemLead = {
   fullName: string;
   source: string;
   interest: string;
-  company: string;
-  projectTitle: string;
-  brief: string;
-  contextId: string;
-  inquiryType: string;
-  inquiryTypeLabel: string;
-  goal: string;
-  goalLabel: string;
-  surface: string;
-  surfaceLabel: string;
-  engagement: string;
-  engagementLabel: string;
-  timeline: string;
-  timelineLabel: string;
-  budgetRange: string;
-  budgetRangeLabel: string;
-  sourceRoute: string;
-  campaignWindow: string;
-  wantsWallsDevineUpdates: boolean;
-  wantsBongTourLaunchNotice: boolean;
-  wantsAppreeshLaunchNotice: boolean;
-  joinedBeforeJune30: boolean;
-  airdropCandidate: boolean;
   createdAt: string;
   updatedAt: string;
   status: EcosystemLeadStatus;
@@ -329,15 +139,11 @@ export type ListeningRoomVisitInput = {
 
 export type WallsDevineAdminData = {
   plan: ReleasePlan;
-  bookingBoard: BookingBoard;
   instagramDrafts: AdminMarkdownFile[];
   journalEntries: AdminMarkdownFile[];
   collectorHeroNote: WallsDevineCollectorHeroNote;
-  bookingBannerNote: WallsDevineBookingBannerNote;
-  upcomingShowsNote: WallsDevineUpcomingShowsNote;
   linkHub: LinkHubContent;
   storageBacked?: boolean;
   contentBackend?: "firestore" | "bootstrap";
   markdownInitialized?: boolean;
-  bookingBoardInitialized?: boolean;
 };

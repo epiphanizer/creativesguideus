@@ -3,11 +3,8 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
-import ContactModalLink from "@/components/contact/ContactModalLink";
-import { buildContactHref } from "@/lib/contact-intake-routing";
 import { getLinkHubContent } from "@/lib/firebase/link-hub-public";
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
-import { seanhallsWorkHref } from "@/lib/studio-links";
 
 function isExternalHref(href: string) {
   return /^(https?:|mailto:|tel:)/i.test(href);
@@ -28,7 +25,6 @@ function formatUpdatedAt(value: string) {
 }
 
 export function LinkHubLanding() {
-  const linkHubConversationHref = buildContactHref({});
   const [linkHub, setLinkHub] = useState(defaultLinkHubContent);
 
   useEffect(() => {
@@ -45,76 +41,39 @@ export function LinkHubLanding() {
     };
   }, []);
 
-  const activeLinks = useMemo(
-    () => [...linkHub.links].filter((link) => link.isActive),
-    [linkHub.links]
-  );
-  const featuredLinkCount = useMemo(() => activeLinks.filter((link) => link.isFeatured).length, [activeLinks]);
+  const activeLinks = useMemo(() => linkHub.links.filter((link) => link.isActive), [linkHub.links]);
 
   return (
     <main className="cg-page cg-link-hub-page" id="hero">
       <section className="cg-link-hub" aria-labelledby="cg-link-hub-title">
         <div className="cg-link-hub__masthead">
-          <div className="cg-link-hub__masthead-top">
-            <div className="cg-link-hub__identity">
-              <span className="cg-link-hub__identity-mark">CGU</span>
-              <div>
-                <strong>Creatives Guide Us</strong>
-                <small>sound · story · signal</small>
-              </div>
+          <div className="cg-link-hub__identity">
+            <span className="cg-link-hub__identity-mark">CGU</span>
+            <div>
+              <strong>Creatives Guide Us</strong>
+              <small>sound · story · signal</small>
             </div>
-
-            <span className="cg-link-hub__status-pill">
-              {activeLinks.length} live route{activeLinks.length === 1 ? "" : "s"}
-            </span>
           </div>
 
-          <div className="cg-link-hub__hero">
-            <div className="cg-link-hub__intro">
-              <p className="cg-link-hub__eyebrow">{linkHub.eyebrow}</p>
-              <h1 id="cg-link-hub-title">{linkHub.title}</h1>
-              <p className="cg-link-hub__description">{linkHub.description}</p>
-            </div>
+          <div className="cg-link-hub__intro">
+            <p className="cg-link-hub__eyebrow">{linkHub.eyebrow}</p>
+            <h1 id="cg-link-hub-title">{linkHub.title}</h1>
+            <p className="cg-link-hub__description">{linkHub.description}</p>
+          </div>
 
-            <div className="cg-link-hub__summary">
-              <div className="cg-link-hub__summary-grid">
-                <article className="cg-link-hub__summary-card">
-                  <span className="cg-link-hub__summary-label">Updated</span>
-                  <strong>{formatUpdatedAt(linkHub.updatedAt)}</strong>
-                  <p>Fresh jump links from the current CGU rooms.</p>
-                </article>
-
-                <article className="cg-link-hub__summary-card">
-                  <span className="cg-link-hub__summary-label">Focus</span>
-                  <strong>
-                    {featuredLinkCount
-                      ? `${featuredLinkCount} featured route${featuredLinkCount === 1 ? "" : "s"}`
-                      : `${activeLinks.length} active route${activeLinks.length === 1 ? "" : "s"}`}
-                  </strong>
-                  <p>
-                    {featuredLinkCount
-                      ? "Priority rooms stay surfaced first for fast scanning on compact phones."
-                      : "Everything live is stacked into one compact dispatch board."}
-                  </p>
-                </article>
-              </div>
-
-              <div className="cg-link-hub__meta-links">
-                <Link href="/">Home</Link>
-                <Link href="/contact">Contact</Link>
-                <a href={seanhallsWorkHref} target="_blank" rel="noreferrer">
-                  Selected work
-                </a>
-              </div>
+          <div className="cg-link-hub__meta">
+            <span>Updated {formatUpdatedAt(linkHub.updatedAt)}</span>
+            <div className="cg-link-hub__meta-links">
+              <Link href="/">Home</Link>
+              <Link href="/contact">Contact</Link>
             </div>
           </div>
         </div>
 
         <div className="cg-link-hub__stack">
           {activeLinks.length ? (
-            activeLinks.map((link, index) => {
+            activeLinks.map((link) => {
               const external = isExternalHref(link.href);
-              const routeLabel = external ? "External route" : link.href.startsWith("/contact?") ? "Guided intake" : "Inside CGU";
 
               return (
                 <a
@@ -128,19 +87,9 @@ export function LinkHubLanding() {
                   href={link.href}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noreferrer" : undefined}
-                  data-analytics-event="link_hub_link_click"
-                  data-analytics-param-source="link_hub"
-                  data-analytics-param-link-id={link.id}
-                  data-analytics-param-link-title={link.title}
-                  data-analytics-param-destination={link.href}
-                  data-analytics-param-featured={link.isFeatured ? "true" : "false"}
-                  data-analytics-param-external={external ? "true" : "false"}
                 >
                   <div className="cg-link-hub__card-head">
-                    <div className="cg-link-hub__card-meta">
-                      <span className="cg-link-hub__card-index">{String(index + 1).padStart(2, "0")}</span>
-                      <span className="cg-link-hub__card-eyebrow">{link.eyebrow}</span>
-                    </div>
+                    <span className="cg-link-hub__card-eyebrow">{link.eyebrow}</span>
                     {link.isFeatured ? <span className="cg-link-hub__card-badge">Featured</span> : null}
                   </div>
 
@@ -151,7 +100,7 @@ export function LinkHubLanding() {
 
                   <div className="cg-link-hub__card-foot">
                     <span className="cg-link-hub__card-cta">{link.ctaLabel || "Open link"}</span>
-                    <small>{routeLabel}</small>
+                    <small>{external ? "External route" : "Inside CGU"}</small>
                   </div>
                 </a>
               );
@@ -161,9 +110,9 @@ export function LinkHubLanding() {
               <p className="cg-link-hub__card-eyebrow">Signal routes</p>
               <h2>The current dispatch board is being reset.</h2>
               <p>Check back shortly or head to the studio contact route for the cleanest next step.</p>
-              <ContactModalLink href={linkHubConversationHref} className="cg-link-hub__card-cta cg-link-hub__card-cta--inline">
-                Start a Conversation
-              </ContactModalLink>
+              <Link href="/contact" className="cg-link-hub__card-cta cg-link-hub__card-cta--inline">
+                Open contact
+              </Link>
             </article>
           )}
         </div>

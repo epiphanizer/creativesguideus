@@ -3,18 +3,7 @@
 import { type FormEvent, type ReactNode, useEffect, useMemo, useState, useTransition } from "react";
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 
-import { buildBookingLeadMatches, defaultBookingBoard } from "@/lib/admin/booking-engine";
-import type {
-  AdminAudioAnalysis,
-  AdminMarkdownCollection,
-  BookingTargetStatus,
-  EcosystemLead,
-  LinkHubContent,
-  ListeningRoomVisit,
-  ReleasePlanChecklistItem,
-  WallsDevineAdminData,
-  WallsDevineUpcomingShow
-} from "@/lib/admin/types";
+import type { AdminAudioAnalysis, AdminMarkdownCollection, EcosystemLead, LinkHubContent, ListeningRoomVisit, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
 import {
   deleteFirebaseAdminMarkdownFile,
   getAdminUserProfile,
@@ -24,12 +13,9 @@ import {
   renameFirebaseAdminMarkdownFile,
   replaceAdminMarkdownFile,
   seedFirebaseWallsDevineAdminData,
-  updateFirebaseBookingBannerNote,
-  updateFirebaseBookingBoard,
   updateFirebaseAdminMarkdownFile,
   updateFirebaseCollectorHeroNote,
   updateFirebaseLinkHub,
-  updateFirebaseUpcomingShowsNote,
   updateFirebaseReleasePlanItem,
   type AdminUserProfile
 } from "@/lib/firebase/admin-content";
@@ -38,17 +24,11 @@ import { firebaseAdminPaths } from "@/lib/firebase/config";
 import { getEcosystemLeads } from "@/lib/firebase/ecosystem-leads";
 import { getListeningRoomVisits } from "@/lib/firebase/listening-room-visits";
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
-import {
-  defaultWallsDevineBookingBannerNote,
-  defaultWallsDevineCollectorHeroNote,
-  defaultWallsDevineUpcomingShowsNote
-} from "@/lib/walls-devine/public-content";
-import { cx } from "@/lib/cx";
+import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
 
-import { AdminBookingEngine } from "./AdminBookingEngine";
 import { AdminLinkHubEditor } from "./AdminLinkHubEditor";
 import { AdminFirebaseStatus } from "./AdminFirebaseStatus";
 
@@ -56,20 +36,7 @@ type SaveState = "saving" | "deleting" | "success" | "error";
 type ContentSource = "pending" | "firebase" | "bootstrap";
 
 const collectorHeroNoteSaveKey = "collectorHeroNote";
-const bookingBannerNoteSaveKey = "bookingBannerNote";
-const upcomingShowsSaveKey = "upcomingShows";
 const linkHubSaveKey = "linkHub";
-const bookingTargetSaveKeyPrefix = "bookingTarget";
-
-const bookingTargetStatuses = new Set<BookingTargetStatus>([
-  "seeded",
-  "researching",
-  "outreach-ready",
-  "contacted",
-  "in-conversation",
-  "hold",
-  "confirmed"
-]);
 
 function groupChecklistByPhase(items: ReleasePlanChecklistItem[]) {
   const grouped = new Map<string, ReleasePlanChecklistItem[]>();
@@ -89,14 +56,6 @@ function getSaveNoticeKey(collection: AdminMarkdownCollection, slug: string) {
 
 function getCreateNoticeKey(collection: AdminMarkdownCollection) {
   return `create:${collection}`;
-}
-
-function getBookingTargetSaveKey(targetId: string) {
-  return `${bookingTargetSaveKeyPrefix}:${targetId}`;
-}
-
-function isBookingTargetStatus(value: string): value is BookingTargetStatus {
-  return bookingTargetStatuses.has(value as BookingTargetStatus);
 }
 
 function getMarkdownFiles(data: WallsDevineAdminData, collection: AdminMarkdownCollection) {
@@ -131,56 +90,6 @@ function buildInitialMarkdownContent(title: string, content: string) {
   }
 
   return `# ${trimmedTitle}\n\n${trimmedContent}\n`;
-}
-
-function formatUpcomingShowsForEditor(shows: WallsDevineUpcomingShow[]) {
-  return shows
-    .map((show) => [show.dateLabel, show.city, show.venue, show.status, show.href].map((segment) => segment.trim()).join(" | "))
-    .join("\n");
-}
-
-function parseUpcomingShowsFromEditor(rawShows: string) {
-  const lines = rawShows
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  const shows: WallsDevineUpcomingShow[] = [];
-
-  for (let index = 0; index < lines.length; index += 1) {
-    const line = lines[index] ?? "";
-    const segments = line.split("|").map((segment) => segment.trim());
-
-    if (segments.length < 3) {
-      return {
-        shows: [],
-        error: `Line ${index + 1} must include at least Date | City | Venue.`
-      };
-    }
-
-    const [dateLabel = "", city = "", venue = "", status = "", href = ""] = segments;
-
-    if (!dateLabel || !city || !venue) {
-      return {
-        shows: [],
-        error: `Line ${index + 1} is missing required Date, City, or Venue values.`
-      };
-    }
-
-    shows.push({
-      id: `show-${index + 1}`,
-      dateLabel,
-      city,
-      venue,
-      status: status || "TBA",
-      href
-    });
-  }
-
-  return {
-    shows,
-    error: ""
-  };
 }
 
 function getFirebaseErrorMessage(error: unknown) {
@@ -318,70 +227,10 @@ function formatListeningRoomQueryKey(queryKey: string) {
   }
 }
 
-function getLeadProgramLabel(lead: EcosystemLead) {
-  const haystack = [lead.source, lead.contextId, lead.projectTitle, lead.interest, lead.brief].join(" ").toLowerCase();
-
-  if (haystack.includes("bong-tour") || haystack.includes("bong tour")) {
-    return "Bong Tour";
-  }
-
-  if (
-    haystack.includes("walls-devine") ||
-    haystack.includes("walls devine") ||
-    lead.source === "walls-devine-hero" ||
-    lead.source.startsWith("collector-grid:")
-  ) {
-    return "Walls/Devine";
-  }
-
-  return "CGU / general";
-}
-
-function getLeadPrimaryContext(lead: EcosystemLead) {
-  return lead.projectTitle || lead.inquiryTypeLabel || lead.inquiryType || lead.interest || "General intake";
-}
-
-function formatLeadProgramSummary(label: string, count: number) {
-  return `${label} · ${count} lead${count === 1 ? "" : "s"}`;
-}
-
-function getBacklogElementId(tabId: AdminWorkspaceTabId) {
-  return `admin-backlog-${tabId}`;
-}
-
-type AdminWorkspaceSectionId = "admin-release-desk" | "admin-booking-engine" | "admin-journals" | "admin-instagram-posts" | "admin-analytics" | "admin-assets" | "admin-health" | "admin-ideas";
-
-type IdeaEntry = {
-  id: string;
-  name: string;
-  type: "app" | "script" | "feature" | "ecosystem";
-  status: "concept" | "exploring" | "prototyping" | "parked";
-  description: string;
-  notes?: string;
-};
-
-const ideaCatalogue: IdeaEntry[] = [
-  {
-    id: "living-will",
-    name: "The Living Will",
-    type: "ecosystem",
-    status: "concept",
-    description: "Users post their goals and ambitions publicly, then reward people in real time for helping them achieve those goals. Social accountability layer — think Nextdoor with depth, built around contribution and tangible mutual benefit rather than just proximity.",
-    notes: "Key design tension: reward mechanism (token-based, cash-equivalent, or reputation points?), privacy model for personal goals, and how to prevent reward gaming. Strong hook for community retention."
-  }
-];
-type AdminWorkspaceTabId = "walls-devine" | "agency";
-
-type AdminWorkspaceTab = {
-  id: AdminWorkspaceTabId;
-  label: string;
-  title: string;
-  description: string;
-};
+type AdminWorkspaceSectionId = "admin-release-desk" | "admin-journals" | "admin-instagram-posts" | "admin-analytics" | "admin-assets" | "admin-health";
 
 type DashboardModule = {
   id: AdminWorkspaceSectionId;
-  tab: AdminWorkspaceTabId;
   title: string;
   summary: string;
   detail: string;
@@ -391,35 +240,8 @@ type DashboardModule = {
 
 type AdminJumpLink = {
   id: AdminWorkspaceSectionId;
-  tab: AdminWorkspaceTabId;
   label: string;
   detail: string;
-};
-
-const adminWorkspaceTabs: AdminWorkspaceTab[] = [
-  {
-    id: "walls-devine",
-    label: "Walls/Devine",
-    title: "Release-world operations",
-    description: "Booking, release sequencing, editorial updates, and asset QA for the Walls/Devine world."
-  },
-  {
-    id: "agency",
-    label: "Agency-wide",
-    title: "CGU signal desk",
-    description: "Lead generation, Bong Tour and intake segmentation, listening traffic, and backend health across the broader studio."
-  }
-];
-
-const workspaceSectionTabs: Record<AdminWorkspaceSectionId, AdminWorkspaceTabId> = {
-  "admin-release-desk": "walls-devine",
-  "admin-booking-engine": "walls-devine",
-  "admin-journals": "walls-devine",
-  "admin-instagram-posts": "walls-devine",
-  "admin-analytics": "agency",
-  "admin-assets": "walls-devine",
-  "admin-health": "agency",
-  "admin-ideas": "agency"
 };
 
 type AdminWorkspaceSectionProps = {
@@ -429,7 +251,6 @@ type AdminWorkspaceSectionProps = {
   description: string;
   detail?: string;
   actions?: ReactNode;
-  isVisible?: boolean;
   isOpen: boolean;
   onToggle: () => void;
   children: ReactNode;
@@ -437,13 +258,11 @@ type AdminWorkspaceSectionProps = {
 
 const defaultOpenSections: Record<AdminWorkspaceSectionId, boolean> = {
   "admin-release-desk": true,
-  "admin-booking-engine": true,
-  "admin-journals": false,
+  "admin-journals": true,
   "admin-instagram-posts": false,
-  "admin-analytics": true,
+  "admin-analytics": false,
   "admin-assets": false,
-  "admin-health": false,
-  "admin-ideas": false
+  "admin-health": false
 };
 
 function isWorkspaceSectionId(value: string): value is AdminWorkspaceSectionId {
@@ -457,15 +276,10 @@ function AdminWorkspaceSection({
   description,
   detail,
   actions,
-  isVisible = true,
   isOpen,
   onToggle,
   children
 }: AdminWorkspaceSectionProps) {
-  if (!isVisible) {
-    return null;
-  }
-
   return (
     <SectionShell id={id} labelledBy={labelId} className="cg-admin__workspace-shell" innerClassName="cg-admin__section cg-admin__workspace-section">
       <div className="cg-admin__workspace-section-head">
@@ -483,27 +297,8 @@ function AdminWorkspaceSection({
         </div>
       </div>
 
-      {isOpen ? <div id={`${id}-body`} className="cg-admin__workspace-section-body">{children}</div> : <p className="cg-admin__helper">Collapsed. Reopen it from the whiteboard or the lane navigation.</p>}
+      {isOpen ? <div id={`${id}-body`} className="cg-admin__workspace-section-body">{children}</div> : <p className="cg-admin__helper">Collapsed. Use the jump rail above to reopen this workspace.</p>}
     </SectionShell>
-  );
-}
-
-type AdminWhiteboardCardProps = {
-  label: string;
-  title: string;
-  copy?: string;
-  className?: string;
-  children?: ReactNode;
-};
-
-function AdminWhiteboardCard({ label, title, copy, className, children }: AdminWhiteboardCardProps) {
-  return (
-    <article className={cx("cg-admin__whiteboard-card", className)}>
-      <span className="cg-admin__whiteboard-card-label">{label}</span>
-      <h3>{title}</h3>
-      {copy ? <p>{copy}</p> : null}
-      {children}
-    </article>
   );
 }
 
@@ -571,42 +366,17 @@ const fallbackAdminData: WallsDevineAdminData = {
       }
     ]
   },
-  bookingBoard: defaultBookingBoard,
   instagramDrafts: [],
   journalEntries: [],
   collectorHeroNote: defaultWallsDevineCollectorHeroNote,
-  bookingBannerNote: defaultWallsDevineBookingBannerNote,
-  upcomingShowsNote: defaultWallsDevineUpcomingShowsNote,
   linkHub: defaultLinkHubContent,
   storageBacked: false,
   contentBackend: "bootstrap",
-  markdownInitialized: false,
-  bookingBoardInitialized: false
+  markdownInitialized: false
 };
 
 function countCompletedChecklist(items: ReleasePlanChecklistItem[]) {
   return items.filter((item) => item.completed).length;
-}
-
-function formatCountdownToDate(targetDate: string) {
-  const diff = new Date(targetDate).getTime() - Date.now();
-  const dayInMs = 24 * 60 * 60 * 1000;
-  const days = Math.ceil(diff / dayInMs);
-
-  if (Number.isNaN(days)) {
-    return "Needs review";
-  }
-
-  if (days > 0) {
-    return `${days} day${days === 1 ? "" : "s"} out`;
-  }
-
-  if (days === 0) {
-    return "Due today";
-  }
-
-  const elapsed = Math.abs(days);
-  return `${elapsed} day${elapsed === 1 ? "" : "s"} late`;
 }
 
 function buildDashboardModules({
@@ -614,10 +384,6 @@ function buildDashboardModules({
   adminData,
   isScaffoldMode,
   hasLiveMarkdownContent,
-  bookingTargetsCount,
-  bookingLeadCount,
-  bookingDeadline,
-  bookingCriticalCount,
   leadsCount,
   hasLeadsError,
   leadSources,
@@ -625,18 +391,12 @@ function buildDashboardModules({
   topVisitSong,
   audioCount,
   hasAudioError,
-  hasVisitsError,
-  contentSource,
-  hasPanelError
+  hasVisitsError
 }: {
   completedChecklist: number;
   adminData: WallsDevineAdminData;
   isScaffoldMode: boolean;
   hasLiveMarkdownContent: boolean;
-  bookingTargetsCount: number;
-  bookingLeadCount: number;
-  bookingDeadline: string;
-  bookingCriticalCount: number;
   leadsCount: number;
   hasLeadsError: boolean;
   leadSources: Array<[string, number]>;
@@ -645,15 +405,12 @@ function buildDashboardModules({
   audioCount: number;
   hasAudioError: boolean;
   hasVisitsError: boolean;
-  contentSource: ContentSource;
-  hasPanelError: boolean;
 }) {
   const topLeadSource = leadSources[0]?.[0];
 
   return [
     {
       id: "admin-release-desk",
-      tab: "walls-devine",
       title: "Release desk",
       summary: `${completedChecklist}/${adminData.plan.checklist.length} tasks complete`,
       detail: isScaffoldMode ? "Scaffold mode is holding the release desk visible while live content reconnects." : `Last release update ${new Date(adminData.plan.updatedAt).toLocaleString()}.`,
@@ -662,7 +419,6 @@ function buildDashboardModules({
     },
     {
       id: "admin-journals",
-      tab: "walls-devine",
       title: "Journal studio",
       summary: `${adminData.journalEntries.length} journal${adminData.journalEntries.length === 1 ? "" : "s"}`,
       detail: hasLiveMarkdownContent ? "Write, rename, publish, and prune song journals from one place." : "Waiting on Firestore markdown sync before journal CRUD is live.",
@@ -670,21 +426,7 @@ function buildDashboardModules({
       status: hasLiveMarkdownContent ? "ready" : "pending"
     },
     {
-      id: "admin-booking-engine",
-      tab: "walls-devine",
-      title: "Booking engine",
-      summary: `${bookingTargetsCount} target${bookingTargetsCount === 1 ? "" : "s"} · ${bookingLeadCount} booking-fit lead${bookingLeadCount === 1 ? "" : "s"}`,
-      detail: isScaffoldMode
-        ? "Waiting on the live project document before the booking board returns to the primary workspace."
-        : bookingTargetsCount
-          ? `Lock by ${new Date(bookingDeadline).toLocaleDateString()}. ${bookingCriticalCount} critical target${bookingCriticalCount === 1 ? "" : "s"} seeded.`
-          : "Seed the booking board before the lock date gets too close.",
-      actionLabel: "Open booking engine",
-      status: !isScaffoldMode && bookingTargetsCount ? "ready" : "pending"
-    },
-    {
       id: "admin-instagram-posts",
-      tab: "walls-devine",
       title: "Draft studio",
       summary: `${adminData.instagramDrafts.length} draft${adminData.instagramDrafts.length === 1 ? "" : "s"}`,
       detail: hasLiveMarkdownContent ? "Keep release copy editable without touching repo files." : "Draft CRUD will unlock once the markdown collection finishes hydrating.",
@@ -693,8 +435,7 @@ function buildDashboardModules({
     },
     {
       id: "admin-analytics",
-      tab: "agency",
-      title: "Agency signal desk",
+      title: "Analytics",
       summary: `${leadsCount} leads · ${visitsCount} visits`,
       detail:
         hasLeadsError || hasVisitsError
@@ -703,45 +444,17 @@ function buildDashboardModules({
             ? `Top lead source: ${formatLeadSource(topLeadSource)}.`
             : topVisitSong
               ? `Top listening-room arrival: ${topVisitSong}.`
-              : "Lead generation and listening-room activity will land here.",
-      actionLabel: "Open signal desk",
+              : "Collector and listening-room activity will land here.",
+      actionLabel: "Open analytics",
       status: hasLeadsError || hasVisitsError ? "pending" : "ready"
     },
     {
       id: "admin-assets",
-      tab: "walls-devine",
       title: "Assets & QA",
       summary: `${audioCount} WAV file${audioCount === 1 ? "" : "s"} inspected`,
-      detail: hasAudioError
-        ? "Audio inspection reported an issue. Use refresh to retry."
-        : audioCount
-          ? "Server-side file inspection is returning metadata."
-          : "Live WAV inspection has not landed yet, so this stays parked in backlog.",
+      detail: hasAudioError ? "Audio inspection reported an issue. Use refresh to retry." : audioCount ? "Server-side file inspection is returning metadata." : "Run refresh to inspect the live release WAVs.",
       actionLabel: "Open assets",
-      status: hasAudioError || !audioCount ? "pending" : "ready"
-    },
-    {
-      id: "admin-health",
-      tab: "agency",
-      title: "Backend health",
-      summary: contentSource === "bootstrap" ? "Fallback mode" : contentSource === "firebase" ? "Firebase live" : "Awaiting backend",
-      detail:
-        hasPanelError
-          ? "One or more auth or content checks need attention."
-          : contentSource === "firebase"
-            ? "Auth gate, content source, and migration readiness are available here."
-            : "Keep this parked in backlog until the console is running against live Firebase content.",
-      actionLabel: "Open backend health",
-      status: hasPanelError || contentSource !== "firebase" ? "pending" : "ready"
-    },
-    {
-      id: "admin-ideas",
-      tab: "agency",
-      title: "Ideas",
-      summary: `${ideaCatalogue.length} idea${ideaCatalogue.length === 1 ? "" : "s"} logged`,
-      detail: "App concepts, ecosystem ideas, and scripts to weigh. A running catalogue of what could be built next.",
-      actionLabel: "Open ideas",
-      status: "ready"
+      status: hasAudioError ? "pending" : "ready"
     }
   ] satisfies DashboardModule[];
 }
@@ -767,7 +480,6 @@ export function AdminConsole() {
   const [listeningRoomVisits, setListeningRoomVisits] = useState<ListeningRoomVisit[]>([]);
   const [visitsLoading, setVisitsLoading] = useState(false);
   const [visitsError, setVisitsError] = useState("");
-  const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<AdminWorkspaceTabId>("walls-devine");
   const [openSections, setOpenSections] = useState<Record<AdminWorkspaceSectionId, boolean>>(() => ({ ...defaultOpenSections }));
   const [, startTransition] = useTransition();
 
@@ -787,38 +499,6 @@ export function AdminConsole() {
 
     return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
   }, [ecosystemLeads]);
-  const leadProgramMix = useMemo(() => {
-    const counts = new Map<string, number>();
-
-    for (const lead of ecosystemLeads) {
-      const label = getLeadProgramLabel(lead);
-      counts.set(label, (counts.get(label) ?? 0) + 1);
-    }
-
-    return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]);
-  }, [ecosystemLeads]);
-  const leadContextMix = useMemo(() => {
-    const counts = new Map<string, number>();
-
-    for (const lead of ecosystemLeads) {
-      const label = getLeadPrimaryContext(lead);
-      counts.set(label, (counts.get(label) ?? 0) + 1);
-    }
-
-    return Array.from(counts.entries()).sort((left, right) => right[1] - left[1]).slice(0, 6);
-  }, [ecosystemLeads]);
-  const bookingLeadMatches = useMemo(
-    () => buildBookingLeadMatches(adminViewData.bookingBoard, ecosystemLeads),
-    [adminViewData.bookingBoard, ecosystemLeads]
-  );
-  const bookingTargetSaveStates = useMemo(
-    () =>
-      adminViewData.bookingBoard.targets.reduce<Record<string, SaveState | undefined>>((states, target) => {
-        states[target.id] = saveStates[getBookingTargetSaveKey(target.id)];
-        return states;
-      }, {}),
-    [adminViewData.bookingBoard.targets, saveStates]
-  );
   const visitSongs = useMemo(() => {
     const counts = new Map<string, number>();
 
@@ -836,10 +516,6 @@ export function AdminConsole() {
         adminData: adminViewData,
         isScaffoldMode,
         hasLiveMarkdownContent,
-        bookingTargetsCount: adminViewData.bookingBoard.targets.length,
-        bookingLeadCount: bookingLeadMatches.length,
-        bookingDeadline: adminViewData.bookingBoard.goal.lockByDate,
-        bookingCriticalCount: adminViewData.bookingBoard.targets.filter((target) => target.priority === "critical").length,
         leadsCount: ecosystemLeads.length,
         hasLeadsError: Boolean(leadsError),
         leadSources,
@@ -847,16 +523,13 @@ export function AdminConsole() {
         topVisitSong: visitSongs[0]?.[0] ?? null,
         audioCount: audioAnalysis.length,
         hasAudioError: Boolean(audioError),
-        hasVisitsError: Boolean(visitsError),
-        contentSource,
-        hasPanelError: Boolean(panelError)
+        hasVisitsError: Boolean(visitsError)
       }),
     [
       completedChecklist,
       adminViewData,
       isScaffoldMode,
       hasLiveMarkdownContent,
-      bookingLeadMatches.length,
       ecosystemLeads.length,
       leadsError,
       leadSources,
@@ -865,7 +538,6 @@ export function AdminConsole() {
       audioAnalysis.length,
       audioError,
       visitsError,
-      contentSource,
       panelError
     ]
   );
@@ -873,60 +545,40 @@ export function AdminConsole() {
     () => [
       {
         id: "admin-release-desk",
-        tab: "walls-devine",
         label: "Release desk",
         detail: `${completedChecklist}/${adminViewData.plan.checklist.length} complete`
       },
       {
         id: "admin-journals",
-        tab: "walls-devine",
         label: "Journals",
         detail: `${adminViewData.journalEntries.length} live`
       },
       {
-        id: "admin-booking-engine",
-        tab: "walls-devine",
-        label: "Booking",
-        detail: `${adminViewData.bookingBoard.targets.length} targets · ${bookingLeadMatches.length} matches`
-      },
-      {
         id: "admin-instagram-posts",
-        tab: "walls-devine",
         label: "Drafts",
         detail: `${adminViewData.instagramDrafts.length} live`
       },
       {
         id: "admin-analytics",
-        tab: "agency",
-        label: "Signal desk",
+        label: "Analytics",
         detail: `${ecosystemLeads.length} leads · ${listeningRoomVisits.length} visits`
       },
       {
         id: "admin-assets",
-        tab: "walls-devine",
         label: "Assets",
         detail: `${audioAnalysis.length} WAV${audioAnalysis.length === 1 ? "" : "s"}`
       },
       {
         id: "admin-health",
-        tab: "agency",
         label: "Health",
         detail: panelError ? "Needs attention" : contentSource === "bootstrap" ? "Fallback mode" : "Backend ready"
-      },
-      {
-        id: "admin-ideas",
-        tab: "agency",
-        label: "Ideas",
-        detail: `${ideaCatalogue.length} logged`
       }
     ] satisfies AdminJumpLink[],
     [
       audioAnalysis.length,
-      adminViewData.bookingBoard.targets.length,
       adminViewData.instagramDrafts.length,
       adminViewData.journalEntries.length,
       adminViewData.plan.checklist.length,
-      bookingLeadMatches.length,
       completedChecklist,
       contentSource,
       ecosystemLeads.length,
@@ -934,42 +586,8 @@ export function AdminConsole() {
       panelError
     ]
   );
-  const activeWorkspaceTabConfig = useMemo(
-    () => adminWorkspaceTabs.find((tab) => tab.id === activeWorkspaceTab) ?? adminWorkspaceTabs[0],
-    [activeWorkspaceTab]
-  );
-  const moduleStatusById = useMemo(
-    () =>
-      dashboardModules.reduce<Record<AdminWorkspaceSectionId, DashboardModule["status"]>>((statuses, module) => {
-        statuses[module.id] = module.status;
-        return statuses;
-      }, {} as Record<AdminWorkspaceSectionId, DashboardModule["status"]>),
-    [dashboardModules]
-  );
-  const visibleDashboardModules = useMemo(
-    () => dashboardModules.filter((module) => module.tab === activeWorkspaceTab && module.status === "ready"),
-    [dashboardModules, activeWorkspaceTab]
-  );
-  const backlogDashboardModules = useMemo(
-    () => dashboardModules.filter((module) => module.tab === activeWorkspaceTab && module.status === "pending"),
-    [dashboardModules, activeWorkspaceTab]
-  );
-  const visibleJumpLinks = useMemo(
-    () => jumpLinks.filter((link) => link.tab === activeWorkspaceTab && moduleStatusById[link.id] === "ready"),
-    [jumpLinks, activeWorkspaceTab, moduleStatusById]
-  );
-  const activeBacklogId = getBacklogElementId(activeWorkspaceTab);
   const isResolvingAuthorizedSession = Boolean(authUser) && dataLoading && !isAuthorized && !panelError;
   const isRefreshingAuthorizedAdmin = Boolean(authUser) && isAuthorized && dataLoading;
-  const whiteboardActionLinks = visibleJumpLinks.slice(0, 4);
-  const bookingGoalCountdown = formatCountdownToDate(adminViewData.bookingBoard.goal.lockByDate);
-  const releaseFocusItems = Array.from(
-    new Set([...adminViewData.bookingBoard.goal.nextMoves, ...adminViewData.plan.recommendedSetup, ...adminViewData.plan.guidance])
-  ).slice(0, 4);
-
-  function isSectionReady(sectionId: AdminWorkspaceSectionId) {
-    return moduleStatusById[sectionId] === "ready";
-  }
 
   function setWorkspaceSectionOpen(sectionId: AdminWorkspaceSectionId, nextOpen: boolean) {
     setOpenSections((current) => (current[sectionId] === nextOpen ? current : { ...current, [sectionId]: nextOpen }));
@@ -979,45 +597,18 @@ export function AdminConsole() {
     setOpenSections((current) => ({ ...current, [sectionId]: !current[sectionId] }));
   }
 
-  function scrollToElement(elementId: string, behavior: ScrollBehavior = "smooth") {
+  function scrollToWorkspaceSection(sectionId: AdminWorkspaceSectionId, behavior: ScrollBehavior = "smooth") {
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        document.getElementById(elementId)?.scrollIntoView({ behavior, block: "start" });
+        document.getElementById(sectionId)?.scrollIntoView({ behavior, block: "start" });
       });
     });
   }
 
-  function scrollToWorkspaceSection(sectionId: AdminWorkspaceSectionId, behavior: ScrollBehavior = "smooth") {
-    scrollToElement(sectionId, behavior);
-  }
-
   function handleJumpToSection(sectionId: AdminWorkspaceSectionId) {
-    const tabId = workspaceSectionTabs[sectionId];
-
-    setActiveWorkspaceTab(tabId);
-
-    if (!isSectionReady(sectionId)) {
-      const backlogId = getBacklogElementId(tabId);
-      window.history.replaceState(null, "", `#${backlogId}`);
-      scrollToElement(backlogId);
-      return;
-    }
-
     setWorkspaceSectionOpen(sectionId, true);
     window.history.replaceState(null, "", `#${sectionId}`);
     scrollToWorkspaceSection(sectionId);
-  }
-
-  function handleWorkspaceTabChange(tabId: AdminWorkspaceTabId) {
-    setActiveWorkspaceTab(tabId);
-  }
-
-  function handleJumpToBacklog(tabId: AdminWorkspaceTabId = activeWorkspaceTab) {
-    const backlogId = getBacklogElementId(tabId);
-
-    setActiveWorkspaceTab(tabId);
-    window.history.replaceState(null, "", `#${backlogId}`);
-    scrollToElement(backlogId);
   }
 
   function collectionHasDuplicateSlug(collection: AdminMarkdownCollection, slug: string, currentSlug?: string) {
@@ -1046,8 +637,7 @@ export function AdminConsole() {
       const needsBootstrap =
         !nextData ||
         nextData.contentBackend === "bootstrap" ||
-        nextData.markdownInitialized === false ||
-        nextData.bookingBoardInitialized === false;
+        nextData.markdownInitialized === false;
 
       if (needsBootstrap) {
         const bootstrapSeed = await fetchBootstrapData(await user.getIdToken());
@@ -1267,30 +857,15 @@ export function AdminConsole() {
       return;
     }
 
-    const hashId = window.location.hash.replace(/^#/, "");
-
-    if (hashId === getBacklogElementId("walls-devine") || hashId === getBacklogElementId("agency")) {
-      setActiveWorkspaceTab(hashId.endsWith("agency") ? "agency" : "walls-devine");
-      scrollToElement(hashId, "auto");
-      return;
-    }
-
-    const sectionId = hashId;
+    const sectionId = window.location.hash.replace(/^#/, "");
 
     if (!isWorkspaceSectionId(sectionId)) {
       return;
     }
 
-    setActiveWorkspaceTab(workspaceSectionTabs[sectionId]);
-
-    if (!isSectionReady(sectionId)) {
-      scrollToElement(getBacklogElementId(workspaceSectionTabs[sectionId]), "auto");
-      return;
-    }
-
     setWorkspaceSectionOpen(sectionId, true);
     scrollToWorkspaceSection(sectionId, "auto");
-  }, [isAuthorized, moduleStatusById]);
+  }, [isAuthorized]);
 
   useEffect(() => {
     if (panelError || isScaffoldMode || !hasLiveMarkdownContent) {
@@ -1372,62 +947,6 @@ export function AdminConsole() {
     }
   }
 
-  async function handleBookingTargetSave(event: FormEvent<HTMLFormElement>, targetId: string) {
-    event.preventDefault();
-
-    if (!adminData) {
-      return;
-    }
-
-    const saveKey = getBookingTargetSaveKey(targetId);
-    const formData = new FormData(event.currentTarget);
-    const nextStatus = String(formData.get("status") ?? "").trim();
-    const nextNotes = String(formData.get("notes") ?? "").trim();
-
-    if (!isBookingTargetStatus(nextStatus)) {
-      setPanelError("Booking targets need a valid workflow status before they can be saved.");
-      setSaveStates((current) => ({ ...current, [saveKey]: "error" }));
-      return;
-    }
-
-    setPanelError("");
-    setSaveStates((current) => ({ ...current, [saveKey]: "saving" }));
-
-    try {
-      const nextBookingBoard = {
-        ...adminData.bookingBoard,
-        updatedAt: new Date().toISOString(),
-        targets: adminData.bookingBoard.targets.map((target) =>
-          target.id === targetId
-            ? {
-                ...target,
-                status: nextStatus,
-                notes: nextNotes
-              }
-            : target
-        )
-      };
-      const savedBookingBoard = await updateFirebaseBookingBoard(nextBookingBoard);
-
-      startTransition(() => {
-        setAdminData((current) =>
-          current
-            ? {
-                ...current,
-                bookingBoard: savedBookingBoard,
-                bookingBoardInitialized: true
-              }
-            : current
-        );
-      });
-
-      setSaveStates((current) => ({ ...current, [saveKey]: "success" }));
-    } catch (error) {
-      setSaveStates((current) => ({ ...current, [saveKey]: "error" }));
-      setPanelError(getFirebaseErrorMessage(error));
-    }
-  }
-
   async function handleCollectorHeroNoteSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -1436,18 +955,11 @@ export function AdminConsole() {
     }
 
     const formData = new FormData(event.currentTarget);
-    const eyebrow = String(formData.get("eyebrow") ?? "").trim();
-    const title = String(formData.get("title") ?? "").trim();
     const salutation = String(formData.get("salutation") ?? "").trim();
     const body = String(formData.get("body") ?? "").trim();
-    const primaryCtaLabel = String(formData.get("primaryCtaLabel") ?? "").trim();
-    const secondaryCtaLabel = String(formData.get("secondaryCtaLabel") ?? "").trim();
-    const mailingListHelper = String(formData.get("mailingListHelper") ?? "").trim();
-    const signatureIntro = String(formData.get("signatureIntro") ?? "").trim();
-    const journalLabel = String(formData.get("journalLabel") ?? "").trim();
 
-    if (!eyebrow || !title || !salutation || !body || !primaryCtaLabel || !secondaryCtaLabel || !mailingListHelper || !signatureIntro || !journalLabel) {
-      setPanelError("The collector note needs an eyebrow, title, salutation, body copy, both CTA labels, the mailing-list helper copy, the signoff line, and the journal label before it can be saved.");
+    if (!salutation || !body) {
+      setPanelError("The collector note needs both a salutation and body copy before it can be saved.");
       setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "error" }));
       return;
     }
@@ -1456,17 +968,7 @@ export function AdminConsole() {
     setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "saving" }));
 
     try {
-      const nextNote = await updateFirebaseCollectorHeroNote({
-        eyebrow,
-        title,
-        salutation,
-        body,
-        primaryCtaLabel,
-        secondaryCtaLabel,
-        mailingListHelper,
-        signatureIntro,
-        journalLabel
-      });
+      const nextNote = await updateFirebaseCollectorHeroNote({ salutation, body });
 
       startTransition(() => {
         setAdminData((current) => (current ? { ...current, collectorHeroNote: nextNote } : current));
@@ -1475,94 +977,6 @@ export function AdminConsole() {
       setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "success" }));
     } catch (error) {
       setSaveStates((current) => ({ ...current, [collectorHeroNoteSaveKey]: "error" }));
-      setPanelError(getFirebaseErrorMessage(error));
-    }
-  }
-
-  async function handleBookingBannerNoteSave(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (!adminData) {
-      return;
-    }
-
-    const formData = new FormData(event.currentTarget);
-    const eyebrow = String(formData.get("eyebrow") ?? "").trim();
-    const title = String(formData.get("title") ?? "").trim();
-    const description = String(formData.get("description") ?? "").trim();
-    const primaryCtaLabel = String(formData.get("primaryCtaLabel") ?? "").trim();
-    const secondaryCtaLabel = String(formData.get("secondaryCtaLabel") ?? "").trim();
-    const meta = String(formData.get("meta") ?? "").trim();
-
-    if (!eyebrow || !title || !description || !primaryCtaLabel || !secondaryCtaLabel || !meta) {
-      setPanelError("The booking banner needs an eyebrow, title, description, both CTA labels, and a meta line before it can be saved.");
-      setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "error" }));
-      return;
-    }
-
-    setPanelError("");
-    setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "saving" }));
-
-    try {
-      const nextNote = await updateFirebaseBookingBannerNote({ eyebrow, title, description, primaryCtaLabel, secondaryCtaLabel, meta });
-
-      startTransition(() => {
-        setAdminData((current) => (current ? { ...current, bookingBannerNote: nextNote } : current));
-      });
-
-      setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "success" }));
-    } catch (error) {
-      setSaveStates((current) => ({ ...current, [bookingBannerNoteSaveKey]: "error" }));
-      setPanelError(getFirebaseErrorMessage(error));
-    }
-  }
-
-  async function handleUpcomingShowsSave(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (!adminData) {
-      return;
-    }
-
-    const formData = new FormData(event.currentTarget);
-    const eyebrow = String(formData.get("eyebrow") ?? "").trim();
-    const title = String(formData.get("title") ?? "").trim();
-    const description = String(formData.get("description") ?? "").trim();
-    const emptyState = String(formData.get("emptyState") ?? "").trim();
-    const showsManifest = String(formData.get("showsManifest") ?? "").trim();
-    const { shows, error } = parseUpcomingShowsFromEditor(showsManifest);
-
-    if (!eyebrow || !title || !description || !emptyState) {
-      setPanelError("The upcoming shows panel needs an eyebrow, title, description, and empty-state note before it can be saved.");
-      setSaveStates((current) => ({ ...current, [upcomingShowsSaveKey]: "error" }));
-      return;
-    }
-
-    if (error) {
-      setPanelError(error);
-      setSaveStates((current) => ({ ...current, [upcomingShowsSaveKey]: "error" }));
-      return;
-    }
-
-    setPanelError("");
-    setSaveStates((current) => ({ ...current, [upcomingShowsSaveKey]: "saving" }));
-
-    try {
-      const nextNote = await updateFirebaseUpcomingShowsNote({
-        eyebrow,
-        title,
-        description,
-        emptyState,
-        shows
-      });
-
-      startTransition(() => {
-        setAdminData((current) => (current ? { ...current, upcomingShowsNote: nextNote } : current));
-      });
-
-      setSaveStates((current) => ({ ...current, [upcomingShowsSaveKey]: "success" }));
-    } catch (error) {
-      setSaveStates((current) => ({ ...current, [upcomingShowsSaveKey]: "error" }));
       setPanelError(getFirebaseErrorMessage(error));
     }
   }
@@ -1851,8 +1265,8 @@ export function AdminConsole() {
           <SectionHeader
             id="admin-console-title"
             eyebrow="Admin"
-            title="CGU control room"
-            description={isScaffoldMode ? `Control-room scaffold for ${activeWorkspaceTabConfig.description.toLowerCase()} while live backend content reconnects.` : activeWorkspaceTabConfig.description}
+            title="Walls/Devine control room"
+            description={isScaffoldMode ? "Control-room scaffold for releases, journals, analytics, and asset QA while live backend content reconnects." : "Operational workspace for release management, journal publishing, analytics, and asset QA."}
           />
 
           <div className="cg-admin__topbar-actions">
@@ -1892,329 +1306,69 @@ export function AdminConsole() {
           </p>
         ) : null}
 
-        <section className="cg-admin__whiteboard" aria-label={`${activeWorkspaceTabConfig.label} whiteboard`}>
-          <div className="cg-admin__whiteboard-head">
-            <div className="cg-admin__whiteboard-copy">
-              <p className="cg-admin__whiteboard-eyebrow">Whiteboard</p>
-              <h2>
-                {activeWorkspaceTab === "walls-devine"
-                  ? "Schedule, goals, and the few moves that actually change the June 4 release."
-                  : "Signals, routing, and backend readiness kept above the fold."}
-              </h2>
-              <p>
-                {activeWorkspaceTab === "walls-devine"
-                  ? "This lane keeps the release plan visible first, then lets you jump directly into booking, editorial, and QA without hunting through the whole dashboard."
-                  : "This lane keeps lead flow, listening traffic, and backend state in one place so the broader studio picture stays legible."}
-              </p>
-            </div>
-
-            <div className="cg-admin__whiteboard-controls">
-              <div className="cg-admin__tab-bar" role="tablist" aria-label="Admin workspace categories">
-                {adminWorkspaceTabs.map((tab) => (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={activeWorkspaceTab === tab.id}
-                    className={["cg-admin__tab-chip", activeWorkspaceTab === tab.id ? "cg-admin__tab-chip--active" : ""].filter(Boolean).join(" ")}
-                    onClick={() => handleWorkspaceTabChange(tab.id)}
-                  >
-                    <strong>{tab.label}</strong>
-                    <span>{tab.title}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="cg-admin__whiteboard-grid">
-            {activeWorkspaceTab === "walls-devine" ? (
-              <>
-                <AdminWhiteboardCard
-                  label="Primary goal"
-                  title={adminViewData.bookingBoard.goal.title}
-                  copy={adminViewData.bookingBoard.goal.summary}
-                  className="cg-admin__whiteboard-card--goal"
-                >
-                  <p className="cg-admin__whiteboard-card-note">Success metric: {adminViewData.bookingBoard.goal.successMetric}</p>
-                </AdminWhiteboardCard>
-
-                <AdminWhiteboardCard
-                  label="Locked schedule"
-                  title={adminViewData.plan.lockedDates[0]?.value ?? "Schedule pending"}
-                  copy={adminViewData.plan.lockedDates[0]?.label ?? "Set the release anchors first."}
-                >
-                  <ul className="cg-admin__list">
-                    {adminViewData.plan.lockedDates.slice(1).map((item) => (
-                      <li key={item.label}>
-                        <strong>{item.label}</strong>
-                        <span>{item.value}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </AdminWhiteboardCard>
-
-                <AdminWhiteboardCard
-                  label="Pareto focus"
-                  title="Run the smallest set of launch-moving tasks"
-                  copy="Keep the current goal and the next few actions visible. Everything else can wait below the fold or stay collapsed."
-                >
-                  <ul className="cg-admin__bullet-list">
-                    {releaseFocusItems.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </AdminWhiteboardCard>
-
-                <AdminWhiteboardCard
-                  label="Operate now"
-                  title="Open the right lane"
-                  copy="Jump into the live sections or force a content sync if a lane is still hydrating."
-                >
-                  <div className="cg-admin__whiteboard-actions-list">
-                    {whiteboardActionLinks.map((link) => (
-                      <Button key={link.id} type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection(link.id)}>
-                        {link.label}
-                      </Button>
-                    ))}
-                    {!hasLiveMarkdownContent ? (
-                      <Button type="button" variant="secondary" size="sm" onClick={handleRetryAccess} disabled={dataLoading}>
-                        {dataLoading ? "Syncing…" : "Retry content sync"}
-                      </Button>
-                    ) : null}
-                  </div>
-                </AdminWhiteboardCard>
-              </>
-            ) : (
-              <>
-                <AdminWhiteboardCard
-                  label="Signal goal"
-                  title="Keep routing, listening traffic, and backend state readable"
-                  copy="This lane is for triage. Use it to sort what needs attention and leave the lower-priority modules collapsed until you need them."
-                  className="cg-admin__whiteboard-card--goal"
-                >
-                  <p className="cg-admin__whiteboard-card-note">Backend mode: {contentSource === "firebase" ? "Firebase live" : contentSource === "bootstrap" ? "Bootstrap fallback" : "Awaiting backend"}</p>
-                </AdminWhiteboardCard>
-
-                <AdminWhiteboardCard
-                  label="Lead stack"
-                  title={leadSources[0] ? formatLeadSource(leadSources[0][0]) : "Lead intake is quiet"}
-                  copy={leadSources[0] ? `${leadSources[0][1]} lead${leadSources[0][1] === 1 ? "" : "s"} from the strongest active source.` : "Once collector and guided-intake traffic lands, the biggest source will surface here first."}
-                >
-                  <ul className="cg-admin__list">
-                    {leadProgramMix.slice(0, 3).map(([label, count]) => (
-                      <li key={label}>
-                        <strong>{label}</strong>
-                        <span>{count} lead{count === 1 ? "" : "s"}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </AdminWhiteboardCard>
-
-                <AdminWhiteboardCard
-                  label="Listening traffic"
-                  title={visitSongs[0]?.[0] ?? "No song traffic yet"}
-                  copy={visitSongs[0] ? `${visitSongs[0][1]} visit${visitSongs[0][1] === 1 ? "" : "s"} on the most active song-link route.` : "Listening-room arrivals will show up here once shared links start circulating."}
-                >
-                  <ul className="cg-admin__list">
-                    {leadContextMix.slice(0, 3).map(([label, count]) => (
-                      <li key={label}>
-                        <strong>{label}</strong>
-                        <span>{count} signal{count === 1 ? "" : "s"}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </AdminWhiteboardCard>
-
-                <AdminWhiteboardCard
-                  label="Operate now"
-                  title="Open the active lane"
-                  copy="Stay on the few sections that are already wired, and keep health tucked away unless something breaks."
-                >
-                  <div className="cg-admin__whiteboard-actions-list">
-                    {whiteboardActionLinks.map((link) => (
-                      <Button key={link.id} type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection(link.id)}>
-                        {link.label}
-                      </Button>
-                    ))}
-                    <Button type="button" variant="secondary" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
-                      {leadsLoading || visitsLoading ? "Refreshing…" : "Refresh signals"}
-                    </Button>
-                  </div>
-                </AdminWhiteboardCard>
-              </>
-            )}
-          </div>
-
-          <div className="cg-admin__whiteboard-strip" aria-label="At a glance metrics">
-            {activeWorkspaceTab === "walls-devine" ? (
-              <>
-                <article className="cg-admin__whiteboard-metric">
-                  <span>Checklist</span>
-                  <strong>{completedChecklist}/{adminViewData.plan.checklist.length}</strong>
-                  <p>release tasks complete</p>
-                </article>
-                <article className="cg-admin__whiteboard-metric">
-                  <span>Lock date</span>
-                  <strong>{new Date(adminViewData.bookingBoard.goal.lockByDate).toLocaleDateString()}</strong>
-                  <p>{bookingGoalCountdown}</p>
-                </article>
-                <article className="cg-admin__whiteboard-metric">
-                  <span>Booking-fit leads</span>
-                  <strong>{bookingLeadMatches.length}</strong>
-                  <p>ready for follow-through</p>
-                </article>
-                <article className="cg-admin__whiteboard-metric">
-                  <span>Live lanes</span>
-                  <strong>{visibleDashboardModules.length}</strong>
-                  <p>{backlogDashboardModules.length} still parked</p>
-                </article>
-              </>
-            ) : (
-              <>
-                <article className="cg-admin__whiteboard-metric">
-                  <span>Leads</span>
-                  <strong>{ecosystemLeads.length}</strong>
-                  <p>in the intake queue</p>
-                </article>
-                <article className="cg-admin__whiteboard-metric">
-                  <span>Visits</span>
-                  <strong>{listeningRoomVisits.length}</strong>
-                  <p>listening-room arrivals</p>
-                </article>
-                <article className="cg-admin__whiteboard-metric">
-                  <span>Booking-fit</span>
-                  <strong>{bookingLeadMatches.length}</strong>
-                  <p>lead and release overlap</p>
-                </article>
-                <article className="cg-admin__whiteboard-metric">
-                  <span>Backend</span>
-                  <strong>{contentSource === "firebase" ? "Live" : contentSource === "bootstrap" ? "Fallback" : "Pending"}</strong>
-                  <p>{panelError ? "needs attention" : "status clear"}</p>
-                </article>
-              </>
-            )}
-          </div>
-        </section>
-      </SectionShell>
-
-      <div className="cg-admin__workspace-layout">
-        <aside className="cg-admin__workspace-drawer cg-admin__panel" aria-label={`${activeWorkspaceTabConfig.label} workspace drawer`}>
-          <div className="cg-admin__workspace-drawer-head">
-            <div>
-              <strong>Navigation</strong>
-              <h2>{activeWorkspaceTabConfig.label}</h2>
-            </div>
-            <p>
-              {activeWorkspaceTab === "walls-devine"
-                ? "Start with the release desk, then open booking, editorial, or QA only when you need to act."
-                : "Use this lane to jump between signals and health checks without drowning in every lower-priority surface."}
-            </p>
-          </div>
-
-          <div className="cg-admin__workspace-drawer-actions">
-            {activeWorkspaceTab === "walls-devine" ? (
-              <>
-                {isSectionReady("admin-release-desk") ? <Button type="button" onClick={() => handleJumpToSection("admin-release-desk")}>Open release desk</Button> : null}
-                {isSectionReady("admin-booking-engine") ? <Button type="button" variant="secondary" onClick={() => handleJumpToSection("admin-booking-engine")}>Open booking engine</Button> : null}
-                {isSectionReady("admin-journals") ? <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-journals")}>Open journals</Button> : null}
-              </>
-            ) : (
-              <>
-                {isSectionReady("admin-analytics") ? <Button type="button" onClick={() => handleJumpToSection("admin-analytics")}>Open signal desk</Button> : null}
-                <Button type="button" variant="secondary" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
-                  {leadsLoading || visitsLoading ? "Refreshing signals…" : "Refresh signals"}
-                </Button>
-                {isSectionReady("admin-health") ? <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection("admin-health")}>Open backend health</Button> : null}
-              </>
-            )}
+        <div className="cg-admin__command-deck">
+          <div className="cg-admin__quick-actions">
+            <Button type="button" onClick={() => handleJumpToSection("admin-journals")}>Write new journal</Button>
+            <Button type="button" variant="secondary" onClick={() => handleJumpToSection("admin-release-desk")}>Open release desk</Button>
+            <Button type="button" variant="ghost" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
+              {leadsLoading || visitsLoading ? "Refreshing analytics…" : "Refresh analytics"}
+            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
+              {audioLoading ? "Refreshing assets…" : "Refresh assets"}
+            </Button>
             {!hasLiveMarkdownContent ? (
               <Button type="button" variant="ghost" size="sm" onClick={handleRetryAccess} disabled={dataLoading}>
                 {dataLoading ? "Syncing…" : "Retry content sync"}
               </Button>
             ) : null}
-            {backlogDashboardModules.length ? (
-              <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToBacklog(activeWorkspaceTab)}>
-                Open backlog
-              </Button>
-            ) : null}
           </div>
 
-          {visibleDashboardModules.length ? (
-            <nav className="cg-admin__workspace-nav" aria-label={`${activeWorkspaceTabConfig.label} modules`}>
-              {visibleDashboardModules.map((module) => {
-                const moduleLink = visibleJumpLinks.find((link) => link.id === module.id);
-
-                return (
-                  <button key={module.id} type="button" className="cg-admin__workspace-nav-item" onClick={() => handleJumpToSection(module.id)}>
-                    <span>{module.title}</span>
-                    <strong>{module.summary}</strong>
-                    <p>{moduleLink?.detail ?? module.detail}</p>
-                  </button>
-                );
-              })}
-            </nav>
-          ) : (
-            <article className="cg-admin__backlog-empty">
-              <h2>Focus lane cleared</h2>
-              <p>Nothing in this tab is fully live yet. The unfinished surfaces stay parked in backlog below.</p>
-            </article>
-          )}
-
-          {backlogDashboardModules.length ? (
-            <div className="cg-admin__workspace-backlog-drawer">
-              <div className="cg-admin__workspace-backlog-drawer-head">
-                <div>
-                  <strong>Backlog</strong>
-                  <p>{backlogDashboardModules.length} parked for later</p>
+          <div className="cg-admin__module-grid cg-admin__module-grid--ops">
+            {dashboardModules.map((module) => (
+              <article key={module.id} className="cg-admin__panel cg-admin__module-card">
+                <div className="cg-admin__module-head">
+                  <h2>{module.title}</h2>
+                  <span className={["cg-admin__status-badge", module.status === "ready" ? "cg-admin__status-badge--ready" : "cg-admin__status-badge--pending"].join(" ")}>
+                    {module.status === "ready" ? "Ready" : "Pending"}
+                  </span>
                 </div>
-                <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToBacklog(activeWorkspaceTab)}>
-                  Open backlog
-                </Button>
-              </div>
+                <strong className="cg-admin__module-stat">{module.summary}</strong>
+                <p>{module.detail}</p>
+                <div className="cg-admin__module-actions">
+                  <Button type="button" variant="ghost" size="sm" onClick={() => handleJumpToSection(module.id)}>
+                    {module.actionLabel}
+                  </Button>
+                </div>
+              </article>
+            ))}
+          </div>
 
-              <ul className="cg-admin__workspace-backlog-list">
-                {backlogDashboardModules.map((module) => (
-                  <li key={module.id} className="cg-admin__workspace-backlog-item">
-                    <strong>{module.title}</strong>
-                    <span>{module.summary}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </aside>
+          <nav className="cg-admin__jump-bar" aria-label="Admin workspace sections">
+            {jumpLinks.map((link) => (
+              <button
+                key={link.id}
+                type="button"
+                className={["cg-admin__jump-chip", openSections[link.id] ? "cg-admin__jump-chip--active" : ""].filter(Boolean).join(" ")}
+                onClick={() => handleJumpToSection(link.id)}
+              >
+                <strong>{link.label}</strong>
+                <span>{link.detail}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
+      </SectionShell>
 
-        <div className="cg-admin__workspace-main">
-
-      {activeWorkspaceTab === "walls-devine" ? (
-        <>
       <AdminWorkspaceSection
         id="admin-release-desk"
         labelId="admin-release-desk-title"
         title="Release desk"
         description={adminViewData.plan.summary}
         detail={`Updated ${new Date(adminViewData.plan.updatedAt).toLocaleString()}`}
-        isVisible={isSectionReady("admin-release-desk")}
         isOpen={openSections["admin-release-desk"]}
         onToggle={() => toggleWorkspaceSection("admin-release-desk")}
       >
-        <div className="cg-admin__release-board">
-          <article className="cg-admin__panel cg-admin__release-priority-card">
-            <div className="cg-admin__status-row">
-              <h3>Release goal</h3>
-              <span className="cg-admin__status-badge cg-admin__status-badge--ready">{bookingGoalCountdown}</span>
-            </div>
-            <p className="cg-admin__whiteboard-card-note">{adminViewData.bookingBoard.goal.title}</p>
-            <p>{adminViewData.bookingBoard.goal.summary}</p>
-            <p className="cg-admin__path-note">Success metric: {adminViewData.bookingBoard.goal.successMetric}</p>
-            <ul className="cg-admin__bullet-list">
-              {adminViewData.bookingBoard.goal.nextMoves.slice(0, 4).map((move) => (
-                <li key={move}>{move}</li>
-              ))}
-            </ul>
-          </article>
-
+        <div className="cg-admin__release-grid">
           <article className="cg-admin__panel">
             <h3>Locked dates</h3>
             <ul className="cg-admin__list">
@@ -2228,8 +1382,8 @@ export function AdminConsole() {
           </article>
 
           <article className="cg-admin__panel">
-            <h3>Near-term schedule</h3>
-            <div className="cg-admin__calendar cg-admin__calendar--stacked">
+            <h3>Campaign calendar</h3>
+            <div className="cg-admin__calendar">
               {adminViewData.plan.calendar.map((item) => (
                 <article key={`${item.date}-${item.action}`} className="cg-admin__panel">
                   <span className="cg-admin__calendar-date">{item.date}</span>
@@ -2240,6 +1394,66 @@ export function AdminConsole() {
             </div>
           </article>
         </div>
+
+        <article className="cg-admin__panel cg-admin__release-note-card">
+          <div className="cg-admin__file-head">
+            <div>
+              <h3>Public collector note</h3>
+              <p>This note feeds the personalized collector letter on the public Walls/Devine Volume 1 hero.</p>
+            </div>
+            <p className="cg-admin__path-note">
+              Firestore: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.publicContentCollection}/{firebaseAdminPaths.collectorHeroNoteDocId}
+            </p>
+          </div>
+
+          <form onSubmit={handleCollectorHeroNoteSave} className="cg-admin__editor-form">
+            <div className="cg-admin__editor-split">
+              <label className="cg-admin__editor-field">
+                <span>Salutation</span>
+                <input
+                  name="salutation"
+                  type="text"
+                  className="cg-admin__editor-input"
+                  defaultValue={adminViewData.collectorHeroNote.salutation}
+                  placeholder="Dear Collector,"
+                  required
+                />
+              </label>
+              <div className="cg-admin__stack">
+                <span className="cg-admin__editor-field-label">Last updated</span>
+                <p className="cg-admin__path-note">{new Date(adminViewData.collectorHeroNote.updatedAt).toLocaleString()}</p>
+              </div>
+            </div>
+
+            <label className="cg-admin__editor-field">
+              <span>Body copy</span>
+              <textarea
+                name="body"
+                className="cg-admin__editor-textarea"
+                rows={6}
+                defaultValue={adminViewData.collectorHeroNote.body}
+                placeholder="Write the note that appears beside the collector signup."
+                required
+              />
+            </label>
+
+            <div className="cg-admin__editor-actions">
+              <Button type="submit" variant="secondary" size="sm" disabled={saveStates[collectorHeroNoteSaveKey] === "saving"}>
+                Save note
+              </Button>
+              {saveStates[collectorHeroNoteSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
+              {saveStates[collectorHeroNoteSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
+              {saveStates[collectorHeroNoteSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this note.</p> : null}
+            </div>
+          </form>
+        </article>
+
+        <AdminLinkHubEditor
+          value={adminViewData.linkHub}
+          saveState={saveStates[linkHubSaveKey]}
+          firestorePath={`${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.publicContentCollection}/${firebaseAdminPaths.linkHubDocId}`}
+          onSave={handleLinkHubSave}
+        />
 
         <div className="cg-admin__phases">
           {checklistByPhase.map(([phase, items]) => (
@@ -2265,372 +1479,133 @@ export function AdminConsole() {
             </article>
           ))}
         </div>
-
-        <div className="cg-admin__release-editors">
-          <article className="cg-admin__panel cg-admin__release-note-card">
-            <div className="cg-admin__file-head">
-              <div>
-                <h3>Public collector note</h3>
-                <p>This note feeds the personalized collector letter on the public Walls/Devine Volume 1 hero.</p>
-              </div>
-              <p className="cg-admin__path-note">
-                Firestore: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.publicContentCollection}/{firebaseAdminPaths.collectorHeroNoteDocId}
-              </p>
-            </div>
-
-            <form onSubmit={handleCollectorHeroNoteSave} className="cg-admin__editor-form">
-              <div className="cg-admin__editor-split">
-                <label className="cg-admin__editor-field">
-                  <span>Hero eyebrow</span>
-                  <input
-                    name="eyebrow"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.collectorHeroNote.eyebrow}
-                    placeholder="Collector experience"
-                    required
-                  />
-                </label>
-                <label className="cg-admin__editor-field">
-                  <span>Hero title</span>
-                  <input
-                    name="title"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.collectorHeroNote.title}
-                    placeholder="Walls/Devine Volume 1"
-                    required
-                  />
-                </label>
-              </div>
-
-              <div className="cg-admin__editor-split">
-                <label className="cg-admin__editor-field">
-                  <span>Salutation</span>
-                  <input
-                    name="salutation"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.collectorHeroNote.salutation}
-                    placeholder="Dear Collector,"
-                    required
-                  />
-                </label>
-                <div className="cg-admin__stack">
-                  <span className="cg-admin__editor-field-label">Last updated</span>
-                  <p className="cg-admin__path-note">{new Date(adminViewData.collectorHeroNote.updatedAt).toLocaleString()}</p>
-                </div>
-              </div>
-
-              <label className="cg-admin__editor-field">
-                <span>Body copy</span>
-                <textarea
-                  name="body"
-                  className="cg-admin__editor-textarea"
-                  rows={6}
-                  defaultValue={adminViewData.collectorHeroNote.body}
-                  placeholder="Write the note that appears beside the collector signup."
-                  required
-                />
-              </label>
-
-              <div className="cg-admin__editor-split">
-                <label className="cg-admin__editor-field">
-                  <span>Primary CTA label</span>
-                  <input
-                    name="primaryCtaLabel"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.collectorHeroNote.primaryCtaLabel}
-                    placeholder="Open Listening Room"
-                    required
-                  />
-                </label>
-                <label className="cg-admin__editor-field">
-                  <span>Secondary CTA label</span>
-                  <input
-                    name="secondaryCtaLabel"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.collectorHeroNote.secondaryCtaLabel}
-                    placeholder="Shop Volume 1 Merch"
-                    required
-                  />
-                </label>
-              </div>
-
-              <label className="cg-admin__editor-field">
-                <span>Mailing-list helper copy</span>
-                <textarea
-                  name="mailingListHelper"
-                  className="cg-admin__editor-textarea"
-                  rows={3}
-                  defaultValue={adminViewData.collectorHeroNote.mailingListHelper}
-                  placeholder="Request to be added for drop alerts and collector unlock notices."
-                  required
-                />
-              </label>
-
-              <div className="cg-admin__editor-split">
-                <label className="cg-admin__editor-field">
-                  <span>Signature intro</span>
-                  <input
-                    name="signatureIntro"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.collectorHeroNote.signatureIntro}
-                    placeholder="With Love From the Room,"
-                    required
-                  />
-                </label>
-                <label className="cg-admin__editor-field">
-                  <span>Journal label</span>
-                  <input
-                    name="journalLabel"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.collectorHeroNote.journalLabel}
-                    placeholder="From the journals"
-                    required
-                  />
-                </label>
-              </div>
-
-              <div className="cg-admin__editor-actions">
-                <Button type="submit" variant="secondary" size="sm" disabled={saveStates[collectorHeroNoteSaveKey] === "saving"}>
-                  Save note
-                </Button>
-                {saveStates[collectorHeroNoteSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
-                {saveStates[collectorHeroNoteSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
-                {saveStates[collectorHeroNoteSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this note.</p> : null}
-              </div>
-            </form>
-          </article>
-
-          <article className="cg-admin__panel cg-admin__release-note-card">
-            <div className="cg-admin__file-head">
-              <div>
-                <h3>Public booking banner</h3>
-                <p>This copy feeds the booking and merch banner beneath the collector grid on the public Walls/Devine page.</p>
-              </div>
-              <p className="cg-admin__path-note">
-                Firestore: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.publicContentCollection}/{firebaseAdminPaths.bookingBannerNoteDocId}
-              </p>
-            </div>
-
-            <form onSubmit={handleBookingBannerNoteSave} className="cg-admin__editor-form">
-              <div className="cg-admin__editor-split">
-                <label className="cg-admin__editor-field">
-                  <span>Eyebrow</span>
-                  <input
-                    name="eyebrow"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.bookingBannerNote.eyebrow}
-                    placeholder="Live Booking + Merch"
-                    required
-                  />
-                </label>
-                <div className="cg-admin__stack">
-                  <span className="cg-admin__editor-field-label">Last updated</span>
-                  <p className="cg-admin__path-note">{new Date(adminViewData.bookingBannerNote.updatedAt).toLocaleString()}</p>
-                </div>
-              </div>
-
-              <label className="cg-admin__editor-field">
-                <span>Title</span>
-                <input
-                  name="title"
-                  type="text"
-                  className="cg-admin__editor-input"
-                  defaultValue={adminViewData.bookingBannerNote.title}
-                  placeholder="Book or shop Walls/Devine"
-                  required
-                />
-              </label>
-
-              <label className="cg-admin__editor-field">
-                <span>Description</span>
-                <textarea
-                  name="description"
-                  className="cg-admin__editor-textarea"
-                  rows={4}
-                  defaultValue={adminViewData.bookingBannerNote.description}
-                  placeholder="Describe the booking, partnership, or merch invitation shown on the public page."
-                  required
-                />
-              </label>
-
-              <div className="cg-admin__editor-split">
-                <label className="cg-admin__editor-field">
-                  <span>Primary CTA label</span>
-                  <input
-                    name="primaryCtaLabel"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.bookingBannerNote.primaryCtaLabel}
-                    placeholder="Book Walls/Devine"
-                    required
-                  />
-                </label>
-                <label className="cg-admin__editor-field">
-                  <span>Secondary CTA label</span>
-                  <input
-                    name="secondaryCtaLabel"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.bookingBannerNote.secondaryCtaLabel}
-                    placeholder="Visit Merch Shop"
-                    required
-                  />
-                </label>
-              </div>
-
-              <label className="cg-admin__editor-field">
-                <span>Meta line</span>
-                <input
-                  name="meta"
-                  type="text"
-                  className="cg-admin__editor-input"
-                  defaultValue={adminViewData.bookingBannerNote.meta}
-                  placeholder="Live Music · Events ·"
-                  required
-                />
-              </label>
-
-              <div className="cg-admin__editor-actions">
-                <Button type="submit" variant="secondary" size="sm" disabled={saveStates[bookingBannerNoteSaveKey] === "saving"}>
-                  Save banner
-                </Button>
-                {saveStates[bookingBannerNoteSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
-                {saveStates[bookingBannerNoteSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
-                {saveStates[bookingBannerNoteSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save this banner.</p> : null}
-              </div>
-            </form>
-          </article>
-
-          <article className="cg-admin__panel cg-admin__release-note-card">
-            <div className="cg-admin__file-head">
-              <div>
-                <h3>Public upcoming shows</h3>
-                <p>This feeds the upcoming-shows block beneath booking on the public Walls/Devine page.</p>
-              </div>
-              <p className="cg-admin__path-note">
-                Firestore: {firebaseAdminPaths.adminProjectsCollection}/{firebaseAdminPaths.wallsDevineProjectId}/{firebaseAdminPaths.publicContentCollection}/{firebaseAdminPaths.upcomingShowsDocId}
-              </p>
-            </div>
-
-            <form onSubmit={handleUpcomingShowsSave} className="cg-admin__editor-form">
-              <div className="cg-admin__editor-split">
-                <label className="cg-admin__editor-field">
-                  <span>Eyebrow</span>
-                  <input
-                    name="eyebrow"
-                    type="text"
-                    className="cg-admin__editor-input"
-                    defaultValue={adminViewData.upcomingShowsNote.eyebrow}
-                    placeholder="Upcoming shows"
-                    required
-                  />
-                </label>
-                <div className="cg-admin__stack">
-                  <span className="cg-admin__editor-field-label">Last updated</span>
-                  <p className="cg-admin__path-note">{new Date(adminViewData.upcomingShowsNote.updatedAt).toLocaleString()}</p>
-                </div>
-              </div>
-
-              <label className="cg-admin__editor-field">
-                <span>Title</span>
-                <input
-                  name="title"
-                  type="text"
-                  className="cg-admin__editor-input"
-                  defaultValue={adminViewData.upcomingShowsNote.title}
-                  placeholder="Where Walls/Devine lands next"
-                  required
-                />
-              </label>
-
-              <label className="cg-admin__editor-field">
-                <span>Description</span>
-                <textarea
-                  name="description"
-                  className="cg-admin__editor-textarea"
-                  rows={3}
-                  defaultValue={adminViewData.upcomingShowsNote.description}
-                  placeholder="Optional intro line above the show list."
-                  required
-                />
-              </label>
-
-              <label className="cg-admin__editor-field">
-                <span>Empty-state message</span>
-                <input
-                  name="emptyState"
-                  type="text"
-                  className="cg-admin__editor-input"
-                  defaultValue={adminViewData.upcomingShowsNote.emptyState}
-                  placeholder="No public dates are posted right now."
-                  required
-                />
-              </label>
-
-              <label className="cg-admin__editor-field">
-                <span>Shows manifest (one per line)</span>
-                <textarea
-                  name="showsManifest"
-                  className="cg-admin__editor-textarea"
-                  rows={6}
-                  defaultValue={formatUpcomingShowsForEditor(adminViewData.upcomingShowsNote.shows)}
-                  placeholder="Aug 15, 2026 | Atlanta, GA | Terminal West | On sale | https://tickets.example.com"
-                />
-              </label>
-
-              <p className="cg-admin__helper">Format: Date | City, ST | Venue | Status | URL. Status and URL are optional.</p>
-
-              <div className="cg-admin__editor-actions">
-                <Button type="submit" variant="secondary" size="sm" disabled={saveStates[upcomingShowsSaveKey] === "saving"}>
-                  Save upcoming shows
-                </Button>
-                {saveStates[upcomingShowsSaveKey] === "saving" ? <p className="cg-admin__save-note">Saving…</p> : null}
-                {saveStates[upcomingShowsSaveKey] === "success" ? <p className="cg-admin__save-note cg-admin__save-note--success">Saved.</p> : null}
-                {saveStates[upcomingShowsSaveKey] === "error" ? <p className="cg-admin__save-note cg-admin__save-note--error">Could not save upcoming shows.</p> : null}
-              </div>
-            </form>
-          </article>
-
-          <AdminLinkHubEditor
-            value={adminViewData.linkHub}
-            saveState={saveStates[linkHubSaveKey]}
-            firestorePath={`${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.publicContentCollection}/${firebaseAdminPaths.linkHubDocId}`}
-            onSave={handleLinkHubSave}
-          />
-        </div>
       </AdminWorkspaceSection>
 
       <AdminWorkspaceSection
-        id="admin-booking-engine"
-        labelId="admin-booking-engine-title"
-        title="Booking engine"
-        description="Availability windows, seeded targets, and booking-fit leads in one operating view."
-        detail={`Project doc: ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}.${firebaseAdminPaths.bookingBoardField} + ${firebaseAdminPaths.ecosystemLeadsCollection}`}
-        isVisible={isSectionReady("admin-booking-engine")}
+        id="admin-analytics"
+        labelId="admin-analytics-title"
+        title="Audience & listening analytics"
+        description="Collector signups and shared listening-room traffic in one working view."
+        detail={`Firestore: ${firebaseAdminPaths.ecosystemLeadsCollection} + ${firebaseAdminPaths.listeningRoomVisitsCollection}`}
         actions={
           <Button type="button" variant="secondary" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
-            {leadsLoading || visitsLoading ? "Refreshing booking signals…" : "Refresh booking signals"}
+            {leadsLoading || visitsLoading ? "Refreshing analytics…" : "Refresh analytics"}
           </Button>
         }
-        isOpen={openSections["admin-booking-engine"]}
-        onToggle={() => toggleWorkspaceSection("admin-booking-engine")}
+        isOpen={openSections["admin-analytics"]}
+        onToggle={() => toggleWorkspaceSection("admin-analytics")}
       >
         {leadsError ? <p className="cg-admin__error">{leadsError}</p> : null}
-        <AdminBookingEngine
-          board={adminViewData.bookingBoard}
-          leads={ecosystemLeads}
-          canSave={Boolean(adminData)}
-          targetSaveStates={bookingTargetSaveStates}
-          onTargetSave={handleBookingTargetSave}
-        />
+        {visitsError ? <p className="cg-admin__error">{visitsError}</p> : null}
+
+        <div className="cg-admin__analytics-grid">
+          <div className="cg-admin__stack">
+            <div className="cg-admin__subsection-head">
+              <div>
+                <h3>Collector leads</h3>
+                <p>Recent email captures from the Walls/Devine hero and collector-grid takeover rooms.</p>
+              </div>
+              <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.ecosystemLeadsCollection}</p>
+            </div>
+
+            {leadsLoading && !ecosystemLeads.length ? <p className="cg-admin__helper">Loading collector leads…</p> : null}
+
+            <div className="cg-admin__lead-grid">
+              <article className="cg-admin__panel">
+                <h3>Source mix</h3>
+                {leadSources.length ? (
+                  <ul className="cg-admin__list">
+                    {leadSources.map(([source, count]) => (
+                      <li key={source}>
+                        <strong>{formatLeadSource(source)}</strong>
+                        <span>{count} capture{count === 1 ? "" : "s"}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">No collector leads have landed yet.</p>
+                )}
+              </article>
+
+              <article className="cg-admin__panel">
+                <h3>Recent signups</h3>
+                {ecosystemLeads.length ? (
+                  <ul className="cg-admin__lead-list">
+                    {ecosystemLeads.map((lead) => (
+                      <li key={lead.id} className="cg-admin__lead-item">
+                        <div>
+                          <strong>{lead.email}</strong>
+                          <span>{lead.fullName || "Name not provided"}</span>
+                        </div>
+                        <div className="cg-admin__lead-meta">
+                          <span>{formatLeadSource(lead.source)}</span>
+                          <span>{lead.interest}</span>
+                          <span>{new Date(lead.createdAt).toLocaleString()}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">Collector signups will appear here once the public CTA is live.</p>
+                )}
+              </article>
+            </div>
+          </div>
+
+          <div className="cg-admin__stack">
+            <div className="cg-admin__subsection-head">
+              <div>
+                <h3>Listening room visits</h3>
+                <p>Recent arrivals from shared song URLs, grouped by track and the query key that opened the room.</p>
+              </div>
+              <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.listeningRoomVisitsCollection}</p>
+            </div>
+
+            {visitsLoading && !listeningRoomVisits.length ? <p className="cg-admin__helper">Loading listening-room visits…</p> : null}
+
+            <div className="cg-admin__lead-grid">
+              <article className="cg-admin__panel">
+                <h3>Song mix</h3>
+                {visitSongs.length ? (
+                  <ul className="cg-admin__list">
+                    {visitSongs.map(([songTitle, count]) => (
+                      <li key={songTitle}>
+                        <strong>{songTitle}</strong>
+                        <span>{count} visit{count === 1 ? "" : "s"}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">Shared song-link traffic will appear here once those URLs start circulating.</p>
+                )}
+              </article>
+
+              <article className="cg-admin__panel">
+                <h3>Recent arrivals</h3>
+                {listeningRoomVisits.length ? (
+                  <ul className="cg-admin__lead-list">
+                    {listeningRoomVisits.map((visit) => (
+                      <li key={visit.id} className="cg-admin__lead-item">
+                        <div>
+                          <strong>{visit.songTitle}</strong>
+                          <span>{visit.songSlug}</span>
+                        </div>
+                        <div className="cg-admin__lead-meta">
+                          <span>{formatListeningRoomQueryKey(visit.queryKey)}</span>
+                          <span>{visit.pagePath}</span>
+                          <span>{visit.referrer || "Direct / unknown referrer"}</span>
+                          <span>{new Date(visit.createdAt).toLocaleString()}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="cg-admin__helper">No shared listening-room arrivals have been tracked yet.</p>
+                )}
+              </article>
+            </div>
+          </div>
+        </div>
       </AdminWorkspaceSection>
 
       <AdminWorkspaceSection
@@ -2639,7 +1614,6 @@ export function AdminConsole() {
         title="Assets & QA"
         description="Server-inspected technical metadata for the live release WAVs in the Volume 1 folder."
         detail="Source: public/walls-devine/releases/volume1"
-        isVisible={isSectionReady("admin-assets")}
         actions={
           <Button type="button" variant="secondary" size="sm" onClick={handleAudioRefresh} disabled={audioLoading}>
             {audioLoading ? "Refreshing assets…" : "Refresh analysis"}
@@ -2743,7 +1717,6 @@ export function AdminConsole() {
         title="Draft studio"
         description="Create, rename, update, and delete release-copy drafts without touching repo files."
         detail={`Firestore path: ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/instagram-posts--{slug}`}
-        isVisible={isSectionReady("admin-instagram-posts")}
         isOpen={openSections["admin-instagram-posts"]}
         onToggle={() => toggleWorkspaceSection("admin-instagram-posts")}
       >
@@ -2845,7 +1818,6 @@ export function AdminConsole() {
         title="Journal studio"
         description="Write, publish, and prune the public-facing song journals from the live Firebase layer."
         detail={`Firestore path: ${firebaseAdminPaths.adminProjectsCollection}/${firebaseAdminPaths.wallsDevineProjectId}/${firebaseAdminPaths.markdownCollection}/journals--{slug}`}
-        isVisible={isSectionReady("admin-journals")}
         isOpen={openSections["admin-journals"]}
         onToggle={() => toggleWorkspaceSection("admin-journals")}
       >
@@ -2937,267 +1909,17 @@ export function AdminConsole() {
         </div>
       </AdminWorkspaceSection>
 
-        </>
-      ) : null}
-
-      {activeWorkspaceTab === "agency" ? (
-        <>
-      <AdminWorkspaceSection
-        id="admin-analytics"
-        labelId="admin-analytics-title"
-        title="Agency signal desk"
-        description="Lead generation, guided intake, Bong Tour context, and Walls/Devine listening traffic in one operational view."
-        detail={`Firestore: ${firebaseAdminPaths.ecosystemLeadsCollection} + ${firebaseAdminPaths.listeningRoomVisitsCollection}`}
-        isVisible={isSectionReady("admin-analytics")}
-        actions={
-          <Button type="button" variant="secondary" size="sm" onClick={handleAnalyticsRefresh} disabled={leadsLoading || visitsLoading}>
-            {leadsLoading || visitsLoading ? "Refreshing signals…" : "Refresh signals"}
-          </Button>
-        }
-        isOpen={openSections["admin-analytics"]}
-        onToggle={() => toggleWorkspaceSection("admin-analytics")}
-      >
-        {leadsError ? <p className="cg-admin__error">{leadsError}</p> : null}
-        {visitsError ? <p className="cg-admin__error">{visitsError}</p> : null}
-
-        <div className="cg-admin__grid--summary cg-admin__agency-summary-grid">
-          <article className="cg-admin__panel">
-            <h3>Program mix</h3>
-            {leadProgramMix.length ? (
-              <ul className="cg-admin__list">
-                {leadProgramMix.map(([label, count]) => (
-                  <li key={label}>
-                    <strong>{label}</strong>
-                    <span>{count} lead{count === 1 ? "" : "s"}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="cg-admin__helper">Program segmentation will appear once lead traffic lands.</p>
-            )}
-          </article>
-
-          <article className="cg-admin__panel">
-            <h3>Top contexts</h3>
-            {leadContextMix.length ? (
-              <ul className="cg-admin__list">
-                {leadContextMix.map(([label, count]) => (
-                  <li key={label}>
-                    <strong>{label}</strong>
-                    <span>{count} signal{count === 1 ? "" : "s"}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="cg-admin__helper">Lead context mix will appear here once guided intake starts stacking.</p>
-            )}
-          </article>
-
-          <article className="cg-admin__panel">
-            <h3>Priority signals</h3>
-            <ul className="cg-admin__list">
-              <li>
-                <strong>Booking-fit leads</strong>
-                <span>{bookingLeadMatches.length}</span>
-              </li>
-              <li>
-                <strong>Bong Tour signals</strong>
-                <span>{leadProgramMix.find(([label]) => label === "Bong Tour")?.[1] ?? 0}</span>
-              </li>
-              <li>
-                <strong>Listening-room visits</strong>
-                <span>{listeningRoomVisits.length}</span>
-              </li>
-            </ul>
-          </article>
-        </div>
-
-        <div className="cg-admin__analytics-grid">
-          <div className="cg-admin__stack">
-            <div className="cg-admin__subsection-head">
-              <div>
-                <h3>Generated leads</h3>
-                <p>Collector captures and guided-intake leads across Walls/Devine, Bong Tour, and broader CGU requests.</p>
-              </div>
-              <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.ecosystemLeadsCollection}</p>
-            </div>
-
-            {leadsLoading && !ecosystemLeads.length ? <p className="cg-admin__helper">Loading lead backlog…</p> : null}
-
-            <div className="cg-admin__lead-grid">
-              <article className="cg-admin__panel">
-                <h3>Source mix</h3>
-                {leadSources.length ? (
-                  <ul className="cg-admin__list">
-                    {leadSources.map(([source, count]) => (
-                      <li key={source}>
-                        <strong>{formatLeadSource(source)}</strong>
-                        <span>{count} lead{count === 1 ? "" : "s"}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="cg-admin__helper">Lead sources will appear once the public intake surfaces start writing.</p>
-                )}
-              </article>
-
-              <article className="cg-admin__panel">
-                <h3>Recent leads</h3>
-                {ecosystemLeads.length ? (
-                  <ul className="cg-admin__lead-list">
-                    {ecosystemLeads.map((lead) => (
-                      <li key={lead.id} className="cg-admin__lead-item">
-                        <div>
-                          <strong>{lead.fullName || lead.email}</strong>
-                          <span>{lead.email}</span>
-                        </div>
-                        <div className="cg-admin__lead-meta">
-                          <span>{formatLeadProgramSummary(getLeadProgramLabel(lead), 1)}</span>
-                          <span>{getLeadPrimaryContext(lead)}</span>
-                          <span>{formatLeadSource(lead.source)}</span>
-                          <span>{new Date(lead.createdAt).toLocaleString()}</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="cg-admin__helper">Generated leads will appear here once site and intake traffic lands.</p>
-                )}
-              </article>
-            </div>
-          </div>
-
-          <div className="cg-admin__stack">
-            <div className="cg-admin__subsection-head">
-              <div>
-                <h3>Walls/Devine listening room traffic</h3>
-                <p>Shared song-link arrivals stay visible here so program-wide lead triage can still see release-world activity.</p>
-              </div>
-              <p className="cg-admin__path-note">Firestore: {firebaseAdminPaths.listeningRoomVisitsCollection}</p>
-            </div>
-
-            {visitsLoading && !listeningRoomVisits.length ? <p className="cg-admin__helper">Loading listening-room visits…</p> : null}
-
-            <div className="cg-admin__lead-grid">
-              <article className="cg-admin__panel">
-                <h3>Song mix</h3>
-                {visitSongs.length ? (
-                  <ul className="cg-admin__list">
-                    {visitSongs.map(([songTitle, count]) => (
-                      <li key={songTitle}>
-                        <strong>{songTitle}</strong>
-                        <span>{count} visit{count === 1 ? "" : "s"}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="cg-admin__helper">Shared song-link traffic will appear here once those URLs start circulating.</p>
-                )}
-              </article>
-
-              <article className="cg-admin__panel">
-                <h3>Recent arrivals</h3>
-                {listeningRoomVisits.length ? (
-                  <ul className="cg-admin__lead-list">
-                    {listeningRoomVisits.map((visit) => (
-                      <li key={visit.id} className="cg-admin__lead-item">
-                        <div>
-                          <strong>{visit.songTitle}</strong>
-                          <span>{visit.songSlug}</span>
-                        </div>
-                        <div className="cg-admin__lead-meta">
-                          <span>{formatListeningRoomQueryKey(visit.queryKey)}</span>
-                          <span>{visit.pagePath}</span>
-                          <span>{visit.referrer || "Direct / unknown referrer"}</span>
-                          <span>{new Date(visit.createdAt).toLocaleString()}</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="cg-admin__helper">No shared listening-room arrivals have been tracked yet.</p>
-                )}
-              </article>
-            </div>
-          </div>
-        </div>
-      </AdminWorkspaceSection>
-
       <AdminWorkspaceSection
         id="admin-health"
         labelId="admin-health-title"
         title="Backend health"
         description="Firebase auth, live content source, and migration readiness for the admin layer."
         detail={`Content source: ${contentSource === "pending" ? "waiting on Firebase" : contentSource}`}
-        isVisible={isSectionReady("admin-health")}
         isOpen={openSections["admin-health"]}
         onToggle={() => toggleWorkspaceSection("admin-health")}
       >
         <AdminFirebaseStatus signedInEmail={authUser.email ?? null} contentSource={contentSource} isAuthorized notice={panelError || undefined} />
       </AdminWorkspaceSection>
-
-      <AdminWorkspaceSection
-        id="admin-ideas"
-        labelId="admin-ideas-title"
-        title="Ideas"
-        description="App concepts, ecosystem ideas, and scripts to weigh. A running catalogue of what could be built next."
-        detail={`${ideaCatalogue.length} idea${ideaCatalogue.length === 1 ? "" : "s"} logged`}
-        isOpen={openSections["admin-ideas"]}
-        onToggle={() => toggleWorkspaceSection("admin-ideas")}
-      >
-        <div className="cg-admin__ideas-grid">
-          {ideaCatalogue.map((idea) => (
-            <article key={idea.id} className="cg-admin__panel cg-admin__idea-card">
-              <div className="cg-admin__idea-head">
-                <div>
-                  <h3>{idea.name}</h3>
-                  <div className="cg-admin__idea-badges">
-                    <span className="cg-admin__idea-badge cg-admin__idea-badge--type">{idea.type}</span>
-                    <span className={`cg-admin__idea-badge cg-admin__idea-badge--status cg-admin__idea-badge--${idea.status}`}>{idea.status}</span>
-                  </div>
-                </div>
-              </div>
-              <p className="cg-admin__idea-description">{idea.description}</p>
-              {idea.notes ? (
-                <div className="cg-admin__idea-notes">
-                  <span className="cg-admin__editor-field-label">Design notes</span>
-                  <p>{idea.notes}</p>
-                </div>
-              ) : null}
-            </article>
-          ))}
-        </div>
-      </AdminWorkspaceSection>
-
-        </>
-      ) : null}
-
-          {backlogDashboardModules.length ? (
-            <article id={activeBacklogId} className="cg-admin__panel cg-admin__backlog-panel">
-              <div className="cg-admin__backlog-head">
-                <div>
-                  <h2>Backlog</h2>
-                  <p>Hidden from the active workspace until each surface is fully live. Nothing here has been removed from code.</p>
-                </div>
-                <p className="cg-admin__path-note">{backlogDashboardModules.length} parked for later</p>
-              </div>
-
-              <div className="cg-admin__backlog-list">
-                {backlogDashboardModules.map((module) => (
-                  <article key={module.id} className="cg-admin__backlog-item">
-                    <div className="cg-admin__module-head">
-                      <h3>{module.title}</h3>
-                      <span className="cg-admin__status-badge cg-admin__status-badge--pending">Backlog</span>
-                    </div>
-                    <strong className="cg-admin__module-stat">{module.summary}</strong>
-                    <p>{module.detail}</p>
-                  </article>
-                ))}
-              </div>
-            </article>
-          ) : null}
-        </div>
-      </div>
     </main>
   );
 }
