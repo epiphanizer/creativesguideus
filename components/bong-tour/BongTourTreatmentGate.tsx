@@ -5,7 +5,7 @@ import { type FormEvent, useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { buildContactHref } from "@/lib/contact-intake-routing";
-import { albumLaunchCampaignWindow, bongTourLaunchDateLabel, isBongTourPreview, wallsDevineLaunchDateLabel } from "@/lib/launch-state";
+import { albumLaunchCampaignWindow, isBongTourPreview, june30LaunchDateLabel } from "@/lib/launch-state";
 
 type TreatmentPayload = {
   title: string;
@@ -25,6 +25,17 @@ const bongTourTreatmentTravelNotes = [
 
 const treatmentAccessHref = "/api/bong-tour/treatment/access";
 const treatmentContentHref = "/api/bong-tour/treatment/content";
+const wallsDevineSignalListHref = buildContactHref({
+  pathname: "/contact",
+  overrides: {
+    context: "walls-devine-mailing-list",
+    inquiryType: "mailing-list",
+    project: "Walls/Devine",
+    surface: "campaign-world",
+    sourceRoute: "/bong-tour/treatment",
+    campaignWindow: albumLaunchCampaignWindow
+  }
+});
 const bongTourContactHref = buildContactHref({
   pathname: "/contact",
   overrides: {
@@ -41,22 +52,22 @@ const bongTourContactCtaLabel = isBongTourPreview ? "Request Post-Launch Access"
 const approvedReaderChecklist = [
   "Use the same email already shared through CGU.",
   "Enter the current private password to unlock the treatment.",
-  "The screenplay is shared privately once access is confirmed."
+  "The screenplay copy stays out of the initial page response until the gate passes."
 ] as const;
 const newReaderChecklist = [
   "Introduce the reader through the CGU contact route first.",
   "Leave enough context for why the treatment access is needed.",
-  "Approved readers return here with that same email once access is ready."
+  "Approved readers return here and use that same email at the gate."
 ] as const;
 const previewAccessChecklist = [
-  `Use this route now if you need treatment access after ${bongTourLaunchDateLabel}.`,
+  `Use this route now if you need treatment access after ${june30LaunchDateLabel}.`,
   "Leave enough context for the reader and the next conversation.",
-  `Approved readers return here with the same email after ${bongTourLaunchDateLabel}.`
+  `Approved readers return here with the same email after ${june30LaunchDateLabel}.`
 ] as const;
 const previewSignalChecklist = [
-  `Walls/Devine opens ${wallsDevineLaunchDateLabel}.`,
-  "Use Walls/Devine for the first soundtrack chapter while the screenplay remains private.",
-  "The poster and premise stay public until treatment access opens."
+  "Walls/Devine remains the live public world right now.",
+  "Use the Volume 1 signal list if you want the July 11 bridge into Bong Tour.",
+  "No screenplay pages are exposed on this public route before the gate opens."
 ] as const;
 
 async function getResponseError(response: Response, fallbackMessage: string) {
@@ -219,7 +230,7 @@ export function BongTourTreatmentGate() {
 
       await loadTreatmentContent();
     } catch {
-      setFeedbackMessage("Could not open the treatment right now.");
+      setFeedbackMessage("Could not open the treatment gate right now.");
     } finally {
       setIsSubmitting(false);
     }
@@ -259,12 +270,12 @@ export function BongTourTreatmentGate() {
               <Button as="a" href={bongTourContactHref} className="bt-button">
                 {bongTourContactCtaLabel}
               </Button>
-              <Button as="a" href="/walls-devine" className="bt-button bt-button--outline">
-                Open Walls/Devine
+              <Button as="a" href={wallsDevineSignalListHref} className="bt-button bt-button--outline">
+                Join the Volume 1 Signal List
               </Button>
             </div>
 
-            <p className="bt-treatment__meta-line">{`Private treatment opens ${bongTourLaunchDateLabel}. No screenplay pages are exposed on the public route before then.`}</p>
+            <p className="bt-treatment__meta-line">{`Private treatment opens ${june30LaunchDateLabel}. No screenplay pages are exposed on the public route before then.`}</p>
           </header>
 
           <article className="bt-treatment__lock-card">
@@ -272,7 +283,7 @@ export function BongTourTreatmentGate() {
               <section className="bt-treatment__track">
                 <p className="bt-section-header__eyebrow">Post-launch access</p>
                 <h2>Line up the approved-reader route.</h2>
-                <p>{`Use the contact path now if you need treatment access after the gate opens on ${bongTourLaunchDateLabel}.`}</p>
+                <p>{`Use the contact path now if you need treatment access after the gate opens on ${june30LaunchDateLabel}.`}</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {previewAccessChecklist.map((item) => (
@@ -289,8 +300,8 @@ export function BongTourTreatmentGate() {
 
               <section className="bt-treatment__track bt-treatment__track--secondary">
                 <p className="bt-section-header__eyebrow">Live bridge</p>
-                <h2>Use Volume 1 as the first release world.</h2>
-                <p>{`Walls/Devine opens ${wallsDevineLaunchDateLabel} and carries the first score-world bridge while Bong Tour waits for ${bongTourLaunchDateLabel}.`}</p>
+                <h2>Use Volume 1 as the active world now.</h2>
+                <p>The signal list and listening room stay live while Bong Tour waits for the July 11 window.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {previewSignalChecklist.map((item) => (
@@ -301,6 +312,9 @@ export function BongTourTreatmentGate() {
                 <div className="bt-treatment__track-actions">
                   <Button as="a" href="/walls-devine" className="bt-button">
                     Open Walls/Devine
+                  </Button>
+                  <Button as="a" href={wallsDevineSignalListHref} className="bt-button bt-button--outline">
+                    Join the Volume 1 Signal List
                   </Button>
                 </div>
               </section>
@@ -334,7 +348,7 @@ export function BongTourTreatmentGate() {
               </Button>
             ) : (
               <Button type="button" className="bt-button" onClick={() => setIsModalOpen(true)} disabled={isCheckingSession}>
-                Open Approved Reader Access
+                Open Approved-Reader Gate
               </Button>
             )}
           </div>
@@ -386,8 +400,8 @@ export function BongTourTreatmentGate() {
             <div className="bt-treatment__lock-grid">
               <section className="bt-treatment__track">
                 <p className="bt-section-header__eyebrow">Already approved?</p>
-                <h2>Open the private treatment.</h2>
-                <p>Use the email already on file with CGU plus the current password to read the screenplay.</p>
+                <h2>Open the private gate.</h2>
+                <p>Use the email already on file with CGU plus the current password to read the screenplay world.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {approvedReaderChecklist.map((item) => (
@@ -397,7 +411,7 @@ export function BongTourTreatmentGate() {
                 </div>
                 <div className="bt-treatment__track-actions">
                   <Button type="button" className="bt-button" onClick={() => setIsModalOpen(true)} disabled={isCheckingSession}>
-                    Open Treatment
+                    Open Treatment Gate
                   </Button>
                 </div>
               </section>
@@ -405,7 +419,7 @@ export function BongTourTreatmentGate() {
               <section className="bt-treatment__track bt-treatment__track--secondary">
                 <p className="bt-section-header__eyebrow">Need access?</p>
                 <h2>Introduce the reader first.</h2>
-                <p>New readers should start with contact so we can review access and follow up directly.</p>
+                <p>New readers should route through contact so the treatment stays private, attributable, and out of the public page payload.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {newReaderChecklist.map((item) => (
@@ -427,13 +441,13 @@ export function BongTourTreatmentGate() {
           <div className="bt-treatment__modal" role="presentation">
             <div className="bt-treatment__modal-backdrop" onClick={() => setIsModalOpen(false)} />
             <div className="bt-treatment__modal-panel" role="dialog" aria-modal="true" aria-labelledby={`${titleId}-modal`} aria-describedby={`${descriptionId}-modal`}>
-              <button type="button" className="bt-treatment__modal-close" onClick={() => setIsModalOpen(false)} aria-label="Close treatment access">
+              <button type="button" className="bt-treatment__modal-close" onClick={() => setIsModalOpen(false)} aria-label="Close treatment gate">
                 Close
               </button>
 
               <div className="bt-treatment__modal-copy">
                 <p className="bt-section-header__eyebrow">Private reading copy</p>
-                <h2 id={`${titleId}-modal`}>Use the approved-reader access.</h2>
+                <h2 id={`${titleId}-modal`}>Use the approved-reader gate.</h2>
                 <p id={`${descriptionId}-modal`}>Approved readers enter the email already on file plus the current password. New readers should start with contact first.</p>
               </div>
 
@@ -445,7 +459,7 @@ export function BongTourTreatmentGate() {
 
                 <article className="bt-treatment__modal-guide">
                   <span>Need access?</span>
-                  <p>Open the contact route first so we can review access and follow up directly.</p>
+                  <p>Open the contact route first so the request stays inside the private CGU intake flow.</p>
                 </article>
               </div>
 
@@ -482,7 +496,7 @@ export function BongTourTreatmentGate() {
 
                 <div className="bt-treatment__modal-actions">
                   <Button type="submit" className="bt-button" disabled={isSubmitting || isLoadingTreatment}>
-                    {isSubmitting || isLoadingTreatment ? "Checking access" : "Open Treatment"}
+                    {isSubmitting || isLoadingTreatment ? "Checking access" : "Open Treatment Gate"}
                   </Button>
                   <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                     {bongTourContactCtaLabel}

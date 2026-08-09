@@ -88,24 +88,6 @@ export type WallsDevineBookingBannerNote = {
   updatedAt: string;
 };
 
-export type WallsDevineUpcomingShow = {
-  id: string;
-  dateLabel: string;
-  city: string;
-  venue: string;
-  status: string;
-  href: string;
-};
-
-export type WallsDevineUpcomingShowsNote = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  emptyState: string;
-  shows: WallsDevineUpcomingShow[];
-  updatedAt: string;
-};
-
 export type LinkHubLink = {
   id: string;
   eyebrow: string;
@@ -334,7 +316,6 @@ export type WallsDevineAdminData = {
   journalEntries: AdminMarkdownFile[];
   collectorHeroNote: WallsDevineCollectorHeroNote;
   bookingBannerNote: WallsDevineBookingBannerNote;
-  upcomingShowsNote: WallsDevineUpcomingShowsNote;
   linkHub: LinkHubContent;
   storageBacked?: boolean;
   contentBackend?: "firestore" | "bootstrap";

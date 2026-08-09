@@ -16,7 +16,7 @@ export default function GlobalChrome({ children }: { children: ReactNode }) {
   return (
     <>
       {!isAdminRoute ? <HeaderNav /> : null}
-      {!isAdminRoute ? <div className="cg-app-chrome-body">{children}</div> : children}
+      {children}
       {!isAdminRoute ? <Footer /> : null}
       {!isAdminRoute ? <PortableListeningRoom /> : null}
       {!isAdminRoute ? (

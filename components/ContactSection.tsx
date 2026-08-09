@@ -14,14 +14,7 @@ import {
   GuidedIntakeStepHeader
 } from "@/components/contact-guided/GuidedIntakePrimitives";
 import { buildContactPrefill, type ContactPrefill } from "@/lib/contact-intake-routing";
-import {
-  albumLaunchCampaignWindow,
-  appreeshLaunchDateLabel,
-  bongTourLaunchDateLabel,
-  isBeforeWallsDevineLaunchCutoff,
-  launchSequenceDateRangeLabel,
-  wallsDevineLaunchDateLabel
-} from "@/lib/launch-state";
+import { albumLaunchCampaignWindow, isBeforeJune30LaunchCutoff, june30LaunchDateLabel } from "@/lib/launch-state";
 import { SectionShell } from "@/components/ui/SectionShell";
 import { Button } from "@/components/ui/Button";
 
@@ -117,7 +110,7 @@ const inquiryTypeCardOptions: ContactChoiceOption[] = [
   {
     value: "mailing-list",
     label: "Mailing list",
-    description: "Get release updates, drop alerts, and collector unlock notices."
+    description: "Route signal updates, drop alerts, and collector unlock notices through the studio intake."
   },
   {
     value: "screening",
@@ -127,7 +120,7 @@ const inquiryTypeCardOptions: ContactChoiceOption[] = [
   {
     value: "performance",
     label: "Performance",
-    description: "Ask about a live activation, performance, or event around the work."
+    description: "Open a staged performance or live activation conversation without losing the project context."
   },
   {
     value: "partnership",
@@ -199,7 +192,7 @@ const partnershipFocusOptions: ContactChoiceOption[] = [
   {
     value: "soundtrack",
     label: "Soundtrack",
-    description: "Music direction, soundtrack expansion, or score collaboration."
+    description: "Music direction, soundtrack expansion, or release-world collaboration around the score."
   },
   {
     value: "collector-world",
@@ -290,13 +283,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
   if (flowId === "walls-mailing") {
     return {
       id: flowId,
-      routingNote: "Walls/Devine updates request loaded for the Volume 1 rollout.",
+      routingNote:
+        "Walls/Devine signal-list context is loaded. This stays inside the CGU intake flow while Volume 1 remains live and the July 11 bridge is staged.",
       summary: [
-        `Walls/Devine opens ${wallsDevineLaunchDateLabel} while Appreesh and Bong Tour follow later in the fall sequence.`,
-        `Your email anchors future Volume 1 updates tied to the ${wallsDevineLaunchDateLabel} release world.`,
-        "Each request is reviewed and routed by the studio team."
+        "Walls/Devine stays live now while Bong Tour and Appreesh remain staged toward July 11.",
+        "Your email becomes the Volume 1 signal anchor for updates tied to the live album world and the July 11 bridge.",
+        "Requests are reviewed manually until the dedicated list wiring is ready."
       ],
-      trustNote: "This is a reviewed updates request. The studio follows up with the right Volume 1 notes for this inbox.",
+      trustNote: "This is a signal-list request, not an instant subscription. CGU reviews it first, then routes the right Volume 1 updates back to this inbox.",
       noteLabel: "Optional note",
       notePlaceholder: "How did you find Volume 1, and what kind of update should reach you first?",
       companyLabel: "Company or context",
@@ -305,9 +299,9 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
         {
           id: "intent",
           label: "Confirm request",
-          title: "Request Volume 1 updates",
-          description: `This route keeps you close to the Volume 1 rollout and the ${wallsDevineLaunchDateLabel} opening.`,
-          helper: "The request stays attached to Walls/Devine so follow-up can stay specific."
+          title: "Join the Volume 1 Signal List",
+          description: `This is the Walls/Devine request path for the live album world and the ${june30LaunchDateLabel} bridge into the next rooms.`,
+          helper: "You are not entering a third-party newsletter flow here. CGU keeps the request attached to Volume 1."
         },
         {
           id: "contact",
@@ -319,16 +313,16 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
         {
           id: "details",
           label: "Update preferences",
-          title: "What updates do you want?",
+          title: "Choose the signals that matter",
           description: "Pick the signal types you actually want, then add any note that helps the studio route this cleanly.",
-          helper: `If you skip this step, we treat it as a general request for Walls/Devine and ${wallsDevineLaunchDateLabel} rollout updates.`
+          helper: `If you skip this step, CGU treats it as a general request for Walls/Devine and ${june30LaunchDateLabel} bridge updates.`
         },
         {
           id: "review",
           label: "Review",
           title: "Review the routed request",
           description: "Confirm the contact lane, then send it into the studio signal flow.",
-          helper: "The team reviews each request before future updates are sent."
+          helper: "This request is reviewed manually before any future mailing or unlock updates are sent."
         }
       ]
     };
@@ -338,14 +332,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        "Walls/Devine booking context is loaded. Leave the room type, timing, and booking note here so it stays attached to the Volume 1 rollout.",
+        "Walls/Devine booking context is loaded. Leave the room type, timing, and booking note here so it stays attached to the live Volume 1 world.",
       summary: [
-        `The booking lane stays attached to the ${wallsDevineLaunchDateLabel} release world instead of dropping into a generic calendar flow.`,
+        "The booking lane stays attached to the live release world instead of dropping into a generic calendar flow.",
         "Inquiry type, timing, and room note remain visible to booking-fit review in admin.",
         "Direct contact details stay inside CGU rather than being handed off to a third-party scheduler."
       ],
       trustNote:
-        `This route is for listening sessions, screenings, live bookings, and partnership-adjacent room asks around the ${wallsDevineLaunchDateLabel} Walls/Devine opening.`,
+        "This route is for listening sessions, screenings, live bookings, and partnership-adjacent room asks around the active Walls/Devine release.",
       noteLabel: "Room note",
       notePlaceholder: "Room size, event type, desired date, collaborators, press angle, or the exact booking context.",
       companyLabel: "Company or context",
@@ -354,7 +348,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
         {
           id: "intent",
           label: "Confirm intent",
-          title: "What kind of booking is this?",
+          title: "Choose the booking lane",
           description: "Pick the closest room so CGU routes the ask to the right side of the release world.",
           helper: "You can keep this inside the Walls/Devine lane even if the ask spans live performance, listening, screening, or partnership."
         },
@@ -387,14 +381,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Use this route to request Bong Tour treatment access ahead of the ${bongTourLaunchDateLabel} opening.`,
+        `Bong Tour treatment access context is loaded. Use this route to line up post-launch reader access before the private gate opens on ${june30LaunchDateLabel}.`,
       summary: [
-        `The private treatment opens on ${bongTourLaunchDateLabel}.`,
-        "Use the email you want us to contact when access is available.",
-        "Tell us why the screenplay matters to you so we can follow up in the right way."
+        `The private treatment stays off the public route until the gate opens on ${june30LaunchDateLabel}.`,
+        "The submitted email becomes the identity that later enters the protected reader gate.",
+        "Reader context and access reason remain tied to the film instead of a generic inbox ask."
       ],
       trustNote:
-        `This request does not unlock the treatment immediately. We review it first and follow up as access opens around ${bongTourLaunchDateLabel}.`,
+        `This does not grant instant access. CGU reviews the reader request first, then approved readers return here with the same email after ${june30LaunchDateLabel}.`,
       noteLabel: "Additional context",
       notePlaceholder: "Any extra context around the reader, the relationship, or the conversation this should unlock.",
       companyLabel: "Role or company",
@@ -404,29 +398,29 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "intent",
           label: "Confirm request",
           title: "Request post-launch treatment access",
-          description: `This route is for readers who want access when the treatment opens on ${bongTourLaunchDateLabel}.`,
-          helper: "Leave the clearest request you can and we will follow up from there."
+          description: `This route is for new-reader treatment access after the ${june30LaunchDateLabel} launch window opens, not an instant unlock.`,
+          helper: "The screenplay copy stays behind the protected gate until launch and review are both in place."
         },
         {
           id: "contact",
           label: "Contact details",
           title: "Anchor the reader identity",
-          description: "Use the best email for the reader or the person requesting access.",
-          helper: "Role or company context helps us respond with the right next step."
+          description: "Use the exact email the reader should later use inside the private gate.",
+          helper: "Role or company context helps the review, but the submitted email is the key identity."
         },
         {
           id: "details",
           label: "Reader details",
           title: "Describe the reader fit",
           description: "Leave the relationship to the project and why this reader needs the private copy.",
-          helper: "A concise reason is enough. Help us understand the fit."
+          helper: "A concise reason is enough. The goal is to protect the treatment while keeping approvals legible."
         },
         {
           id: "review",
           label: "Review",
           title: "Review the reader request",
           description: "Confirm the reader identity and access note before sending it into the review lane.",
-          helper: `We will reply here as treatment access opens around ${bongTourLaunchDateLabel}.`
+          helper: `Approved readers later return to the protected gate with this same email after ${june30LaunchDateLabel}.`
         }
       ]
     };
@@ -436,14 +430,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Bong Tour preview context is loaded. Leave the clearest production, soundtrack, or partnership note here so the ${bongTourLaunchDateLabel} launch path can route cleanly.`,
+        `Bong Tour preview context is loaded. Leave the clearest production, soundtrack, or partnership note here so the July 11 launch path can route cleanly.`,
       summary: [
-        `Production, soundtrack, collector-world, and partnership interest can start here before ${bongTourLaunchDateLabel}.`,
+        `Production, soundtrack, collector-world, and partnership signals stay attached to the film while the public route is still in preview before ${june30LaunchDateLabel}.`,
         "The intake leads with fit and context instead of a scheduling-first experience.",
-        "We can reply with the clearest next step once we understand the fit."
+        "CGU can route the ask cleanly without losing the preview-state context."
       ],
       trustNote:
-        "This is the film-fit lane for production, soundtrack, and partnership conversations around Bong Tour.",
+        "This is the film-fit lane. CGU captures the right signal first, then decides what the next operational move should be after launch sequencing is clear.",
       noteLabel: "Partnership note",
       notePlaceholder: "What you see, the fit you want to explore, and the clearest next move around Bong Tour.",
       companyLabel: "Role or company",
@@ -454,7 +448,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           label: "Confirm intent",
           title: "Open the Bong Tour launch lane",
           description: "This route is for production, soundtrack, collector-world, or broader partnership conversations around Bong Tour.",
-          helper: "Tell us what you want to explore and we will route it from there."
+          helper: "The intake starts with fit and context, not a calendar handoff or a public treatment gate."
         },
         {
           id: "contact",
@@ -467,7 +461,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "details",
           label: "Partnership details",
           title: "Describe the fit",
-          description: "Select the lane that fits best, add timing if you have it, and leave the clearest note you can.",
+          description: "Choose the lane that fits best, add timing if you have it, and leave the clearest note you can.",
           helper: "Production, soundtrack, and collector-world context can all live together here without losing the film signal."
         },
         {
@@ -485,14 +479,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Appreesh opens ${appreeshLaunchDateLabel}. Leave your info here if you want the first notice.`,
+        `Appreesh preview context is loaded. This route captures launch-window interest without sending anyone off CGU before ${june30LaunchDateLabel}.`,
       summary: [
-        `Appreesh opens on ${appreeshLaunchDateLabel}.`,
-        "We will use this inbox for first access notes and launch updates.",
-        "Add context if you want to tell us why Appreesh matters to you."
+        `Appreesh stays queued inside the CGU rollout until ${june30LaunchDateLabel}.`,
+        "The submitted inbox becomes the preview-notice lane tied to the current album launch window.",
+        "Internal launch flags stay attached to this lead for later routing without being exposed publicly."
       ],
       trustNote:
-        "This is the easiest way to hear first when Appreesh opens.",
+        "This is a preview-interest route. CGU keeps it internal until the launch window opens.",
       noteLabel: "Optional note",
       notePlaceholder: "If helpful, say how Appreesh connects to your interest in Walls/Devine, Bong Tour, or the wider release world.",
       companyLabel: "Company or context",
@@ -502,14 +496,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "intent",
           label: "Confirm request",
           title: "Queue the Appreesh preview lane",
-          description: `This route signs you up for Appreesh news ahead of the ${appreeshLaunchDateLabel} opening.`,
-          helper: "You are in the right place if you want early notice when Appreesh arrives."
+          description: `This route holds Appreesh interest inside CGU until the ${june30LaunchDateLabel} opening.`,
+          helper: "CGU does not send this traffic to the external Appreesh site before launch."
         },
         {
           id: "contact",
           label: "Contact details",
           title: "Anchor the inbox",
-          description: "Use the best email for launch notes and first access updates.",
+          description: "Use the best email for the launch-window notice so the preview route stays tied to the right person.",
           helper: "Add working context if this interest is tied to a collaborator, publication, or partner lane."
         },
         {
@@ -517,14 +511,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           label: "Context note",
           title: "Add any useful context",
           description: "Leave an optional note if there is a specific Appreesh angle, bridge, or follow-up that matters.",
-          helper: "Use this note if there is a specific angle or follow-up you want us to remember."
+          helper: "This note stays internal to CGU and helps route the launch-window follow-up later."
         },
         {
           id: "review",
           label: "Review",
           title: "Review the preview route",
           description: "Confirm the inbox and note before sending this Appreesh preview request into CGU.",
-          helper: `We will follow up here as Appreesh opens on ${appreeshLaunchDateLabel}.`
+          helper: `This request stays internal until Appreesh opens on ${june30LaunchDateLabel}.`
         }
       ]
     };
@@ -533,13 +527,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
   return {
     id: "general",
     routingNote:
-      "Use this form for bookings, collaborations, soundtrack work, and systems builds.",
+      "Use this intake to route booking asks, release-world collaborations, soundtrack conversations, and system builds through one clear entry point.",
     summary: [
-      "Inquiry type, timing, and range help us respond clearly.",
-      "Project context and a real note help us start in the right place.",
-      "Direct contact details keep the conversation personal from the first reply."
+      "Inquiry type, timing, and range stay visible so the request lands in the right lane.",
+      "Project context and a real note keep the conversation anchored to the work instead of a blank inbox.",
+      "Direct contact details stay inside the CGU signal flow rather than a third-party form handoff."
     ],
-    trustNote: "",
+    trustNote:
+      "This is the main CGU intake route. The guided flow keeps enough signal intact that the next move can be obvious without turning into a scheduling widget.",
     noteLabel: "Project note",
     notePlaceholder: "Scope, desired move, collaborators, links, or the exact conversation you want to have.",
     companyLabel: "Company or context",
@@ -547,31 +542,31 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     steps: [
       {
         id: "intent",
-        label: "Select the lane",
-        title: "What are you looking for?",
-        description: "Pick the lane that best matches your project.",
-        helper: "Select the lane that fits the work."
+        label: "Confirm intent",
+        title: "Choose the right room",
+        description: "Pick the closest lane so the request enters the studio with the right shape.",
+        helper: "You do not need perfect information yet. The goal is to keep the first move legible."
       },
       {
         id: "project",
-        label: "Scope and timing",
-        title: "Outline scope and timing",
-        description: "",
-        helper: ""
+        label: "Project shape",
+        title: "Describe the project shape",
+        description: "Add the core project details so the request can be routed without guesswork.",
+        helper: "Goal, surface, engagement, timing, and range are all helpful, but the project note carries the most weight."
       },
       {
         id: "contact",
         label: "Contact details",
-        title: "Add your contact details",
-        description: "Share the best contact path for this project.",
-        helper: "Include your studio or company context when relevant."
+        title: "Anchor the reply path",
+        description: "Use the best inbox and context so the conversation can continue cleanly.",
+        helper: "If there is no company yet, leave the working context that best explains the lane."
       },
       {
         id: "review",
-        label: "Send the brief",
-        title: "Send the brief",
-        description: "Review the details, then send.",
-        helper: ""
+        label: "Review",
+        title: "Review the routed intake",
+        description: "Confirm the lane, contact path, and project note before sending it into CGU.",
+        helper: "This stays inside the studio signal flow until the next move is clear."
       }
     ]
   };
@@ -586,7 +581,7 @@ function buildDisplayInquiryLabel(flowId: ContactFlowId, inquiryType: string) {
     return "Appreesh preview route";
   }
 
-  return getOptionLabel(inquiryTypeOptions, inquiryType) || "Studio contact";
+  return getOptionLabel(inquiryTypeOptions, inquiryType) || "Guided intake";
 }
 
 function buildInterestLabel(flowId: ContactFlowId, inquiryTypeLabel: string) {
@@ -598,7 +593,7 @@ function buildInterestLabel(flowId: ContactFlowId, inquiryTypeLabel: string) {
     return "Appreesh preview";
   }
 
-  return inquiryTypeLabel || "Studio contact";
+  return inquiryTypeLabel || "Guided intake";
 }
 
 function buildSubmissionBrief(flowId: ContactFlowId, form: ContactFormState, routeDetails: RouteDetailsState) {
@@ -614,7 +609,7 @@ function buildSubmissionBrief(flowId: ContactFlowId, form: ContactFormState, rou
     const selectedPreferences = formatOptionLabels(routeDetails.updatePreferences, mailingPreferenceOptions);
 
     return [
-      "Request: Walls/Devine Volume 1 updates.",
+      "Request: Walls/Devine Volume 1 signal-list updates routed through CGU intake.",
       `Requested updates: ${selectedPreferences.length ? selectedPreferences.join(", ") : "General Volume 1 signal updates"}.`,
       trimmedBrief ? `Note: ${trimmedBrief}` : ""
     ]
@@ -677,7 +672,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
     return [
       {
         label: "Request",
-        value: "Volume 1 updates request",
+        value: "Volume 1 signal-list request",
         description: selectedPreferences
       },
       {
@@ -688,7 +683,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       {
         label: "Project",
         value: form.projectTitle.trim() || "Walls/Devine",
-        description: `Walls/Devine opens ${wallsDevineLaunchDateLabel} as the first chapter in the ${launchSequenceDateRangeLabel} sequence.`
+        description: `Routed through CGU while Walls/Devine stays live and the ${june30LaunchDateLabel} bridge is staged.`
       },
       {
         label: "Next move",
@@ -738,12 +733,12 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       {
         label: "Project",
         value: form.projectTitle.trim() || "Bong Tour",
-        description: `Treatment access requests are reviewed ahead of the ${bongTourLaunchDateLabel} opening.`
+        description: `Access is reviewed manually before the protected gate opens on ${june30LaunchDateLabel}.`
       },
       {
         label: "Next move",
         value: "Reader review",
-        description: `We will follow up here as treatment access opens around ${bongTourLaunchDateLabel}.`
+        description: `Approved readers later use this same email inside the private gate after ${june30LaunchDateLabel}.`
       }
     ];
   }
@@ -778,7 +773,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       {
         label: "Request",
         value: "Appreesh preview notice",
-        description: `Held inside CGU until the ${appreeshLaunchDateLabel} opening.`
+        description: `Held inside CGU until the ${june30LaunchDateLabel} opening.`
       },
       {
         label: "Contact",
@@ -826,7 +821,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
 
 function validateStep(flow: ContactFlow, stepId: GuidedStepId, form: ContactFormState, routeDetails: RouteDetailsState) {
   if (stepId === "intent" && (flow.id === "general" || flow.id === "walls-booking") && !form.inquiryType) {
-    return "What are you looking for? Select a lane to continue.";
+    return "Choose the closest room before continuing.";
   }
 
   if (stepId === "project" && flow.id === "general" && !form.brief.trim()) {
@@ -848,7 +843,7 @@ function validateStep(flow: ContactFlow, stepId: GuidedStepId, form: ContactForm
 
     if (flow.id === "bong-partnership") {
       if (!routeDetails.partnershipFocus) {
-        return "What kind of Bong Tour conversation is this? Select a lane to continue.";
+        return "Choose the closest Bong Tour lane before continuing.";
       }
 
       if (!form.brief.trim()) {
@@ -1001,11 +996,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
       const engagementLabel = getOptionLabel(engagementOptions, form.engagement);
       const timelineLabel = getOptionLabel(timelineOptions, form.timeline);
       const budgetRangeLabel = getOptionLabel(budgetRangeOptions, form.budgetRange);
-      const joinedBeforeWallsDevineLaunch = prefill.campaignWindow === albumLaunchCampaignWindow && isBeforeWallsDevineLaunchCutoff();
+      const joinedBeforeJune30 = prefill.campaignWindow === albumLaunchCampaignWindow && isBeforeJune30LaunchCutoff();
       const wantsWallsDevineUpdates = activeFlow.id === "walls-mailing";
       const wantsBongTourLaunchNotice = activeFlow.id === "bong-treatment" || activeFlow.id === "bong-partnership";
       const wantsAppreeshLaunchNotice = activeFlow.id === "appreesh-preview";
-      const airdropCandidate = joinedBeforeWallsDevineLaunch && (wantsWallsDevineUpdates || wantsAppreeshLaunchNotice);
+      const airdropCandidate = joinedBeforeJune30 && (wantsWallsDevineUpdates || wantsAppreeshLaunchNotice);
 
       await createContactIntake({
         name: form.name,
@@ -1033,7 +1028,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         wantsWallsDevineUpdates,
         wantsBongTourLaunchNotice,
         wantsAppreeshLaunchNotice,
-        joinedBeforeJune30: joinedBeforeWallsDevineLaunch,
+        joinedBeforeJune30,
         airdropCandidate
       });
 
@@ -1069,8 +1064,8 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         return (
           <>
             <fieldset className="cg-contact__fieldset">
-              <legend className="cg-contact__legend">What are you looking for?</legend>
-              <p className="cg-contact__field-hint">Select the lane that best matches your request.</p>
+              <legend className="cg-contact__legend">Choose the room</legend>
+              <p className="cg-contact__field-hint">Pick the lane that best fits the first move. You can still clarify the exact shape in the next step.</p>
               <GuidedIntakeChoiceGrid
                 options={inquiryTypeCardOptions}
                 value={form.inquiryType}
@@ -1105,11 +1100,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
               <strong>Signal route confirmed</strong>
-              <p>This request stays attached to the Walls/Devine rollout instead of getting flattened into a generic signup field.</p>
+              <p>This request stays attached to the live Walls/Devine route instead of getting flattened into a generic signup field.</p>
             </article>
             <article className="cg-contact__affirmation">
               <strong>What happens next</strong>
-              <p>{`CGU reviews this route first, then uses the submitted inbox for future Volume 1 and ${wallsDevineLaunchDateLabel} rollout updates.`}</p>
+              <p>{`CGU reviews this route first, then uses the submitted inbox for future Volume 1 and ${june30LaunchDateLabel} bridge updates.`}</p>
             </article>
           </div>
         );
@@ -1119,12 +1114,12 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         return (
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
-              <strong>Treatment request received</strong>
-              <p>{`The Bong Tour treatment opens ${bongTourLaunchDateLabel}. We will review this request and follow up as access becomes available.`}</p>
+              <strong>Protected reading path</strong>
+              <p>{`The treatment stays behind the private gate until the ${june30LaunchDateLabel} launch window opens and this reader request is reviewed.`}</p>
             </article>
             <article className="cg-contact__affirmation">
-              <strong>Watch this inbox</strong>
-              <p>{`We will use the email you submitted here for the next step if treatment access opens after ${bongTourLaunchDateLabel}.`}</p>
+              <strong>Identity matters</strong>
+              <p>{`The email you submit here is the same identity that later enters the private gate if the reader is approved after ${june30LaunchDateLabel}.`}</p>
             </article>
           </div>
         );
@@ -1134,12 +1129,12 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         return (
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
-              <strong>You’re on the list</strong>
-              <p>{`Appreesh opens ${appreeshLaunchDateLabel}. We will use this inbox for the first notice.`}</p>
+              <strong>Preview lane confirmed</strong>
+              <p>{`Appreesh stays queued inside CGU until ${june30LaunchDateLabel}, so this route captures interest without an external handoff.`}</p>
             </article>
             <article className="cg-contact__affirmation">
               <strong>What happens next</strong>
-              <p>We will follow up here with launch updates and first-access details.</p>
+              <p>CGU keeps the preview signal internal and uses the submitted inbox for launch-window follow-up later.</p>
             </article>
           </div>
         );
@@ -1176,7 +1171,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
 
             <GuidedIntakeField label="Goal" htmlFor="contact-goal">
               <select id="contact-goal" name="goal" value={form.goal} onChange={handleFieldChange}>
-                <option value="">What is the goal?</option>
+                <option value="">Choose the lead move</option>
                 {goalOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1189,7 +1184,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <GuidedIntakeFieldRow>
             <GuidedIntakeField label="Surface" htmlFor="contact-surface">
               <select id="contact-surface" name="surface" value={form.surface} onChange={handleFieldChange}>
-                <option value="">What is the surface?</option>
+                <option value="">Choose the primary surface</option>
                 {surfaceOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1200,7 +1195,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
 
             <GuidedIntakeField label="Engagement" htmlFor="contact-engagement">
               <select id="contact-engagement" name="engagement" value={form.engagement} onChange={handleFieldChange}>
-                <option value="">What is the engagement?</option>
+                <option value="">Choose the lead mode</option>
                 {engagementOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1213,7 +1208,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <GuidedIntakeFieldRow>
             <GuidedIntakeField label="Timeline" htmlFor="contact-timeline">
               <select id="contact-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
-                <option value="">When do you need this?</option>
+                <option value="">Choose timing</option>
                 {timelineOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1224,7 +1219,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
 
             <GuidedIntakeField label="Budget range" htmlFor="contact-budget-range">
               <select id="contact-budget-range" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
-                <option value="">What is the budget range?</option>
+                <option value="">Choose a range</option>
                 {budgetRangeOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1313,7 +1308,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         return (
           <>
             <fieldset className="cg-contact__fieldset">
-              <legend className="cg-contact__legend">What updates do you want?</legend>
+              <legend className="cg-contact__legend">Choose the updates that matter</legend>
               <p className="cg-contact__field-hint">Pick one or many. If you skip these, CGU treats this as a general request for Volume 1 signal updates.</p>
               <GuidedIntakeChoiceGrid
                 options={mailingPreferenceOptions}
@@ -1353,7 +1348,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
 
               <GuidedIntakeField label="Timeline" htmlFor="contact-booking-timeline">
                 <select id="contact-booking-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
-                  <option value="">When do you need this?</option>
+                  <option value="">Choose timing</option>
                   {timelineOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -1366,7 +1361,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
             <GuidedIntakeFieldRow>
               <GuidedIntakeField label="Budget range" htmlFor="contact-booking-budget">
                 <select id="contact-booking-budget" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
-                  <option value="">What is the budget range?</option>
+                  <option value="">Choose a range</option>
                   {budgetRangeOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -1473,7 +1468,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
       return (
         <>
           <fieldset className="cg-contact__fieldset">
-            <legend className="cg-contact__legend">What kind of Bong Tour conversation is this?</legend>
+            <legend className="cg-contact__legend">Choose the closest Bong Tour lane</legend>
             <p className="cg-contact__field-hint">Pick the focus that best fits the first conversation. The full note can still span production, soundtrack, and collector-world context.</p>
             <GuidedIntakeChoiceGrid
               options={partnershipFocusOptions}
@@ -1489,7 +1484,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <GuidedIntakeFieldRow>
             <GuidedIntakeField label="Timeline" htmlFor="contact-bong-timeline">
               <select id="contact-bong-timeline" name="timeline" value={form.timeline} onChange={handleFieldChange}>
-                <option value="">When do you need this?</option>
+                <option value="">Choose timing</option>
                 {timelineOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1500,7 +1495,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
 
             <GuidedIntakeField label="Budget range" htmlFor="contact-bong-budget">
               <select id="contact-bong-budget" name="budgetRange" value={form.budgetRange} onChange={handleFieldChange}>
-                <option value="">What is the budget range?</option>
+                <option value="">Choose a range</option>
                 {budgetRangeOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -1550,7 +1545,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
   const formContent = (
     <form className="cg-contact__form" onSubmit={handleSubmit} noValidate aria-busy={submissionState === "submitting"}>
       <HeadingTag id="contact-title" className="cg-contact__sr-only">
-        Studio Contact
+        Guided intake
       </HeadingTag>
 
       <div className="cg-contact__form-head">
@@ -1560,6 +1555,8 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         />
 
         <GuidedIntakeStepHeader
+          currentStep={currentStep}
+          totalSteps={activeFlow.steps.length}
           title={activeStep.title}
           description={activeStep.description}
           trustNote={activeFlow.trustNote}

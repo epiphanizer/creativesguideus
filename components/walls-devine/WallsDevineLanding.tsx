@@ -3,6 +3,7 @@
 import Image from "next/image";
 import type { StaticImageData } from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { FiCheck, FiPause, FiPlay, FiShare2, FiSkipForward } from "react-icons/fi";
 
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -11,13 +12,9 @@ import { songPostCards } from "@/components/walls-devine/content";
 import { type CollectorGridTile, WallsDevineCollectorGrid } from "@/components/walls-devine/WallsDevineCollectorGrid";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { buildContactHref } from "@/lib/contact-intake-routing";
-import { albumLaunchCampaignWindow, wallsDevineLaunchDateLabel } from "@/lib/launch-state";
+import { albumLaunchCampaignWindow } from "@/lib/launch-state";
 import type { EcosystemRewardId } from "@/lib/ecosystem/reward-catalog";
-import {
-  getWallsDevineBookingBannerNote,
-  getWallsDevineCollectorHeroNote,
-  getWallsDevineUpcomingShowsNote
-} from "@/lib/firebase/walls-devine-public";
+import { getWallsDevineBookingBannerNote, getWallsDevineCollectorHeroNote } from "@/lib/firebase/walls-devine-public";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 import {
   openWallsDevineListeningRoomShortcut,
@@ -25,14 +22,10 @@ import {
   wallsDevineListeningRoomAnchorId,
   wallsDevinePlayerDismissedChangeEventName
 } from "@/lib/wallsDevinePlayerBridge";
-import {
-  defaultWallsDevineBookingBannerNote,
-  defaultWallsDevineCollectorHeroNote,
-  defaultWallsDevineUpcomingShowsNote
-} from "@/lib/walls-devine/public-content";
+import { defaultWallsDevineBookingBannerNote, defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
-import convictionPlaceholderImage from "@/app/walls-devine/assets/instagram/4.home.png";
+import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
 import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
 import poetryImage from "@/app/walls-devine/assets/instagram/7.poetry.png";
 import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
@@ -122,19 +115,19 @@ const instagramGrid: GridTile[] = [
     tokenLabel: "orbit"
   }),
   withSongStory({
-    slug: "conviction",
-    title: "Conviction",
+    slug: "home",
+    title: "Home",
     role: "Song 04",
-    image: convictionPlaceholderImage,
-    playerTarget: "conviction",
-    teaser: "A sealed fourth chapter held in public by title alone.",
-    challengeLabel: "Pressure pattern",
-    challengePrompt: "Replay the pressure marks before the chapter clears.",
-    easterEggTitle: "Reserved pressure",
-    easterEggBody: "Conviction stays named before it is heard. The hidden note is that the slot exists to signal nerve and forward motion, not absence.",
-    interest: "Conviction collector list",
+    image: homeImage,
+    playerTarget: "home",
+    teaser: "The quiet middle chapter where the myth comes back to earth.",
+    challengeLabel: "Porch pattern",
+    challengePrompt: "Replay the porch lights before the house goes dark.",
+    easterEggTitle: "Landing signal",
+    easterEggBody: "Home holds the nervous-system reset of finally landing somewhere honest. The hidden note is that its power comes from keeping the first truthful take intact.",
+    interest: "Home collector list",
     gameMode: "porch-lights",
-    tokenLabel: "mark"
+    tokenLabel: "glow"
   }),
   {
     slug: "volume-1",
@@ -217,8 +210,38 @@ const instagramGrid: GridTile[] = [
   })
 ];
 
+type CollectorLetterQuote = {
+  source: string;
+  author: string;
+  text: string;
+};
+
+const collectorLetterQuotes: readonly CollectorLetterQuote[] = [
+  {
+    source: "Joint Queen",
+    author: "Terry Devine",
+    text: "Joint Queen needed to feel like an entrance cue with authority and swagger, not just a groove loop."
+  },
+  {
+    source: "Poetry",
+    author: "John Walls",
+    text: "Poetry is the inward core of Volume 1: language first, ornament second."
+  },
+  {
+    source: "Home",
+    author: "John Walls",
+    text: "Home is the grounded chapter that lets the project breathe between heavier passages."
+  },
+  {
+    source: "Decay",
+    author: "Terry Devine",
+    text: "Decay is meant to sound like memory collapsing and reforming at the same time."
+  }
+];
+
+const collectorQuoteIntervalSeconds = 15;
 const heartfeltCollectorHeroBody =
-  "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us as Volume 1 opens on September 1 and the next rooms line up through the fall.\n\nWith gratitude,\nTerry Devine";
+  "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine";
 const wallsDevineBookingIntakeHref = buildContactHref({
   overrides: {
     context: "walls-devine-booking",
@@ -227,14 +250,27 @@ const wallsDevineBookingIntakeHref = buildContactHref({
     surface: "campaign-world"
   }
 });
+const wallsDevineSignalListHref = buildContactHref({
+  pathname: "/contact",
+  overrides: {
+    context: "walls-devine-mailing-list",
+    project: "Walls/Devine",
+    inquiryType: "mailing-list",
+    surface: "campaign-world",
+    sourceRoute: "/walls-devine",
+    campaignWindow: albumLaunchCampaignWindow
+  }
+});
 const wallsDevineListeningRoomHref = `#${wallsDevineListeningRoomAnchorId}`;
 
 export function WallsDevineLanding() {
+  const [activeQuoteIndex, setActiveQuoteIndex] = useState(0);
+  const [isQuotePaused, setIsQuotePaused] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState<"idle" | "shared" | "copied">("idle");
   const [isLetterExpanded, setIsLetterExpanded] = useState(false);
   const [isPlayerDismissed, setIsPlayerDismissed] = useState(false);
   const [collectorHeroNote, setCollectorHeroNote] = useState(defaultWallsDevineCollectorHeroNote);
   const [bookingBannerNote, setBookingBannerNote] = useState(defaultWallsDevineBookingBannerNote);
-  const [upcomingShowsNote, setUpcomingShowsNote] = useState(defaultWallsDevineUpcomingShowsNote);
   const prefersReducedMotion = usePrefersReducedMotion();
   const collectorHeroBody = collectorHeroNote.body.trim() === defaultWallsDevineCollectorHeroNote.body.trim() ? heartfeltCollectorHeroBody : collectorHeroNote.body;
 
@@ -248,18 +284,15 @@ export function WallsDevineLanding() {
     return slugOrder.map((slug) => instagramGrid.find((t) => t.slug === slug)).filter((t): t is GridTile => t !== undefined);
   }, []);
 
+  const activeQuote = collectorLetterQuotes[activeQuoteIndex] ?? collectorLetterQuotes[0];
+
   useEffect(() => {
     let isActive = true;
 
-    void Promise.all([
-      getWallsDevineCollectorHeroNote(),
-      getWallsDevineBookingBannerNote(),
-      getWallsDevineUpcomingShowsNote()
-    ]).then(([note, banner, shows]) => {
+    void Promise.all([getWallsDevineCollectorHeroNote(), getWallsDevineBookingBannerNote()]).then(([note, banner]) => {
       if (isActive) {
         setCollectorHeroNote(note);
         setBookingBannerNote(banner);
-        setUpcomingShowsNote(shows);
       }
     });
 
@@ -283,6 +316,68 @@ export function WallsDevineLanding() {
     };
   }, []);
 
+  useEffect(() => {
+    if (isQuotePaused) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setActiveQuoteIndex((currentIndex) => (currentIndex + 1) % collectorLetterQuotes.length);
+    }, collectorQuoteIntervalSeconds * 1000);
+
+    return () => window.clearTimeout(timer);
+  }, [activeQuoteIndex, isQuotePaused]);
+
+  useEffect(() => {
+    if (shareFeedback === "idle") {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setShareFeedback("idle");
+    }, 1800);
+
+    return () => window.clearTimeout(timer);
+  }, [shareFeedback]);
+
+  function handleNextQuote() {
+    setActiveQuoteIndex((currentIndex) => (currentIndex + 1) % collectorLetterQuotes.length);
+  }
+
+  async function handleShareQuote() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const browserNavigator = window.navigator;
+    const shareUrl = new URL("/walls-devine", window.location.origin).toString();
+    const shareText = `"${activeQuote.text}"\n\n${activeQuote.author} · ${activeQuote.source}`;
+
+    if (typeof browserNavigator.share === "function") {
+      try {
+        await browserNavigator.share({
+          title: `${activeQuote.source} · Walls/Devine Volume 1`,
+          text: shareText,
+          url: shareUrl
+        });
+        setShareFeedback("shared");
+      } catch {
+        return;
+      }
+
+      return;
+    }
+
+    if (browserNavigator.clipboard?.writeText) {
+      try {
+        await browserNavigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+        setShareFeedback("copied");
+      } catch {
+        setShareFeedback("idle");
+      }
+    }
+  }
+
   function handleListeningRoomShortcut(event: React.MouseEvent<HTMLAnchorElement>) {
     event.preventDefault();
 
@@ -302,6 +397,7 @@ export function WallsDevineLanding() {
               eyebrow={collectorHeroNote.eyebrow}
               title={collectorHeroNote.title}
               headingLevel="h1"
+              description="Volume 1 is live now: start in the listening room, move through the collector grid, and join the signal list for the June 30 bridge into the next rooms."
             />
 
             <div className="wd-hero__gamification-strip" aria-label="Release details">
@@ -309,7 +405,7 @@ export function WallsDevineLanding() {
               <span className="wd-hero__gamification-strip__dot" aria-hidden="true">·</span>
               <span>8 collector challenges</span>
               <span className="wd-hero__gamification-strip__dot" aria-hidden="true">·</span>
-              <span>{wallsDevineLaunchDateLabel}</span>
+              <span>June 4</span>
             </div>
 
             <figure className="wd-hero__cover">
@@ -365,6 +461,19 @@ export function WallsDevineLanding() {
                   <div className="wd-hero__collector-secondary-row">
                     <Button
                       as="a"
+                      href={wallsDevineSignalListHref}
+                      variant="secondary"
+                      className="wd-hero__signal-link wd-hero__collector-button wd-hero__collector-button--secondary"
+                      data-analytics-event="walls_devine_cta_click"
+                      data-analytics-param-source="walls_devine"
+                      data-analytics-param-cta="hero_signal_list"
+                      data-analytics-param-destination={wallsDevineSignalListHref}
+                      data-analytics-param-external="false"
+                    >
+                      Join the Volume 1 Signal List
+                    </Button>
+                    <Button
+                      as="a"
                       href={wallsDevineMerchShopHref}
                       variant="ghost"
                       className="wd-hero__signal-link wd-hero__collector-button wd-hero__collector-button--secondary wd-hero__collector-button--ghost"
@@ -379,6 +488,8 @@ export function WallsDevineLanding() {
                       {collectorHeroNote.secondaryCtaLabel}
                     </Button>
                   </div>
+
+                  <p className="wd-hero__signal-helper">{collectorHeroNote.mailingListHelper}</p>
 
                   <div className="wd-hero__grid-preview" aria-label="Collector grid preview">
                     <div className="wd-hero__grid-preview__tiles">
@@ -402,11 +513,63 @@ export function WallsDevineLanding() {
                 </div>
               </div>
 
-              {/*
-                Journals widget intentionally hidden on the front page for now.
-                Restore with:
-                <WallsDevineJournalsWidget journalLabel={collectorHeroNote.journalLabel} />
-              */}
+              <div className="wd-hero__journal" aria-label="Rotating journal entries from Volume 1">
+                <div className="wd-hero__letter-postscript">
+                  <span className="wd-hero__letter-postscript-label">{collectorHeroNote.journalLabel}</span>
+                  <div className="wd-hero__letter-quote-rotator" aria-live="polite">
+                    {collectorLetterQuotes.map((quote, index) => (
+                      <figure
+                        key={quote.source}
+                        className="wd-hero__letter-quote"
+                        data-active={index === activeQuoteIndex}
+                        aria-hidden={index !== activeQuoteIndex}
+                      >
+                        <blockquote>{quote.text}</blockquote>
+                        <figcaption>
+                          <span className="wd-hero__letter-quote-source">from &quot;{quote.source}&quot;</span>
+                          <span className="wd-hero__letter-quote-author">— {quote.author}</span>
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+
+                  <div className="wd-hero__journal-controls" aria-label="Journal controls">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="wd-hero__journal-control wd-hero__journal-control--icon"
+                      onClick={() => setIsQuotePaused((currentState) => !currentState)}
+                      aria-label={isQuotePaused ? "Resume journal rotation" : "Pause journal rotation"}
+                      title={isQuotePaused ? "Resume" : "Pause"}
+                    >
+                      {isQuotePaused ? <FiPlay aria-hidden="true" /> : <FiPause aria-hidden="true" />}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="wd-hero__journal-control wd-hero__journal-control--icon"
+                      onClick={handleNextQuote}
+                      aria-label="Next journal entry"
+                      title="Next entry"
+                    >
+                      <FiSkipForward aria-hidden="true" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="wd-hero__journal-control wd-hero__journal-control--icon"
+                      onClick={handleShareQuote}
+                      aria-label={shareFeedback === "shared" ? "Journal entry shared" : shareFeedback === "copied" ? "Journal entry copied" : "Share journal entry"}
+                      title={shareFeedback === "shared" ? "Shared" : shareFeedback === "copied" ? "Copied" : "Share entry"}
+                    >
+                      {shareFeedback === "shared" || shareFeedback === "copied" ? <FiCheck aria-hidden="true" /> : <FiShare2 aria-hidden="true" />}
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -416,7 +579,7 @@ export function WallsDevineLanding() {
         <header className="wd-grid-section__header">
           <p className="wd-grid-section__eyebrow">Collector path</p>
           <h2 id="walls-devine-grid-title">The Collector Grid</h2>
-          <p>Open the cover first or tap any chapter tile. Each room loops you back into the record and the next chapter of Volume 1.</p>
+          <p>Open the cover first or tap any chapter tile. Every room loops you back into the record, the hidden note, and the next signal around Volume 1.</p>
 
           <div className="wd-grid-section__steps" aria-label="Collector path steps">
             <span>Tap a chapter tile</span>
@@ -442,6 +605,18 @@ export function WallsDevineLanding() {
             <div className="wd-booking-banner__action">
               <Button
                 as="a"
+                href={wallsDevineBookingIntakeHref}
+                className="wd-booking-banner__button"
+                data-analytics-event="walls_devine_cta_click"
+                data-analytics-param-source="walls_devine"
+                data-analytics-param-cta="booking_banner_book"
+                data-analytics-param-destination={wallsDevineBookingIntakeHref}
+                data-analytics-param-external="false"
+              >
+                {bookingBannerNote.primaryCtaLabel}
+              </Button>
+              <Button
+                as="a"
                 href={wallsDevineMerchShopHref}
                 variant="secondary"
                 className="wd-booking-banner__button wd-booking-banner__button--secondary"
@@ -455,52 +630,8 @@ export function WallsDevineLanding() {
               >
                 {bookingBannerNote.secondaryCtaLabel}
               </Button>
-              <Button
-                as="a"
-                href={wallsDevineBookingIntakeHref}
-                className="wd-booking-banner__button"
-                data-analytics-event="walls_devine_cta_click"
-                data-analytics-param-source="walls_devine"
-                data-analytics-param-cta="booking_banner_book"
-                data-analytics-param-destination={wallsDevineBookingIntakeHref}
-                data-analytics-param-external="false"
-              >
-                {bookingBannerNote.primaryCtaLabel}
-              </Button>
               <p className="wd-booking-banner__meta">{bookingBannerNote.meta}</p>
             </div>
-          </section>
-
-          <section className="wd-upcoming-shows" aria-labelledby="walls-devine-upcoming-shows-title">
-            <div className="wd-upcoming-shows__head">
-              <p className="wd-upcoming-shows__eyebrow">{upcomingShowsNote.eyebrow}</p>
-              <h3 id="walls-devine-upcoming-shows-title" className="wd-upcoming-shows__title">{upcomingShowsNote.title}</h3>
-              <p className="wd-upcoming-shows__description">{upcomingShowsNote.description}</p>
-            </div>
-
-            {upcomingShowsNote.shows.length ? (
-              <ul className="wd-upcoming-shows__list">
-                {upcomingShowsNote.shows.map((show) => (
-                  <li key={show.id} className="wd-upcoming-shows__item">
-                    <div className="wd-upcoming-shows__line">
-                      <p className="wd-upcoming-shows__date">{show.dateLabel}</p>
-                      <p className="wd-upcoming-shows__city">{show.city}</p>
-                    </div>
-                    <div className="wd-upcoming-shows__line">
-                      <p className="wd-upcoming-shows__venue">{show.venue}</p>
-                      <p className="wd-upcoming-shows__status">{show.status}</p>
-                    </div>
-                    {show.href ? (
-                      <a href={show.href} target="_blank" rel="noreferrer" className="wd-upcoming-shows__link">
-                        Details
-                      </a>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="wd-upcoming-shows__empty">{upcomingShowsNote.emptyState}</p>
-            )}
           </section>
         </div>
       </SectionShell>

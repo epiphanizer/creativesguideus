@@ -18,6 +18,29 @@ service cloud.firestore {
           'fullName',
           'source',
           'interest',
+          'company',
+          'projectTitle',
+          'brief',
+          'contextId',
+          'inquiryType',
+          'inquiryTypeLabel',
+          'goal',
+          'goalLabel',
+          'surface',
+          'surfaceLabel',
+          'engagement',
+          'engagementLabel',
+          'timeline',
+          'timelineLabel',
+          'budgetRange',
+          'budgetRangeLabel',
+          'sourceRoute',
+          'campaignWindow',
+          'wantsWallsDevineUpdates',
+          'wantsBongTourLaunchNotice',
+          'wantsAppreeshLaunchNotice',
+          'joinedBeforeJune30',
+          'airdropCandidate',
           'createdAt',
           'updatedAt',
           'status',
@@ -41,10 +64,56 @@ service cloud.firestore {
         request.resource.data.fullName.size() <= 80 &&
         request.resource.data.source is string &&
         request.resource.data.source.size() >= 3 &&
-        request.resource.data.source.size() <= 80 &&
+        request.resource.data.source.size() <= 120 &&
         request.resource.data.interest is string &&
         request.resource.data.interest.size() >= 3 &&
-        request.resource.data.interest.size() <= 120 &&
+        request.resource.data.interest.size() <= 160 &&
+        (!request.resource.data.keys().hasAny(['company']) ||
+          (request.resource.data.company is string && request.resource.data.company.size() <= 160)) &&
+        (!request.resource.data.keys().hasAny(['projectTitle']) ||
+          (request.resource.data.projectTitle is string && request.resource.data.projectTitle.size() <= 160)) &&
+        (!request.resource.data.keys().hasAny(['brief']) ||
+          (request.resource.data.brief is string && request.resource.data.brief.size() <= 3000)) &&
+        (!request.resource.data.keys().hasAny(['contextId']) ||
+          (request.resource.data.contextId is string && request.resource.data.contextId.size() <= 120)) &&
+        (!request.resource.data.keys().hasAny(['inquiryType']) ||
+          (request.resource.data.inquiryType is string && request.resource.data.inquiryType.size() <= 80)) &&
+        (!request.resource.data.keys().hasAny(['inquiryTypeLabel']) ||
+          (request.resource.data.inquiryTypeLabel is string && request.resource.data.inquiryTypeLabel.size() <= 120)) &&
+        (!request.resource.data.keys().hasAny(['goal']) ||
+          (request.resource.data.goal is string && request.resource.data.goal.size() <= 80)) &&
+        (!request.resource.data.keys().hasAny(['goalLabel']) ||
+          (request.resource.data.goalLabel is string && request.resource.data.goalLabel.size() <= 120)) &&
+        (!request.resource.data.keys().hasAny(['surface']) ||
+          (request.resource.data.surface is string && request.resource.data.surface.size() <= 80)) &&
+        (!request.resource.data.keys().hasAny(['surfaceLabel']) ||
+          (request.resource.data.surfaceLabel is string && request.resource.data.surfaceLabel.size() <= 120)) &&
+        (!request.resource.data.keys().hasAny(['engagement']) ||
+          (request.resource.data.engagement is string && request.resource.data.engagement.size() <= 80)) &&
+        (!request.resource.data.keys().hasAny(['engagementLabel']) ||
+          (request.resource.data.engagementLabel is string && request.resource.data.engagementLabel.size() <= 120)) &&
+        (!request.resource.data.keys().hasAny(['timeline']) ||
+          (request.resource.data.timeline is string && request.resource.data.timeline.size() <= 80)) &&
+        (!request.resource.data.keys().hasAny(['timelineLabel']) ||
+          (request.resource.data.timelineLabel is string && request.resource.data.timelineLabel.size() <= 120)) &&
+        (!request.resource.data.keys().hasAny(['budgetRange']) ||
+          (request.resource.data.budgetRange is string && request.resource.data.budgetRange.size() <= 80)) &&
+        (!request.resource.data.keys().hasAny(['budgetRangeLabel']) ||
+          (request.resource.data.budgetRangeLabel is string && request.resource.data.budgetRangeLabel.size() <= 120)) &&
+        (!request.resource.data.keys().hasAny(['sourceRoute']) ||
+          (request.resource.data.sourceRoute is string && request.resource.data.sourceRoute.size() <= 240)) &&
+        (!request.resource.data.keys().hasAny(['campaignWindow']) ||
+          (request.resource.data.campaignWindow is string && request.resource.data.campaignWindow.size() <= 80)) &&
+        (!request.resource.data.keys().hasAny(['wantsWallsDevineUpdates']) ||
+          request.resource.data.wantsWallsDevineUpdates is bool) &&
+        (!request.resource.data.keys().hasAny(['wantsBongTourLaunchNotice']) ||
+          request.resource.data.wantsBongTourLaunchNotice is bool) &&
+        (!request.resource.data.keys().hasAny(['wantsAppreeshLaunchNotice']) ||
+          request.resource.data.wantsAppreeshLaunchNotice is bool) &&
+        (!request.resource.data.keys().hasAny(['joinedBeforeJune30']) ||
+          request.resource.data.joinedBeforeJune30 is bool) &&
+        (!request.resource.data.keys().hasAny(['airdropCandidate']) ||
+          request.resource.data.airdropCandidate is bool) &&
         request.resource.data.createdAt is string &&
         request.resource.data.createdAt.size() >= 20 &&
         request.resource.data.createdAt.size() <= 40 &&
@@ -98,6 +167,121 @@ service cloud.firestore {
         request.resource.data.createdAt.size() <= 40;
     }
 
+    function isValidCollectorRecord() {
+      return request.resource.data.keys().hasOnly([
+          'email',
+          'collector_id',
+          'joined_at',
+          'updated_at',
+          'total_rewards_claimed',
+          'total_stashes_found'
+        ]) &&
+        request.resource.data.keys().hasAll([
+          'email',
+          'collector_id',
+          'updated_at',
+          'total_rewards_claimed',
+          'total_stashes_found'
+        ]) &&
+        request.resource.data.email is string &&
+        request.resource.data.email.size() <= 160 &&
+        request.resource.data.collector_id is string &&
+        request.resource.data.collector_id.size() <= 120 &&
+        request.resource.data.updated_at == request.time &&
+        request.resource.data.total_rewards_claimed is int &&
+        request.resource.data.total_rewards_claimed >= 1 &&
+        request.resource.data.total_stashes_found is int &&
+        request.resource.data.total_stashes_found == request.resource.data.total_rewards_claimed;
+    }
+
+    function isValidCollectorCreate() {
+      return isValidCollectorRecord() &&
+        request.resource.data.keys().hasAll(['joined_at']) &&
+        request.resource.data.joined_at == request.time;
+    }
+
+    function isValidCollectorUpdate() {
+      return isValidCollectorRecord() &&
+        request.resource.data.keys().hasAll(['joined_at']) &&
+        request.resource.data.joined_at == resource.data.joined_at &&
+        request.resource.data.total_rewards_claimed == resource.data.total_rewards_claimed + 1 &&
+        request.resource.data.total_stashes_found == resource.data.total_stashes_found + 1 &&
+        (resource.data.email == '' || request.resource.data.email == resource.data.email) &&
+        (resource.data.collector_id == '' || request.resource.data.collector_id == resource.data.collector_id);
+    }
+
+    function isValidRewardClaim() {
+      return request.resource.data.keys().hasOnly([
+          'collector_ref',
+          'collector_key',
+          'email',
+          'collector_id',
+          'wallet_address',
+          'reward_id',
+          'reward_label',
+          'chapter',
+          'reward_type',
+          'claimed_at',
+          'status',
+          'source',
+          'distribution_mode',
+          'airdrop_key',
+          'max_claims_per_wallet'
+        ]) &&
+        request.resource.data.keys().hasAll([
+          'collector_ref',
+          'collector_key',
+          'email',
+          'collector_id',
+          'wallet_address',
+          'reward_id',
+          'reward_label',
+          'chapter',
+          'reward_type',
+          'claimed_at',
+          'status',
+          'source',
+          'distribution_mode',
+          'airdrop_key',
+          'max_claims_per_wallet'
+        ]) &&
+        request.resource.data.collector_key is string &&
+        request.resource.data.collector_key.size() >= 1 &&
+        request.resource.data.collector_key.size() <= 160 &&
+        request.resource.data.email is string &&
+        request.resource.data.email.size() <= 160 &&
+        request.resource.data.collector_id is string &&
+        request.resource.data.collector_id.size() <= 120 &&
+        request.resource.data.wallet_address is string &&
+        request.resource.data.wallet_address.size() <= 80 &&
+        request.resource.data.reward_id is string &&
+        request.resource.data.reward_id.size() >= 3 &&
+        request.resource.data.reward_id.size() <= 120 &&
+        request.resource.data.reward_label is string &&
+        request.resource.data.reward_label.size() >= 3 &&
+        request.resource.data.reward_label.size() <= 160 &&
+        request.resource.data.chapter is string &&
+        request.resource.data.chapter.size() >= 2 &&
+        request.resource.data.chapter.size() <= 120 &&
+        request.resource.data.reward_type is string &&
+        request.resource.data.reward_type.size() >= 2 &&
+        request.resource.data.reward_type.size() <= 80 &&
+        request.resource.data.source is string &&
+        request.resource.data.source.size() >= 3 &&
+        request.resource.data.source.size() <= 120 &&
+        request.resource.data.distribution_mode is string &&
+        (request.resource.data.distribution_mode == 'direct' || request.resource.data.distribution_mode == 'airdrop') &&
+        request.resource.data.airdrop_key is string &&
+        request.resource.data.airdrop_key.size() <= 120 &&
+        request.resource.data.max_claims_per_wallet is int &&
+        request.resource.data.max_claims_per_wallet >= 0 &&
+        (request.resource.data.distribution_mode == 'direct'
+          ? request.resource.data.wallet_address.size() == 0 && request.resource.data.max_claims_per_wallet == 0 && request.resource.data.airdrop_key.size() == 0
+          : request.resource.data.wallet_address.size() >= 32 && request.resource.data.max_claims_per_wallet >= 1 && request.resource.data.airdrop_key.size() >= 3) &&
+        request.resource.data.claimed_at == request.time &&
+        request.resource.data.status == 'pending_distribution';
+    }
+
     match /adminUsers/{userId} {
       allow read: if signedIn() && request.auth.uid == userId;
       allow write: if false;
@@ -109,6 +293,14 @@ service cloud.firestore {
       match /markdownFiles/{fileId} {
         allow read, write: if isAdmin();
       }
+
+      match /privateContent/{docId} {
+        allow read, write: if isAdmin();
+      }
+
+      match /privateContentAccessLogs/{logId} {
+        allow read, write: if isAdmin();
+      }
     }
 
     match /adminProjects/walls-devine/publicContent/{docId} {
@@ -117,8 +309,27 @@ service cloud.firestore {
     }
 
     match /ecosystemLeads/{leadId} {
-      allow read: if true;
+      allow read: if isAdmin();
       allow create: if isValidLead();
+    }
+
+    match /releaseTasks/{taskId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /bookingRoutingTasks/{targetId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /collectors/{collectorId} {
+      allow read: if isAdmin();
+      allow create: if isValidCollectorCreate();
+      allow update: if isValidCollectorUpdate();
+    }
+
+    match /rewardClaims/{claimId} {
+      allow read: if isAdmin();
+      allow create: if isValidRewardClaim();
     }
 
     match /listeningRoomVisits/{visitId} {

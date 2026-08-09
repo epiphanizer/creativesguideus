@@ -22,25 +22,25 @@ export function HeaderNav() {
   const router = useRouter();
   const activeAnchors = useMemo(() => anchors, []);
   const anchorIds = useMemo(() => activeAnchors.flatMap((anchor) => (anchor.id ? [anchor.id] : [])), [activeAnchors]);
-  const { activeId } = useActiveSection(anchorIds);
+  const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPlayerDismissed, setIsPlayerDismissed] = useState(false);
 
   const headerRoom = useMemo(() => {
     return {
-      buttonLabel: "Collector Access",
+      buttonLabel: "Signal Room",
       source: "header-nav-walls-devine",
-      interest: "Walls Devine collector access",
-      cardTitle: "Open Collector Access",
+      interest: "Walls Devine collector signal list",
+      cardTitle: "Enter The Signal Room",
       cardDescription: "Get the shortest route to first-listen links, journal fragments, hidden-room passwords, and release-night signals.",
       benefits: ["First-listen links", "Studio-journal fragments", "Hidden-room passwords"],
       modalEyebrow: "Collector access",
-      modalTitle: "Open Collector Access",
+      modalTitle: "Enter The Signal Room",
       modalDescription: "Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update.",
       submitLabel: "Get collector access",
       successMessage: "You are in. Watch your inbox for the next room opening, journal fragment, and collector signal.",
       note: "High-signal only. Used for first listens, hidden-room access, and artifact drops.",
-      roomOverlayScript: "Collector Access",
+      roomOverlayScript: "The Signal Room",
       roomOverlaySubtitle: "Private collector access"
     };
   }, []);
@@ -48,6 +48,43 @@ export function HeaderNav() {
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
   }, []);
+
+  const scrollToAnchor = useCallback(
+    (anchorId: string) => {
+      const target = document.getElementById(anchorId);
+      if (!target) {
+        return;
+      }
+
+      manuallySetActiveId(anchorId);
+      target.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start"
+      });
+    },
+    [manuallySetActiveId, prefersReducedMotion]
+  );
+
+  const handleNavigate = useCallback(
+    (anchorId: string) => {
+      if (pathname !== "/") {
+        router.push(`/#${anchorId}`);
+      } else {
+        scrollToAnchor(anchorId);
+      }
+
+      closeMenu();
+    },
+    [closeMenu, pathname, router, scrollToAnchor]
+  );
+
+  const handleLinkNavigate = useCallback(
+    (href: string) => {
+      router.push(href);
+      closeMenu();
+    },
+    [closeMenu, router]
+  );
 
   const handleHomeNavigate = useCallback(() => {
     if (pathname !== "/") {
@@ -82,30 +119,6 @@ export function HeaderNav() {
   useEffect(() => {
     closeMenu();
   }, [closeMenu, pathname]);
-
-  useEffect(() => {
-    document.body.classList.toggle("cg-menu-open", isMenuOpen);
-
-    return () => {
-      document.body.classList.remove("cg-menu-open");
-    };
-  }, [isMenuOpen]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeMenu();
-      }
-    };
-
-    if (isMenuOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [closeMenu, isMenuOpen]);
 
   useEffect(() => {
     if (!isWallsDevineRoute) {
@@ -150,7 +163,7 @@ export function HeaderNav() {
           type="button"
           className={["cg-header__menu-toggle", isMenuOpen ? "cg-header__menu-toggle--open" : ""].filter(Boolean).join(" ")}
           aria-expanded={isMenuOpen}
-          aria-controls="primary-navigation-overlay"
+          aria-controls="primary-navigation"
           aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
           onClick={() => setIsMenuOpen((prev) => !prev)}
         >
@@ -161,54 +174,41 @@ export function HeaderNav() {
           </span>
           <span className="cg-header__menu-toggle-label">Menu</span>
         </button>
-        <div
-          id="primary-navigation-overlay"
-          className={["cg-header__menu-overlay", isMenuOpen ? "cg-header__menu-overlay--open" : ""].filter(Boolean).join(" ")}
-          aria-hidden={!isMenuOpen}
-          onClick={(event) => {
-            if (event.target === event.currentTarget) {
-              closeMenu();
-            }
-          }}
-        >
-          <div
-            className={["cg-header__menu", isMenuOpen ? "cg-header__menu--open" : ""].filter(Boolean).join(" ")}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Site navigation"
-          >
-            <button
-              type="button"
-              className="cg-header__menu-close"
-              aria-label="Close navigation"
-              onClick={closeMenu}
-            >
-              <span aria-hidden="true">X</span>
-            </button>
-            {activeAnchors.length ? (
-              <nav className="cg-header__nav" aria-label="Primary" id="primary-navigation">
-                <ul className="cg-header__list">
-                  {activeAnchors.map((anchor) => (
-                    <li key={anchor.id ?? anchor.href ?? anchor.label} className="cg-header__item">
-                      <a
-                        href={anchor.id ? (pathname === "/" ? `#${anchor.id}` : `/#${anchor.id}`) : anchor.href ?? "/"}
-                        className={[
-                          "cg-header__link",
-                          anchor.id && pathname === "/" && activeId === anchor.id ? "cg-header__link--active" : "",
-                          anchor.href && pathname === anchor.href ? "cg-header__link--active" : ""
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
-                        onClick={closeMenu}
-                      >
-                        {anchor.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            ) : null}
-            <div className="cg-header__actions">
+        <div className={["cg-header__menu", isMenuOpen ? "cg-header__menu--open" : ""].filter(Boolean).join(" ")}>
+          {activeAnchors.length ? (
+            <nav className="cg-header__nav" aria-label="Primary" id="primary-navigation">
+              <ul className="cg-header__list">
+                {activeAnchors.map((anchor) => (
+                  <li key={anchor.id ?? anchor.href ?? anchor.label} className="cg-header__item">
+                    <a
+                      href={anchor.id ? `#${anchor.id}` : anchor.href ?? "/"}
+                      className={[
+                        "cg-header__link",
+                        anchor.id && activeId === anchor.id ? "cg-header__link--active" : "",
+                        anchor.href && pathname === anchor.href ? "cg-header__link--active" : ""
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        if (anchor.id) {
+                          handleNavigate(anchor.id);
+                          return;
+                        }
+
+                        if (anchor.href) {
+                          handleLinkNavigate(anchor.href);
+                        }
+                      }}
+                    >
+                      {anchor.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : null}
+          <div className="cg-header__actions">
             {isWallsDevineRoute ? (
               <WallsDevineCollectorAccess
                 source={headerRoom.source}
@@ -261,7 +261,6 @@ export function HeaderNav() {
                 Listening Room
               </button>
             ) : null}
-            </div>
           </div>
         </div>
       </div>

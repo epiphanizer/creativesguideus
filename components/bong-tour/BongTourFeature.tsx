@@ -9,7 +9,7 @@ import type { StaticImageData } from "next/image";
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { buildContactHref } from "@/lib/contact-intake-routing";
-import { albumLaunchCampaignWindow, bongTourLaunchDateLabel, isBongTourPreview, wallsDevineLaunchDateLabel } from "@/lib/launch-state";
+import { albumLaunchCampaignWindow, isBongTourPreview, june30LaunchDateLabel } from "@/lib/launch-state";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
 import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
@@ -108,6 +108,17 @@ function buildWallsDevineListeningRoomHref(playerTarget: string) {
 
 const wallsDevineCollectorGridHref = "/walls-devine#walls-devine-grid-title";
 const bongTourTreatmentHref = "/bong-tour/treatment";
+const bongTourSignalListHref = buildContactHref({
+  pathname: "/contact",
+  overrides: {
+    context: "walls-devine-mailing-list",
+    project: "Walls/Devine",
+    inquiryType: "mailing-list",
+    surface: "campaign-world",
+    sourceRoute: "/bong-tour",
+    campaignWindow: albumLaunchCampaignWindow
+  }
+});
 const bongTourContactHref = buildContactHref({
   pathname: "/contact",
   overrides: {
@@ -151,8 +162,8 @@ const bongTourHeroFacts = [
 const bongTourHeroSignals = [
   {
     label: "Private reading copy",
-    title: "Approved readers open the treatment.",
-    description: "The screenplay stays private so the poster and premise can lead before the full read arrives."
+    title: "Approved readers open the gate.",
+    description: "The screenplay stays behind the reader gate so the public route can sell tone without leaking the pages."
   },
   {
     label: "Cue rooms",
@@ -176,10 +187,10 @@ const bongTourBridgeCards = [
     ctaLabel: "Enter cue rooms"
   },
   {
-    label: "Private treatment",
+    label: "Reader gate",
     title: "Keep the pages private until the fit is real.",
     description:
-      "The treatment stays private until the poster and cue world have landed. Approved readers return through the private path, and new readers request a reading copy first.",
+      "The treatment stays behind the gate until the poster and cue world have already landed. Approved readers return through the protected path, and new readers request a private reading copy first.",
     href: bongTourTreatmentHref,
     ctaLabel: "Open the private reading path"
   }
@@ -998,20 +1009,20 @@ export function BongTourFeature() {
                   <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority sizes="(max-width: 960px) 82vw, 32vw" />
                 </div>
               </a>
-              <figcaption>{`Poster first. The private treatment opens ${bongTourLaunchDateLabel}.`}</figcaption>
+              <figcaption>{`Poster first. The private treatment opens ${june30LaunchDateLabel}.`}</figcaption>
             </figure>
 
             <div className="bt-hero__content">
               <p className="bt-hero__eyebrow">Screenplay portal preview</p>
               <h1>Bong Tour</h1>
 
-              <p className="bt-hero__descriptor">A cult-comedy feature and soundtrack world with its next chapter arriving November 4.</p>
+              <p className="bt-hero__descriptor">A cult-comedy feature staged behind the live Walls/Devine world until the July 11 launch window opens the deeper route.</p>
 
               <div className="bt-hero__modules" aria-label="Bong Tour preview modules">
                 <span>Poster artifact</span>
                 <span>Short premise</span>
                 <span>Launch conversation</span>
-                <span>{`Treatment opens ${bongTourLaunchDateLabel}`}</span>
+                <span>{`Treatment opens ${june30LaunchDateLabel}`}</span>
               </div>
 
               <div className="bt-hero__logline">
@@ -1019,18 +1030,21 @@ export function BongTourFeature() {
                 <p>{bongTourPremise}</p>
               </div>
 
-              <p className="bt-hero__positioning">Walls/Devine opens ${wallsDevineLaunchDateLabel} with the first soundtrack chapter. Bong Tour follows on ${bongTourLaunchDateLabel} with the treatment and a wider film experience.</p>
+              <p className="bt-hero__positioning">Walls/Devine carries the live soundtrack and collector signal now. Bong Tour stays short on purpose until the treatment gate and deeper rooms open on July 11.</p>
 
               <div className="bt-hero__cta">
+                <Button as="a" href={bongTourSignalListHref} className="bt-button">
+                  Join the Volume 1 Signal List
+                </Button>
                 <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                   Start a Launch Conversation
                 </Button>
                 <Button as="a" href={bongTourTreatmentHref} className="bt-button bt-button--outline">
-                  {`Treatment Opens ${bongTourLaunchDateLabel}`}
+                  {`Treatment Opens ${june30LaunchDateLabel}`}
                 </Button>
               </div>
 
-              <p className="bt-hero__route">Poster first. Conversation now. The private treatment arrives after November 4.</p>
+              <p className="bt-hero__route">Poster first. Launch conversation now. Private treatment and deeper score rooms unlock after July 11.</p>
 
               <div className="bt-hero__meta" aria-label="Bong Tour quick facts">
                 {bongTourHeroFacts.map((fact) => (
@@ -1043,19 +1057,19 @@ export function BongTourFeature() {
 
               <div className="bt-hero__signal-strip" aria-label="Bong Tour preview signals">
                 <article className="bt-hero__signal-card">
-                  <span>Release bridge</span>
-                  <strong>{`Walls/Devine opens ${wallsDevineLaunchDateLabel}.`}</strong>
-                  <p>Volume 1 carries the first music and mood of this world while Bong Tour gets ready for its wider reveal.</p>
+                  <span>Live bridge</span>
+                  <strong>Walls/Devine carries the active score world now.</strong>
+                  <p>Use Volume 1 and its signal list as the live path while Bong Tour keeps the public route tight.</p>
                 </article>
                 <article className="bt-hero__signal-card">
                   <span>Private treatment</span>
-                  <strong>{`Treatment access opens ${bongTourLaunchDateLabel}.`}</strong>
-                  <p>Until then, the poster and premise lead the way.</p>
+                  <strong>{`The reader gate opens ${june30LaunchDateLabel}.`}</strong>
+                  <p>The screenplay pages stay off the public route until the launch window opens and reader review is in place.</p>
                 </article>
                 <article className="bt-hero__signal-card">
                   <span>Launch lane</span>
                   <strong>Production and soundtrack conversations can start now.</strong>
-                  <p>Reach out if you want to talk production, soundtrack, or partnership.</p>
+                  <p>The contact route stays open for partner fit, soundtrack interest, and launch sequencing without implying a live treatment release.</p>
                 </article>
               </div>
             </div>
@@ -1065,33 +1079,33 @@ export function BongTourFeature() {
         <section className="bt-bridge" aria-labelledby="bt-bridge-title">
           <header className="bt-section-header">
             <p className="bt-section-header__eyebrow">Launch sequence</p>
-            <h2 id="bt-bridge-title">The road to November 4</h2>
-            <p>For now, the poster and premise lead. Walls/Devine opens on September 1, then Bong Tour widens on November 4.</p>
+            <h2 id="bt-bridge-title">What stays live before July 11</h2>
+            <p>The public route is intentionally narrow right now: poster, premise, and partner-fit lane here; live music-world proof and collector signal inside Walls/Devine.</p>
           </header>
 
           <div className="bt-bridge__grid">
             <article className="bt-bridge__card">
-              <span>Opening September 1</span>
+              <span>Live now</span>
               <strong>Walls/Devine Volume 1</strong>
-              <p>The album opens first and carries the soundtrack, imagery, and first invitation into the wider world.</p>
+              <p>The album world, collector path, and live reward spine remain the active public route until Bong Tour opens wider.</p>
               <a href="/walls-devine" className="bt-bridge__card-link">
                 Open Walls/Devine
               </a>
             </article>
             <article className="bt-bridge__card">
-              <span>Partner lane</span>
-              <strong>Start the film-fit conversation now.</strong>
-              <p>Production, soundtrack, and partnership conversations can start now.</p>
-              <a href={bongTourContactHref} className="bt-bridge__card-link">
-                Start a launch conversation
+              <span>Signal bridge</span>
+              <strong>Use the Volume 1 signal list as the bridge.</strong>
+              <p>The July 11 expansion routes through the same inbox path so the live world and the staged worlds stay connected.</p>
+              <a href={bongTourSignalListHref} className="bt-bridge__card-link">
+                Join the signal list
               </a>
             </article>
             <article className="bt-bridge__card">
-              <span>Next window</span>
-              <strong>See what’s coming November 4.</strong>
-              <p>The treatment opens November 4. Until then, the poster and premise stay out front.</p>
-              <a href={bongTourTreatmentHref} className="bt-bridge__card-link">
-                View treatment preview
+              <span>Partner lane</span>
+              <strong>Start the film-fit conversation now.</strong>
+              <p>Production, soundtrack, and partnership context can route now without opening the full treatment or archive stack early.</p>
+              <a href={bongTourContactHref} className="bt-bridge__card-link">
+                Start a launch conversation
               </a>
             </article>
           </div>
@@ -1100,20 +1114,20 @@ export function BongTourFeature() {
         <section className="bt-world" id="treatment" aria-labelledby="bt-treatment-title">
           <header className="bt-section-header">
             <h2 id="bt-treatment-title">Treatment posture</h2>
-            <p>{`The private treatment stays protected and closed to the public route until ${bongTourLaunchDateLabel}. Approved readers return here after the gate opens.`}</p>
+            <p>{`The private treatment stays protected and closed to the public route until ${june30LaunchDateLabel}. Approved readers return here after the gate opens.`}</p>
           </header>
 
           <article className="bt-world__panel bt-world__panel--treatment">
             <p className="bt-treatment__lead">{bongTourLogline}</p>
             <ul className="bt-treatment__bullets">
               <li>Poster and premise stay public now.</li>
-              <li>{`Private treatment access opens ${bongTourLaunchDateLabel}.`}</li>
+              <li>{`Private treatment access opens ${june30LaunchDateLabel}.`}</li>
               <li>Deeper score rooms and archive layers stay downstream until launch.</li>
             </ul>
 
             <div className="bt-section-header__actions">
               <Button as="a" href={bongTourTreatmentHref} className="bt-button">
-                {`Treatment Opens ${bongTourLaunchDateLabel}`}
+                {`Treatment Opens ${june30LaunchDateLabel}`}
               </Button>
               <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                 Start a Launch Conversation
@@ -1125,11 +1139,11 @@ export function BongTourFeature() {
         <section className="bt-finale" id="bong-tour-intake" aria-labelledby="bt-finale-title">
           <div className="bt-finale__body">
             <h2 id="bt-finale-title">Want to be in the next window?</h2>
-            <p>{`Use the launch conversation route now, or open Walls/Devine to stay inside the first score world as September 1 lands and November 4 approaches.`}</p>
+            <p>Use the signal list if you want the July 11 bridge through the live album world, or open a launch conversation if the film fit is already clear.</p>
 
             <div className="bt-finale__actions">
-              <Button as="a" href="/walls-devine" className="bt-button">
-                Open Walls/Devine
+              <Button as="a" href={bongTourSignalListHref} className="bt-button">
+                Join the Volume 1 Signal List
               </Button>
               <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
                 Start a Launch Conversation

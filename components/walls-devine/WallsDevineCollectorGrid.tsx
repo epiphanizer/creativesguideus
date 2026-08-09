@@ -1215,7 +1215,7 @@ function CollectorChallenge({ tile, onUnlock }: { tile: CollectorGridTile; onUnl
 }
 
 export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProps) {
-  const previewTileSlug = "resolve";
+  const liveTileSlug = "resolve";
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
   const [easterEggUnlocked, setEasterEggUnlocked] = useState(false);
@@ -1297,8 +1297,8 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
     <>
       <ol className="wd-grid" aria-label="Walls/Devine release grid">
         {tiles.map((tile) => {
-          const isPreview = tile.slug === previewTileSlug;
-          const isLocked = !tile.center && !isPreview;
+          const isLive = tile.slug === liveTileSlug;
+          const isLocked = !tile.center && !isLive;
 
           return (
             <li
@@ -1307,17 +1307,17 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
                 "wd-grid__tile",
                 `wd-grid__tile--${tile.slug}`,
                 tile.center && "wd-grid__tile--center",
-                isPreview && "wd-grid__tile--live",
+                isLive && "wd-grid__tile--live",
                 isLocked && "wd-grid__tile--locked"
               )}
             >
               <button type="button" className="wd-grid__trigger" aria-label={`Open ${tile.title}`} onClick={() => setActiveSlug(tile.slug)}>
                 <figure className="wd-grid__figure">
                   <div className="wd-grid__image-wrap">
-                    {isPreview ? (
-                      <span className="wd-grid__live-badge" aria-label="Preview track">
+                    {isLive ? (
+                      <span className="wd-grid__live-badge" aria-label="Live now">
                         <span className="wd-grid__live-badge__dot" aria-hidden="true" />
-                        PREVIEW
+                        LIVE
                       </span>
                     ) : (
                       getTileBadgeLabel(tile) ? <span className="wd-grid__badge">{getTileBadgeLabel(tile)}</span> : null
@@ -1409,8 +1409,8 @@ export function WallsDevineCollectorGrid({ tiles }: WallsDevineCollectorGridProp
                       cardTitle={`Keep ${activeTile.title} open`}
                       cardDescription="Get the next hidden note, return entry, and collector signal for this chapter without waiting for the public recap."
                       benefits={["Hidden-room returns", "Chapter-specific signals"]}
-                      triggerLabel="Open Collector Access"
-                      modalTitle="Open Collector Access"
+                      triggerLabel="Enter The Signal Room"
+                      modalTitle="Enter The Signal Room"
                       modalDescription={`Drop your email for ${activeTile.title} updates, return signals, journal fragments, and collector-only access.`}
                       submitLabel="Join this chapter"
                       successMessage={`You are in for ${activeTile.title}. Watch your inbox for the next signal, hidden note, and room opening.`}

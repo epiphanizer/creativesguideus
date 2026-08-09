@@ -1,23 +1,19 @@
-import type {
-  WallsDevineBookingBannerNote,
-  WallsDevineCollectorHeroNote,
-  WallsDevineUpcomingShow,
-  WallsDevineUpcomingShowsNote
-} from "@/lib/admin/types";
+import type { WallsDevineBookingBannerNote, WallsDevineCollectorHeroNote } from "@/lib/admin/types";
 
 const legacyWallsDevineCollectorBody =
   "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine";
 const legacyWallsDevineMailingListHelper =
-  "Stay close to Walls/Devine for drop alerts, collector unlocks, and new chapter openings.";
+  "Ask to receive Walls/Devine drop alerts, listening-room updates, and collector unlock notices. Until the dedicated list is live, this request routes through CGU intake.";
 
 export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote = {
-  eyebrow: "Collector preview",
+  eyebrow: "Collector experience",
   title: "Walls/Devine Volume 1",
   salutation: "Dear Collector,",
-  body: "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us as Volume 1 opens on September 1 and the next rooms line up through the fall.\n\nWith gratitude,\nTerry Devine",
+  body: "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us as Volume 1 lives in public now and the next rooms line up for June 30.\n\nWith gratitude,\nTerry Devine",
   primaryCtaLabel: "Open Listening Room",
   secondaryCtaLabel: "Shop Volume 1 Merch",
-  mailingListHelper: "Stay close to Walls/Devine for collector unlocks, merch drops, and the September 1 opening.",
+  mailingListHelper:
+    "Ask to join the Volume 1 Signal List for listening-room updates, collector unlock notices, merch drops, and the June 30 bridge into Bong Tour and Appreesh. Until the dedicated list is live, this request routes through CGU intake.",
   signatureIntro: "With Love From the Room,",
   journalLabel: "From the journals",
   updatedAt: "2026-05-16T00:00:00.000Z"
@@ -26,44 +22,12 @@ export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote =
 export const defaultWallsDevineBookingBannerNote: WallsDevineBookingBannerNote = {
   eyebrow: "Live booking",
   title: "Bring Walls/Devine into the room.",
-  description: "Use this lane for listening sessions, screenings, release-week bookings, and partnership conversations around the September 1 Volume 1 opening.",
+  description: "Use this lane for listening sessions, screenings, live bookings, and partnership conversations around the active Volume 1 world.",
   primaryCtaLabel: "Book Walls/Devine",
   secondaryCtaLabel: "Shop Volume 1 Merch",
-  meta: "Live Music · Events ·",
+  meta: "Listening sessions · Screenings · Partnerships",
   updatedAt: "2026-05-22T00:00:00.000Z"
 };
-
-export const defaultWallsDevineUpcomingShowsNote: WallsDevineUpcomingShowsNote = {
-  eyebrow: "Upcoming shows",
-  title: "Where Walls/Devine lands next",
-  description: "Confirmed appearances, listening sessions, and event rooms update here as soon as dates lock.",
-  emptyState: "No public dates are posted right now. Check back soon.",
-  shows: [],
-  updatedAt: "2026-06-25T00:00:00.000Z"
-};
-
-function normalizeUpcomingShowEntry(entry: Partial<WallsDevineUpcomingShow> | null | undefined, index: number): WallsDevineUpcomingShow | null {
-  const dateLabel = typeof entry?.dateLabel === "string" ? entry.dateLabel.trim() : "";
-  const city = typeof entry?.city === "string" ? entry.city.trim() : "";
-  const venue = typeof entry?.venue === "string" ? entry.venue.trim() : "";
-
-  if (!dateLabel || !city || !venue) {
-    return null;
-  }
-
-  const status = typeof entry?.status === "string" && entry.status.trim() ? entry.status.trim() : "TBA";
-  const href = typeof entry?.href === "string" ? entry.href.trim() : "";
-  const normalizedId = typeof entry?.id === "string" && entry.id.trim() ? entry.id.trim() : `show-${index + 1}`;
-
-  return {
-    id: normalizedId,
-    dateLabel,
-    city,
-    venue,
-    status,
-    href
-  } satisfies WallsDevineUpcomingShow;
-}
 
 export function normalizeWallsDevineCollectorHeroNote(note?: Partial<WallsDevineCollectorHeroNote> | null): WallsDevineCollectorHeroNote {
   const nextBody = typeof note?.body === "string" && note.body.trim() ? note.body.trim() : "";
@@ -99,21 +63,4 @@ export function normalizeWallsDevineBookingBannerNote(note?: Partial<WallsDevine
     meta: typeof note?.meta === "string" && note.meta.trim() ? note.meta.trim() : defaultWallsDevineBookingBannerNote.meta,
     updatedAt: typeof note?.updatedAt === "string" && note.updatedAt.trim() ? note.updatedAt : new Date().toISOString()
   } satisfies WallsDevineBookingBannerNote;
-}
-
-export function normalizeWallsDevineUpcomingShowsNote(note?: Partial<WallsDevineUpcomingShowsNote> | null): WallsDevineUpcomingShowsNote {
-  const shows = Array.isArray(note?.shows)
-    ? note.shows
-        .map((show, index) => normalizeUpcomingShowEntry(show as Partial<WallsDevineUpcomingShow>, index))
-        .filter((show): show is WallsDevineUpcomingShow => show !== null)
-    : defaultWallsDevineUpcomingShowsNote.shows;
-
-  return {
-    eyebrow: typeof note?.eyebrow === "string" && note.eyebrow.trim() ? note.eyebrow.trim() : defaultWallsDevineUpcomingShowsNote.eyebrow,
-    title: typeof note?.title === "string" && note.title.trim() ? note.title.trim() : defaultWallsDevineUpcomingShowsNote.title,
-    description: typeof note?.description === "string" && note.description.trim() ? note.description.trim() : defaultWallsDevineUpcomingShowsNote.description,
-    emptyState: typeof note?.emptyState === "string" && note.emptyState.trim() ? note.emptyState.trim() : defaultWallsDevineUpcomingShowsNote.emptyState,
-    shows,
-    updatedAt: typeof note?.updatedAt === "string" && note.updatedAt.trim() ? note.updatedAt : new Date().toISOString()
-  } satisfies WallsDevineUpcomingShowsNote;
 }

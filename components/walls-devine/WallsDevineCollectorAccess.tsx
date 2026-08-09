@@ -32,7 +32,7 @@ type WallsDevineCollectorAccessProps = {
   roomOverlaySubtitle?: string;
   className?: string;
   variant?: "feature" | "inline";
-  renderTrigger?: (openCollectorAccess: () => void) => ReactNode;
+  renderTrigger?: (openSignalRoom: () => void) => ReactNode;
 };
 
 export function WallsDevineCollectorAccess({
@@ -41,11 +41,11 @@ export function WallsDevineCollectorAccess({
   cardEyebrow,
   cardTitle,
   cardDescription,
-  triggerLabel = "Open Collector Access",
+  triggerLabel = "Enter The Signal Room",
   benefits = [],
   actionNote,
   modalEyebrow = "Collector access",
-  modalTitle = "Open Collector Access",
+  modalTitle = "Enter The Signal Room",
   modalDescription = "Drop your email for first-listen links, hidden-room returns, journal fragments, and artifact-drop signals.",
   signupEyebrow,
   signupTitle,
@@ -53,7 +53,7 @@ export function WallsDevineCollectorAccess({
   submitLabel = "Get first access",
   successMessage = "You are in. Watch your inbox for the next collector signal.",
   note = "High-signal only. Used for first listens, hidden-room access, and artifact drops.",
-  roomOverlayScript = "Collector Access",
+  roomOverlayScript = "The Signal Room",
   roomOverlaySubtitle = "Private collector access",
   className,
   variant = "feature",
@@ -63,7 +63,7 @@ export function WallsDevineCollectorAccess({
   const [isOpen, setIsOpen] = useState(false);
   const titleId = useId();
 
-  const openCollectorAccess = () => {
+  const openSignalRoom = () => {
     setIsOpen(true);
   };
 
@@ -77,7 +77,7 @@ export function WallsDevineCollectorAccess({
   return (
     <>
       {renderTrigger ? (
-        renderTrigger(openCollectorAccess)
+        renderTrigger(openSignalRoom)
       ) : (
         <section className={cx("wd-collector-access", `wd-collector-access--${variant}`, className)} aria-label={cardTitle}>
           <div className="wd-collector-access__copy">
@@ -95,7 +95,7 @@ export function WallsDevineCollectorAccess({
           ) : null}
 
           <div className="wd-collector-access__actions">
-            <Button type="button" variant="primary" onClick={openCollectorAccess}>
+            <Button type="button" variant="primary" onClick={openSignalRoom}>
               {triggerLabel}
             </Button>
             {actionNote ? <p className="wd-collector-access__action-note">{actionNote}</p> : null}
