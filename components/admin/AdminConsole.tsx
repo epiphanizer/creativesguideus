@@ -3,6 +3,7 @@
 import { type FormEvent, type ReactNode, useEffect, useMemo, useState, useTransition } from "react";
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut, type User } from "firebase/auth";
 
+import { defaultBookingBoard } from "@/lib/admin/booking-engine";
 import type { AdminAudioAnalysis, AdminMarkdownCollection, EcosystemLead, LinkHubContent, ListeningRoomVisit, ReleasePlanChecklistItem, WallsDevineAdminData } from "@/lib/admin/types";
 import {
   deleteFirebaseAdminMarkdownFile,
@@ -24,7 +25,11 @@ import { firebaseAdminPaths } from "@/lib/firebase/config";
 import { getEcosystemLeads } from "@/lib/firebase/ecosystem-leads";
 import { getListeningRoomVisits } from "@/lib/firebase/listening-room-visits";
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
-import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import {
+  defaultWallsDevineBookingBannerNote,
+  defaultWallsDevineCollectorHeroNote,
+  defaultWallsDevineUpcomingShowsNote
+} from "@/lib/walls-devine/public-content";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionShell } from "@/components/ui/SectionShell";
@@ -366,13 +371,17 @@ const fallbackAdminData: WallsDevineAdminData = {
       }
     ]
   },
+  bookingBoard: defaultBookingBoard,
   instagramDrafts: [],
   journalEntries: [],
   collectorHeroNote: defaultWallsDevineCollectorHeroNote,
+  bookingBannerNote: defaultWallsDevineBookingBannerNote,
+  upcomingShowsNote: defaultWallsDevineUpcomingShowsNote,
   linkHub: defaultLinkHubContent,
   storageBacked: false,
   contentBackend: "bootstrap",
-  markdownInitialized: false
+  markdownInitialized: false,
+  bookingBoardInitialized: false
 };
 
 function countCompletedChecklist(items: ReleasePlanChecklistItem[]) {

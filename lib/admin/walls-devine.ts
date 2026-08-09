@@ -1,10 +1,15 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { defaultBookingBoard } from "./booking-engine";
 import type { AdminMarkdownCollection, AdminMarkdownFile, ReleasePlan, WallsDevineAdminData } from "./types";
 
 import { defaultLinkHubContent } from "@/lib/link-hub/content";
-import { defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
+import {
+  defaultWallsDevineBookingBannerNote,
+  defaultWallsDevineCollectorHeroNote,
+  defaultWallsDevineUpcomingShowsNote
+} from "@/lib/walls-devine/public-content";
 
 const releasePlanPath = path.join(process.cwd(), "data", "walls-devine", "release-plan.json");
 const instagramPostsDir = path.join(process.cwd(), "app", "walls-devine", "instagram-posts");
@@ -115,9 +120,12 @@ export async function getWallsDevineAdminData() {
 
   return {
     plan,
+    bookingBoard: defaultBookingBoard,
     instagramDrafts,
     journalEntries,
     collectorHeroNote: defaultWallsDevineCollectorHeroNote,
+    bookingBannerNote: defaultWallsDevineBookingBannerNote,
+    upcomingShowsNote: defaultWallsDevineUpcomingShowsNote,
     linkHub: defaultLinkHubContent
   } satisfies WallsDevineAdminData;
 }
