@@ -5,6 +5,7 @@ import type {
   BookingContactMethod,
   BookingContactResearchStatus,
   BookingProspect,
+  BookingRoutingStatus,
   BookingTarget,
   BookingTargetCategory,
   BookingTargetContact,
@@ -479,8 +480,22 @@ function normalizeTarget(value: PartialBookingTarget, fallback: BookingTarget) {
       Array.isArray(value?.contacts) && value.contacts.length
         ? value.contacts.map((contact, index) => normalizeTargetContact(contact, fallbackContacts[index] ?? fallbackContacts[0]))
         : fallback.contacts,
-    tags: normalizeStringArray(value?.tags).length ? normalizeStringArray(value?.tags) : fallback.tags
+    tags: normalizeStringArray(value?.tags).length ? normalizeStringArray(value?.tags) : fallback.tags,
+    routingStart: normalizeString((value as BookingTarget | undefined)?.routingStart, fallback.routingStart ?? ""),
+    routingEnd: normalizeString((value as BookingTarget | undefined)?.routingEnd, fallback.routingEnd ?? ""),
+    routingGCalEventId:
+      typeof (value as BookingTarget | undefined)?.routingGCalEventId === "string"
+        ? (value as BookingTarget | undefined)?.routingGCalEventId ?? null
+        : fallback.routingGCalEventId ?? null,
+    routingSyncSource:
+      typeof (value as BookingTarget | undefined)?.routingSyncSource === "string"
+        ? (value as BookingTarget | undefined)?.routingSyncSource
+        : fallback.routingSyncSource
   } satisfies BookingTarget;
+}
+
+export function isBookingRoutingStatus(value: unknown): value is BookingRoutingStatus {
+  return value === "hold" || value === "confirmed";
 }
 
 function normalizeProspect(value: PartialBookingProspect, fallback: BookingProspect) {
