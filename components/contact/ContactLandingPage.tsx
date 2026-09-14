@@ -13,18 +13,18 @@ const aboutCards = [
     body: "We help collaborations take the right form, from film and soundtrack conversations to collector paths, narrative infrastructure, and cross-surface campaigns."
   },
   {
-    title: "Web, product, and operational backbone",
-    body: "We design and build the quieter systems underneath the public layer: sites, product surfaces, admin tooling, workflow logic, and the operational structure that keeps the work coherent."
+    title: "Campaign operations and continuity",
+    body: "We run the quieter operating layer behind each world: launch calendars, publishing flow, audience routing, and the coordination rhythms that keep momentum intact."
   }
 ];
 
 const generalConversationHref = buildContactHref({});
 const systemsConversationHref = buildContactHref({
   overrides: {
-    context: "systems-build",
-    goal: "systems",
-    surface: "internal-platform",
-    engagement: "systems-layer"
+    context: "campaign-operations",
+    goal: "operations",
+    surface: "release-operations",
+    engagement: "agency-support"
   }
 });
 
@@ -42,7 +42,7 @@ export function ContactLandingPage() {
               Walls/Devine opens first on September 1. Appreesh follows on September 11, and Bong Tour arrives on November 4. This page is the calmer studio layer underneath them: the place to reach the team behind the work, start a real conversation, and make the next move feel easy.
             </p>
             <p>
-              Use it for direct contact, partnerships, systems builds, and the conversations that connect this season of work.
+              Use it for direct contact, partnerships, campaign operations, and the conversations that connect this season of work.
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export function ContactLandingPage() {
               Start a Conversation
             </ContactModalLink>
             <ContactModalLink href={systemsConversationHref} buttonVariant="ghost">
-              Tell Us What You&apos;re Building
+              Plan a Campaign With Us
             </ContactModalLink>
             <p className="cg-contact-landing__note">
               Prefer direct email? <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a>

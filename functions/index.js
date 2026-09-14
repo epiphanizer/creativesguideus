@@ -4,6 +4,7 @@ import { logger } from "firebase-functions";
 import { HttpsError, onCall, onRequest } from "firebase-functions/v2/https";
 import { onDocumentCreated, onDocumentWritten } from "firebase-functions/v2/firestore";
 import { GoogleAuth, google } from "googleapis";
+import { dispatchRewardClaim, resolveRewardDistributionProvider } from "./reward-distribution.js";
 
 initializeApp();
 
@@ -268,6 +269,7 @@ export const onEcosystemRewardClaimed = onDocumentCreated(
     const walletAddress = typeof claimData.wallet_address === "string" ? claimData.wallet_address : "";
     const distributionMode = typeof claimData.distribution_mode === "string" ? claimData.distribution_mode : "direct";
     const airdropKey = typeof claimData.airdrop_key === "string" ? claimData.airdrop_key : "";
+    const distributionProvider = resolveRewardDistributionProvider(claimData.distribution_provider);
 
     logger.info("Processing ecosystem reward claim.", {
       claimId,
@@ -276,7 +278,16 @@ export const onEcosystemRewardClaimed = onDocumentCreated(
       rewardLabel,
       chapter,
       distributionMode,
+      distributionProvider,
       airdropKey,
+      walletAddress
+    });
+
+    const dispatchResult = await dispatchRewardClaim({
+      claimId,
+      rewardType,
+      rewardLabel,
+      distributionProvider,
       walletAddress
     });
 
@@ -288,18 +299,21 @@ export const onEcosystemRewardClaimed = onDocumentCreated(
       chapter,
       wallet_address: walletAddress,
       distribution_mode: distributionMode,
+      distribution_provider: dispatchResult.distributionProvider,
+      provider_status: dispatchResult.providerStatus,
+      detail: dispatchResult.logDetail,
       airdrop_key: airdropKey,
       logged_at: FieldValue.serverTimestamp(),
-      status: "logged_for_distribution"
+      status: dispatchResult.providerStatus
     });
 
     await snapshot.ref.set(
       {
-        status: "distributed",
+        status: dispatchResult.claimStatus,
         distributed_at: FieldValue.serverTimestamp(),
-        distribution_log: distributionMode === "airdrop"
-          ? `Logged ${rewardType} (${rewardLabel}) for wallet-aware downstream distribution.`
-          : `Logged ${rewardType} (${rewardLabel}) for downstream distribution.`
+        distribution_log: dispatchResult.distributionLog,
+        distribution_provider: dispatchResult.distributionProvider,
+        provider_status: dispatchResult.providerStatus
       },
       { merge: true }
     );

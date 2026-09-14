@@ -17,6 +17,8 @@ export type EcosystemRewardClaimInput = {
   maxClaimsPerWallet?: number;
 };
 
+type RewardDistributionProvider = "legacy" | "appreesh-solana";
+
 type CollectorRecord = {
   email?: string;
   collector_id?: string;
@@ -60,6 +62,14 @@ function isValidSolanaWallet(value: string) {
 
 function buildAirdropClaimId(rewardKey: string, walletAddress: string) {
   return `${rewardKey}__${walletAddress}`;
+}
+
+function resolveRewardDistributionProvider(maxClaimsPerWallet: number, walletAddress: string): RewardDistributionProvider {
+  if (maxClaimsPerWallet > 0 || walletAddress) {
+    return "appreesh-solana";
+  }
+
+  return "legacy";
 }
 
 export async function createEcosystemRewardClaim(input: EcosystemRewardClaimInput) {
@@ -110,6 +120,7 @@ export async function createEcosystemRewardClaim(input: EcosystemRewardClaimInpu
   const claimDocId = maxClaimsPerWallet > 0
     ? buildAirdropClaimId(airdropKey || rewardId, walletAddress)
     : undefined;
+  const distributionProvider = resolveRewardDistributionProvider(maxClaimsPerWallet, walletAddress);
   let claimId = "";
 
   try {
@@ -158,6 +169,8 @@ export async function createEcosystemRewardClaim(input: EcosystemRewardClaimInpu
         status: "pending_distribution",
         source,
         distribution_mode: maxClaimsPerWallet > 0 ? "airdrop" : "direct",
+        distribution_provider: distributionProvider,
+        provider_status: "queued",
         airdrop_key: airdropKey,
         max_claims_per_wallet: maxClaimsPerWallet
       });

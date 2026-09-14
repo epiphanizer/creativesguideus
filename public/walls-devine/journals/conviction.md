@@ -1,19 +1,19 @@
 # Conviction — Studio Journal
 
-Date window: Pre-release placeholder
+Date window: Volume 1
 
 ## Intent
-Conviction marks the still-sealed fourth chapter in Volume 1 and lets the release world announce the song before the audio is public.
+Conviction holds the fourth chapter in Volume 1 as a statement of nerve, discipline, and chosen forward motion.
 
 ## Making Notes
-- Hold the slot open in the track list so the September 1 sequence reads as deliberate, not unfinished.
-- Use the title as the emotional cue: pressure, nerve, and chosen forward motion.
-- Replace this starter entry with arrangement and session detail once the final mix is locked.
+- Sequence the track as the pressure point between Space Cruiser's lift and Decay's heavier turn.
+- Let the title carry the emotional cue: pressure, nerve, and chosen forward motion.
+- Keep the presentation direct so the track's discipline remains the center of the chapter.
 
 ## Technical Notes
-- Placeholder entry only; no public audio or platform destinations yet.
-- Reuse temporary art until dedicated Conviction artwork is delivered.
-- Keep player copy and collector grid language honest about the track being unreleased.
+- Final listening-room master: 24-bit, 48 kHz stereo WAV.
+- Runtime: 4:20.
+- Volume 1 cover art remains the neutral visual until dedicated Conviction artwork is delivered.
 
 ## Visual Tie-In
-Red-thread geometry, sealed type, and steel diagonals should make the chapter feel announced but unopened.
+Red-thread geometry, pressure signals, and steel diagonals frame the chapter as a vow held under strain.

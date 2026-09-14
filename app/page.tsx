@@ -4,7 +4,6 @@ import Link from "next/link";
 import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
 import { albumLaunchCampaignWindow, cguLaunchState } from "@/lib/launch-state";
-import { seanhallsWorkHref } from "@/lib/studio-links";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
@@ -56,10 +55,10 @@ const gateways: readonly HomeGateway[] = [
     eyebrow: "Collector experience",
     descriptor: `${cguLaunchState.wallsDevine.label} · player · journals · merch shop`,
     title: "Walls/Devine",
-    description: "Volume 1 is the active public world now: listening room first, collector grid next, then the signal-list bridge into the June 30 expansion.",
+    description: `Volume 1 opens ${cguLaunchState.wallsDevine.launchDate}: listening room first, collector grid next, then the signal list for the next release windows.`,
     href: "/walls-devine",
-    entryLabel: "Enter Volume 1",
-    entryMeta: "Live now · Player · Journals · Collector Access · Merch Shop",
+    entryLabel: `Walls/Devine opens ${cguLaunchState.wallsDevine.launchDate}`,
+    entryMeta: `${cguLaunchState.wallsDevine.label} · Player · Journals · Collector Access · Merch Shop`,
     image: volOneImage,
     alt: "Walls/Devine Volume 1 album cover artwork",
     tone: "walls",
@@ -231,8 +230,8 @@ export default function HomePage() {
       <section className="cg-home-dispatch" aria-labelledby="cg-home-dispatch-title">
         <div className="cg-home-dispatch__copy">
           <p className="cg-home-dispatch__eyebrow">Creatives Guide Us</p>
-          <h1 id="cg-home-dispatch-title">Walls/Devine is live now. Bong Tour, Appreesh, and Cache follow.</h1>
-          <p>Volume 1 is the active public world. The next rooms stay staged behind the June 30 window, while Cache and studio proof remain one quiet click away.</p>
+          <h1 id="cg-home-dispatch-title">Walls/Devine opens September 1. Appreesh, Bong Tour, and Cache follow.</h1>
+          <p>Volume 1 opens first. Appreesh and Bong Tour are staged next, with Cache following after this season&rsquo;s rollout.</p>
         </div>
 
         <ol className="cg-home-dispatch__route-list" aria-label="Launch sequence routes">
@@ -241,7 +240,7 @@ export default function HomePage() {
               <span className="cg-home-dispatch__route-index">01</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Walls/Devine Volume 1</strong>
-                <small>Live now</small>
+                <small>Opening September 1</small>
               </span>
             </Link>
           </li>
@@ -250,7 +249,7 @@ export default function HomePage() {
               <span className="cg-home-dispatch__route-index">02</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Join Volume 1 Signal List</strong>
-                <small>Bridge into the June 30 window</small>
+                <small>Launch updates before opening day</small>
               </span>
             </Link>
           </li>
@@ -268,7 +267,7 @@ export default function HomePage() {
               <span className="cg-home-dispatch__route-index">04</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Bong Tour</strong>
-                <small>Opening June 30</small>
+                <small>{`Opening ${cguLaunchState.bongTour.launchDate}`}</small>
               </span>
             </Link>
           </li>
@@ -277,7 +276,7 @@ export default function HomePage() {
               <span className="cg-home-dispatch__route-index">05</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Appreesh</strong>
-                <small>Opening June 30</small>
+                <small>{`Opening ${cguLaunchState.appreesh.launchDate}`}</small>
               </span>
             </Link>
           </li>
@@ -305,10 +304,6 @@ export default function HomePage() {
           <ContactModalLink href={homeSignalListHref}>Join Volume 1 Signal List</ContactModalLink>
           <ContactModalLink href={homeConversationHref} buttonVariant="ghost">Start a Conversation</ContactModalLink>
         </nav>
-
-        <p className="cg-home-dispatch__work-note">
-          Studio proof stays one click away at <a href={seanhallsWorkHref} target="_blank" rel="noreferrer">Selected work</a>.
-        </p>
       </section>
     </main>
   );

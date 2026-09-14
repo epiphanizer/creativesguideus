@@ -19,7 +19,7 @@ type CollectorChallengeMode =
   | "crown-chase"
   | "vault-code"
   | "orbit-lock"
-  | "porch-lights"
+  | "conviction-sequence"
   | "seal-alignment"
   | "decay-patch"
   | "spark-ladder"
@@ -563,7 +563,7 @@ function CollectorOrbitLockGame({ tile, onUnlock }: { tile: CollectorGridTile; o
   );
 }
 
-function CollectorPorchLightsGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
+function CollectorConvictionSequenceGame({ tile, onUnlock }: { tile: CollectorGridTile; onUnlock: () => void }) {
   const patternLength = 4;
   const padCount = 6;
   const [pattern, setPattern] = useState<number[]>(() => buildSequencePattern(patternLength, padCount));
@@ -655,12 +655,12 @@ function CollectorPorchLightsGame({ tile, onUnlock }: { tile: CollectorGridTile;
   return (
     <div className="wd-grid-modal__game-shell">
       <div className="wd-grid-modal__game-status">
-        <span>Porch lights</span>
+        <span>Pressure sequence</span>
         <span>{input.length}/{pattern.length}</span>
         <span>{secondsLeft}s</span>
       </div>
 
-      <div className="wd-grid-modal__windows" aria-label={`${tile.title} porch light pattern`}>
+      <div className="wd-grid-modal__windows" aria-label={`${tile.title} pressure signal sequence`}>
         {Array.from({ length: padCount }, (_, index) => (
           <button
             key={`${tile.slug}-pad-${index}`}
@@ -669,8 +669,8 @@ function CollectorPorchLightsGame({ tile, onUnlock }: { tile: CollectorGridTile;
             onClick={() => handlePadPress(index)}
             disabled={status === "showing"}
           >
-            <span>Glow</span>
-            <strong>Window {index + 1}</strong>
+            <span>Signal</span>
+            <strong>Line {index + 1}</strong>
           </button>
         ))}
       </div>
@@ -680,13 +680,13 @@ function CollectorPorchLightsGame({ tile, onUnlock }: { tile: CollectorGridTile;
           {status === "won"
             ? "Pattern matched. The hidden note is live below."
             : status === "lost"
-              ? "The porch went dark. Cue the pattern again."
+              ? "The pressure line broke. Cue the sequence again."
               : status === "showing"
-                ? "Watch the windows once, then replay them cleanly."
+                ? "Watch the signals once, then replay them cleanly."
                 : tile.challengePrompt}
         </p>
         <Button type="button" variant="secondary" size="sm" onClick={handleReset}>
-          Replay lights
+          Replay sequence
         </Button>
       </div>
     </div>
@@ -1191,8 +1191,8 @@ function CollectorChallenge({ tile, onUnlock }: { tile: CollectorGridTile; onUnl
     return <CollectorOrbitLockGame tile={tile} onUnlock={onUnlock} />;
   }
 
-  if (tile.gameMode === "porch-lights") {
-    return <CollectorPorchLightsGame tile={tile} onUnlock={onUnlock} />;
+  if (tile.gameMode === "conviction-sequence") {
+    return <CollectorConvictionSequenceGame tile={tile} onUnlock={onUnlock} />;
   }
 
   if (tile.gameMode === "seal-alignment") {

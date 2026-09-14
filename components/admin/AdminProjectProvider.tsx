@@ -38,9 +38,9 @@ const adminProjects: Record<AdminProjectId, AdminProject> = {
   "walls-devine": {
     id: "walls-devine",
     label: "Walls/Devine",
-    statusLabel: "Live",
+    statusLabel: "Sep 1",
     isLive: true,
-    description: "Live release tools and content editing."
+    description: "Launch control room and release content editing."
   },
   "bong-tour": {
     id: "bong-tour",
@@ -66,13 +66,6 @@ const adminProjectNavItems: Record<AdminProjectId, AdminNavItem[]> = {
       description: "Dates, checklist, and launch flow.",
       group: "Operations",
       routeKey: "release-desk"
-    },
-    {
-      href: "/admin/booking",
-      label: "Booking Engine",
-      description: "Targets, filters, and lead matches.",
-      group: "Operations",
-      routeKey: "booking"
     },
     {
       href: "/admin/content",

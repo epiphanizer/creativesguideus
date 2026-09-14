@@ -1,5 +1,5 @@
-import { AdminBookingRoute } from "@/components/admin/AdminRouteViews";
+import { redirect } from "next/navigation";
 
 export default function AdminBookingPage() {
-  return <AdminBookingRoute />;
+  redirect("/admin/overview");
 }

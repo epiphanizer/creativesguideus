@@ -20,7 +20,7 @@ const pendingRouteStatuses = {
 } as const;
 
 const projectSwitcherOptions: Array<{ id: AdminProjectId; label: string; statusLabel: string; isLive: boolean }> = [
-  { id: "walls-devine", label: "Walls/Devine", statusLabel: "Live", isLive: true },
+  { id: "walls-devine", label: "Walls/Devine", statusLabel: "Sep 1", isLive: true },
   { id: "bong-tour", label: "Bong Tour", statusLabel: "Next", isLive: false }
 ];
 

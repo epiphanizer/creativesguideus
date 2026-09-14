@@ -11,7 +11,6 @@ import { SiApplemusic, SiBandcamp, SiSoundcloud, SiSpotify, SiTidal, SiYoutubemu
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
-import convictionPlaceholderImage from "@/app/walls-devine/assets/instagram/4.home.png";
 import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
 import poetryImage from "@/app/walls-devine/assets/instagram/7.poetry.png";
 import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
@@ -45,7 +44,7 @@ type VisualizerPalette = {
   ink: string;
 };
 
-type VisualizerMotif = "crown" | "vault" | "orbit" | "porch" | "decay" | "resolve" | "poetry" | "gratitude";
+type VisualizerMotif = "crown" | "vault" | "orbit" | "conviction" | "decay" | "resolve" | "poetry" | "gratitude";
 
 type VisualizerTheme = VisualizerPalette & {
   motif: VisualizerMotif;
@@ -81,7 +80,7 @@ const trackPosterImages: Record<number, StaticImageData> = {
   1: jointQueenImage,
   2: stashDaddyImage,
   3: spaceCruiserImage,
-  4: convictionPlaceholderImage,
+  4: volOneImage,
   5: decayImage,
   6: resolveImage,
   7: poetryImage,
@@ -92,7 +91,7 @@ const trackVisualizerThemes: Record<number, VisualizerTheme> = {
   1: { primary: "#d96a1f", secondary: "#b31612", glow: "#ecbbba", ink: "#1a130d", field: "#f4e7ce", motif: "crown" },
   2: { primary: "#7e0705", secondary: "#29543b", glow: "#f4e7ce", ink: "#1a130d", field: "#ead7b1", motif: "vault" },
   3: { primary: "#29543b", secondary: "#d96a1f", glow: "#f4e7ce", ink: "#1a130d", field: "#dfe9e2", motif: "orbit" },
-  4: { primary: "#ca3f3b", secondary: "#29543b", glow: "#fafaf9", ink: "#1a130d", field: "#f1ebe0", motif: "porch" },
+  4: { primary: "#ca3f3b", secondary: "#29543b", glow: "#fafaf9", ink: "#1a130d", field: "#f1ebe0", motif: "conviction" },
   5: { primary: "#7e0705", secondary: "#ca3f3b", glow: "#ecbbba", ink: "#140d0d", field: "#ead4d4", motif: "decay" },
   6: { primary: "#d96a1f", secondary: "#7e0705", glow: "#f7e0e0", ink: "#140d0d", field: "#f4dfcf", motif: "resolve" },
   7: { primary: "#29543b", secondary: "#ca3f3b", glow: "#fafaf9", ink: "#1a130d", field: "#eef2ef", motif: "poetry" },
@@ -333,32 +332,17 @@ function drawTrackMotif({
     return;
   }
 
-  if (theme.motif === "porch") {
-    const houseWidth = ringRadius * 1.24;
-    const houseHeight = ringRadius * 0.94;
-    const roofY = centerY - houseHeight * 0.5;
-    const baseY = centerY + houseHeight * 0.32;
+  if (theme.motif === "conviction") {
+    for (let index = -3; index <= 3; index += 1) {
+      const offset = index * ringRadius * 0.24;
+      const pressure = Math.sin(elapsed * 0.0018 + index + seed * 0.01) * ringRadius * 0.04;
 
-    context.beginPath();
-    context.moveTo(centerX - houseWidth * 0.42, roofY + houseHeight * 0.18);
-    context.lineTo(centerX, roofY - houseHeight * 0.18);
-    context.lineTo(centerX + houseWidth * 0.42, roofY + houseHeight * 0.18);
-    context.lineTo(centerX + houseWidth * 0.42, baseY);
-    context.lineTo(centerX - houseWidth * 0.42, baseY);
-    context.closePath();
-    context.strokeStyle = hexToRgba(theme.secondary, 0.22);
-    context.lineWidth = 1.5;
-    context.stroke();
-
-    for (let row = 0; row < 2; row += 1) {
-      for (let column = 0; column < 3; column += 1) {
-        const x = centerX - houseWidth * 0.28 + column * houseWidth * 0.28;
-        const y = centerY - houseHeight * 0.12 + row * houseHeight * 0.28;
-        const glow = 0.22 + Math.max(0, Math.sin(elapsed * 0.002 + row * 0.7 + column * 0.4 + seed * 0.01)) * 0.18;
-
-        context.fillStyle = hexToRgba(theme.glow, glow);
-        context.fillRect(x, y, houseWidth * 0.12, houseHeight * 0.16);
-      }
+      context.beginPath();
+      context.moveTo(centerX - ringRadius * 0.62 + offset, centerY + ringRadius * 0.72);
+      context.lineTo(centerX + ringRadius * 0.18 + offset + pressure, centerY - ringRadius * 0.72);
+      context.strokeStyle = hexToRgba(index % 2 === 0 ? theme.primary : theme.secondary, 0.2 + energy * 0.16);
+      context.lineWidth = index === 0 ? 2.5 : 1.25;
+      context.stroke();
     }
 
     return;

@@ -1,0 +1,113 @@
+.cg-project-hub {
+  display: grid;
+  gap: clamp(var(--cg-space-lg), 3vw, var(--cg-space-2xl));
+}
+
+.cg-project-hub__lead {
+  display: grid;
+}
+
+.cg-project-hub__accordion {
+  display: grid;
+  gap: var(--cg-space-sm);
+}
+
+.cg-project-hub__item {
+  border: 1px solid rgba(15, 15, 15, 0.1);
+  border-radius: calc(var(--cg-radius-lg) * 0.95);
+  background: rgba(255, 255, 255, 0.78);
+  overflow: hidden;
+}
+
+.cg-project-hub__summary {
+  list-style: none;
+  display: grid;
+  gap: var(--cg-space-xs);
+  padding: clamp(var(--cg-space-md), 2.5vw, var(--cg-space-lg));
+  cursor: pointer;
+}
+
+.cg-project-hub__summary::-webkit-details-marker {
+  display: none;
+}
+
+.cg-project-hub__summary::after {
+  content: "+";
+  position: absolute;
+  right: clamp(var(--cg-space-md), 2.5vw, var(--cg-space-lg));
+  margin-top: -0.05rem;
+  font-size: 1.15rem;
+  color: var(--cg-color-ink-400);
+}
+
+.cg-project-hub__item[open] .cg-project-hub__summary::after {
+  content: "-";
+}
+
+.cg-project-hub__summary {
+  position: relative;
+}
+
+.cg-project-hub__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-400);
+}
+
+.cg-project-hub__summary-copy {
+  display: grid;
+  gap: 0.2rem;
+  padding-right: clamp(var(--cg-space-xl), 4vw, var(--cg-space-3xl));
+}
+
+.cg-project-hub__summary-copy h3 {
+  margin: 0;
+  font-size: var(--cg-type-subtitle);
+}
+
+.cg-project-hub__summary-copy p {
+  color: var(--cg-color-ink-500);
+}
+
+.cg-project-hub__panel {
+  display: grid;
+  gap: var(--cg-space-md);
+  padding: 0 clamp(var(--cg-space-md), 2.5vw, var(--cg-space-lg)) clamp(var(--cg-space-md), 2.5vw, var(--cg-space-lg));
+  border-top: 1px solid rgba(15, 15, 15, 0.08);
+}
+
+.cg-project-hub__description {
+  color: var(--cg-color-ink-600);
+}
+
+.cg-project-hub__bullets {
+  list-style: none;
+  display: grid;
+  gap: var(--cg-space-xs);
+  margin: 0;
+  padding: 0;
+  color: var(--cg-color-ink-500);
+}
+
+.cg-project-hub__bullets li {
+  position: relative;
+  padding-left: var(--cg-space-md);
+}
+
+.cg-project-hub__bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cg-color-ink-300);
+}
+
+.cg-project-hub__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cg-space-sm);
+}

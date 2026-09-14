@@ -987,7 +987,7 @@ function MarkdownEditorDrawer({
 }
 
 export function AdminOverviewRoute() {
-  const { adminViewData, bookingLeadMatches, completedChecklist, bookingGoalCountdown, routeStatuses, liveRouteCount, handleForceSync, dataLoading } = useAdminWorkspace();
+  const { adminViewData, bookingLeadMatches, completedChecklist, bookingGoalCountdown, routeStatuses, handleForceSync, dataLoading } = useAdminWorkspace();
   const releaseFocusItems = Array.from(
     new Set([...adminViewData.bookingBoard.goal.nextMoves, ...adminViewData.plan.recommendedSetup, ...adminViewData.plan.guidance])
   ).slice(0, 4);
@@ -997,12 +997,6 @@ export function AdminOverviewRoute() {
       title: "Release Desk",
       summary: `${completedChecklist}/${adminViewData.plan.checklist.length} tasks complete`,
       status: routeStatuses["release-desk"]
-    },
-    {
-      href: "/admin/booking",
-      title: "Booking Engine",
-      summary: `${adminViewData.bookingBoard.targets.length} targets · ${bookingLeadMatches.length} booking-fit leads`,
-      status: routeStatuses.booking
     },
     {
       href: "/admin/content",
@@ -1017,6 +1011,7 @@ export function AdminOverviewRoute() {
       status: routeStatuses.assets
     }
   ] as const;
+  const liveLaneCount = laneCards.filter((lane) => lane.status === "live").length;
 
   return (
     <div className="cg-admin-route">
@@ -1068,7 +1063,6 @@ export function AdminOverviewRoute() {
             <h3>Jump into the module you actually need.</h3>
             <div className="cg-admin-route__action-list">
               <Link href="/admin/release-desk">Release desk</Link>
-              <Link href="/admin/booking">Booking engine</Link>
               <Link href="/admin/content">Content studio</Link>
               <Link href="/admin/assets">Assets &amp; QA</Link>
             </div>
@@ -1078,7 +1072,7 @@ export function AdminOverviewRoute() {
         <div className="cg-admin__whiteboard-strip">
           <AdminMetricCard label="Booking-fit Leads" value={String(bookingLeadMatches.length)} detail="matched against the current seeded board" />
           <AdminMetricCard label="Release Tasks" value={`${completedChecklist}/${adminViewData.plan.checklist.length}`} detail="checklist items complete" />
-          <AdminMetricCard label="Live Lanes" value={`${liveRouteCount}/5`} detail="routes fully hydrated and ready" />
+          <AdminMetricCard label="Live Lanes" value={`${liveLaneCount}/4`} detail="routes fully hydrated and ready" />
           <AdminMetricCard label="Lock Date" value={formatDate(adminViewData.bookingBoard.goal.lockByDate)} detail={bookingGoalCountdown} />
         </div>
       </section>

@@ -25,7 +25,6 @@ import {
 import { defaultWallsDevineBookingBannerNote, defaultWallsDevineCollectorHeroNote } from "@/lib/walls-devine/public-content";
 import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
 import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
-import homeImage from "@/app/walls-devine/assets/instagram/4.home.png";
 import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
 import poetryImage from "@/app/walls-devine/assets/instagram/7.poetry.png";
 import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
@@ -115,19 +114,19 @@ const instagramGrid: GridTile[] = [
     tokenLabel: "orbit"
   }),
   withSongStory({
-    slug: "home",
-    title: "Home",
+    slug: "conviction",
+    title: "Conviction",
     role: "Song 04",
-    image: homeImage,
-    playerTarget: "home",
-    teaser: "The quiet middle chapter where the myth comes back to earth.",
-    challengeLabel: "Porch pattern",
-    challengePrompt: "Replay the porch lights before the house goes dark.",
-    easterEggTitle: "Landing signal",
-    easterEggBody: "Home holds the nervous-system reset of finally landing somewhere honest. The hidden note is that its power comes from keeping the first truthful take intact.",
-    interest: "Home collector list",
-    gameMode: "porch-lights",
-    tokenLabel: "glow"
+    image: volOneImage,
+    playerTarget: "conviction",
+    teaser: "Hard-edged nerve, disciplined pressure, and chosen forward motion.",
+    challengeLabel: "Pressure sequence",
+    challengePrompt: "Replay the pressure signals before the line breaks.",
+    easterEggTitle: "Hold the line",
+    easterEggBody: "Conviction anchors the fourth chapter as a statement of nerve. The hidden note is that its force comes from discipline held under pressure.",
+    interest: "Conviction collector list",
+    gameMode: "conviction-sequence",
+    tokenLabel: "signal"
   }),
   {
     slug: "volume-1",
@@ -228,9 +227,9 @@ const collectorLetterQuotes: readonly CollectorLetterQuote[] = [
     text: "Poetry is the inward core of Volume 1: language first, ornament second."
   },
   {
-    source: "Home",
+    source: "Conviction",
     author: "John Walls",
-    text: "Home is the grounded chapter that lets the project breathe between heavier passages."
+    text: "Conviction is the pressure point that turns discipline into forward motion."
   },
   {
     source: "Decay",

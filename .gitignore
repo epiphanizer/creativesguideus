@@ -3,5 +3,7 @@ node_modules/
 .env*
 dist/
 .artifacts/
+test-results/
+tsconfig.tsbuildinfo
 .DS_Store
 public/walls-devine/releases/volume1/Walls_Devine Vol.1 Master V3.wav
