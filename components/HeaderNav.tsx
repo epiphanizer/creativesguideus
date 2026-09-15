@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { buildContactHref } from "@/lib/contact-intake-routing";
 import { anchors } from "./nav/anchors";
-import { WallsDevineCollectorAccess } from "@/components/walls-devine/WallsDevineCollectorAccess";
 import {
   openWallsDevineListeningRoomShortcut,
   readWallsDevinePlayerDismissed,
@@ -25,25 +24,6 @@ export function HeaderNav() {
   const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPlayerDismissed, setIsPlayerDismissed] = useState(false);
-
-  const headerRoom = useMemo(() => {
-    return {
-      buttonLabel: "Signal Room",
-      source: "header-nav-walls-devine",
-      interest: "Walls Devine collector signal list",
-      cardTitle: "Enter The Signal Room",
-      cardDescription: "Get the shortest route to first-listen links, journal fragments, hidden-room passwords, and release-night signals.",
-      benefits: ["First-listen links", "Studio-journal fragments", "Hidden-room passwords"],
-      modalEyebrow: "Collector access",
-      modalTitle: "Enter The Signal Room",
-      modalDescription: "Drop your email for the cleanest route to the next room opening, hidden-listen signal, and collector-only update.",
-      submitLabel: "Get collector access",
-      successMessage: "You are in. Watch your inbox for the next room opening, journal fragment, and collector signal.",
-      note: "High-signal only. Used for first listens, hidden-room access, and artifact drops.",
-      roomOverlayScript: "The Signal Room",
-      roomOverlaySubtitle: "Private collector access"
-    };
-  }, []);
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
@@ -116,6 +96,14 @@ export function HeaderNav() {
     });
   }, [closeMenu, isPlayerDismissed, isWallsDevineRoute, prefersReducedMotion, router]);
 
+  const handleWallsDevineSignup = useCallback(() => {
+    closeMenu();
+    document.getElementById("walls-devine-signal")?.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "start"
+    });
+  }, [closeMenu, prefersReducedMotion]);
+
   useEffect(() => {
     closeMenu();
   }, [closeMenu, pathname]);
@@ -172,7 +160,6 @@ export function HeaderNav() {
             <span />
             <span />
           </span>
-          <span className="cg-header__menu-toggle-label">Menu</span>
         </button>
         <div className={["cg-header__menu", isMenuOpen ? "cg-header__menu--open" : ""].filter(Boolean).join(" ")}>
           {activeAnchors.length ? (
@@ -210,34 +197,9 @@ export function HeaderNav() {
           ) : null}
           <div className="cg-header__actions">
             {isWallsDevineRoute ? (
-              <WallsDevineCollectorAccess
-                source={headerRoom.source}
-                interest={headerRoom.interest}
-                cardTitle={headerRoom.cardTitle}
-                cardDescription={headerRoom.cardDescription}
-                triggerLabel={headerRoom.cardTitle}
-                benefits={headerRoom.benefits}
-                modalEyebrow={headerRoom.modalEyebrow}
-                modalTitle={headerRoom.modalTitle}
-                modalDescription={headerRoom.modalDescription}
-                submitLabel={headerRoom.submitLabel}
-                successMessage={headerRoom.successMessage}
-                note={headerRoom.note}
-                roomOverlayScript={headerRoom.roomOverlayScript}
-                roomOverlaySubtitle={headerRoom.roomOverlaySubtitle}
-                renderTrigger={(openSignalRoom) => (
-                  <button
-                    type="button"
-                    className="cg-header__cta"
-                    onClick={() => {
-                      closeMenu();
-                      openSignalRoom();
-                    }}
-                  >
-                    {headerRoom.buttonLabel}
-                  </button>
-                )}
-              />
+              <button type="button" className="cg-header__cta" onClick={handleWallsDevineSignup}>
+                Join the list
+              </button>
             ) : (
               <button
                 type="button"

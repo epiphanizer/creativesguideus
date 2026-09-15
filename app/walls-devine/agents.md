@@ -4,7 +4,7 @@
 - Page role: Treat Walls Devine as a staged public release world opening September 1. The page should feel collectible, editorial, calm under pressure, and clearly positioned as the first bridge into the September 11 and November 4 companion launches.
 - Visual rule: Pull palette and ornament from the artwork first. Favor oxblood, aged paper, charcoal, engraved borders, and soft lightning/smoke motifs over neutral portfolio styling.
 - Typography rule: Lead with refined display treatment for titles and restrained mono or compact sans for metadata. Avoid generic SaaS typography rhythms.
-- Content rule: Keep the hero, collector grid, and listening room legible as distinct modules in a premium narrative sequence.
+- Content rule: For Volume 1, keep the public page focused on the hero, listening room, email capture, and merchandise. Preserve collector-grid artifacts in code for a future Volume 2 release, but do not render them publicly.
 - Cross-link rule: The Volume 1 signal-list bridge can be prominent because it is the first path into the September 11 and November 4 windows. Bong Tour and Appreesh mentions should stay deliberate and secondary so they never overpower the album object itself before launch.
 - Asset rule: Walls Devine imagery now lives in [app/walls-devine/assets](app/walls-devine/assets). Keep future artwork organized by purpose, not in the app root.
 - Edit rule: Preserve the separation between public-facing journals in [public/walls-devine/journals](public/walls-devine/journals) and admin/source drafts in [app/walls-devine/instagram-posts](app/walls-devine/instagram-posts).

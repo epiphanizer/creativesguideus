@@ -33,7 +33,7 @@ export const songPostCards: SongPostCard[] = [
     title: "Joint Queen",
     duration: "2:07",
     audioFileName: "1. Joint Queen.wav",
-    phase: "Album week",
+    phase: "Released September 1, 2026",
     hook: "Mythic command and smoke-crowned swagger.",
     caption: "Joint Queen opens the room like a coronation with sparks in every corner.",
     storySummary:
@@ -50,7 +50,7 @@ export const songPostCards: SongPostCard[] = [
     title: "Stash Daddy",
     duration: "3:35",
     audioFileName: "2. Stash Daddy.wav",
-    phase: "Album week",
+    phase: "Released September 1, 2026",
     hook: "Backroom confidence with analog danger.",
     caption: "Stash Daddy runs on low-end pressure and late-night authority.",
     storySummary:
@@ -67,7 +67,7 @@ export const songPostCards: SongPostCard[] = [
     title: "Space Cruiser",
     duration: "3:12",
     audioFileName: "3. Space Cruiser.wav",
-    phase: "Album week",
+    phase: "Released September 1, 2026",
     hook: "Cosmic drift with ritual propulsion.",
     caption: "Space Cruiser lifts the grid into orbit before dropping back into grit.",
     storySummary:
@@ -84,7 +84,7 @@ export const songPostCards: SongPostCard[] = [
     title: "Conviction",
     duration: "4:20",
     audioFileName: "4. Conviction.wav",
-    phase: "Album week",
+    phase: "Released September 1, 2026",
     hook: "Hard-edged nerve held against forward pressure.",
     caption: "Conviction holds the fourth chapter with discipline, pressure, and chosen forward motion.",
     storySummary:
@@ -99,7 +99,7 @@ export const songPostCards: SongPostCard[] = [
     title: "Decay",
     duration: "2:43",
     audioFileName: "5. Decay.wav",
-    phase: "Album week",
+    phase: "Released September 1, 2026",
     hook: "Beautiful ruin with stubborn pulse.",
     caption: "Decay is where vines, amps, and memory collapse into one final sermon.",
     storySummary:
@@ -114,7 +114,7 @@ export const songPostCards: SongPostCard[] = [
     title: "Resolve",
     duration: "3:15",
     audioFileName: "6. Resolve.wav",
-    phase: "Lead single · June 28",
+    phase: "Released September 1, 2026",
     hook: "The ignition track that lights the campaign fuse.",
     caption: "Resolve lands first and sets the terms for everything that follows.",
     storySummary:
@@ -129,7 +129,7 @@ export const songPostCards: SongPostCard[] = [
     title: "Poetry",
     duration: "4:31",
     audioFileName: "7. Poetry.wav",
-    phase: "Album focus",
+    phase: "Released September 1, 2026",
     hook: "Writerly nerve and scarred tenderness.",
     caption: "Poetry is the heart chamber of Volume 1 and a strong album-focus pitch.",
     storySummary:
@@ -144,7 +144,7 @@ export const songPostCards: SongPostCard[] = [
     title: "Gratitude",
     duration: "3:30",
     audioFileName: "8. Gratitude.wav",
-    phase: "Post-release sustain",
+    phase: "Released September 1, 2026",
     hook: "Open-hearted lift after the storm.",
     caption: "Gratitude holds the final glow and keeps the record emotionally open.",
     storySummary:

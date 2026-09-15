@@ -30,8 +30,8 @@ export function EcosystemSignupForm({
   title,
   description,
   submitLabel = "Join the collector circle",
-  successMessage = "You are in. Watch your inbox for first-access drops and hidden-room invites.",
-  note = "Used for first-listen access, private drops, and launch-night signals only.",
+  successMessage = "You are in. Watch your inbox for release notes and private updates.",
+  note = "Used for occasional release notes and private updates only.",
   compact = false,
   emailOnly = false,
   className
@@ -78,7 +78,7 @@ export function EcosystemSignupForm({
           <>
             <div className="wd-signup__minimal-row">
               <label className="wd-signup__field wd-signup__field--email-only">
-                <span>Email</span>
+                <span className="wd-visually-hidden">Email</span>
                 <input
                   type="email"
                   name="email"
