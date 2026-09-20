@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test:intake": "playwright test --config playwright.intake.config.ts",
     "sync:work-module": "node ./scripts/sync-work-module.mjs",
     "screenshots:launch": "playwright test tests/visual/launch-readiness.spec.ts",
     "screenshots:launch:before": "CGU_SCREENSHOT_PHASE=before playwright test tests/visual/launch-readiness.spec.ts",
