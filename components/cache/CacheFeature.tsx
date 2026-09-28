@@ -29,14 +29,13 @@ const wallsDevineSignalListHref = buildContactHref({
 
 export function CacheFeature() {
   if (!isCachePreview) {
-    // Gate UI placeholder — wire up when content is ready.
     return (
       <section className="cache-world" aria-label="Cache series">
         <div className="cache-world__shell">
           <header className="cache-world__intro">
-            <p className="cache-section-header__eyebrow">Series</p>
+            <p className="cache-section-header__eyebrow">Studio Monograph &amp; Archive</p>
             <h1>Cache</h1>
-            <p className="cache-world__deck">Access infrastructure is live. Content coming soon.</p>
+            <p className="cache-world__deck">A limited-run print monograph and archival audio release documenting unreleased takes and studio typography.</p>
           </header>
         </div>
       </section>
@@ -47,47 +46,53 @@ export function CacheFeature() {
     <section className="cache-world" aria-label="Cache series">
       <div className="cache-world__shell">
         <header className="cache-world__intro">
-          <p className="cache-section-header__eyebrow">Series · Coming soon</p>
+          <p className="cache-section-header__eyebrow">Studio Monograph &amp; Archive · Series 2027</p>
           <h1>Cache</h1>
           <p className="cache-world__deck">
-            A new series from Creatives Guide Us. Details and access open after launch.
+            An upcoming limited-run print monograph and audio archive documenting unreleased tracking takes, typographic proofs, production polaroids, and physical ephemera from the studio floor.
           </p>
 
           <div className="cache-world__actions">
             <Link href={cacheContactHref} className="cache-button">
-              Request Early Access
+              Request Edition Notice →
             </Link>
             <Link href={wallsDevineSignalListHref} className="cache-button cache-button--outline">
               Join the Volume 1 Signal List
             </Link>
           </div>
 
-          <p className="cache-world__meta-line">No series content is exposed on the public route before the gate opens.</p>
+          <p className="cache-world__meta-line">
+            Curated by Sean Halls and the Creatives Guide Us studio team. Limited numbered edition in 2027.
+          </p>
         </header>
 
         <article className="cache-world__lock-card">
           <div className="cache-world__lock-grid">
             <section className="cache-world__track">
-              <p className="cache-section-header__eyebrow">Early access</p>
-              <h2>Get in line before the gate opens.</h2>
-              <p>Use the contact route to introduce yourself and request early access. Approved readers receive credentials when the series launches.</p>
+              <p className="cache-section-header__eyebrow">Archival Edition</p>
+              <h2>Reserve notice for the print edition.</h2>
+              <p>
+                The first printing will be limited to hand-numbered copies with accompanying vinyl audio artifacts. Inquire through the studio to receive publication notices and collector allocations.
+              </p>
               <div className="cache-world__track-actions">
                 <Link href={cacheContactHref} className="cache-button">
-                  Request Early Access
+                  Request Edition Notice →
                 </Link>
               </div>
             </section>
 
             <section className="cache-world__track cache-world__track--secondary">
-              <p className="cache-section-header__eyebrow">Active world</p>
-              <h2>Walls/Devine carries the live bridge now.</h2>
-              <p>Volume 1 is open. Join the signal list to stay connected through the June 30 window and into what comes next.</p>
+              <p className="cache-section-header__eyebrow">Active Release</p>
+              <h2>Walls/Devine Volume 1 is available now.</h2>
+              <p>
+                Volume 1 represents the active sound world from the studio. Stream the four tracks in the listening room with synchronized commentary, order physical merch, or stay connected through the signal list.
+              </p>
               <div className="cache-world__track-actions">
                 <Link href="/walls-devine" className="cache-button">
-                  Open Walls/Devine
+                  Enter Walls/Devine →
                 </Link>
                 <Link href={wallsDevineSignalListHref} className="cache-button cache-button--outline">
-                  Join the Volume 1 Signal List
+                  Join the Signal List
                 </Link>
               </div>
             </section>

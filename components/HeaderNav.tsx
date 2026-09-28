@@ -144,7 +144,7 @@ export function HeaderNav() {
         >
           <span className="cg-header__copy">
             <span className="cg-header__studio">Creatives Guide Us</span>
-            <span className="cg-header__tagline">sound · story · signal</span>
+            <span className="cg-header__tagline">Studio &amp; Record Label</span>
           </span>
         </a>
         <button

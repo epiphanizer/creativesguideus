@@ -784,15 +784,7 @@ p + ol {
   line-height: var(--cg-type-relaxed);
   position: relative;
   background-color: var(--cg-color-canvas);
-  background-image:
-    linear-gradient(90deg, rgba(244, 231, 206, 0.98) 0 49.65%, rgba(26, 19, 13, 0.86) 49.65% 50.35%, rgba(250, 250, 249, 0.99) 50.35% 100%),
-    linear-gradient(0deg, transparent 0 15%, rgba(26, 19, 13, 0.12) 15% 15.35%, transparent 15.35% 63%, rgba(26, 19, 13, 0.1) 63% 63.35%, transparent 63.35% 100%),
-    linear-gradient(90deg, transparent 0 10%, rgba(26, 19, 13, 0.14) 10% 10.35%, transparent 10.35% 31%, rgba(217, 106, 31, 0.22) 31% 31.35%, transparent 31.35% 69%, rgba(179, 22, 18, 0.18) 69% 69.35%, transparent 69.35% 88%, rgba(26, 19, 13, 0.12) 88% 88.35%, transparent 88.35% 100%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0 18%, transparent 18% 100%),
-    linear-gradient(135deg, rgba(217, 106, 31, 0.08) 0 14%, transparent 14% 100%),
-    linear-gradient(315deg, rgba(179, 22, 18, 0.08) 0 16%, transparent 16% 100%);
-  background-blend-mode: normal, normal, normal, screen, normal, normal;
-  color: var(--cg-color-bong-ink);
+  color: var(--cg-color-ink-950);
   -webkit-font-smoothing: antialiased;
 }
 

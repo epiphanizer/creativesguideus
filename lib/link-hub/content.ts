@@ -105,9 +105,9 @@ const canonicalLinkOrder = [
 ] as const;
 
 export const defaultLinkHubContent: LinkHubContent = {
-  eyebrow: "Signal routes",
-  title: "Jump Through The Live And Staged Rooms",
-  description: "A compact dispatch board for Volume 1 now, the June 30 openings next, and the calm studio route underneath them.",
+  eyebrow: "Studio Directory & Dispatch",
+  title: "Active Releases, Film Portals & Studio Routes",
+  description: "Direct index for Walls/Devine Volume 1, the Bong Tour screenplay world, Appreesh protocol, and studio commission inquiries.",
   updatedAt: defaultUpdatedAt,
   links: [
     defaultWallsDevineLink,

@@ -5,16 +5,16 @@ import { buildContactHref } from "@/lib/contact-intake-routing";
 
 const aboutCards = [
   {
-    title: "Release worlds and creative direction",
-    body: "We shape music worlds, launch systems, story framing, and the visual direction that lets a release feel lived in instead of merely announced."
+    title: "Record Production & Sonic Direction",
+    body: "From tracking on analog tape to spatial audio mixing, original soundtrack composition, and release packaging. We direct records that feel lived-in, acoustic, and timeless."
   },
   {
-    title: "Partnerships and narrative systems",
-    body: "We help collaborations take the right form, from film and soundtrack conversations to collector paths, narrative infrastructure, and cross-surface campaigns."
+    title: "Screenwriting & Narrative Strategy",
+    body: "Feature treatments, character bibles, narrative packaging, and soundtrack integration for films, streaming series, and long-form storytelling."
   },
   {
-    title: "Campaign operations and continuity",
-    body: "We run the quieter operating layer behind each world: launch calendars, publishing flow, audience routing, and the coordination rhythms that keep momentum intact."
+    title: "Creative Engineering & Identity",
+    body: "Bespoke typography, editorial web flagships, and high-performance interactive rooms built to outlast corporate design cycles."
   }
 ];
 
@@ -34,27 +34,27 @@ export function ContactLandingPage() {
       <SectionShell id="contact-landing" labelledBy="contact-landing-title" innerClassName="cg-contact-landing">
         <section className="cg-contact-landing__hero" aria-labelledby="contact-landing-title">
           <div className="cg-contact-landing__copy">
-            <p className="cg-contact-landing__eyebrow">Creatives Guide Us</p>
+            <p className="cg-contact-landing__eyebrow">CREATIVES GUIDE US · STUDIO INQUIRIES</p>
             <h1 id="contact-landing-title" className="cg-contact-landing__title">
-              Walls/Devine opens September 1. The studio lane stays calm underneath.
+              Studio Commissions, Soundtrack Licensing &amp; Creative Direction.
             </h1>
             <p className="cg-contact-landing__lede">
-              Walls/Devine opens first on September 1. Appreesh follows on September 11, and Bong Tour arrives on November 4. This page is the calmer studio layer underneath them: the place to reach the team behind the work, start a real conversation, and make the next move feel easy.
+              Creatives Guide Us collaborates with independent artists, directors, and cultural brands on ambitious releases. Whether you are licensing a soundtrack cue, commissioning an editorial web platform, or packaging a feature screenplay, this is the direct line to our team.
             </p>
             <p>
-              Use it for direct contact, partnerships, campaign operations, and the conversations that connect this season of work.
+              We accept a limited number of partner commissions each season to ensure uncompromising focus across sonic production, narrative framing, and technical execution.
             </p>
           </div>
 
           <div className="cg-contact-landing__actions">
             <ContactModalLink href={generalConversationHref} buttonVariant="primary">
-              Start a Conversation
+              Start a Conversation →
             </ContactModalLink>
             <ContactModalLink href={systemsConversationHref} buttonVariant="ghost">
-              Plan a Campaign With Us
+              Inquire About a Commission
             </ContactModalLink>
             <p className="cg-contact-landing__note">
-              Prefer direct email? <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a>
+              Direct studio inquiries: <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a>
             </p>
           </div>
         </section>
@@ -64,12 +64,12 @@ export function ContactLandingPage() {
             <SectionHeader
               id="contact-about-title"
               headingLevel="h2"
-              eyebrow="About us"
-              title="A studio for sound, story, signal, and systems."
-              description="Creatives Guide Us stages Walls/Devine, Appreesh, Bong Tour, and the systems beneath them so each world opens in sequence without losing the shared frame."
+              eyebrow="Studio Philosophy"
+              title="A unified practice for sound, screen, and software."
+              description="Creatives Guide Us operates across record production, screenplay development, and creative engineering. We direct complete release worlds where the music, the story, and the graphic object reinforce each other."
             />
             <p>
-              The work can look like a release world, a film partnership, a narrative system, a product surface, or the operational infrastructure that keeps the whole thing from drifting apart. The point is not to separate those lanes too early. The point is to make the right one legible, then build from there.
+              We believe independent culture thrives when creative direction is not separated from technical execution. From analog tape tracking in the live room to bespoke typography and modern web engineering, we build artifacts that feel tactile, enduring, and unmistakable.
             </p>
           </div>
 

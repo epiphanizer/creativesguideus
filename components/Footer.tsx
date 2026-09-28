@@ -6,8 +6,11 @@ export function Footer() {
   return (
     <footer className="cg-footer">
       <div className="cg-footer__inner">
-        <p className="cg-footer__manifesto">Release the signal. Keep the channel alive.</p>
+        <p className="cg-footer__manifesto">Independent creative studio &amp; record label. Sound, screen, and bespoke engineering.</p>
         <div className="cg-footer__links" aria-label="Footer links">
+          <a className="cg-footer__link" href="/contact">
+            Studio Inquiries
+          </a>
           <a className="cg-footer__link" href="/links">
             Links
           </a>
