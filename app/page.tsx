@@ -55,9 +55,9 @@ const gateways: readonly HomeGateway[] = [
     eyebrow: "Collector experience",
     descriptor: `${cguLaunchState.wallsDevine.label} · player · journals · merch shop`,
     title: "Walls/Devine",
-    description: `Volume 1 opens ${cguLaunchState.wallsDevine.launchDate}: listening room first, collector grid next, then the signal list for the next release windows.`,
+    description: "Volume 1 is available now: listening room first, collector grid next, then the signal list for the next release windows.",
     href: "/walls-devine",
-    entryLabel: `Walls/Devine opens ${cguLaunchState.wallsDevine.launchDate}`,
+    entryLabel: "Walls/Devine Volume 1 · Available Now",
     entryMeta: `${cguLaunchState.wallsDevine.label} · Player · Journals · Collector Access · Merch Shop`,
     image: volOneImage,
     alt: "Walls/Devine Volume 1 album cover artwork",
@@ -230,8 +230,8 @@ export default function HomePage() {
       <section className="cg-home-dispatch" aria-labelledby="cg-home-dispatch-title">
         <div className="cg-home-dispatch__copy">
           <p className="cg-home-dispatch__eyebrow">Creatives Guide Us</p>
-          <h1 id="cg-home-dispatch-title">Walls/Devine opens September 1. Appreesh, Bong Tour, and Cache follow.</h1>
-          <p>Volume 1 opens first. Appreesh and Bong Tour are staged next, with Cache following after this season&rsquo;s rollout.</p>
+          <h1 id="cg-home-dispatch-title">Walls/Devine Volume 1 is available now. Bong Tour and Cache follow.</h1>
+          <p>Volume 1 is live: listening room first, collector grid next, then the signal list. Bong Tour and Cache follow in the next release windows.</p>
         </div>
 
         <ol className="cg-home-dispatch__route-list" aria-label="Launch sequence routes">
@@ -240,7 +240,7 @@ export default function HomePage() {
               <span className="cg-home-dispatch__route-index">01</span>
               <span className="cg-home-dispatch__route-copy">
                 <strong>Walls/Devine Volume 1</strong>
-                <small>Opening September 1</small>
+                <small>Available Now</small>
               </span>
             </Link>
           </li>

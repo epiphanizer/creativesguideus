@@ -3,7 +3,7 @@ type LaunchStatus = "live" | "preview";
 type LaunchStage = {
   status: LaunchStatus;
   label: string;
-  launchDate?: string;
+  launchDate: string | null;
 };
 
 export const albumLaunchCampaignWindow = "album-launch";
@@ -24,10 +24,10 @@ export const albumReleaseDateLabel = wallsDevineLaunchDateLabel;
 export const june30LaunchDateIso = wallsDevineLaunchDateIso;
 export const june30LaunchDateLabel = launchSequenceSeasonLabel;
 
-export const cguLaunchState = {
+export const cguLaunchState: Record<"wallsDevine" | "bongTour" | "appreesh" | "cache", LaunchStage> = {
   wallsDevine: {
-    status: "preview",
-    label: `Opening ${wallsDevineLaunchDateLabel}`,
+    status: "live",
+    label: "Available Now",
     launchDate: wallsDevineLaunchDateLabel
   },
   bongTour: {
@@ -45,11 +45,6 @@ export const cguLaunchState = {
     label: `Opening ${cacheLaunchYearLabel}`,
     launchDate: cacheLaunchYearLabel
   }
-} satisfies {
-  wallsDevine: LaunchStage;
-  bongTour: LaunchStage;
-  appreesh: LaunchStage;
-  cache: LaunchStage;
 };
 
 export const isWallsDevinePreview = cguLaunchState.wallsDevine.status === "preview";
