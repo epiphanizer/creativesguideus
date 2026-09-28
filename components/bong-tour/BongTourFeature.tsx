@@ -1164,12 +1164,18 @@ export function BongTourFeature() {
 
           <div className="bt-hero__layout">
             <figure className="bt-hero__poster">
-              <a href={bongTourTreatmentHref} className="bt-hero__poster-link" aria-label="Request access to the Bong Tour treatment">
+              <button
+                type="button"
+                className="bt-hero__poster-link bt-hero__poster-link--interactive"
+                onClick={() => setActiveRoom(musicPosters[0].room)}
+                aria-label="Launch the Bong Tour Fullscreen Takeover"
+              >
                 <div className="bt-hero__poster-frame">
                   <Image src={posterImage} alt="Concept poster artwork for Bong Tour" priority sizes="(max-width: 960px) 82vw, 32vw" />
+                  <span className="bt-hero__poster-badge">Launch Fullscreen Takeover ↗</span>
                 </div>
-              </a>
-              <figcaption>Poster first. The private treatment opens only after reader approval.</figcaption>
+              </button>
+              <figcaption>Interactive concept poster. Click to enter the immersive fullscreen cue world.</figcaption>
             </figure>
 
             <div className="bt-hero__content">
@@ -1192,7 +1198,14 @@ export function BongTourFeature() {
               <p className="bt-hero__positioning">Poster first, then cue-world proof, then a private reading copy for approved partners. The archive stays downstream so the pitch stays legible on first pass.</p>
 
               <div className="bt-hero__cta">
-                <Button as="a" href={bongTourTreatmentHref} className="bt-button">
+                <Button
+                  type="button"
+                  className="bt-button bt-button--takeover"
+                  onClick={() => setActiveRoom(musicPosters[0].room)}
+                >
+                  Enter Fullscreen Takeover
+                </Button>
+                <Button as="a" href={bongTourTreatmentHref} className="bt-button bt-button--outline">
                   {bongTourPrivatePathCtaLabel}
                 </Button>
                 <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
@@ -1376,13 +1389,58 @@ export function BongTourFeature() {
       {hasMounted && activeRoom
         ? createPortal(
             <div
-              className={`bt-room-modal${isCollectorRoom ? " bt-room-modal--collector" : isCueRoom ? " bt-room-modal--cue" : ""}`}
+              className={`bt-room-modal bt-room-modal--fullscreen${isCollectorRoom ? " bt-room-modal--collector" : isCueRoom ? " bt-room-modal--cue" : ""}`}
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
               onClick={() => setActiveRoom(null)}
             >
               <div className="bt-room-modal__panel" onClick={(event) => event.stopPropagation()}>
+                {/* Immersive Takeover Top Bar */}
+                <header className="bt-room-modal__nav-bar">
+                  <div className="bt-room-modal__nav-badge">
+                    <span className="bt-room-modal__nav-pulse" />
+                    <strong>BONG TOUR // CINEMATIC TAKEOVER</strong>
+                  </div>
+
+                  <nav className="bt-room-modal__room-tabs" aria-label="Takeover rooms">
+                    {musicPosters.map((poster) => (
+                      <button
+                        key={poster.id}
+                        type="button"
+                        className={`bt-room-modal__room-tab${poster.room.slug === activeRoom.slug ? " bt-room-modal__room-tab--active" : ""}`}
+                        onClick={() => setActiveRoom(poster.room)}
+                      >
+                        {poster.badge}: {poster.title}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      className={`bt-room-modal__room-tab${activeRoom.slug === portalRooms.producer.slug ? " bt-room-modal__room-tab--active" : ""}`}
+                      onClick={() => setActiveRoom(portalRooms.producer)}
+                    >
+                      Smoke Room
+                    </button>
+                    <button
+                      type="button"
+                      className={`bt-room-modal__room-tab${activeRoom.slug === portalRooms.collector.slug ? " bt-room-modal__room-tab--active" : ""}`}
+                      onClick={() => setActiveRoom(portalRooms.collector)}
+                    >
+                      Archive Vault
+                    </button>
+                  </nav>
+
+                  <button
+                    type="button"
+                    className="bt-room-modal__close-btn"
+                    onClick={() => setActiveRoom(null)}
+                    aria-label="Exit fullscreen takeover"
+                  >
+                    <span>Close</span>
+                    <kbd>ESC</kbd>
+                  </button>
+                </header>
+
                 <div className="bt-room-modal__room-overlay" aria-hidden="true">
                   <span className="bt-room-modal__room-script">{activeRoom.ambientLabel}</span>
                   <span className="bt-room-modal__room-subtitle">{activeRoom.ambientSubtitle}</span>
