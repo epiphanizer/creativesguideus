@@ -49,7 +49,7 @@ export function CacheFeature() {
           <p className="cache-section-header__eyebrow">Studio Monograph &amp; Archive · Series 2027</p>
           <h1>Cache</h1>
           <p className="cache-world__deck">
-            An upcoming limited-run print monograph and audio archive documenting unreleased tracking takes, typographic proofs, production polaroids, and physical ephemera from the studio floor.
+            A hand-numbered archival volume of studio outtakes, spilled-coffee lyric sheets, blurry Polaroids, and woodcut proofs from the tracking sessions. Includes a lathe-cut 7-inch record featuring studio banter, false starts, and warm analog gold.
           </p>
 
           <div className="cache-world__actions">
@@ -62,7 +62,7 @@ export function CacheFeature() {
           </div>
 
           <p className="cache-world__meta-line">
-            Curated by Sean Halls and the Creatives Guide Us studio team. Limited numbered edition in 2027.
+            Assembled by hand at Creatives Guide Us in Los Angeles. Proof that records are made by real humans in dark rooms, not software plugins.
           </p>
         </header>
 
@@ -70,9 +70,9 @@ export function CacheFeature() {
           <div className="cache-world__lock-grid">
             <section className="cache-world__track">
               <p className="cache-section-header__eyebrow">Archival Edition</p>
-              <h2>Reserve notice for the print edition.</h2>
+              <h2>Reserve a copy before Terry hoards them all.</h2>
               <p>
-                The first printing will be limited to hand-numbered copies with accompanying vinyl audio artifacts. Inquire through the studio to receive publication notices and collector allocations.
+                The first printing is strictly limited. It&apos;s printed on heavy archival paper that smells like a proper library, paired with a companion lathe-cut vinyl record cut directly in-house. If you appreciate tactile oddities, you&apos;ll want your name on the box.
               </p>
               <div className="cache-world__track-actions">
                 <Link href={cacheContactHref} className="cache-button">
@@ -82,10 +82,10 @@ export function CacheFeature() {
             </section>
 
             <section className="cache-world__track cache-world__track--secondary">
-              <p className="cache-section-header__eyebrow">Active Release</p>
-              <h2>Walls/Devine Volume 1 is available now.</h2>
+              <p className="cache-section-header__eyebrow">Debut Album</p>
+              <h2>Walls/Devine Volume 1 is streaming now.</h2>
               <p>
-                Volume 1 represents the active sound world from the studio. Stream the four tracks in the listening room with synchronized commentary, order physical merch, or stay connected through the signal list.
+                Four songs tracked live on 2-inch tape late at night. Stream all four tracks in the listening room with synchronized lyric journals, or order the physical 12-inch vinyl pressing.
               </p>
               <div className="cache-world__track-actions">
                 <Link href="/walls-devine" className="cache-button">

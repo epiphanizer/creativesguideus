@@ -5,26 +5,26 @@ import { buildContactHref } from "@/lib/contact-intake-routing";
 
 const aboutCards = [
   {
-    title: "Record Production & Sonic Direction",
-    body: "From tracking on analog tape to spatial audio mixing, original soundtrack composition, and release packaging. We direct records that feel lived-in, acoustic, and timeless."
+    title: "Sound & Records",
+    body: "Tracking on 2-inch tape, tube preamps redlining gently, spatial mixing, and vinyl mastering. We make records with sweat and grit, not sterile digital presets."
   },
   {
-    title: "Screenwriting & Narrative Strategy",
-    body: "Feature treatments, character bibles, narrative packaging, and soundtrack integration for films, streaming series, and long-form storytelling."
+    title: "Screenwriting & Story",
+    body: "Feature screenplays, road comedies, and sharp dialogue written in the exact same room where the guitar amps are plugged in."
   },
   {
-    title: "Creative Engineering & Identity",
-    body: "Bespoke typography, editorial web flagships, and high-performance interactive rooms built to outlast corporate design cycles."
+    title: "Print & Graphic Direction",
+    body: "Hand-pulled woodcut prints, custom letterforms, heavy vinyl sleeves, and limited book editions designed to survive your next three moves."
   }
 ];
 
 const generalConversationHref = buildContactHref({});
-const systemsConversationHref = buildContactHref({
+const commissionsHref = buildContactHref({
   overrides: {
-    context: "campaign-operations",
-    goal: "operations",
-    surface: "release-operations",
-    engagement: "agency-support"
+    context: "studio-commissions",
+    goal: "creative-direction",
+    surface: "release-packaging",
+    engagement: "studio-collaboration"
   }
 });
 
@@ -34,27 +34,27 @@ export function ContactLandingPage() {
       <SectionShell id="contact-landing" labelledBy="contact-landing-title" innerClassName="cg-contact-landing">
         <section className="cg-contact-landing__hero" aria-labelledby="contact-landing-title">
           <div className="cg-contact-landing__copy">
-            <p className="cg-contact-landing__eyebrow">CREATIVES GUIDE US · STUDIO INQUIRIES</p>
+            <p className="cg-contact-landing__eyebrow">CREATIVES GUIDE US · DIRECT TO THE STUDIO</p>
             <h1 id="contact-landing-title" className="cg-contact-landing__title">
-              Studio Commissions, Soundtrack Licensing &amp; Creative Direction.
+              Let&apos;s make something loud, tactile, or slightly unhinged.
             </h1>
             <p className="cg-contact-landing__lede">
-              Creatives Guide Us collaborates with independent artists, directors, and cultural brands on ambitious releases. Whether you are licensing a soundtrack cue, commissioning an editorial web platform, or packaging a feature screenplay, this is the direct line to our team.
+              Creatives Guide Us collaborates with independent directors, musicians, and publishers who care about physical craft. Whether you need an original score cut on 2-inch tape, a road comedy script that doesn&apos;t read like an algorithm spat it out, or a hand-printed vinyl sleeve, this is the direct line to our desk.
             </p>
             <p>
-              We accept a limited number of partner commissions each season to ensure uncompromising focus across sonic production, narrative framing, and technical execution.
+              No account executives, no automated email drip sequences, and no 14-page questionnaires. Just two guys drinking black coffee in a room full of guitar amplifiers.
             </p>
           </div>
 
           <div className="cg-contact-landing__actions">
             <ContactModalLink href={generalConversationHref} buttonVariant="primary">
-              Start a Conversation →
+              Write to the Studio →
             </ContactModalLink>
-            <ContactModalLink href={systemsConversationHref} buttonVariant="ghost">
-              Inquire About a Commission
+            <ContactModalLink href={commissionsHref} buttonVariant="ghost">
+              Propose a Commission
             </ContactModalLink>
             <p className="cg-contact-landing__note">
-              Direct studio inquiries: <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a>
+              Direct studio email (checked obsessively): <a href="mailto:hello@creativesguide.us">hello@creativesguide.us</a>
             </p>
           </div>
         </section>
@@ -64,12 +64,12 @@ export function ContactLandingPage() {
             <SectionHeader
               id="contact-about-title"
               headingLevel="h2"
-              eyebrow="Studio Philosophy"
-              title="A unified practice for sound, screen, and software."
-              description="Creatives Guide Us operates across record production, screenplay development, and creative engineering. We direct complete release worlds where the music, the story, and the graphic object reinforce each other."
+              eyebrow="The Way We Work"
+              title="Sound, screen, and print—under one noisy roof."
+              description="We don't believe in separating the music from the movie, or the cover art from the record sleeve. If you make something cool, the whole package should feel alive in your hands."
             />
             <p>
-              We believe independent culture thrives when creative direction is not separated from technical execution. From analog tape tracking in the live room to bespoke typography and modern web engineering, we build artifacts that feel tactile, enduring, and unmistakable.
+              From late-night tracking sessions in the live room to handset type and custom film scores, we focus exclusively on things you can touch, hear, and keep on your shelf.
             </p>
           </div>
 

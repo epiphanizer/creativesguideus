@@ -16,11 +16,11 @@ type TreatmentPayload = {
 };
 
 const bongTourTreatmentLogline =
-  "A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to a Hollywood trip that keeps mutating between cult comedy, diaspora myth, and industry reckoning.";
+  "A sacred relic disappears from a Varanasi ghat and washes up on Sunset Boulevard, dragging two displaced screenwriters into a Hollywood odyssey that careens between diaspora satire, cult comedy, and industry survival.";
 const bongTourTreatmentTravelNotes = [
-  "Diaspora masala satire with cult-comedy propulsion.",
-  "A screenplay world built to carry soundtrack and collectible expansion.",
-  "Sequel gravity without flattening the emotional core."
+  "Sun-baked road satire with cult-comedy momentum.",
+  "Original soundtrack cues tracked to key script sequences.",
+  "Character bibles, scene lookbooks, and production breakdown."
 ] as const;
 
 const treatmentAccessHref = "/api/bong-tour/treatment/access";
@@ -48,26 +48,26 @@ const bongTourContactHref = buildContactHref({
     campaignWindow: albumLaunchCampaignWindow
   }
 });
-const bongTourContactCtaLabel = isBongTourPreview ? "Request Post-Launch Access" : "Request Private Reading Copy";
+const bongTourContactCtaLabel = isBongTourPreview ? "Request Screenplay Treatment" : "Request Reading Copy";
 const approvedReaderChecklist = [
-  "Use the same email already shared through CGU.",
-  "Enter the current private password to unlock the treatment.",
-  "The screenplay copy stays out of the initial page response until the gate passes."
+  "Use the email address approved by the studio.",
+  "Enter the private password issued for your reading copy.",
+  "Reading copy is watermarked and held in private circulation."
 ] as const;
 const newReaderChecklist = [
-  "Introduce the reader through the CGU contact route first.",
-  "Leave enough context for why the treatment access is needed.",
-  "Approved readers return here and use that same email at the gate."
+  "Request reader access through the studio contact form.",
+  "Include production, agency, or directorial affiliation.",
+  "Watermarked digital copy and lookbook provided upon approval."
 ] as const;
 const previewAccessChecklist = [
-  `Use this route now if you need treatment access after ${june30LaunchDateLabel}.`,
-  "Leave enough context for the reader and the next conversation.",
-  `Approved readers return here with the same email after ${june30LaunchDateLabel}.`
+  "Screenplay draft and lookbook available by request.",
+  "Direct inquiries routed through the studio production desk.",
+  "Approved partners receive private access credentials."
 ] as const;
 const previewSignalChecklist = [
-  "Walls/Devine remains the live public world right now.",
-  "Use the Volume 1 signal list if you want the July 11 bridge into Bong Tour.",
-  "No screenplay pages are exposed on this public route before the gate opens."
+  "Original score in progress at the Creatives Guide Us sound lab.",
+  "Join the studio mailing list for soundtrack and production notices.",
+  "Full screenplay circulated privately for packaging."
 ] as const;
 
 async function getResponseError(response: Response, fallbackMessage: string) {
@@ -281,9 +281,9 @@ export function BongTourTreatmentGate() {
           <article className="bt-treatment__lock-card">
             <div className="bt-treatment__lock-grid">
               <section className="bt-treatment__track">
-                <p className="bt-section-header__eyebrow">Post-launch access</p>
-                <h2>Line up the approved-reader route.</h2>
-                <p>{`Use the contact path now if you need treatment access after the gate opens on ${june30LaunchDateLabel}.`}</p>
+                <p className="bt-section-header__eyebrow">Reader Access</p>
+                <h2>Request a reading copy.</h2>
+                <p>Screenplay drafts, director lookbooks, and character bibles are circulated privately for production partners and talent.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {previewAccessChecklist.map((item) => (
@@ -299,9 +299,9 @@ export function BongTourTreatmentGate() {
               </section>
 
               <section className="bt-treatment__track bt-treatment__track--secondary">
-                <p className="bt-section-header__eyebrow">Live bridge</p>
-                <h2>Use Volume 1 as the active world now.</h2>
-                <p>The signal list and listening room stay live while Bong Tour waits for the July 11 window.</p>
+                <p className="bt-section-header__eyebrow">Original Score</p>
+                <h2>Listen to the studio catalog.</h2>
+                <p>Explore the studio's debut release, Walls/Devine Volume 1, tracked live on 2-inch tape in Los Angeles.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {previewSignalChecklist.map((item) => (
@@ -314,7 +314,7 @@ export function BongTourTreatmentGate() {
                     Open Walls/Devine
                   </Button>
                   <Button as="a" href={wallsDevineSignalListHref} className="bt-button bt-button--outline">
-                    Join the Volume 1 Signal List
+                    Join the Studio Mailing List
                   </Button>
                 </div>
               </section>
@@ -374,8 +374,8 @@ export function BongTourTreatmentGate() {
 
         {treatment ? (
           <>
-            <aside className="bt-treatment__buyer-note" aria-label="Why it travels">
-              <p className="bt-section-header__eyebrow">Why it travels</p>
+            <aside className="bt-treatment__buyer-note" aria-label="Story and production notes">
+              <p className="bt-section-header__eyebrow">Story &amp; Tone</p>
               <ul>
                 {bongTourTreatmentTravelNotes.map((note) => (
                   <li key={note}>{note}</li>
@@ -399,9 +399,9 @@ export function BongTourTreatmentGate() {
           <article className="bt-treatment__lock-card">
             <div className="bt-treatment__lock-grid">
               <section className="bt-treatment__track">
-                <p className="bt-section-header__eyebrow">Already approved?</p>
-                <h2>Open the private gate.</h2>
-                <p>Use the email already on file with CGU plus the current password to read the screenplay world.</p>
+                <p className="bt-section-header__eyebrow">Approved Partners</p>
+                <h2>Access the reading copy.</h2>
+                <p>Enter your approved email and credentials to read the screenplay treatment.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {approvedReaderChecklist.map((item) => (
@@ -411,15 +411,15 @@ export function BongTourTreatmentGate() {
                 </div>
                 <div className="bt-treatment__track-actions">
                   <Button type="button" className="bt-button" onClick={() => setIsModalOpen(true)} disabled={isCheckingSession}>
-                    Open Treatment Gate
+                    Enter Reading Room
                   </Button>
                 </div>
               </section>
 
               <section className="bt-treatment__track bt-treatment__track--secondary">
-                <p className="bt-section-header__eyebrow">Need access?</p>
-                <h2>Introduce the reader first.</h2>
-                <p>New readers should route through contact so the treatment stays private, attributable, and out of the public page payload.</p>
+                <p className="bt-section-header__eyebrow">New Inquiries</p>
+                <h2>Request a reading copy.</h2>
+                <p>New readers should route through the studio contact form so reading copies remain watermarked and private.</p>
                 <div className="bt-world__list-block">
                   <ul>
                     {newReaderChecklist.map((item) => (
@@ -446,20 +446,20 @@ export function BongTourTreatmentGate() {
               </button>
 
               <div className="bt-treatment__modal-copy">
-                <p className="bt-section-header__eyebrow">Private reading copy</p>
-                <h2 id={`${titleId}-modal`}>Use the approved-reader gate.</h2>
-                <p id={`${descriptionId}-modal`}>Approved readers enter the email already on file plus the current password. New readers should start with contact first.</p>
+                <p className="bt-section-header__eyebrow">Private Reading Copy</p>
+                <h2 id={`${titleId}-modal`}>Enter Access Credentials</h2>
+                <p id={`${descriptionId}-modal`}>Enter the approved email address and private password issued for your reading copy.</p>
               </div>
 
               <div className="bt-treatment__modal-guides" aria-label="Treatment access paths">
                 <article className="bt-treatment__modal-guide">
-                  <span>Already approved?</span>
-                  <p>Use the same email already shared through CGU and the current password.</p>
+                  <span>Approved readers</span>
+                  <p>Use your registered email and current private reading password.</p>
                 </article>
 
                 <article className="bt-treatment__modal-guide">
-                  <span>Need access?</span>
-                  <p>Open the contact route first so the request stays inside the private CGU intake flow.</p>
+                  <span>New requests</span>
+                  <p>Inquire directly through the studio contact desk for a watermarked copy.</p>
                 </article>
               </div>
 

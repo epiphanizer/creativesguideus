@@ -4,8 +4,8 @@ import { albumLaunchCampaignWindow, june30LaunchDateLabel } from "@/lib/launch-s
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
 const defaultUpdatedAt = "";
-const legacyLinkHubTitle = "Jump Through The Active Rooms";
-const legacyLinkHubDescription = "A compact dispatch board for project worlds, direct studio routes, and the live surfaces orbiting Creatives Guide Us.";
+const legacyLinkHubTitle = "Active Releases & Studio Directory";
+const legacyLinkHubDescription = "A direct directory of releases, screenplays, and studio contacts for Creatives Guide Us.";
 const wallsDevineSignalListHref = buildContactHref({
   pathname: "/contact",
   overrides: {
@@ -17,80 +17,69 @@ const wallsDevineSignalListHref = buildContactHref({
     campaignWindow: albumLaunchCampaignWindow
   }
 });
-const appreeshPreviewHref = buildContactHref({
-  pathname: "/contact",
-  overrides: {
-    context: "appreesh-preview",
-    inquiryType: "mailing-list",
-    project: "Appreesh",
-    surface: "product-app",
-    sourceRoute: "/links",
-    campaignWindow: albumLaunchCampaignWindow
-  }
-});
 
 const defaultWallsDevineLink = {
   id: "walls-devine",
-  eyebrow: "Collector experience",
+  eyebrow: "Debut Album",
   title: "Walls/Devine Volume 1",
-  description: "Enter the listening room, release journals, collector path, and the live album world around Volume 1.",
+  description: "Four songs recorded live to 2-inch tape at 3 AM. Raw electric guitars, fuzz bass, spoken Midwestern verse, and zero auto-tune. Loud enough to wake the landlord.",
   href: "/walls-devine",
-  ctaLabel: "Enter Volume 1",
+  ctaLabel: "Enter Listening Room",
   isFeatured: true,
   isActive: true
 } satisfies LinkHubLink;
 
 const defaultWallsDevineSignalListLink = {
   id: "walls-devine-mailing-list",
-  eyebrow: "Signal route",
-  title: "Join Volume 1 Signal List",
-  description: `Route listening-room updates, collector unlock notices, and the ${june30LaunchDateLabel} bridge through the CGU intake flow.`,
+  eyebrow: "Mailing List",
+  title: "Studio Notices & Pressings",
+  description: "Get notified when vinyl pressings drop or when Terry unearths weird room audio from the tape machine. No spam, no marketing fluff, ever.",
   href: wallsDevineSignalListHref,
-  ctaLabel: "Join signal list",
+  ctaLabel: "Join the mailing list",
   isFeatured: true,
   isActive: true
 } satisfies LinkHubLink;
 
 const defaultWallsDevineMerchLink = {
   id: "walls-devine-merch-shop",
-  eyebrow: "Merch shop",
-  title: "Shop Volume 1 Merch",
-  description: "Open the Fourthwall merch room for Volume 1 apparel, printed goods, and release-world objects.",
+  eyebrow: "Merch Shop",
+  title: "Shop Volume 1 Physical Goods",
+  description: "Heavyweight hoodies, hand-pulled woodcut prints, and physical artifacts made to outlive your phone (and probably our studio van).",
   href: wallsDevineMerchShopHref,
-  ctaLabel: "Open merch shop",
+  ctaLabel: "Shop the collection",
   isFeatured: false,
   isActive: true
 } satisfies LinkHubLink;
 
 const defaultBongTourLink = {
   id: "bong-tour",
-  eyebrow: "Screenplay portal",
+  eyebrow: "Feature Screenplay",
   title: "Bong Tour",
-  description: `Preview the poster, logline, and launch lane now. The private treatment opens ${june30LaunchDateLabel}.`,
+  description: "A comedy about hauling a fragile, six-foot hand-blown glass rig across Route 66 in July heat in a van with a broken radiator. Motels, road food, and original score cues.",
   href: "/bong-tour",
-  ctaLabel: "Preview Bong Tour",
+  ctaLabel: "Read the premise",
   isFeatured: false,
   isActive: true
 } satisfies LinkHubLink;
 
-const defaultAppreeshPreviewLink = {
-  id: "appreesh-preview",
-  eyebrow: "Preview route",
-  title: "Appreesh",
-  description: `Queue the Appreesh preview lane inside CGU now. No external Appreesh handoff before ${june30LaunchDateLabel}.`,
-  href: appreeshPreviewHref,
-  ctaLabel: "Request Appreesh notice",
+const defaultCacheLink = {
+  id: "cache",
+  eyebrow: "Studio Monograph",
+  title: "Cache: Outtakes & Ephemera",
+  description: "A hand-bound monograph of studio outtakes, coffee-stained lyric sheets, blurry Polaroids, and a lathe-cut 7-inch record of unreleased room audio.",
+  href: "/cache",
+  ctaLabel: "Inspect the archive",
   isFeatured: false,
   isActive: true
 } satisfies LinkHubLink;
 
 const defaultContactLink = {
   id: "contact",
-  eyebrow: "Direct route",
-  title: "Contact the Studio",
-  description: "Start a build, book a room, or ask for the cleanest next move.",
+  eyebrow: "Direct Line",
+  title: "Talk to the Studio",
+  description: "Got a film to score, a record to track, or a weird print project in mind? We actually read and answer these ourselves with fresh coffee in hand.",
   href: "/contact",
-  ctaLabel: "Open contact",
+  ctaLabel: "Say hello",
   isFeatured: false,
   isActive: true
 } satisfies LinkHubLink;
@@ -100,21 +89,21 @@ const canonicalLinkOrder = [
   "walls-devine-mailing-list",
   "walls-devine-merch-shop",
   "bong-tour",
-  "appreesh-preview",
+  "cache",
   "contact"
 ] as const;
 
 export const defaultLinkHubContent: LinkHubContent = {
-  eyebrow: "Studio Directory & Dispatch",
-  title: "Active Releases, Film Portals & Studio Routes",
-  description: "Direct index for Walls/Devine Volume 1, the Bong Tour screenplay world, Appreesh protocol, and studio commission inquiries.",
+  eyebrow: "Studio Directory",
+  title: "Creatives Guide Us Directory",
+  description: "Analog tape records, screenplays in progress, and tactile editions from our studio in Los Angeles. Click around, listen to some tunes, or drop us a line.",
   updatedAt: defaultUpdatedAt,
   links: [
     defaultWallsDevineLink,
     defaultWallsDevineSignalListLink,
     defaultWallsDevineMerchLink,
     defaultBongTourLink,
-    defaultAppreeshPreviewLink,
+    defaultCacheLink,
     defaultContactLink
   ]
 };
@@ -177,7 +166,7 @@ function ensureRequiredLinks(links: LinkHubLink[]) {
     defaultWallsDevineSignalListLink,
     defaultWallsDevineMerchLink,
     defaultBongTourLink,
-    defaultAppreeshPreviewLink,
+    defaultCacheLink,
     defaultContactLink
   ];
 

@@ -57,7 +57,7 @@ type ContactSectionProps = {
   surface?: "page" | "modal";
 };
 
-type ContactFlowId = "general" | "walls-mailing" | "walls-booking" | "bong-treatment" | "bong-partnership" | "appreesh-preview";
+type ContactFlowId = "general" | "walls-mailing" | "walls-booking" | "bong-treatment" | "bong-partnership" | "cache-early-access";
 
 type GuidedStepId = "intent" | "project" | "contact" | "details" | "review";
 
@@ -110,7 +110,7 @@ const inquiryTypeCardOptions: ContactChoiceOption[] = [
   {
     value: "mailing-list",
     label: "Mailing list",
-    description: "Route signal updates, drop alerts, and collector unlock notices through the studio intake."
+    description: "Receive direct studio notices for vinyl pressings, tape editions, and private playback sessions."
   },
   {
     value: "screening",
@@ -168,18 +168,18 @@ const budgetRangeOptions: ContactOption[] = [
 const mailingPreferenceOptions: ContactChoiceOption[] = [
   {
     value: "drop-alerts",
-    label: "Drop alerts",
-    description: "The main release drops, merch releases, and major listening-room moments."
+    label: "Release notices",
+    description: "Vinyl pressings, physical merch releases, and major catalog additions."
   },
   {
     value: "listening-room-updates",
-    label: "Listening-room updates",
-    description: "New playback notes, room updates, and audio-world additions around Volume 1."
+    label: "Listening-room notes",
+    description: "Unreleased session takes, studio liner notes, and room updates."
   },
   {
     value: "collector-unlocks",
-    label: "Collector unlock notices",
-    description: "Signals tied to chapter reveals, collector paths, and deeper worldbuilding updates."
+    label: "Archival & print editions",
+    description: "Limited lathe cuts, print monographs, and studio ephemera."
   }
 ];
 
@@ -270,8 +270,8 @@ function getContactFlowId(prefill: ContactPrefill): ContactFlowId {
     return "bong-partnership";
   }
 
-  if (prefill.contextId === "appreesh-preview") {
-    return "appreesh-preview";
+  if (prefill.contextId === "cache-early-access" || prefill.contextId === "appreesh-preview") {
+    return "cache-early-access";
   }
 
   return "general";
@@ -284,13 +284,13 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        "Walls/Devine signal-list context is loaded. This stays inside the CGU intake flow while Volume 1 remains live and the July 11 bridge is staged.",
+        "Walls/Devine studio mailing list: vinyl pressings, tape editions, and private listening sessions.",
       summary: [
-        "Walls/Devine stays live now while Bong Tour and Appreesh remain staged toward July 11.",
-        "Your email becomes the Volume 1 signal anchor for updates tied to the live album world and the July 11 bridge.",
-        "Requests are reviewed manually until the dedicated list wiring is ready."
+        "Walls/Devine is currently in release while Bong Tour and Cache are in active development.",
+        "Direct email dispatches for vinyl announcements, liner notes, and private listening sessions.",
+        "Direct studio communication with zero automated marketing loops."
       ],
-      trustNote: "This is a signal-list request, not an instant subscription. CGU reviews it first, then routes the right Volume 1 updates back to this inbox.",
+      trustNote: "Direct studio dispatch. We do not sell or share contact information.",
       noteLabel: "Optional note",
       notePlaceholder: "How did you find Volume 1, and what kind of update should reach you first?",
       companyLabel: "Company or context",
@@ -306,23 +306,23 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
         {
           id: "contact",
           label: "Contact details",
-          title: "Anchor the inbox",
-          description: "Use the best email for future updates so the request stays attached to the right person.",
-          helper: "A company or listener context is optional, but useful if this request comes from a publication, label, or collaborator."
+          title: "Your email address",
+          description: "Where should we send vinyl drops and studio notes? No newsletters or corporate spam, ever.",
+          helper: "A note on who you are is welcome, but totally optional."
         },
         {
           id: "details",
           label: "Update preferences",
-          title: "Choose the signals that matter",
-          description: "Pick the signal types you actually want, then add any note that helps the studio route this cleanly.",
-          helper: `If you skip this step, CGU treats it as a general request for Walls/Devine and ${june30LaunchDateLabel} bridge updates.`
+          title: "What would you like to hear about?",
+          description: "Pick what interests you, or add a quick note to say hello.",
+          helper: `If you skip this step, we'll keep you posted on major Walls/Devine releases and studio dispatches.`
         },
         {
           id: "review",
           label: "Review",
-          title: "Review the routed request",
-          description: "Confirm the contact lane, then send it into the studio signal flow.",
-          helper: "This request is reviewed manually before any future mailing or unlock updates are sent."
+          title: "Review your details",
+          description: "Confirm your details, then send your note straight to the studio desk.",
+          helper: "This goes straight to our inbox. We read everything ourselves."
         }
       ]
     };
@@ -355,23 +355,23 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
         {
           id: "contact",
           label: "Contact details",
-          title: "Anchor the conversation",
-          description: "Use the best email and organization context so the reply can start from the real room.",
-          helper: "Independent rooms are fine. If there is no formal venue yet, use the clearest working context you have."
+          title: "How to reach you",
+          description: "Leave your email and name so we can follow up directly.",
+          helper: "Independent rooms and DIY venues are always welcome."
         },
         {
           id: "details",
           label: "Booking details",
           title: "Describe the room",
-          description: "Leave the location, timing, and a clear note so the booking path lands with enough signal to move.",
-          helper: "A concise room note is more important here than perfect scheduling detail."
+          description: "Tell us about the venue, desired dates, sound setup, or the kind of night you have in mind.",
+          helper: "A quick note is plenty—we can work out the details together."
         },
         {
           id: "review",
           label: "Review",
-          title: "Review the booking route",
-          description: "Confirm the room, contact lane, and timing before sending the request into CGU.",
-          helper: "The request stays attached to Walls/Devine rather than being stripped into a generic intake row."
+          title: "Review booking details",
+          description: "Confirm the room, dates, and contact info before sending to the studio.",
+          helper: "Direct message to John and Terry."
         }
       ]
     };
@@ -381,46 +381,46 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Bong Tour treatment access context is loaded. Use this route to line up post-launch reader access before the private gate opens on ${june30LaunchDateLabel}.`,
+        "Request a watermarked reading copy and lookbook for Bong Tour.",
       summary: [
-        `The private treatment stays off the public route until the gate opens on ${june30LaunchDateLabel}.`,
-        "The submitted email becomes the identity that later enters the protected reader gate.",
-        "Reader context and access reason remain tied to the film instead of a generic inbox ask."
+        "Full screenplay, scene breakdown, and director lookbook held in private circulation.",
+        "Watermarked reading copies provided to verified producers, directors, and talent.",
+        "Direct response from the Creatives Guide Us film desk."
       ],
       trustNote:
-        `This does not grant instant access. CGU reviews the reader request first, then approved readers return here with the same email after ${june30LaunchDateLabel}.`,
-      noteLabel: "Additional context",
-      notePlaceholder: "Any extra context around the reader, the relationship, or the conversation this should unlock.",
-      companyLabel: "Role or company",
-      companyPlaceholder: "Producer, reader, company, publication, or collaborator",
+        "Watermarked reading copies are circulated privately for production and packaging consideration.",
+      noteLabel: "Reader or project note",
+      notePlaceholder: "Production background, directorial interest, agency context, or distribution inquiry.",
+      companyLabel: "Production company or agency",
+      companyPlaceholder: "Production company, agency, management, or studio",
       steps: [
         {
           id: "intent",
           label: "Confirm request",
-          title: "Request post-launch treatment access",
-          description: `This route is for new-reader treatment access after the ${june30LaunchDateLabel} launch window opens, not an instant unlock.`,
-          helper: "The screenplay copy stays behind the protected gate until launch and review are both in place."
+          title: "Request Screenplay Reading Copy",
+          description: "Watermarked feature script and visual lookbook.",
+          helper: "Reading copies are issued directly to verified production partners."
         },
         {
           id: "contact",
           label: "Contact details",
-          title: "Anchor the reader identity",
-          description: "Use the exact email the reader should later use inside the private gate.",
-          helper: "Role or company context helps the review, but the submitted email is the key identity."
+          title: "Reader Information",
+          description: "Provide your direct contact email and production affiliation.",
+          helper: "Production company or representation context helps expedite review."
         },
         {
           id: "details",
           label: "Reader details",
-          title: "Describe the reader fit",
-          description: "Leave the relationship to the project and why this reader needs the private copy.",
-          helper: "A concise reason is enough. The goal is to protect the treatment while keeping approvals legible."
+          title: "Project Interest",
+          description: "Indicate your role or interest (production, financing, direction, or talent).",
+          helper: "A concise note is enough for our team to route the watermarked draft."
         },
         {
           id: "review",
           label: "Review",
-          title: "Review the reader request",
-          description: "Confirm the reader identity and access note before sending it into the review lane.",
-          helper: `Approved readers later return to the protected gate with this same email after ${june30LaunchDateLabel}.`
+          title: "Review Request",
+          description: "Confirm your details before submitting your request to the studio film desk.",
+          helper: "Direct dispatch to the creative team."
         }
       ]
     };
@@ -430,95 +430,95 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        `Bong Tour preview context is loaded. Leave the clearest production, soundtrack, or partnership note here so the July 11 launch path can route cleanly.`,
+        "Bong Tour film packaging, co-production, and original score inquiries.",
       summary: [
-        `Production, soundtrack, collector-world, and partnership signals stay attached to the film while the public route is still in preview before ${june30LaunchDateLabel}.`,
-        "The intake leads with fit and context instead of a scheduling-first experience.",
-        "CGU can route the ask cleanly without losing the preview-state context."
+        "Feature screenplay and analog soundtrack cues in active development.",
+        "Co-production, financing, music licensing, and distribution conversations.",
+        "Direct correspondence with the film's creators and studio partners."
       ],
       trustNote:
-        "This is the film-fit lane. CGU captures the right signal first, then decides what the next operational move should be after launch sequencing is clear.",
-      noteLabel: "Partnership note",
-      notePlaceholder: "What you see, the fit you want to explore, and the clearest next move around Bong Tour.",
-      companyLabel: "Role or company",
-      companyPlaceholder: "Studio, producer, music partner, financier, or collaborator",
+        "Direct studio correspondence with the writers and producers.",
+      noteLabel: "Partnership or packaging note",
+      notePlaceholder: "Scope of interest (co-production, distribution, score licensing, or talent).",
+      companyLabel: "Company or studio",
+      companyPlaceholder: "Production company, studio, distributor, or agency",
       steps: [
         {
           id: "intent",
           label: "Confirm intent",
-          title: "Open the Bong Tour launch lane",
-          description: "This route is for production, soundtrack, collector-world, or broader partnership conversations around Bong Tour.",
-          helper: "The intake starts with fit and context, not a calendar handoff or a public treatment gate."
+          title: "Production & Packaging Inquiry",
+          description: "Explore co-production, score licensing, or distribution for Bong Tour.",
+          helper: "Direct inquiries handled by the studio producing team."
         },
         {
           id: "contact",
           label: "Contact details",
-          title: "Anchor the partner lane",
-          description: "Use the best email and role context so the next response can start from the real fit.",
-          helper: "If the conversation spans multiple people, use the clearest primary contact here and cover the rest in the note."
+          title: "Partner Information",
+          description: "Provide your primary contact email and organization.",
+          helper: "Helps us prepare relevant packaging and score materials."
         },
         {
           id: "details",
           label: "Partnership details",
-          title: "Describe the fit",
-          description: "Choose the lane that fits best, add timing if you have it, and leave the clearest note you can.",
-          helper: "Production, soundtrack, and collector-world context can all live together here without losing the film signal."
+          title: "Inquiry Details",
+          description: "Select the primary focus and provide background on your inquiry.",
+          helper: "Production, score, and distribution context are all welcome."
         },
         {
           id: "review",
           label: "Review",
-          title: "Review the film-fit route",
-          description: "Confirm the focus, contact lane, and timing before sending the note through CGU.",
-          helper: "The goal is to preserve the right intent before any later operational routing happens."
+          title: "Review Inquiry",
+          description: "Confirm your information before submitting to the studio producing desk.",
+          helper: "Direct dispatch to the production team."
         }
       ]
     };
   }
 
-  if (flowId === "appreesh-preview") {
+  if (flowId === "cache-early-access") {
     return {
       id: flowId,
       routingNote:
-        `Appreesh preview context is loaded. This route captures launch-window interest without sending anyone off CGU before ${june30LaunchDateLabel}.`,
+        "Cache archival monograph & print inquiries routed directly to the studio print desk.",
       summary: [
-        `Appreesh stays queued inside the CGU rollout until ${june30LaunchDateLabel}.`,
-        "The submitted inbox becomes the preview-notice lane tied to the current album launch window.",
-        "Internal launch flags stay attached to this lead for later routing without being exposed publicly."
+        "Cache is an archival print monograph and companion lathe-cut record.",
+        "Limited first edition with handset typography, foil stamping, and unreleased studio recordings.",
+        "Institutional acquisitions, gallery reserves, and collector inquiries handled directly."
       ],
       trustNote:
-        "This is a preview-interest route. CGU keeps it internal until the launch window opens.",
-      noteLabel: "Optional note",
-      notePlaceholder: "If helpful, say how Appreesh connects to your interest in Walls/Devine, Bong Tour, or the wider release world.",
-      companyLabel: "Company or context",
-      companyPlaceholder: "Collector, collaborator, press, partner, or working context",
+        "Direct studio communication. We do not sell collector information or send marketing spam.",
+      noteLabel: "Collector note or edition preference",
+      notePlaceholder: "Specify edition preference (print monograph, lathe-cut vinyl, or slipcase archive) or institutional affiliation.",
+      companyLabel: "Institution, gallery, or collector context",
+      companyPlaceholder: "Gallery, archive, library, or private collector",
       steps: [
         {
           id: "intent",
           label: "Confirm request",
-          title: "Queue the Appreesh preview lane",
-          description: `This route holds Appreesh interest inside CGU until the ${june30LaunchDateLabel} opening.`,
-          helper: "CGU does not send this traffic to the external Appreesh site before launch."
+          title: "Inquire About Cache Editions",
+          description: "Reserve a copy or request institutional archival details for the Cache monograph.",
+          helper: "Limited first run produced with handset typography and physical studio ephemera."
         },
         {
           id: "contact",
           label: "Contact details",
-          title: "Anchor the inbox",
-          description: "Use the best email for the launch-window notice so the preview route stays tied to the right person.",
-          helper: "Add working context if this interest is tied to a collaborator, publication, or partner lane."
+          title: "Collector Details",
+          description: "Use your primary email address for edition notices and reserve confirmations.",
+          helper: "Institutional affiliation is optional but helps with accession documentation."
         },
         {
           id: "details",
-          label: "Context note",
-          title: "Add any useful context",
-          description: "Leave an optional note if there is a specific Appreesh angle, bridge, or follow-up that matters.",
-          helper: "This note stays internal to CGU and helps route the launch-window follow-up later."
+          label: "Edition note",
+          title: "Specify Preferences",
+          description: "Leave a note regarding edition format, slipcase options, or shipping destination.",
+          helper: "Helps the studio reserve your requested edition format."
         },
         {
           id: "review",
           label: "Review",
-          title: "Review the preview route",
-          description: "Confirm the inbox and note before sending this Appreesh preview request into CGU.",
-          helper: `This request stays internal until Appreesh opens on ${june30LaunchDateLabel}.`
+          title: "Review Inquiry",
+          description: "Confirm your details before sending your reserve request to the studio print desk.",
+          helper: "Direct dispatch to the studio team."
         }
       ]
     };
@@ -527,14 +527,14 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
   return {
     id: "general",
     routingNote:
-      "Use this intake to route booking asks, release-world collaborations, soundtrack conversations, and system builds through one clear entry point.",
+      "Direct studio intake for score commissions, screenplay packaging, print editions, or performance bookings.",
     summary: [
-      "Inquiry type, timing, and range stay visible so the request lands in the right lane.",
-      "Project context and a real note keep the conversation anchored to the work instead of a blank inbox.",
-      "Direct contact details stay inside the CGU signal flow rather than a third-party form handoff."
+      "Inquiry type, timing, and project details reach the right studio desk directly.",
+      "Project context and details help our team prepare a thoughtful response.",
+      "Direct studio communication with zero automated commercial marketing."
     ],
     trustNote:
-      "This is the main CGU intake route. The guided flow keeps enough signal intact that the next move can be obvious without turning into a scheduling widget.",
+      "Direct studio intake. Your message goes straight to the partners.",
     noteLabel: "Project note",
     notePlaceholder: "Scope, desired move, collaborators, links, or the exact conversation you want to have.",
     companyLabel: "Company or context",
@@ -557,16 +557,16 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
       {
         id: "contact",
         label: "Contact details",
-        title: "Anchor the reply path",
-        description: "Use the best inbox and context so the conversation can continue cleanly.",
-        helper: "If there is no company yet, leave the working context that best explains the lane."
+        title: "Your contact info",
+        description: "Leave the best email and context so we can get right back to you.",
+        helper: "If you don't have a formal company or label, just tell us who you are."
       },
       {
         id: "review",
         label: "Review",
-        title: "Review the routed intake",
-        description: "Confirm the lane, contact path, and project note before sending it into CGU.",
-        helper: "This stays inside the studio signal flow until the next move is clear."
+        title: "Review your note",
+        description: "Confirm the details and project note before sending it to the studio.",
+        helper: "Your note lands directly on our desk where real humans read it."
       }
     ]
   };
@@ -574,11 +574,11 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
 
 function buildDisplayInquiryLabel(flowId: ContactFlowId, inquiryType: string) {
   if (flowId === "bong-treatment") {
-    return "Post-launch treatment access";
+    return "Screenplay treatment access";
   }
 
-  if (flowId === "appreesh-preview") {
-    return "Appreesh preview route";
+  if (flowId === "cache-early-access") {
+    return "Cache monograph inquiry";
   }
 
   return getOptionLabel(inquiryTypeOptions, inquiryType) || "Guided intake";
@@ -586,11 +586,11 @@ function buildDisplayInquiryLabel(flowId: ContactFlowId, inquiryType: string) {
 
 function buildInterestLabel(flowId: ContactFlowId, inquiryTypeLabel: string) {
   if (flowId === "bong-treatment") {
-    return "Post-launch treatment access";
+    return "Screenplay treatment access";
   }
 
-  if (flowId === "appreesh-preview") {
-    return "Appreesh preview";
+  if (flowId === "cache-early-access") {
+    return "Cache monograph reserve";
   }
 
   return inquiryTypeLabel || "Guided intake";
@@ -640,9 +640,9 @@ function buildSubmissionBrief(flowId: ContactFlowId, form: ContactFormState, rou
       .join("\n\n");
   }
 
-  if (flowId === "appreesh-preview") {
+  if (flowId === "cache-early-access") {
     return [
-      "Request: Appreesh preview notice.",
+      "Request: Cache monograph & editions inquiry.",
       trimmedBrief ? `Note: ${trimmedBrief}` : ""
     ]
       .filter(Boolean)
@@ -768,27 +768,27 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
     ];
   }
 
-  if (flow.id === "appreesh-preview") {
+  if (flow.id === "cache-early-access") {
     return [
       {
         label: "Request",
-        value: "Appreesh preview notice",
-        description: `Held inside CGU until the ${june30LaunchDateLabel} opening.`
+        value: "Cache monograph reserve",
+        description: "Archival print monograph and companion lathe-cut record."
       },
       {
         label: "Contact",
         value: contactValue,
-        description: form.company.trim() || "Direct collector or collaborator route"
+        description: form.company.trim() || "Private collector or institutional reserve"
       },
       {
         label: "Project",
-        value: form.projectTitle.trim() || "Appreesh",
-        description: "No external Appreesh handoff before launch."
+        value: form.projectTitle.trim() || "Cache",
+        description: "Limited first edition reserve."
       },
       {
-        label: "Next move",
-        value: "Internal preview routing",
-        description: "Launch-window flags stay with this lead for later follow-up."
+        label: "Next step",
+        value: "Studio review",
+        description: "Direct response from the print and archival desk."
       }
     ];
   }
@@ -813,8 +813,8 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
     },
     {
       label: "Next move",
-      value: "CGU review and routing",
-      description: "The routed note stays inside the studio signal flow instead of a scheduling widget."
+      value: "Studio review",
+      description: "Your note lands directly in our studio inbox—no robotic scheduling links or bots."
     }
   ];
 }
@@ -999,8 +999,8 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
       const joinedBeforeJune30 = prefill.campaignWindow === albumLaunchCampaignWindow && isBeforeJune30LaunchCutoff();
       const wantsWallsDevineUpdates = activeFlow.id === "walls-mailing";
       const wantsBongTourLaunchNotice = activeFlow.id === "bong-treatment" || activeFlow.id === "bong-partnership";
-      const wantsAppreeshLaunchNotice = activeFlow.id === "appreesh-preview";
-      const airdropCandidate = joinedBeforeJune30 && (wantsWallsDevineUpdates || wantsAppreeshLaunchNotice);
+      const wantsAppreeshLaunchNotice = false;
+      const airdropCandidate = false;
 
       await createContactIntake({
         name: form.name,
@@ -1043,7 +1043,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
       setRouteDetails(emptyRouteDetails);
       setCurrentStep(0);
       setSubmissionState("success");
-      setFeedbackMessage("Intake received. It is now sitting inside the CGU signal flow for review and routing.");
+      setFeedbackMessage("Note received! We read everything ourselves and will get back to you shortly.");
     } catch (error) {
       void trackAnalyticsEvent("contact_guided_submit_error", {
         contextId: prefill.contextId || "default",
@@ -1099,12 +1099,12 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         return (
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
-              <strong>Signal route confirmed</strong>
-              <p>This request stays attached to the live Walls/Devine route instead of getting flattened into a generic signup field.</p>
+              <strong>Direct studio list confirmed</strong>
+              <p>This request goes straight to our studio desk instead of getting dumped into an automated marketing hopper.</p>
             </article>
             <article className="cg-contact__affirmation">
               <strong>What happens next</strong>
-              <p>{`CGU reviews this route first, then uses the submitted inbox for future Volume 1 and ${june30LaunchDateLabel} bridge updates.`}</p>
+              <p>We read every submission directly and will reach out with vinyl drops and unreleased room audio.</p>
             </article>
           </div>
         );
@@ -1125,16 +1125,16 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         );
       }
 
-      if (activeFlow.id === "appreesh-preview") {
+      if (activeFlow.id === "cache-early-access") {
         return (
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
-              <strong>Preview lane confirmed</strong>
-              <p>{`Appreesh stays queued inside CGU until ${june30LaunchDateLabel}, so this route captures interest without an external handoff.`}</p>
+              <strong>Reserve request received</strong>
+              <p>Your inquiry is logged with the studio print desk for the first edition run of Cache.</p>
             </article>
             <article className="cg-contact__affirmation">
               <strong>What happens next</strong>
-              <p>CGU keeps the preview signal internal and uses the submitted inbox for launch-window follow-up later.</p>
+              <p>We will reach out directly with edition details, slipcase options, and publication timing.</p>
             </article>
           </div>
         );
@@ -1309,7 +1309,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <>
             <fieldset className="cg-contact__fieldset">
               <legend className="cg-contact__legend">Choose the updates that matter</legend>
-              <p className="cg-contact__field-hint">Pick one or many. If you skip these, CGU treats this as a general request for Volume 1 signal updates.</p>
+              <p className="cg-contact__field-hint">Pick one or all three. If you skip, we&apos;ll just keep you posted on major vinyl releases and live sessions.</p>
               <GuidedIntakeChoiceGrid
                 options={mailingPreferenceOptions}
                 values={routeDetails.updatePreferences}
@@ -1450,11 +1450,11 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         );
       }
 
-      if (activeFlow.id === "appreesh-preview") {
+      if (activeFlow.id === "cache-early-access") {
         return (
-          <GuidedIntakeField label={activeFlow.noteLabel} htmlFor="contact-appreesh-note" fullWidth>
+          <GuidedIntakeField label={activeFlow.noteLabel} htmlFor="contact-cache-note" fullWidth>
             <textarea
-              id="contact-appreesh-note"
+              id="contact-cache-note"
               name="brief"
               rows={7}
               placeholder={activeFlow.notePlaceholder}
@@ -1586,10 +1586,10 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           </Button>
         ) : (
           <Button type="submit" className="cg-contact__submit" disabled={submissionState === "submitting"}>
-            {submissionState === "submitting" ? "Sending intake..." : "Send intake"}
+            {submissionState === "submitting" ? "Sending note..." : "Send note to studio"}
           </Button>
         )}
-        privacyText="Your intelligence stays inside the core studio signal flow."
+        privacyText="No spam, no data selling, and zero automated robot emails. Just direct studio correspondence."
       />
 
       <p className="cg-contact__direct-link">

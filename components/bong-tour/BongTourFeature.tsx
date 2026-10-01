@@ -132,80 +132,80 @@ const bongTourContactHref = buildContactHref({
   }
 });
 const bongTourContactCtaLabel = "Talk About the Film";
-const bongTourPrivatePathCtaLabel = "Open the Private Reading Path";
+const bongTourPrivatePathCtaLabel = "Request Reading Copy";
 
-const bongTourPremise = "A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard.";
+const bongTourPremise = "A sacred relic disappears from a Varanasi ghat and washes up on Sunset Boulevard.";
 const bongTourLogline =
-  "A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to a Hollywood trip that keeps mutating between cult comedy, diaspora myth, and industry reckoning.";
+  "A sacred relic disappears from a Varanasi ghat and washes up on Sunset Boulevard, dragging two displaced screenwriters into a Hollywood odyssey that careens between diaspora satire, cult comedy, and industry survival.";
 const bongTourHeroDescriptor =
-  "A cinematic pitch portal for a cult-comedy feature that moves from poster artifact to cue-world proof before it ever asks for a full read.";
+  "An independent cult-comedy feature screenplay in active development, accompanied by an original analog score from Creatives Guide Us.";
 
 const bongTourTreatmentBullets = [
-  "Diaspora masala satire with cult-comedy propulsion.",
-  "A film-world pitch built for tone, music, and collectible evidence.",
-  "A screenplay engine with sequel gravity."
+  "Sun-baked road satire with cult-comedy momentum.",
+  "Original soundtrack cues tracked to key script sequences.",
+  "Character bibles, scene lookbooks, and production breakdown."
 ] as const;
 
 const bongTourHeroModules = [
-  "Poster artifact",
-  "Private reading copy",
-  "Cue-room proof",
-  "Walls/Devine bridge"
+  "Feature Screenplay",
+  "Story Treatment",
+  "Soundtrack Cues",
+  "Production Vault"
 ] as const;
 
 const bongTourHeroFacts = [
   { label: "Format", value: "Feature screenplay" },
   { label: "Tone", value: "Diaspora cult comedy" },
-  { label: "Score bridge", value: "Walls/Devine Volume 1" }
+  { label: "Original Score", value: "Creatives Guide Us Lab" }
 ] as const;
 
 const bongTourHeroSignals = [
   {
-    label: "Private reading copy",
-    title: "Approved readers open the gate.",
-    description: "The screenplay stays behind the reader gate so the public route can sell tone without leaking the pages."
+    label: "Screenplay Draft",
+    title: "Watermarked reading copies.",
+    description: "The complete script and director lookbook are held in private circulation for producing partners."
   },
   {
-    label: "Cue rooms",
-    title: "Hear the film before you read it.",
-    description: "Three soundtrack-led entries make the world legible quickly before the private read asks for deeper commitment."
+    label: "Original Score",
+    title: "Composed alongside the script.",
+    description: "Analog guitar motifs, desert ambient textures, and rhythm tracks recorded at the studio sound lab."
   },
   {
-    label: "After-hours archive",
-    title: "Return for the object layer.",
-    description: "Artifacts stay quiet and optional so the poster, cue logic, and private read do the first heavy lifting."
+    label: "Production Archive",
+    title: "Visual & story ephemera.",
+    description: "Location scouting Polaroids, motel neon sketches, and artifact notes from development."
   }
 ] as const;
 
 const bongTourBridgeCards = [
   {
-    label: "Score bridge",
-    title: "Let the soundtrack prove motion first.",
+    label: "Original Score",
+    title: "Hear the film's sonic world.",
     description:
-      "Cue rooms do the proof work fast: they make tone, momentum, and the companion-world logic legible before anyone needs screenplay pages.",
+      "Original guitar motifs, ambient desert drones, and tape saturations composed directly to key sequences in the script.",
     href: "#score-sketches",
     ctaLabel: "Enter cue rooms"
   },
   {
-    label: "Reader gate",
-    title: "Keep the pages private until the fit is real.",
+    label: "Screenplay Access",
+    title: "Watermarked treatment and script.",
     description:
-      "The treatment stays behind the gate until the poster and cue world have already landed. Approved readers return through the protected path, and new readers request a private reading copy first.",
+      "Complete logline, act breakdowns, character bibles, and production notes available for co-producers and directors.",
     href: bongTourTreatmentHref,
-    ctaLabel: "Open the private reading path"
+    ctaLabel: "Request reading copy"
   }
 ] as const;
 
 const bongTourCollectorOverview = [
   {
-    label: "Artifact logic",
-    title: "Objects over merch.",
-    description: "Every drawer should feel like story evidence: sacred object, backstage credential, motel-night key, or sequel bait."
+    label: "Physical Artifacts",
+    title: "Story ephemera & objects.",
+    description: "Artifacts from the road: motel room keys, handwritten lyric scraps, and film stills."
   },
   {
-    label: "Shared reward spine",
-    title: "Walls/Devine still owns the live unlock path.",
-    description: "When Bong Tour turns secret or collectible, it should still hand the active reward flow back into Volume 1."
+    label: "Studio Score",
+    title: "Parallel catalog connection.",
+    description: "Soundtrack themes share recording heritage with the studio's debut LP, Walls/Devine Volume 1."
   }
 ] as const;
 
@@ -638,18 +638,18 @@ function RoomChallengeExperience({ challenge, roomSlug, onUnlock }: RoomChalleng
 const portalRooms: Record<string, ExperienceRoom> = {
   producer: {
     slug: "producer-portal",
-    eyebrow: "Smoke room",
-    title: "Enter the smoke room",
-    ambientLabel: "Smoke room",
-    ambientSubtitle: "Deck, tone, and score in one move",
-    kicker: "For producers, financiers, and creative partners who want the shortest route to the full experience stack.",
+    eyebrow: "Green Room",
+    title: "The Producer's Green Room",
+    ambientLabel: "Green Room",
+    ambientSubtitle: "Script drafts, cues & bad diner coffee",
+    kicker: "For producers, directors, and collaborators who want to cut straight to the music, the script, and the budget reality.",
     description:
-      "This room gathers the poster, story spine, soundtrack bridge, and object archive into one conversation without stepping outside the world.",
-    chips: ["Story spine", "Soundtrack alignment", "Object archive"],
+      "Written by screenwriters who have actually broken down on Route 66 in July. All materials—lookbook, scene breakdowns, score cues, and character bibles—are available here for serious packaging discussions.",
+    chips: ["Screenplay Draft", "Original Score", "Director Lookbook"],
     beats: [
-      "Lead with the poster and myth signal.",
-      "Move into cue-world proof via Walls/Devine.",
-      "Land on packaging and partner fit instead of oversharing plot."
+      "Full script and tone lookbook available by request.",
+      "Scored alongside live analog tracking sessions at CGU.",
+      "No bloated committee notes—just sharp, character-driven comedy."
     ],
     actions: [
       { label: bongTourContactCtaLabel, href: bongTourContactHref },
@@ -659,44 +659,44 @@ const portalRooms: Record<string, ExperienceRoom> = {
       source: "bong-tour-producer-portal",
       interest: "Bong Tour producer portal",
       submitLabel: "Request the room key",
-      successMessage: "You are in. Watch for the private deck route and next Bong Tour signal.",
-      note: "Used for deck access, soundtrack conversations, and partner follow-up only."
+      successMessage: "You are in. The script lookbook and private notes will reach your inbox shortly.",
+      note: "Direct correspondence with the writers and studio producing team."
     }
   },
   collector: {
     slug: "collector-room",
-    eyebrow: "After-hours archive",
-    title: "Enter the after-hours archive",
-    ambientLabel: "After-hours archive",
-    ambientSubtitle: "Artifact drawers and clue rooms",
-    kicker: "The optional return layer for readers who want the object world after the pitch already lands.",
+    eyebrow: "Production Vault",
+    title: "The Production Glovebox",
+    ambientLabel: "The Glovebox",
+    ambientSubtitle: "Receipts, Polaroids & motel room keys",
+    kicker: "Everything that survived the trip: motel keys, gas station receipts, lyric napkins, and tape scraps.",
     description:
-      "Open this takeover when Bong Tour needs to feel revisitable without letting the collector layer overpower the main pitch. Artifacts and clues surface here, while the universal reward path still resolves through Walls/Devine Volume 1.",
-    chips: ["Artifact drawers", "Cue-linked clues", "Volume 1 handoff"],
+      "Every comedy leaves weird evidence behind in the glove compartment. Inspect artifacts from the journey, listen to score sketches, and explore how the world of Bong Tour connects to the studio's debut LP, Walls/Devine Volume 1.",
+    chips: ["Road Artifacts", "Score Sketches", "Session Polaroids"],
     beats: [
-      "Best after the cue rooms or private reading path.",
-      "Artifacts should deepen tone, not replace the pitch.",
-      "Walls/Devine remains the live soundtrack and unlock exit."
+      "Real Polaroids and roadside artifacts from location scouting.",
+      "Original score cues tracked live on 2-inch tape.",
+      "Evidence that independent films are made with sweat, not software."
     ],
     actions: [
       { label: "Explore Cue Rooms", href: "#score-sketches" },
-      { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
+      { label: "Open Volume 1 catalog", href: wallsDevineCollectorGridHref, outline: true }
     ],
     signup: {
       source: "bong-tour-after-hours-archive",
       interest: "Bong Tour after-hours archive",
       submitLabel: "Request archive access",
       successMessage: "You are in. Watch for artifacts, clue drops, and the next archive opening.",
-      note: "Archive access only. Used for artifact notes, soundtrack-linked clues, and hidden-room updates."
+      note: "Archive access only. Used for artifact notes, soundtrack-linked clues, and room updates."
     },
     challenge: {
       label: "Archive seal",
-      prompt: "Align the archive seal before the drawer locks again.",
+      prompt: "Align the lock before the glovebox snaps shut.",
       mode: "seal-alignment",
       tokenLabel: "archive",
-      noteLabel: "Collectible unlocked",
-      noteTitle: "Sealed archive note unlocked",
-      noteBody: "The after-hours archive works best as the reward layer that follows the script and cue rooms. Let it deepen the myth instead of hiding the core pitch."
+      noteLabel: "Glovebox opened",
+      noteTitle: "Glovebox Drawer Unlocked",
+      noteBody: "Inside: three crumpled motel receipts, a faded cassette tape labeled 'DO NOT ERASE', and a hand-drawn map of Route 66 diner spots."
     }
   }
 };
@@ -710,8 +710,8 @@ const musicPosters: CuePoster[] = [
     image: jointQueenImage,
     tagline: "Psych-funk swagger for the Comedy Store takeover.",
     description:
-      "The first cue room proves the film can feel already scored: smoke, confidence, and a slightly dangerous sense of arrival.",
-    highlights: ["Psych-funk built for a cult entrance", "Anchors the first true takeover beat"],
+      "Overdriven tube amps and horn stabs for the scene where two broke screenwriters walk into the Comedy Store like they own the joint.",
+    highlights: ["Psych-funk entrance cue", "Terry Devine's overdriven fuzz bass"],
     video: {
       label: "Cue video deck",
       note: "Hook the Joint Queen cue video here when the scene cut is ready."
@@ -719,17 +719,17 @@ const musicPosters: CuePoster[] = [
     room: {
       slug: "cue-room-joint-queen",
       eyebrow: "Cue room",
-      title: "Joint Queen takeover",
+      title: "Joint Queen: Comedy Store Entrance",
       ambientLabel: "Cue room 01",
       ambientSubtitle: "Comedy Store ignition",
-      kicker: "This is the sound of the screenplay stepping out of deck mode and into live motion.",
+      kicker: "The cue where the comedy stops being polite and starts breaking furniture.",
       description:
-        "Joint Queen should frame the first moment Bong Tour feels inevitable. Swagger first, exposition later, with a direct handoff into the companion Volume 1 score path.",
-      chips: ["Comedy Store montage", "Psych-funk cue", "Cult-premium posture"],
-      beats: ["Built for struts and jump cuts.", "Lets the satire feel cinematic, not explanatory.", "Works best when it visibly connects to Walls/Devine."],
+        "Scored live at the CGU sound lab. Loud, swaggering, and built around a fuzz bass hook that refuses to apologize for itself. Pairs with the scene where our heroes crash an industry party with zero credentials.",
+      chips: ["Comedy Store scene", "Fuzz bass cue", "Live room tracking"],
+      beats: ["Loud guitars, real horns, no digital correction.", "Scored to match the comedic tempo of the scene.", "Cut direct to 2-inch analog tape."],
       actions: [
         { label: "Open Volume 1 score path", href: buildWallsDevineListeningRoomHref("joint-queen") },
-        { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
+        { label: "Open Volume 1 catalog", href: wallsDevineCollectorGridHref, outline: true }
       ]
     }
   },
@@ -739,10 +739,10 @@ const musicPosters: CuePoster[] = [
     badge: "Cue Room 02",
     playerTarget: "stash-daddy",
     image: stashDaddyImage,
-    tagline: "Backroom heist pulse with neon menace.",
+    tagline: "A low-slung, analog crawl for sketchy diner booths and bad decisions.",
     description:
-      "A low-end crawl for handshakes, side deals, and the specific Hollywood feeling that every invitation carries a trap door.",
-    highlights: ["Backstage pressure without losing humor", "Turns packaging and power into a groove"],
+      "Sub-bass crawl with late-night percussion. Scored for the scene where our heroes try trading a screenplay credit for a replacement radiator in Barstow.",
+    highlights: ["Late-night diner tension", "Analog synth and tabla rhythm"],
     video: {
       label: "Cue video deck",
       note: "Hook the Stash Daddy cue video here when the pressure-chamber cut is ready."
@@ -750,17 +750,17 @@ const musicPosters: CuePoster[] = [
     room: {
       slug: "cue-room-stash-daddy",
       eyebrow: "Cue room",
-      title: "Stash Daddy vault",
+      title: "Stash Daddy: Barstow Diner Booth",
       ambientLabel: "Cue room 02",
       ambientSubtitle: "Backroom pressure chamber",
-      kicker: "The cue that makes the underworld feel stylish enough to seduce and sharp enough to scare.",
+      kicker: "The sound of being 2,000 miles from home with $40 in cash and an overheating radiator.",
       description:
-        "Stash Daddy belongs to the meetings behind the meetings. It gives the screenplay a tactile world of codes, handlers, and low-lit leverage.",
-      chips: ["Backroom plotting", "Low-end authority", "Hollywood trapdoor energy"],
-      beats: ["Supports late-night deal scenes.", "Bridges satire and threat cleanly.", "Keeps the collectible rollout grounded in attitude."],
+        "Built from modular synths and live percussion. The groove for late-night motel rooms, neon reflections, and questionable handshake agreements with desert mechanics.",
+      chips: ["Desert motel scene", "Modular synth pulse", "Bad decisions"],
+      beats: ["Sets the rhythm for late-night backroom plotting.", "Balances threat and deadpan satire.", "Recorded at the studio sound lab in Los Angeles."],
       actions: [
         { label: "Open Volume 1 score path", href: buildWallsDevineListeningRoomHref("stash-daddy") },
-        { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
+        { label: "Open Volume 1 catalog", href: wallsDevineCollectorGridHref, outline: true }
       ]
     }
   },
@@ -770,10 +770,10 @@ const musicPosters: CuePoster[] = [
     badge: "Cue Room 03",
     playerTarget: "space-cruiser",
     image: spaceCruiserImage,
-    tagline: "Diaspora dreamscape for the return to source.",
+    tagline: "Cosmic tanpura and tape echo for when the van radiator finally explodes.",
     description:
-      "The cue that lets the myth breathe: river memory, processed tanpura, and lift that feels earned rather than ornamental.",
-    highlights: ["Connects Hollywood excess to India with grace", "Feels like the relic remembering where it came from"],
+      "When the 1994 Econoline van finally gives up the ghost in the Mojave desert, this ambient dreamscape takes over under the stars.",
+    highlights: ["Indian vocal color and tanpura", "Ambient desert drift"],
     video: {
       label: "Cue video deck",
       note: "Hook the Space Cruiser cue video here when the final-act reveal cut is ready."
@@ -781,17 +781,17 @@ const musicPosters: CuePoster[] = [
     room: {
       slug: "cue-room-space-cruiser",
       eyebrow: "Cue room",
-      title: "Space Cruiser drift",
+      title: "Space Cruiser: Mojave Breakdown",
       ambientLabel: "Cue room 03",
       ambientSubtitle: "Return-to-source atmosphere",
-      kicker: "This room turns the page from satire into myth without losing the campaign logic.",
+      kicker: "Cosmic drift for the moment when everything goes wrong and suddenly becomes beautiful.",
       description:
-        "Space Cruiser holds the emotional altitude shift. It is the cue that proves Bong Tour can end in revelation instead of just escalation.",
-      chips: ["Ganges lift", "Diaspora dreamscape", "Final-act release"],
-      beats: ["Lets the river imagery open up.", "Supports the India return with dignity.", "Creates the cleanest bridge into the companion album world."],
+        "Processed tanpura, tape delay, and desert ambient textures. The moment the road trip stops being an embarrassing disaster and turns into a genuine spiritual awakening.",
+      chips: ["Mojave night sequence", "Tanpura & delay", "Cosmic breakdown"],
+      beats: ["Blends Indian acoustic textures with desert silence.", "Written to score the emotional turning point of the script.", "Direct companion to Walls/Devine Volume 1."],
       actions: [
         { label: "Open Volume 1 score path", href: buildWallsDevineListeningRoomHref("space-cruiser") },
-        { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
+        { label: "Open Volume 1 catalog", href: wallsDevineCollectorGridHref, outline: true }
       ]
     }
   }
@@ -803,20 +803,20 @@ const collectibleTiles: CollectibleTile[] = [
     badge: "Collectible 01",
     title: "Ganges Relic",
     image: posterImage,
-    teaser: "The origin object: sacred river memory trapped inside a pitch-world artifact.",
-    challenge: "Align the river sigil before the smoke clears.",
-    reward: "Return note: mythology-first framing for the whole campaign.",
+    teaser: "The sacred six-foot glass rig that floated down the Ganges and ended up in a Sunset Boulevard pawn shop.",
+    challenge: "Align the river sigil before the incense burns down.",
+    reward: "Return note: origin lore for the whole journey.",
     room: {
       slug: "collectible-room-ganges-relic",
       eyebrow: "Collector object",
       title: "Ganges Relic chamber",
       ambientLabel: "Collector chamber",
       ambientSubtitle: "Origin artifact",
-      kicker: "The first collectible should not feel merch-adjacent. It should feel like a myth key.",
+      kicker: "A centuries-old ceremonial artifact that somehow smells faintly of patchouli.",
       description:
-        "This room frames the relic as the worldbuilding engine. Everything from the poster world to final-act gravity gets cleaner once the object feels sacred and cinematic.",
-      chips: ["Origin story", "Sacred object", "Poster-first myth"],
-      beats: ["Best used as the collector anchor.", "Lets the page lead with story gravity.", "Creates an obvious return-to-source motif."],
+        "Forged in Varanasi, lost at sea, and rescued from an estate sale in Tarzana. Two screenwriters swore an oath to return it to the sacred river—right after they pitch a streaming series about it.",
+      chips: ["Origin story", "Sacred object", "Varanasi to Sunset"],
+      beats: ["The central engine of the road trip.", "Fragile, six feet tall, and almost impossible to pack in a van.", "Creates an absurd clash between ancient ritual and Hollywood hustle."],
       actions: [
         { label: bongTourContactCtaLabel, href: bongTourContactHref },
         { label: "Explore Cue Rooms", href: "#score-sketches", outline: true }
@@ -826,15 +826,15 @@ const collectibleTiles: CollectibleTile[] = [
         interest: "Bong Tour Ganges Relic collector list",
         submitLabel: "Claim relic access",
         successMessage: "You are in. Watch for the next relic note and collector-room update.",
-        note: "Collector access only. Used for artifact notes and hidden-room openings."
+        note: "Collector access only. Used for artifact notes and room updates."
       },
       challenge: {
         label: "River sigil",
-        prompt: "Align the river sigil before the smoke clears.",
+        prompt: "Align the river sigil before the incense burns down.",
         mode: "seal-alignment",
         tokenLabel: "relic",
-        noteTitle: "Origin lock opened",
-        noteBody: "The relic works best when the page treats the object as sacred first and explanatory second. That is the actual campaign engine."
+        noteTitle: "Varanasi Seal Aligned",
+        noteBody: "Origin lore revealed: never entrust a sacred river relic to two screenwriters driving an Econoline with a blown head gasket."
       }
     }
   },
@@ -843,38 +843,38 @@ const collectibleTiles: CollectibleTile[] = [
     badge: "Collectible 02",
     title: "Comedy Store Pass",
     image: jointQueenImage,
-    teaser: "A backstage credential that turns the midsection of the page into a takeover instead of a summary.",
-    challenge: "Memorize the room code before the card dissolves.",
-    reward: "Return note: swagger-heavy campaign language for the initiation chapter.",
+    teaser: "A VIP backstage laminate sticky with spilled beer, granting access to green rooms where comedians argue about podcast metrics.",
+    challenge: "Memorize the room code before the bouncer looks your way.",
+    reward: "Return note: backstage lore and initiation notes.",
     room: {
       slug: "collectible-room-comedy-store-pass",
       eyebrow: "Collector object",
       title: "Comedy Store Pass",
       ambientLabel: "Collector chamber",
       ambientSubtitle: "Initiation credential",
-      kicker: "This is the collectible that lets the page feel like it has private doors.",
+      kicker: "Laminated in 1987. Smells like spilled draft beer and broken dreams.",
       description:
-        "The pass reframes the Comedy Store chapter as an access fantasy: secret rooms, escalating chaos, and a score-backed sense of being pulled somewhere dangerous.",
-      chips: ["Backstage key", "Initiation chapter", "Private-door energy"],
-      beats: ["Lets CTAs become hidden entries.", "Pairs naturally with Joint Queen.", "Keeps the satire stylish instead of flat."],
+        "The backstage pass that got our heroes kicked out of three green rooms, one VIP lounge, and an unauthorized open-mic set on Sunset Boulevard.",
+      chips: ["Backstage pass", "Green room politics", "Free drink tickets"],
+      beats: ["Grants access to rooms where deals are whispered.", "Pairs naturally with the Joint Queen score cue.", "Proof that confidence beats credentials."],
       actions: [
         { label: "Open Joint Queen", href: buildWallsDevineListeningRoomHref("joint-queen") },
-        { label: "Enter the smoke room", roomKey: "producer", outline: true }
+        { label: "Enter the green room", roomKey: "producer", outline: true }
       ],
       signup: {
         source: "bong-tour-comedy-store-pass",
         interest: "Bong Tour Comedy Store Pass collector list",
         submitLabel: "Get the backstage pass",
         successMessage: "You are in. Watch for backstage notes and the next room code.",
-        note: "Used for collector-room codes, cue notes, and backstage-style rollout updates."
+        note: "Used for room codes, cue notes, and backstage updates."
       },
       challenge: {
         label: "Room code",
-        prompt: "Memorize the room code before the card dissolves.",
+        prompt: "Memorize the backstage door code before the bouncer looks your way.",
         mode: "vault-code",
         tokenLabel: "pass",
-        noteTitle: "Backroom access granted",
-        noteBody: "This chapter works when the page behaves like private access instead of plot summary. The pass is permission to keep the initiation stylish."
+        noteTitle: "Backstage Laminate Verified",
+        noteBody: "You made it past the velvet rope. The bouncer isn't impressed, but at least the drink tickets are still valid."
       }
     }
   },
@@ -883,20 +883,20 @@ const collectibleTiles: CollectibleTile[] = [
     badge: "Collectible 03",
     title: "Lollipop Guild Key",
     image: stashDaddyImage,
-    teaser: "A motel-night object for the industry shadow system everybody references and nobody explains.",
-    challenge: "Pick the right corridor before the keycard deactivates.",
-    reward: "Return note: noir pressure without burying the comedy.",
+    teaser: "A brass key to Room 214 of the Sunset Motor Lodge. Do not touch the remote control.",
+    challenge: "Pick the right hallway before the fluorescent lights buzz out.",
+    reward: "Return note: motel room rewrites and neon paranoia.",
     room: {
       slug: "collectible-room-lollipop-guild-key",
       eyebrow: "Collector object",
       title: "Lollipop Guild Key",
       ambientLabel: "Collector chamber",
       ambientSubtitle: "Motel-night shadow layer",
-      kicker: "This object gives the campaign a threat signature without turning it grim for the sake of it.",
+      kicker: "A brass key with a plastic fob stamped 'DO NOT DUPLICATE'—which someone definitely duplicated.",
       description:
-        "Use the key as a portal into the underworld logic of the screenplay: strange warnings, industry whispers, and enough menace to sharpen the satire.",
-      chips: ["Motel-night shadow", "Industry underworld", "Noir pressure"],
-      beats: ["Pairs cleanly with Stash Daddy.", "Adds return-value to the page.", "Turns exposition into a collectible clue."],
+        "The roadside motel where the script rewrite happened over 72 hours of bad drip coffee, gas-station jerky, and escalating paranoia about rival screenwriters stealing the ending.",
+      chips: ["Sunset Motor Lodge", "Gas-station coffee", "Act II breakdown"],
+      beats: ["Pairs with the Stash Daddy low-end groove.", "The turning point where the jokes get desperate and brilliant.", "Includes a plastic room key with questionable stains."],
       actions: [
         { label: "Open Stash Daddy", href: buildWallsDevineListeningRoomHref("stash-daddy") },
         { label: "Open after-hours archive", roomKey: "collector", outline: true }
@@ -905,16 +905,16 @@ const collectibleTiles: CollectibleTile[] = [
         source: "bong-tour-lollipop-guild-key",
         interest: "Bong Tour Lollipop Guild Key collector list",
         submitLabel: "Hold the keycard",
-        successMessage: "You are in. Watch for noir-room drops and the next key signal.",
-        note: "Used for clue drops, collector access, and private room notes."
+        successMessage: "You are in. Watch for motel notes and the next room dispatch.",
+        note: "Used for story clues, script notes, and private room dispatches."
       },
       challenge: {
         label: "Corridor key",
-        prompt: "Pick the right corridor before the keycard deactivates.",
+        prompt: "Pick the right hallway before the fluorescent lights buzz out.",
         mode: "corridor-choice",
         tokenLabel: "key",
-        noteTitle: "Shadow corridor found",
-        noteBody: "The noir layer only works when it sharpens the comedy instead of smothering it. The hidden route is pressure, not gloom for its own sake."
+        noteTitle: "Room 214 Unlocked",
+        noteBody: "You have entered Room 214. The air conditioner sounds like an idling tractor, but the dialogue in Act II is finally funny."
       }
     }
   },
@@ -923,38 +923,38 @@ const collectibleTiles: CollectibleTile[] = [
     badge: "Collectible 04",
     title: "Upper Management Token",
     image: spaceCruiserImage,
-    teaser: "The sequel machine rendered as a polished object that feels seductive and ominous at the same time.",
-    challenge: "Keep the token spinning until the sequel offer appears.",
-    reward: "Return note: franchise bait without flattening the emotional close.",
+    teaser: "A gold-plated studio executive coin engraved with the words: 'Can we make it a franchise?'",
+    challenge: "Keep the coin spinning until the sequel offer appears.",
+    reward: "Return note: Hollywood development purgatory.",
     room: {
       slug: "collectible-room-upper-management-token",
       eyebrow: "Collector object",
       title: "Upper Management Token",
       ambientLabel: "Collector chamber",
       ambientSubtitle: "Sequel-machine bait",
-      kicker: "This collectible should feel like the industry smiling while it tries to own the myth.",
+      kicker: "A shiny piece of executive brass that promises backend points that will never exist.",
       description:
-        "The token turns the ending into a premium tease instead of a generic sequel wink. It keeps the satire sharp while preserving the possibility of a larger world.",
-      chips: ["Sequel machine", "Franchise bait", "Final image pressure"],
-      beats: ["Belongs near the closing invitation.", "Lets the campaign end on appetite.", "Protects the myth while opening the door."],
+        "Awarded to the screenwriters by a development VP who promised a three-picture deal, an animated prequel spinoff, and zero upfront money. The ultimate symbol of Hollywood development purgatory.",
+      chips: ["Three-picture deal", "Zero budget", "Hollywood accounting"],
+      beats: ["The pitch meeting where everyone smiles and nobody pays.", "Satirizes franchise hunger in the streaming era.", "Leads directly into the final desert realization."],
       actions: [
         { label: "Open Space Cruiser", href: buildWallsDevineListeningRoomHref("space-cruiser") },
-        { label: "Open Volume 1 collector path", href: wallsDevineCollectorGridHref, outline: true }
+        { label: "Open Volume 1 catalog", href: wallsDevineCollectorGridHref, outline: true }
       ],
       signup: {
         source: "bong-tour-upper-management-token",
         interest: "Bong Tour Upper Management Token collector list",
         submitLabel: "Hold the token",
-        successMessage: "You are in. Watch for sequel-machine notes and collector updates.",
-        note: "Used for collector drops, finale signals, and partner-facing updates."
+        successMessage: "You are in. Watch for sequel-machine notes and studio updates.",
+        note: "Used for studio drops, finale updates, and partner notes."
       },
       challenge: {
         label: "Token spin",
-        prompt: "Keep the token spinning until the sequel offer appears.",
+        prompt: "Keep the coin spinning until the sequel offer appears.",
         mode: "token-spin",
         tokenLabel: "token",
-        noteTitle: "Sequel machine exposed",
-        noteBody: "The ending lands harder when the token feels seductive and predatory at the same time. The object should sell appetite while revealing the trap."
+        noteTitle: "Franchise Deal Offered",
+        noteBody: "Congratulations: you've been offered a three-picture franchise deal with net backend profit participation after Hollywood studio accounting."
       }
     }
   }
@@ -1013,16 +1013,16 @@ export function BongTourFeature() {
             </figure>
 
             <div className="bt-hero__content">
-              <p className="bt-hero__eyebrow">Screenplay portal preview</p>
+              <p className="bt-hero__eyebrow">Screenplay Portal</p>
               <h1>Bong Tour</h1>
 
-              <p className="bt-hero__descriptor">A cult-comedy feature staged behind the live Walls/Devine world until the July 11 launch window opens the deeper route.</p>
+              <p className="bt-hero__descriptor">A sun-baked road comedy feature in active packaging, with an original score by the Creatives Guide Us sound lab.</p>
 
               <div className="bt-hero__modules" aria-label="Bong Tour preview modules">
-                <span>Poster artifact</span>
-                <span>Short premise</span>
-                <span>Launch conversation</span>
-                <span>{`Treatment opens ${june30LaunchDateLabel}`}</span>
+                <span>Feature Screenplay</span>
+                <span>Story Premise</span>
+                <span>Soundtrack Cues</span>
+                <span>Treatment by Request</span>
               </div>
 
               <div className="bt-hero__logline">
@@ -1030,21 +1030,18 @@ export function BongTourFeature() {
                 <p>{bongTourPremise}</p>
               </div>
 
-              <p className="bt-hero__positioning">Walls/Devine carries the live soundtrack and collector signal now. Bong Tour stays short on purpose until the treatment gate and deeper rooms open on July 11.</p>
+              <p className="bt-hero__positioning">The script and soundtrack cues are currently in packaging for production partners. Explore the premise, poster, and story below.</p>
 
               <div className="bt-hero__cta">
-                <Button as="a" href={bongTourSignalListHref} className="bt-button">
-                  Join the Volume 1 Signal List
+                <Button as="a" href={bongTourContactHref} className="bt-button">
+                  Inquire About Screenplay
                 </Button>
-                <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
-                  Start a Launch Conversation
-                </Button>
-                <Button as="a" href={bongTourTreatmentHref} className="bt-button bt-button--outline">
-                  {`Treatment Opens ${june30LaunchDateLabel}`}
+                <Button as="a" href="/walls-devine" className="bt-button bt-button--outline">
+                  Listen to Studio Score
                 </Button>
               </div>
 
-              <p className="bt-hero__route">Poster first. Launch conversation now. Private treatment and deeper score rooms unlock after July 11.</p>
+              <p className="bt-hero__route">Feature packaging in progress. Direct inquiries routed through the studio.</p>
 
               <div className="bt-hero__meta" aria-label="Bong Tour quick facts">
                 {bongTourHeroFacts.map((fact) => (
@@ -1057,19 +1054,19 @@ export function BongTourFeature() {
 
               <div className="bt-hero__signal-strip" aria-label="Bong Tour preview signals">
                 <article className="bt-hero__signal-card">
-                  <span>Live bridge</span>
-                  <strong>Walls/Devine carries the active score world now.</strong>
-                  <p>Use Volume 1 and its signal list as the live path while Bong Tour keeps the public route tight.</p>
+                  <span>Original Score</span>
+                  <strong>Soundtrack cues in progress at CGU.</strong>
+                  <p>Analog guitar, desert ambient cues, and live tracking from the Volume 1 studio sessions.</p>
                 </article>
                 <article className="bt-hero__signal-card">
-                  <span>Private treatment</span>
-                  <strong>{`The reader gate opens ${june30LaunchDateLabel}.`}</strong>
-                  <p>The screenplay pages stay off the public route until the launch window opens and reader review is in place.</p>
+                  <span>Screenplay</span>
+                  <strong>Feature script &amp; treatment.</strong>
+                  <p>Private lookbook, character bibles, and treatment available for producing partners and directors.</p>
                 </article>
                 <article className="bt-hero__signal-card">
-                  <span>Launch lane</span>
-                  <strong>Production and soundtrack conversations can start now.</strong>
-                  <p>The contact route stays open for partner fit, soundtrack interest, and launch sequencing without implying a live treatment release.</p>
+                  <span>Studio Inquiries</span>
+                  <strong>Direct rights &amp; packaging conversations.</strong>
+                  <p>Contact the studio team for reader copies, licensing, or co-production inquiries.</p>
                 </article>
               </div>
             </div>
@@ -1078,34 +1075,34 @@ export function BongTourFeature() {
 
         <section className="bt-bridge" aria-labelledby="bt-bridge-title">
           <header className="bt-section-header">
-            <p className="bt-section-header__eyebrow">Launch sequence</p>
-            <h2 id="bt-bridge-title">What stays live before July 11</h2>
-            <p>The public route is intentionally narrow right now: poster, premise, and partner-fit lane here; live music-world proof and collector signal inside Walls/Devine.</p>
+            <p className="bt-section-header__eyebrow">Creative Context</p>
+            <h2 id="bt-bridge-title">Sound &amp; Screen Under One Roof</h2>
+            <p>Creatives Guide Us develops screenplays in tandem with original sound design, matching the music to the film from the very first draft.</p>
           </header>
 
           <div className="bt-bridge__grid">
             <article className="bt-bridge__card">
-              <span>Live now</span>
+              <span>Active Release</span>
               <strong>Walls/Devine Volume 1</strong>
-              <p>The album world, collector path, and live reward spine remain the active public route until Bong Tour opens wider.</p>
+              <p>Listen to the debut album on 2-inch tape, featuring electric guitars and spoken verse that shape the sound world of Bong Tour.</p>
               <a href="/walls-devine" className="bt-bridge__card-link">
                 Open Walls/Devine
               </a>
             </article>
             <article className="bt-bridge__card">
-              <span>Signal bridge</span>
-              <strong>Use the Volume 1 signal list as the bridge.</strong>
-              <p>The July 11 expansion routes through the same inbox path so the live world and the staged worlds stay connected.</p>
+              <span>Mailing List</span>
+              <strong>Studio Notices &amp; Pressings</strong>
+              <p>Join the signal list for vinyl announcements, film packaging updates, and studio releases.</p>
               <a href={bongTourSignalListHref} className="bt-bridge__card-link">
                 Join the signal list
               </a>
             </article>
             <article className="bt-bridge__card">
-              <span>Partner lane</span>
-              <strong>Start the film-fit conversation now.</strong>
-              <p>Production, soundtrack, and partnership context can route now without opening the full treatment or archive stack early.</p>
+              <span>Direct Contact</span>
+              <strong>Production &amp; Rights Inquiries</strong>
+              <p>Reach out directly to request the screenplay treatment or discuss co-production opportunities.</p>
               <a href={bongTourContactHref} className="bt-bridge__card-link">
-                Start a launch conversation
+                Write to the Studio
               </a>
             </article>
           </div>
@@ -1113,24 +1110,24 @@ export function BongTourFeature() {
 
         <section className="bt-world" id="treatment" aria-labelledby="bt-treatment-title">
           <header className="bt-section-header">
-            <h2 id="bt-treatment-title">Treatment posture</h2>
-            <p>{`The private treatment stays protected and closed to the public route until ${june30LaunchDateLabel}. Approved readers return here after the gate opens.`}</p>
+            <h2 id="bt-treatment-title">Screenplay Treatment</h2>
+            <p>The treatment, lookbook, and character breakdowns are available by request to approved readers, directors, and production partners.</p>
           </header>
 
           <article className="bt-world__panel bt-world__panel--treatment">
             <p className="bt-treatment__lead">{bongTourLogline}</p>
             <ul className="bt-treatment__bullets">
-              <li>Poster and premise stay public now.</li>
-              <li>{`Private treatment access opens ${june30LaunchDateLabel}.`}</li>
-              <li>Deeper score rooms and archive layers stay downstream until launch.</li>
+              <li>Full feature logline, character breakdowns, and story acts.</li>
+              <li>Scored soundtrack cues from the studio sound lab.</li>
+              <li>Director lookbook and physical location scouting notes.</li>
             </ul>
 
             <div className="bt-section-header__actions">
-              <Button as="a" href={bongTourTreatmentHref} className="bt-button">
-                {`Treatment Opens ${june30LaunchDateLabel}`}
+              <Button as="a" href={bongTourContactHref} className="bt-button">
+                Request Screenplay Treatment
               </Button>
-              <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
-                Start a Launch Conversation
+              <Button as="a" href="/walls-devine" className="bt-button bt-button--outline">
+                Listen to the Score →
               </Button>
             </div>
           </article>
@@ -1138,15 +1135,15 @@ export function BongTourFeature() {
 
         <section className="bt-finale" id="bong-tour-intake" aria-labelledby="bt-finale-title">
           <div className="bt-finale__body">
-            <h2 id="bt-finale-title">Want to be in the next window?</h2>
-            <p>Use the signal list if you want the July 11 bridge through the live album world, or open a launch conversation if the film fit is already clear.</p>
+            <h2 id="bt-finale-title">Connect with the Studio</h2>
+            <p>Whether discussing screenplay packaging, soundtrack supervision, or physical editions, we welcome direct inquiries.</p>
 
             <div className="bt-finale__actions">
-              <Button as="a" href={bongTourSignalListHref} className="bt-button">
-                Join the Volume 1 Signal List
+              <Button as="a" href={bongTourContactHref} className="bt-button">
+                Write to the Studio
               </Button>
-              <Button as="a" href={bongTourContactHref} className="bt-button bt-button--outline">
-                Start a Launch Conversation
+              <Button as="a" href={bongTourSignalListHref} className="bt-button bt-button--outline">
+                Join the Mailing List
               </Button>
             </div>
           </div>
@@ -1179,7 +1176,7 @@ export function BongTourFeature() {
             </figure>
 
             <div className="bt-hero__content">
-              <p className="bt-hero__eyebrow">Cinematic pitch portal</p>
+              <p className="bt-hero__eyebrow">Screenplay &amp; Original Score</p>
               <h1>Bong Tour</h1>
 
               <p className="bt-hero__descriptor">{bongTourHeroDescriptor}</p>
@@ -1195,7 +1192,7 @@ export function BongTourFeature() {
                 <p>{bongTourPremise}</p>
               </div>
 
-              <p className="bt-hero__positioning">Poster first, then cue-world proof, then a private reading copy for approved partners. The archive stays downstream so the pitch stays legible on first pass.</p>
+              <p className="bt-hero__positioning">A road comedy about two displaced screenwriters, a stolen relic, and a chaotic crossing from the banks of Varanasi to the neon decay of Sunset Boulevard.</p>
 
               <div className="bt-hero__cta">
                 <Button
@@ -1216,7 +1213,7 @@ export function BongTourFeature() {
                 </Button>
               </div>
 
-              <p className="bt-hero__route">Poster first. Cue rooms prove the score. The private reading copy opens after approval, and the archive stays as the return layer.</p>
+              <p className="bt-hero__route">Screenplay draft and original score cues in active development. Watermarked reading copies and production inquiries handled directly by the studio.</p>
 
               <div className="bt-hero__meta" aria-label="Bong Tour quick facts">
                 {bongTourHeroFacts.map((fact) => (
@@ -1242,9 +1239,9 @@ export function BongTourFeature() {
 
         <section className="bt-bridge" aria-labelledby="bt-bridge-title">
           <header className="bt-section-header">
-            <p className="bt-section-header__eyebrow">Experience bridge</p>
-            <h2 id="bt-bridge-title">Why the world opens this way</h2>
-            <p>The public route is disciplined on purpose: poster first, score proof second, private pages only after the fit is real. The archive stays downstream so the pitch can breathe on first pass.</p>
+            <p className="bt-section-header__eyebrow">Creative Context</p>
+            <h2 id="bt-bridge-title">Script, Sound, and Atmosphere</h2>
+            <p>Written and scored under one roof. The script's kinetic pacing is locked directly to original analog score cues and physical visual development.</p>
           </header>
 
           <div className="bt-bridge__grid">
@@ -1263,8 +1260,8 @@ export function BongTourFeature() {
 
         <section className="bt-world" id="treatment" aria-labelledby="bt-treatment-title">
           <header className="bt-section-header">
-            <h2 id="bt-treatment-title">Private Reading Path</h2>
-            <p>A protected reading layer for approved partners who need the full story architecture after the public tone, poster logic, and soundtrack proof are already clear.</p>
+            <h2 id="bt-treatment-title">Screenplay Treatment</h2>
+            <p>Complete lookbook, character bibles, and watermarked reading copies are available for producing partners, directors, and talent.</p>
           </header>
 
           <article className="bt-world__panel bt-world__panel--treatment">
@@ -1288,8 +1285,8 @@ export function BongTourFeature() {
 
         <section className="bt-music" id="score-sketches" aria-labelledby="bt-music-title">
           <header className="bt-section-header">
-            <h2 id="bt-music-title">Cue Rooms</h2>
-            <p>These cue rooms do the proof work fast: three score-led entries that make the film world legible before the archive asks for deeper commitment.</p>
+            <h2 id="bt-music-title">Soundtrack Cue Rooms</h2>
+            <p>Original compositions scored to specific script scenes, charting the journey from sacred river ghats to California neon.</p>
           </header>
 
           <ul className="bt-music__grid">
@@ -1306,7 +1303,7 @@ export function BongTourFeature() {
 
                 <div className="bt-music__details">
                   <p className="bt-music__lede">{poster.description}</p>
-                  <div className="bt-world__theme-row" aria-label={`${poster.title} proof points`}>
+                  <div className="bt-world__theme-row" aria-label={`${poster.title} scene motifs`}>
                     {poster.highlights.map((highlight) => (
                       <span key={highlight}>{highlight}</span>
                     ))}
@@ -1328,8 +1325,8 @@ export function BongTourFeature() {
         <section className="bt-collectibles" id="collector-grid" aria-labelledby="bt-collectibles-title">
           <header className="bt-section-header bt-section-header--split">
             <div>
-              <h2 id="bt-collectibles-title">After-hours Archive</h2>
-              <p>Artifacts live inside the world, not beside it. Treat this archive as the return layer after the poster, private reading path, and cue rooms have already earned the deeper dive.</p>
+              <h2 id="bt-collectibles-title">Production Archive &amp; Artifacts</h2>
+              <p>Location scouting Polaroids, preliminary set designs, character artifacts, and unreleased studio demo takes from development.</p>
             </div>
             <div className="bt-section-header__actions">
               <Button type="button" className="bt-button bt-button--outline" onClick={() => setActiveRoom(portalRooms.collector)}>
@@ -1371,8 +1368,8 @@ export function BongTourFeature() {
 
         <section className="bt-finale" id="bong-tour-intake" aria-labelledby="bt-finale-title">
           <div className="bt-finale__body">
-            <h2 id="bt-finale-title">Seen enough?</h2>
-            <p>If the tone lands, request treatment access, explore the cue rooms, or reach out for production, soundtrack, collector-world, or partnership conversations.</p>
+            <h2 id="bt-finale-title">Connect with the Studio</h2>
+            <p>For co-production inquiries, rights availability, score licensing, or reader copy requests, reach out directly to the studio team.</p>
 
             <div className="bt-finale__actions">
               <Button as="a" href={bongTourContactHref} className="bt-button">

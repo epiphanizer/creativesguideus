@@ -51,7 +51,7 @@ export function LinkHubLanding() {
             <span className="cg-link-hub__identity-mark">CGU</span>
             <div>
               <strong>Creatives Guide Us</strong>
-              <small>sound · story · signal</small>
+              <small>sound · screen · print</small>
             </div>
           </div>
 

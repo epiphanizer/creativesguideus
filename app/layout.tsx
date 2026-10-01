@@ -7,7 +7,7 @@ import GlobalChrome from "@/components/GlobalChrome";
 
 export const metadata: Metadata = {
   title: "Creatives Guide Us",
-  description: "Boutique web, music, and writing studio portfolio."
+  description: "Independent creative studio & record label. Sound, screen, and tactile editions."
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
