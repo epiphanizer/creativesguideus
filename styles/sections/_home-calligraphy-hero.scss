@@ -1,0 +1,406 @@
+// =============================================================================
+// CGU SIGNATURE CALLIGRAPHIC HERO (Light Archival Touch & Living Ink Formula)
+// =============================================================================
+
+.cg-calligraphy-hero {
+  position: relative;
+  min-height: calc(100vh - var(--cg-header-height, 4rem));
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--cg-color-canvas);
+  box-sizing: border-box;
+}
+
+.cg-calligraphy-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: block;
+}
+
+.cg-calligraphy-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(circle at 50% 50%, transparent 45%, rgba(224, 215, 202, 0.55) 95%);
+}
+
+.cg-calligraphy-overlay {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  min-height: calc(100vh - var(--cg-header-height, 4rem));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(0.6rem, 1.6vh, 1.3rem) 1.5rem;
+  box-sizing: border-box;
+  pointer-events: none;
+
+  & > * {
+    pointer-events: auto;
+  }
+}
+
+// Top Masthead Bar
+.cg-calligraphy-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1040px;
+  font-family: var(--cg-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-600);
+  opacity: 0.95;
+  animation: fadeInDown 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.cg-calligraphy-top-bar__location {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cg-calligraphy-tube-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--cg-color-bong-ember);
+  box-shadow: 0 0 8px var(--cg-color-bong-ember);
+  animation: pulseGlow 3.5s ease-in-out infinite;
+}
+
+.cg-calligraphy-top-bar__tag {
+  color: var(--cg-color-ink-400);
+}
+
+// Center Signature Card
+.cg-calligraphy-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 720px;
+  padding: clamp(1.5rem, 2.8vh, 2.3rem) clamp(1.4rem, 3.2vw, 2.5rem);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(22, 22, 22, 0.16);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 1.3rem;
+  box-shadow: 0 24px 60px rgba(70, 50, 30, 0.10), 0 2px 8px rgba(0, 0, 0, 0.03);
+  animation: fadeInUp 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.cg-calligraphy-title {
+  font-family: var(--cg-font-serif);
+  font-size: clamp(2.0rem, 4.2vw, 3.2rem);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  margin-left: 0.18em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-950);
+  line-height: 1.08;
+  margin-bottom: 0.25rem;
+}
+
+.cg-calligraphy-subtitle {
+  font-family: var(--cg-font-serif);
+  font-style: italic;
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+  color: var(--cg-color-walls-red);
+  letter-spacing: 0.08em;
+  opacity: 0.95;
+  margin-bottom: 0.4rem;
+}
+
+// Gateway Pills
+.cg-calligraphy-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cg-calligraphy-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--cg-font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 0.42rem 1rem;
+  border-radius: 9999px;
+  background: rgba(22, 22, 22, 0.05);
+  border: 1px solid rgba(22, 22, 22, 0.16);
+  color: var(--cg-color-ink-800);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: var(--cg-color-walls-red);
+    color: var(--cg-color-walls-red);
+  }
+
+  &--active {
+    background: var(--cg-color-ink-950);
+    color: #ffffff;
+    border-color: var(--cg-color-ink-950);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+
+    &:hover {
+      background: var(--cg-color-walls-red);
+      color: #ffffff;
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    border-style: dashed;
+    border-color: rgba(22, 22, 22, 0.25);
+  }
+
+  &__icon {
+    font-size: 0.85rem;
+  }
+}
+
+// Manifesto Prose
+.cg-calligraphy-prose {
+  font-family: var(--cg-font-sans);
+  font-size: clamp(0.85rem, 1.3vw, 0.96rem);
+  line-height: 1.75;
+  color: var(--cg-color-ink-700);
+  margin-bottom: 1.35rem;
+  max-width: 630px;
+
+  strong {
+    color: var(--cg-color-ink-950);
+    font-weight: 600;
+  }
+}
+
+// Ribbon Spotlight
+.cg-calligraphy-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--cg-font-sans);
+  font-size: 0.76rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: 0.75rem;
+  background: rgba(140, 29, 24, 0.07);
+  border: 1px solid rgba(140, 29, 24, 0.25);
+  color: var(--cg-color-walls-red-deep);
+  margin-bottom: 1.55rem;
+  text-align: left;
+  line-height: 1.45;
+
+  strong {
+    color: var(--cg-color-walls-red-deep);
+    font-weight: 600;
+  }
+}
+
+// Action Buttons
+.cg-calligraphy-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cg-calligraphy-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.55rem;
+  font-family: var(--cg-font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: var(--cg-color-ink-950);
+  border: 1px solid var(--cg-color-ink-950);
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+  &:hover {
+    background: var(--cg-color-walls-red);
+    border-color: var(--cg-color-walls-red);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(140, 29, 24, 0.25);
+  }
+}
+
+.cg-calligraphy-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.35rem;
+  font-family: var(--cg-font-mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-900);
+  background: rgba(22, 22, 22, 0.05);
+  border: 1px solid rgba(22, 22, 22, 0.22);
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: var(--cg-color-bong-ember);
+    color: var(--cg-color-bong-ember);
+    background: rgba(194, 94, 26, 0.08);
+    transform: translateY(-1px);
+  }
+}
+
+.cg-calligraphy-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  font-family: var(--cg-font-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-700);
+  background: transparent;
+  border: 1px solid rgba(22, 22, 22, 0.2);
+  border-radius: 9999px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: var(--cg-color-ink-950);
+    color: var(--cg-color-ink-950);
+    background: rgba(22, 22, 22, 0.04);
+  }
+}
+
+// Bottom Cadence Bar
+.cg-calligraphy-bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1040px;
+  font-family: var(--cg-font-mono);
+  font-size: 0.72rem;
+  color: var(--cg-color-ink-500);
+  letter-spacing: 0.08em;
+  animation: fadeInUp 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.cg-calligraphy-cadence {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  user-select: none;
+  color: var(--cg-color-ink-700);
+  transition: color 0.25s ease;
+
+  &:hover {
+    color: var(--cg-color-walls-red);
+  }
+}
+
+.cg-calligraphy-cadence__ring {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--cg-color-walls-red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cg-calligraphy-cadence__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--cg-color-walls-red);
+  animation: breathPulse 8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.cg-calligraphy-scroll-link {
+  background: transparent;
+  border: none;
+  font-family: var(--cg-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--cg-color-ink-600);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--cg-color-ink-950);
+  }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 0.95; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.45; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+@keyframes breathPulse {
+  0% { transform: scale(0.6); opacity: 0.35; }
+  50% { transform: scale(1.4); opacity: 1; }
+  100% { transform: scale(0.6); opacity: 0.35; }
+}
+
+@media (max-width: 768px) {
+  .cg-calligraphy-card {
+    padding: 1.8rem 1.4rem;
+    border-radius: 1.2rem;
+  }
+  .cg-calligraphy-top-bar {
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: center;
+  }
+  .cg-calligraphy-bottom-bar {
+    flex-direction: column;
+    gap: 0.6rem;
+    text-align: center;
+  }
+}

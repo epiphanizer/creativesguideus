@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import CalligraphySignatureHero from "@/components/home/CalligraphySignatureHero";
 import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
 import { albumLaunchCampaignWindow } from "@/lib/launch-state";
@@ -23,9 +24,14 @@ const homeSignalListHref = buildContactHref({
 
 export default function HomePage() {
   return (
-    <main className="cg-page cg-broadsheet-page" id="hero">
-      {/* 1. BROADSHEET MASTHEAD */}
-      <header className="cg-masthead" aria-label="Publication masthead">
+    <>
+      {/* Studio Signature: Living Calligraphic Formula */}
+      <CalligraphySignatureHero />
+
+      {/* Broadsheet Dispatches & Stories */}
+      <main className="cg-page cg-broadsheet-page" id="broadsheet-editorial">
+        {/* 1. BROADSHEET MASTHEAD */}
+        <header className="cg-masthead" aria-label="Publication masthead">
         <div className="cg-masthead__meta-bar">
           <div className="cg-masthead__meta-col">
             <span className="cg-meta-kicker">STUDIO &amp; RECORD LABEL</span>
@@ -291,5 +297,6 @@ export default function HomePage() {
         </div>
       </section>
     </main>
+    </>
   );
 }
