@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import CalligraphySignatureHero from "@/components/home/CalligraphySignatureHero";
+import SubtleCalligraphyAtmosphere from "@/components/home/SubtleCalligraphyAtmosphere";
 import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
 import { albumLaunchCampaignWindow } from "@/lib/launch-state";
@@ -24,14 +24,11 @@ const homeSignalListHref = buildContactHref({
 
 export default function HomePage() {
   return (
-    <>
-      {/* Studio Signature: Living Calligraphic Formula */}
-      <CalligraphySignatureHero />
+    <main className="cg-page cg-broadsheet-page" id="broadsheet-editorial">
+      {/* 1. BROADSHEET MASTHEAD WITH SUBTLE INK ATMOSPHERE */}
+      <header className="cg-masthead" aria-label="Publication masthead">
+        <SubtleCalligraphyAtmosphere />
 
-      {/* Broadsheet Dispatches & Stories */}
-      <main className="cg-page cg-broadsheet-page" id="broadsheet-editorial">
-        {/* 1. BROADSHEET MASTHEAD */}
-        <header className="cg-masthead" aria-label="Publication masthead">
         <div className="cg-masthead__meta-bar">
           <div className="cg-masthead__meta-col">
             <span className="cg-meta-kicker">STUDIO &amp; RECORD LABEL</span>
@@ -53,7 +50,7 @@ export default function HomePage() {
             We cut records on analog tape, write screenplays about bad ideas, and print physical things because digital files don&apos;t smell like ink or warm tubes.
           </h1>
           <p className="cg-masthead__lede">
-            An independent studio and record label based in Los Angeles. No algorithmic playlists, no venture capital, and no pitch decks. Currently streaming Walls/Devine Volume 1 in the listening room.
+            An independent studio and record label based in Los Angeles &amp; Hawaiʻi. No algorithmic playlists, no venture capital, and no pitch decks. Currently streaming Walls/Devine Volume 1 in the listening room.
           </p>
         </div>
       </header>
@@ -297,6 +294,5 @@ export default function HomePage() {
         </div>
       </section>
     </main>
-    </>
   );
 }
