@@ -135,7 +135,7 @@ function buildListeningRoomShareUrl(origin: string, track: SongPostCard) {
 
 function buildListeningRoomShareText(track: SongPostCard) {
   if (track.isPlaceholder) {
-    return `Preview the placeholder chapter "${track.title}" in the Walls/Devine Volume 1 Listening Room. ${track.hook}`;
+    return `Preview chapter "${track.title}" in the Walls/Devine Volume 1 Listening Room. ${track.hook}`;
   }
 
   return `Listen to "${track.title}" in the Walls/Devine Volume 1 Listening Room. ${track.hook}`;

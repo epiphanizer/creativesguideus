@@ -151,13 +151,13 @@ export default function HomePage() {
       <section className="cg-dispatches" aria-labelledby="dispatches-title">
         <div className="cg-rule-header">
           <div className="cg-rule-header__left">
-            <span className="cg-badge">DISPATCHES</span>
+            <span className="cg-badge">STUDIO PRODUCTIONS</span>
             <h2 id="dispatches-title" className="cg-rule-header__heading">
-              Works in Active Development
+              Current Productions &amp; Editions
             </h2>
           </div>
           <div className="cg-rule-header__right">
-            <span className="cg-rule-header__date">SCREENPLAY · MONOGRAPH &amp; ARCHIVE</span>
+            <span className="cg-rule-header__date">FEATURE SCREENPLAY · ARCHIVAL MONOGRAPH</span>
           </div>
         </div>
 
@@ -165,8 +165,8 @@ export default function HomePage() {
           {/* Dispatch 01: Bong Tour */}
           <article className="cg-dispatch-column cg-dispatch-column--bong" aria-label="Bong Tour Screenplay">
             <div className="cg-dispatch-column__mast">
-              <span className="cg-meta-kicker cg-meta-kicker--tobacco">DISPATCH 01 · FEATURE SCREENPLAY</span>
-              <span className="cg-dispatch-column__tag">IN DEVELOPMENT</span>
+              <span className="cg-meta-kicker cg-meta-kicker--tobacco">DISPATCH 01 · FEATURE FILM</span>
+              <span className="cg-dispatch-column__tag">ORIGINAL SCREENPLAY</span>
             </div>
 
             <figure className="cg-dispatch-column__media">
@@ -178,10 +178,10 @@ export default function HomePage() {
                     sizes="(max-width: 960px) 90vw, 45vw"
                     className="cg-dispatch-column__image"
                   />
-                  <span className="cg-dispatch-column__poster-badge">Read Premise ↗</span>
+                  <span className="cg-dispatch-column__poster-badge">Read Treatment ↗</span>
                 </div>
               </Link>
-              <figcaption>Feature screenplay &amp; original score in active packaging</figcaption>
+              <figcaption>Feature screenplay treatment &amp; original score suite</figcaption>
             </figure>
 
             <h3 className="cg-dispatch-column__title">
@@ -194,7 +194,7 @@ export default function HomePage() {
 
             <div className="cg-dispatch-column__action">
               <Link href="/bong-tour" className="cg-inline-link">
-                Explore Screenplay Treatment →
+                Read Treatment &amp; Hear Cues →
               </Link>
             </div>
           </article>
@@ -203,7 +203,7 @@ export default function HomePage() {
           <article className="cg-dispatch-column cg-dispatch-column--cache" aria-label="Cache Monograph">
             <div className="cg-dispatch-column__mast">
               <span className="cg-meta-kicker">DISPATCH 02 · MONOGRAPH &amp; ARCHIVE</span>
-              <span className="cg-dispatch-column__tag">SERIES 2027</span>
+              <span className="cg-dispatch-column__tag">LIMITED EDITION</span>
             </div>
 
             <figure className="cg-dispatch-column__media cg-dispatch-column__media--symbolic">
@@ -214,7 +214,7 @@ export default function HomePage() {
                   <div className="cg-symbolic-block__sub">Physical Monograph &amp; Companion Audio</div>
                 </div>
               </Link>
-              <figcaption>Limited hardbound volume with companion 7-inch lathe cut</figcaption>
+              <figcaption>Hand-numbered hardbound volume with companion 7-inch lathe cut</figcaption>
             </figure>
 
             <h3 className="cg-dispatch-column__title">
@@ -227,7 +227,7 @@ export default function HomePage() {
 
             <div className="cg-dispatch-column__action">
               <Link href="/cache" className="cg-inline-link">
-                Request Edition Notice →
+                Inspect Archival Edition →
               </Link>
             </div>
           </article>

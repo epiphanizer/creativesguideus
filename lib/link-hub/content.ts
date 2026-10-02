@@ -57,7 +57,7 @@ const defaultBongTourLink = {
   title: "Bong Tour",
   description: "A comedy about hauling a fragile, six-foot hand-blown glass rig across Route 66 in July heat in a van with a broken radiator. Motels, road food, and original score cues.",
   href: "/bong-tour",
-  ctaLabel: "Read the premise",
+  ctaLabel: "Read treatment & cues",
   isFeatured: false,
   isActive: true
 } satisfies LinkHubLink;
@@ -68,7 +68,7 @@ const defaultCacheLink = {
   title: "Cache: Outtakes & Ephemera",
   description: "A hand-bound monograph of studio outtakes, coffee-stained lyric sheets, blurry Polaroids, and a lathe-cut 7-inch record of unreleased room audio.",
   href: "/cache",
-  ctaLabel: "Inspect the archive",
+  ctaLabel: "Inspect the edition",
   isFeatured: false,
   isActive: true
 } satisfies LinkHubLink;
@@ -96,7 +96,7 @@ const canonicalLinkOrder = [
 export const defaultLinkHubContent: LinkHubContent = {
   eyebrow: "Studio Directory",
   title: "Creatives Guide Us Directory",
-  description: "Original records built on real guitars and SP-404 chops in Ableton, screenplays in progress, and editions edited painstakingly ourselves from our studio in Salt Lake City, operating globally. Click around, listen to some tunes, or drop us a line.",
+  description: "Original records built on real guitars and SP-404 chops in Ableton, original feature screenplays, and physical editions edited painstakingly ourselves from our studio in Salt Lake City, operating globally. Click around, listen to some tunes, or drop us a line.",
   updatedAt: defaultUpdatedAt,
   links: [
     defaultWallsDevineLink,

@@ -249,7 +249,7 @@ export function BongTourLanding() {
           <div className="bt-hero__copy">
             <SectionHeader
               id="bong-tour-title"
-              eyebrow="Feature Screenplay & Film Packaging"
+              eyebrow="Feature Screenplay & Original Score"
               title="Bong Tour"
               headingLevel="h1"
               description="A diaspora masala satire where Hollywood mania collides with Indian myth logic. The MacGuffin is a sacred relic blessed and cursed by the Ganges."

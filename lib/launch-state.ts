@@ -36,14 +36,14 @@ export const cguLaunchState: Record<"wallsDevine" | "bongTour" | "appreesh" | "c
     launchDate: bongTourLaunchDateLabel
   },
   appreesh: {
-    status: "preview",
-    label: `Opening ${appreeshLaunchDateLabel}`,
+    status: "live",
+    label: "Available Now",
     launchDate: appreeshLaunchDateLabel
   },
   cache: {
-    status: "preview",
-    label: `Opening ${cacheLaunchYearLabel}`,
-    launchDate: cacheLaunchYearLabel
+    status: "live",
+    label: "Limited Edition",
+    launchDate: null
   }
 };
 

@@ -286,7 +286,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
       routingNote:
         "Walls/Devine studio mailing list: vinyl pressings, physical editions, and private listening sessions.",
       summary: [
-        "Walls/Devine is currently in release while Bong Tour and Cache are in active development.",
+        "Direct studio dispatches across Walls/Devine Volume 1, the Bong Tour screenplay, and Cache editions.",
         "Direct email dispatches for vinyl announcements, liner notes, and private listening sessions.",
         "Direct studio communication with zero automated marketing loops."
       ],
@@ -432,7 +432,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
       routingNote:
         "Bong Tour film packaging, co-production, and original score inquiries.",
       summary: [
-        "Feature screenplay and original soundtrack cues in active development.",
+        "Completed feature screenplay and original soundtrack cues available for production review.",
         "Co-production, financing, music licensing, and distribution conversations.",
         "Direct correspondence with the film's creators and studio partners."
       ],
@@ -758,7 +758,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       {
         label: "Project",
         value: form.projectTitle.trim() || "Bong Tour",
-        description: "Production, soundtrack, and collector-world context stay attached to the film while the public route stays in preview."
+        description: "Production, soundtrack, and collector-world context stay directly attached to the project."
       },
       {
         label: "Next move",
