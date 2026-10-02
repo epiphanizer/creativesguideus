@@ -49,7 +49,7 @@ export function CacheFeature() {
           <p className="cache-section-header__eyebrow">Studio Monograph &amp; Archive · Series 2027</p>
           <h1>Cache</h1>
           <p className="cache-world__deck">
-            A hand-numbered archival volume of studio outtakes, spilled-coffee lyric sheets, blurry Polaroids, and woodcut proofs from the tracking sessions. Includes a lathe-cut 7-inch record featuring studio banter, false starts, and warm analog gold.
+            A hand-numbered archival volume of studio outtakes, spilled-coffee lyric sheets, blurry Polaroids, and woodcut proofs from the tracking sessions. Includes a lathe-cut 7-inch record featuring studio banter, false starts, and unreleased room audio.
           </p>
 
           <div className="cache-world__actions">
@@ -62,7 +62,7 @@ export function CacheFeature() {
           </div>
 
           <p className="cache-world__meta-line">
-            Assembled by hand at Creatives Guide Us in Los Angeles. Proof that records are made by real humans in dark rooms, not software plugins.
+            Assembled by hand at Creatives Guide Us in Salt Lake City. Proof that records are made by real humans in real rooms, not software plugins.
           </p>
         </header>
 
@@ -85,7 +85,7 @@ export function CacheFeature() {
               <p className="cache-section-header__eyebrow">Debut Album</p>
               <h2>Walls/Devine Volume 1 is streaming now.</h2>
               <p>
-                Four songs tracked live on 2-inch tape late at night. Stream all four tracks in the listening room with synchronized lyric journals, or order the physical 12-inch vinyl pressing.
+                Four songs tracked live late at night with real instruments. Stream all four tracks in the listening room with synchronized lyric journals, or order the physical 12-inch vinyl pressing.
               </p>
               <div className="cache-world__track-actions">
                 <Link href="/walls-devine" className="cache-button">

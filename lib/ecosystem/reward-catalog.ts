@@ -26,13 +26,13 @@ const ecosystemRewardCatalog = {
   "wd-joint-queen-hidden-transmission": {
     id: "wd-joint-queen-hidden-transmission",
     headline: "Stash unsealed",
-    revealTitle: "Studio session tape",
-    revealBody: "You've unlocked the Joint Queen session tape. Enter your email to receive the unreleased acoustic demo and studio tracking notes directly from the reel.",
+    revealTitle: "Studio session audio",
+    revealBody: "You've unlocked the Joint Queen session audio. Enter your email to receive the unreleased acoustic demo and studio tracking notes directly.",
     chapter: "Joint Queen",
     rewardType: "hidden_audio",
     rewardLabel: "Joint Queen unreleased demo",
     claimTitle: "Claim Studio Audio",
-    claimCopy: "The tape is cued. Enter your email below to receive the private audio link and session notes.",
+    claimCopy: "The session is cued. Enter your email below to receive the private audio link and session notes.",
     submitLabel: "Send studio audio",
     successMessage: "Audio queued. We will send the private audio link directly to your inbox.",
     formNote: "We send the private audio link directly to this address. No spam or commercial mail."

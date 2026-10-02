@@ -22,7 +22,7 @@ const defaultWallsDevineLink = {
   id: "walls-devine",
   eyebrow: "Debut Album",
   title: "Walls/Devine Volume 1",
-  description: "Four songs recorded live to 2-inch tape at 3 AM. Raw electric guitars, fuzz bass, spoken Midwestern verse, and zero auto-tune. Loud enough to wake the landlord.",
+  description: "Four songs tracked live in the studio. Raw electric guitars, fuzz bass, spoken Midwestern verse, and zero auto-tune. Loud enough to wake the landlord.",
   href: "/walls-devine",
   ctaLabel: "Enter Listening Room",
   isFeatured: true,
@@ -33,7 +33,7 @@ const defaultWallsDevineSignalListLink = {
   id: "walls-devine-mailing-list",
   eyebrow: "Mailing List",
   title: "Studio Notices & Pressings",
-  description: "Get notified when vinyl pressings drop or when Terry unearths weird room audio from the tape machine. No spam, no marketing fluff, ever.",
+  description: "Get notified when vinyl pressings drop or when the studio shares rare room audio and session notes. No spam, no marketing fluff, ever.",
   href: wallsDevineSignalListHref,
   ctaLabel: "Join the mailing list",
   isFeatured: true,
@@ -96,7 +96,7 @@ const canonicalLinkOrder = [
 export const defaultLinkHubContent: LinkHubContent = {
   eyebrow: "Studio Directory",
   title: "Creatives Guide Us Directory",
-  description: "Analog tape records, screenplays in progress, and tactile editions from our studio in Los Angeles. Click around, listen to some tunes, or drop us a line.",
+  description: "Original records, screenplays in progress, and tactile editions from our studio in Salt Lake City, operating globally. Click around, listen to some tunes, or drop us a line.",
   updatedAt: defaultUpdatedAt,
   links: [
     defaultWallsDevineLink,

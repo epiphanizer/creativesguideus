@@ -69,7 +69,7 @@ const bongTourCues: BongTourCue[] = [
 export async function GET() {
   return NextResponse.json({
     ok: true,
-    scoreSource: "Walls/Devine Volume 1 · Analog Sound Lab at Creatives Guide Us",
+    scoreSource: "Walls/Devine Volume 1 · Creatives Guide Us Sound Lab",
     albumHref: "/walls-devine",
     count: bongTourCues.length,
     cues: bongTourCues

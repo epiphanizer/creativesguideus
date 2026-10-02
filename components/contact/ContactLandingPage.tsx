@@ -6,7 +6,7 @@ import { buildContactHref } from "@/lib/contact-intake-routing";
 const aboutCards = [
   {
     title: "Sound & Records",
-    body: "Tracking on 2-inch tape, tube preamps redlining gently, spatial mixing, and vinyl mastering. We make records with sweat and grit, not sterile digital presets."
+    body: "Live studio tracking, tube preamps pushed into the red, spatial mixing, and vinyl mastering. We make records with sweat and grit, not sterile digital presets."
   },
   {
     title: "Screenwriting & Story",
@@ -39,7 +39,7 @@ export function ContactLandingPage() {
               Let&apos;s make something loud, tactile, or slightly unhinged.
             </h1>
             <p className="cg-contact-landing__lede">
-              Creatives Guide Us collaborates with independent directors, musicians, and publishers who care about physical craft. Whether you need an original score cut on 2-inch tape, a road comedy script that doesn&apos;t read like an algorithm spat it out, or a hand-printed vinyl sleeve, this is the direct line to our desk.
+              Creatives Guide Us collaborates with independent directors, musicians, and publishers who care about physical craft. Whether you need an original score tracked with real instruments, a road comedy script that doesn&apos;t read like an algorithm spat it out, or a hand-printed vinyl sleeve, this is the direct line to our desk.
             </p>
             <p>
               No account executives, no automated email drip sequences, and no 14-page questionnaires. Just two guys drinking black coffee in a room full of guitar amplifiers.

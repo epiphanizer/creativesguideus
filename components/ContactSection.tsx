@@ -110,7 +110,7 @@ const inquiryTypeCardOptions: ContactChoiceOption[] = [
   {
     value: "mailing-list",
     label: "Mailing list",
-    description: "Receive direct studio notices for vinyl pressings, tape editions, and private playback sessions."
+    description: "Receive direct studio notices for vinyl pressings, physical editions, and private playback sessions."
   },
   {
     value: "screening",
@@ -284,7 +284,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        "Walls/Devine studio mailing list: vinyl pressings, tape editions, and private listening sessions.",
+        "Walls/Devine studio mailing list: vinyl pressings, physical editions, and private listening sessions.",
       summary: [
         "Walls/Devine is currently in release while Bong Tour and Cache are in active development.",
         "Direct email dispatches for vinyl announcements, liner notes, and private listening sessions.",
@@ -432,7 +432,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
       routingNote:
         "Bong Tour film packaging, co-production, and original score inquiries.",
       summary: [
-        "Feature screenplay and analog soundtrack cues in active development.",
+        "Feature screenplay and original soundtrack cues in active development.",
         "Co-production, financing, music licensing, and distribution conversations.",
         "Direct correspondence with the film's creators and studio partners."
       ],

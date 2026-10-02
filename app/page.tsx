@@ -47,10 +47,10 @@ export default function HomePage() {
         <div className="cg-masthead__statement">
           <p className="cg-masthead__super-kicker">CREATIVES GUIDE US</p>
           <h1 className="cg-masthead__headline">
-            We cut records on analog tape, write screenplays about bad ideas, and print physical things because digital files don&apos;t smell like ink or warm tubes.
+            We cut raw records, write screenplays about bad ideas, and print physical things because digital files don&apos;t hold weight like real craft and ink.
           </h1>
           <p className="cg-masthead__lede">
-            An independent studio and record label based in Los Angeles &amp; Hawaiʻi. No algorithmic playlists, no venture capital, and no pitch decks. Currently streaming Walls/Devine Volume 1 in the listening room.
+            An independent studio and record label based in Salt Lake City, operating globally. No algorithmic playlists, no venture capital, and no pitch decks. Currently streaming Walls/Devine Volume 1 in the listening room.
           </p>
         </div>
       </header>
@@ -89,7 +89,7 @@ export default function HomePage() {
               </Link>
               <figcaption className="cg-cover-feature__caption">
                 <strong>Walls/Devine — Volume 1</strong>
-                <span>Woodcut print &amp; analog tape mastering by Creatives Guide Us</span>
+                <span>Original sound production &amp; cover artwork by Creatives Guide Us</span>
               </figcaption>
             </figure>
           </div>
@@ -99,17 +99,17 @@ export default function HomePage() {
             <div className="cg-cover-feature__bylines">
               <span className="cg-byline-item">BY JOHN WALLS &amp; TERRY DEVINE</span>
               <span className="cg-byline-divider">/</span>
-              <span className="cg-byline-item">RECORDED LIVE ON 2-INCH TAPE</span>
+              <span className="cg-byline-item">RECORDED LIVE IN THE STUDIO</span>
             </div>
 
             <h2 id="cover-story-title" className="cg-cover-feature__title">
               <Link href="/walls-devine">
-                Volume 1 in the Listening Room: Raw electric guitar, tape decay, and Midwestern poetry.
+                Volume 1 in the Listening Room: Raw electric guitar, live grit, and Midwestern poetry.
               </Link>
             </h2>
 
             <p className="cg-cover-feature__prose">
-              Recorded live to 2-inch tape at 3 AM before anyone sober could talk us out of it. Volume 1 pairs fuzz bass and overdriven tube amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions—cut direct from the reel with zero digital polite correction.
+              Tracked live with real instruments before anyone sober could talk us out of it. Volume 1 pairs fuzz bass and overdriven tube amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions—raw, unvarnished, and delivered with zero digital polite correction.
             </p>
 
             <blockquote className="cg-pullquote">
@@ -211,14 +211,14 @@ export default function HomePage() {
                 <div className="cg-symbolic-block cg-symbolic-block--cache">
                   <div className="cg-symbolic-block__mark">№ 003</div>
                   <div className="cg-symbolic-block__title">CACHE</div>
-                  <div className="cg-symbolic-block__sub">Physical Monograph &amp; Audio Tape</div>
+                  <div className="cg-symbolic-block__sub">Physical Monograph &amp; Companion Audio</div>
                 </div>
               </Link>
               <figcaption>Limited hardbound volume with companion 7-inch lathe cut</figcaption>
             </figure>
 
             <h3 className="cg-dispatch-column__title">
-              <Link href="/cache">Cache: Studio Notebooks, Tape Outtakes &amp; Typography</Link>
+              <Link href="/cache">Cache: Studio Notebooks, Raw Outtakes &amp; Typography</Link>
             </h3>
 
             <p className="cg-dispatch-column__copy">
@@ -254,7 +254,7 @@ export default function HomePage() {
               <span className="cg-discipline-item__num">01</span>
               <div className="cg-discipline-item__body">
                 <h3>Sound &amp; Records</h3>
-                <p>Analog tracking on 2-inch tape, tube preamps pushed into the red, and vinyl records pressed into heavy wax. We still believe warm plastic beats streaming into an algorithmic void.</p>
+                <p>Live tracking with real instruments, tube amps pushed into the red, and vinyl records pressed into heavy wax. We still believe physical sound beats streaming into an algorithmic void.</p>
               </div>
             </div>
 

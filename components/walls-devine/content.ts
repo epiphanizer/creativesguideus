@@ -51,7 +51,7 @@ export const songPostCards: SongPostCard[] = [
     duration: "3:35",
     audioFileName: "2. Stash Daddy.wav",
     phase: "Released September 1, 2026",
-    hook: "Backroom confidence with analog danger.",
+    hook: "Backroom confidence with raw overdrive.",
     caption: "Stash Daddy runs on low-end pressure and late-night authority.",
     storySummary:
       "Born from a kitchen-table joke and a loose studio loop, Stash Daddy became Terry's first proof that recording could be relaxed, direct, and alive in real time. Its swagger comes from creation without rehearsal or ritualized fear.",

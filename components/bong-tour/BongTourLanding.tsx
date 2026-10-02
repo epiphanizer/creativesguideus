@@ -416,7 +416,7 @@ export function BongTourLanding() {
         <div className="bt-section-head">
           <span className="bt-kicker">Original Sound Lab</span>
           <h2 id="soundtrack-title">Soundtrack Cues from Walls/Devine Volume 1</h2>
-          <p>Scored and tracked at the Creatives Guide Us sound lab. Analog guitars, desert grit, and West Coast tape loops locked directly to the scenes.</p>
+          <p>Scored and tracked at the Creatives Guide Us sound lab. Overdriven guitars, desert grit, and atmospheric cues locked directly to the scenes.</p>
         </div>
 
         <div className="bt-player-card">
