@@ -806,6 +806,49 @@ p + ol {
   -webkit-font-smoothing: antialiased;
 }
 
+// Vintage pen nib cursor & canvas
+@media (pointer: fine) {
+  html,
+  body,
+  .cg-body {
+    cursor: url("/cursor-pen-nib.svg") 1 1, auto;
+  }
+
+  a,
+  button,
+  input[type="button"],
+  input[type="submit"],
+  [role="button"],
+  .cg-btn,
+  .cache-button,
+  .bt-hero__btn-primary,
+  .bt-hero__btn-secondary,
+  .bt-hero__btn-ghost,
+  .cg-inline-link,
+  .cg-header__link,
+  .cg-footer__link,
+  .cg-cover-feature__artwork-link,
+  .cg-dispatch-column__poster-link {
+    cursor: url("/cursor-pen-nib-hover.svg") 1 1, pointer;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="search"],
+  textarea {
+    cursor: text;
+  }
+}
+
+.cg-pen-ink-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99999;
+}
+
 .cg-page {
   padding: clamp(var(--cg-space-xl), 4vw, var(--cg-space-2xl))
     clamp(var(--cg-space-md), 5vw, var(--cg-space-xl));

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="nibMetalH" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4d4642" />
+      <stop offset="50%" stop-color="#363230" />
+      <stop offset="100%" stop-color="#242220" />
+    </linearGradient>
+    <linearGradient id="brassBandH" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d4aa55" />
+      <stop offset="100%" stop-color="#9a772b" />
+    </linearGradient>
+  </defs>
+  <!-- Pen Nib Body -->
+  <path d="M1 1 L8 16 C9 18 11.5 20.5 14.5 21.5 L21.5 14.5 C20.5 11.5 18 9 16 8 L1 1 Z" fill="url(#nibMetalH)" stroke="#12100e" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- Brass Collar -->
+  <path d="M12 20.5 L20.5 12 L23 14.5 L14.5 23 Z" fill="url(#brassBandH)" stroke="#12100e" stroke-width="0.8"/>
+  <!-- Engraving Lines -->
+  <path d="M5 8 L10 14" stroke="#a3988f" stroke-width="0.8" fill="none"/>
+  <path d="M8 5 L14 10" stroke="#a3988f" stroke-width="0.8" fill="none"/>
+  <!-- Breather Hole -->
+  <circle cx="11" cy="11" r="1.6" fill="#12100e"/>
+  <!-- Center Slit -->
+  <line x1="1" y1="1" x2="10" y2="10" stroke="#12100e" stroke-width="1"/>
+  <!-- Fresh Wet Ink Swell on Tip -->
+  <circle cx="1.5" cy="1.5" r="2.2" fill="#000000"/>
+  <circle cx="1.8" cy="1.8" r="0.8" fill="#444444" opacity="0.6"/>
+</svg>
