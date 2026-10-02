@@ -143,8 +143,8 @@ export function HeaderNav() {
           }}
         >
           <span className="cg-header__copy">
-            <span className="cg-header__studio">Creatives Guide Us</span>
-            <span className="cg-header__tagline">Studio &amp; Record Label</span>
+            <span className="cg-header__studio">CREATIVES GUIDE US</span>
+            <span className="cg-header__tagline">STUDIO &amp; RECORD LABEL</span>
           </span>
         </a>
         <button
