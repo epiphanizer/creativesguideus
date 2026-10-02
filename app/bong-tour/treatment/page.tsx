@@ -1,22 +1,16 @@
 import type { Metadata } from "next";
 
-import { BongTourTreatmentGate } from "@/components/bong-tour/BongTourTreatmentGate";
+import { BongTourTreatmentReader } from "@/components/bong-tour/BongTourTreatmentReader";
 
 export const metadata: Metadata = {
-  title: "Bong Tour Treatment | Creatives Guide Us",
-  description: "Request access to the private Bong Tour treatment ahead of the November 4 opening.",
-  robots: {
-    index: false,
-    follow: false
-  }
+  title: "Bong Tour Treatment | Official Reading Copy | Creatives Guide Us",
+  description: "Official reading copy and screenplay treatment for Bong Tour: A Masala Film by Sean Halls & Collaborators."
 };
 
 export default function BongTourTreatmentPage() {
   return (
     <main className="cg-page bt-page bt-treatment-page" id="hero">
-      <div className="bt-stage">
-        <BongTourTreatmentGate />
-      </div>
+      <BongTourTreatmentReader />
     </main>
   );
 }
