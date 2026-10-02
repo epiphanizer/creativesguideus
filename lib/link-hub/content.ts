@@ -96,7 +96,7 @@ const canonicalLinkOrder = [
 export const defaultLinkHubContent: LinkHubContent = {
   eyebrow: "Studio Directory",
   title: "Creatives Guide Us Directory",
-  description: "Original records, screenplays in progress, and tactile editions from our studio in Salt Lake City, operating globally. Click around, listen to some tunes, or drop us a line.",
+  description: "Original records built on live instruments and SP-404 chops in Ableton, screenplays in progress, and tactile editions from our studio in Salt Lake City, operating globally. Click around, listen to some tunes, or drop us a line.",
   updatedAt: defaultUpdatedAt,
   links: [
     defaultWallsDevineLink,

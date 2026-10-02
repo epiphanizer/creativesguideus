@@ -109,7 +109,7 @@ export default function HomePage() {
             </h2>
 
             <p className="cg-cover-feature__prose">
-              Tracked live with real instruments before anyone sober could talk us out of it. Volume 1 pairs fuzz bass and overdriven tube amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions—raw, unvarnished, and delivered with zero digital polite correction.
+              Tracked live in the studio with overdriven guitars, Mint-Green P-Bass, and SP-404 chops dialed in Ableton. Volume 1 pairs heavy bass grooves and raw amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions—raw, unvarnished, and delivered with zero digital polite correction.
             </p>
 
             <blockquote className="cg-pullquote">
@@ -254,7 +254,7 @@ export default function HomePage() {
               <span className="cg-discipline-item__num">01</span>
               <div className="cg-discipline-item__body">
                 <h3>Sound &amp; Records</h3>
-                <p>Live tracking with real instruments, tube amps pushed into the red, and vinyl records pressed into heavy wax. We still believe physical sound beats streaming into an algorithmic void.</p>
+                <p>Ableton sessions pushed into the red, dirty chops on the SP-404, live P-Bass, and overdriven tube amps. We make records with grit, groove, and intention—pressed to wax and built to last.</p>
               </div>
             </div>
 
