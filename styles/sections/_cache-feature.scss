@@ -1,89 +1,104 @@
-// Cache series feature styles — minimal preview/lock-out layout.
-// Mirrors the bong-tour feature structure but simplified.
+// Cache series feature styles — Broadsheet Letterpress Edition
+// Matches the broadsheet parchment, Newsreader serif, and sharp typographic boundaries of Creatives Guide Us.
 
 .cache-page {
-  --cache-ink: #bae6fd;
-  --cache-ink-soft: rgba(186, 230, 253, 0.68);
-  --cache-bg: #080c16;
-  --cache-bg-soft: #0d1628;
-  --cache-border: rgba(147, 197, 253, 0.16);
-  --cache-panel-pad: clamp(2rem, 5vw, 4rem);
+  --cache-ink: #1a1918;
+  --cache-ink-soft: rgba(26, 25, 24, 0.75);
+  --cache-ink-muted: rgba(26, 25, 24, 0.55);
+  --cache-bg: #faf8f4;
+  --cache-bg-card: #f4f0e8;
+  --cache-border: #1a1918;
+  --cache-border-subtle: rgba(26, 25, 24, 0.2);
+  --cache-oxblood: #8c1d18;
+  --cache-panel-pad: clamp(1.5rem, 4vw, 3.5rem);
+
+  background-color: var(--cache-bg);
+  color: var(--cache-ink);
+  min-height: calc(100vh - 4.5rem);
 }
 
 .cache-world {
-  min-height: calc(100svh - var(--cg-header-height));
+  width: 100%;
   background: var(--cache-bg);
   color: var(--cache-ink);
 }
 
 .cache-world__shell {
-  width: min(100%, 80rem);
+  width: min(100%, 76rem);
   margin: 0 auto;
-  padding: clamp(2.5rem, 6vh, 4rem) var(--cache-panel-pad);
+  padding: clamp(2.5rem, 5vh, 4rem) var(--cache-panel-pad);
   display: grid;
-  gap: clamp(2rem, 4vh, 3rem);
+  gap: clamp(2.5rem, 5vh, 3.5rem);
 }
 
 .cache-section-header__eyebrow {
   margin: 0;
+  font-family: var(--cg-font-mono, "IBM Plex Mono", monospace);
   font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--cache-ink-soft);
+  color: var(--cache-oxblood);
+  font-weight: 600;
 }
 
 .cache-world__intro {
   display: grid;
-  gap: clamp(0.75rem, 1.5vh, 1.1rem);
-  max-width: 52rem;
+  gap: 1.25rem;
+  max-width: 54rem;
+  border-bottom: 2px solid var(--cache-border);
+  padding-bottom: 2.5rem;
 }
 
 .cache-world__intro h1 {
   margin: 0;
-  font-size: clamp(3rem, 6vw + 1rem, 5.5rem);
+  font-family: var(--cg-font-serif, "Newsreader", Georgia, serif);
+  font-size: clamp(3rem, 7vw, 5.5rem);
   line-height: 0.95;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
+  font-weight: 500;
   color: var(--cache-ink);
 }
 
 .cache-world__deck {
   margin: 0;
-  max-width: 42ch;
-  font-size: clamp(1rem, 1.6vw, 1.15rem);
-  line-height: 1.58;
+  max-width: 54ch;
+  font-family: var(--cg-font-serif, "Newsreader", Georgia, serif);
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  line-height: 1.45;
   color: var(--cache-ink-soft);
 }
 
 .cache-world__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
-  padding-top: clamp(0.5rem, 1vh, 0.75rem);
+  align-items: center;
+  gap: 0.85rem;
+  padding-top: 0.5rem;
 }
 
 .cache-button {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.65rem 1.25rem;
-  font-size: 0.85rem;
+  justify-content: center;
+  padding: 0.75rem 1.4rem;
+  font-family: var(--cg-font-mono, "IBM Plex Mono", monospace);
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
-  border-radius: 999px;
-  border: 1px solid var(--cache-ink);
-  background: var(--cache-ink);
-  color: var(--cache-bg);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 2px solid var(--cache-border);
+  background: var(--cache-border);
+  color: #faf8f4;
   text-decoration: none;
-  transition:
-    background-color 200ms ease,
-    border-color 200ms ease,
-    color 200ms ease;
+  cursor: pointer;
+  transition: all 180ms ease;
 }
 
 .cache-button:hover,
 .cache-button:focus-visible {
-  background: rgba(186, 230, 253, 0.88);
-  border-color: rgba(186, 230, 253, 0.88);
+  background: var(--cache-oxblood);
+  border-color: var(--cache-oxblood);
+  color: #ffffff;
 }
 
 .cache-button--outline {
@@ -93,23 +108,25 @@
 
 .cache-button--outline:hover,
 .cache-button--outline:focus-visible {
-  background: rgba(186, 230, 253, 0.1);
-  border-color: rgba(186, 230, 253, 0.55);
+  background: var(--cache-border);
+  color: #faf8f4;
+  border-color: var(--cache-border);
 }
 
 .cache-world__meta-line {
   margin: 0;
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
-  color: rgba(186, 230, 253, 0.45);
+  font-family: var(--cg-font-mono, "IBM Plex Mono", monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  color: var(--cache-ink-muted);
 }
 
 // Lock card — two-track layout
 
 .cache-world__lock-card {
-  border: 1px solid var(--cache-border);
-  border-radius: var(--cg-radius-lg);
-  background: rgba(147, 197, 253, 0.04);
+  border: 2px solid var(--cache-border);
+  background: var(--cache-bg-card);
   overflow: hidden;
 }
 
@@ -119,49 +136,52 @@
 }
 
 .cache-world__track {
-  padding: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1.75rem, 3.5vw, 2.75rem);
   display: grid;
-  gap: clamp(0.75rem, 1.4vh, 1rem);
+  gap: 1rem;
   align-content: start;
 }
 
 .cache-world__track + .cache-world__track {
-  border-top: 1px solid var(--cache-border);
+  border-top: 2px solid var(--cache-border);
 }
 
 .cache-world__track h2 {
   margin: 0;
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-family: var(--cg-font-serif, "Newsreader", Georgia, serif);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
   line-height: 1.15;
-  letter-spacing: -0.025em;
+  font-weight: 500;
+  letter-spacing: -0.02em;
   color: var(--cache-ink);
 }
 
 .cache-world__track p {
   margin: 0;
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-  line-height: 1.58;
+  font-family: var(--cg-font-sans, "Inter", sans-serif);
+  font-size: clamp(0.92rem, 1.2vw, 1rem);
+  line-height: 1.6;
   color: var(--cache-ink-soft);
 }
 
 .cache-world__track-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
-  padding-top: 0.35rem;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
 }
 
 .cache-world__track--secondary {
-  background: rgba(147, 197, 253, 0.03);
+  background: #f0ebe1;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 768px) {
   .cache-world__lock-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cache-world__track + .cache-world__track {
     border-top: 0;
-    border-left: 1px solid var(--cache-border);
+    border-left: 2px solid var(--cache-border);
   }
 }
