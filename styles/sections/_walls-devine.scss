@@ -3967,6 +3967,28 @@
   opacity: 0.7;
 }
 
+.wd-player-modal__visualizer--playing {
+  &::before {
+    filter: blur(8px);
+    opacity: 0.95;
+    animation: wdVisualizerBreathe 3.6s ease-in-out infinite alternate;
+  }
+
+  .wd-player-modal__art-frame {
+    box-shadow: 0 24px 44px rgba(156, 7, 5, 0.22), 0 0 28px color-mix(in srgb, var(--wd-visualizer-glow, #ecbbba) 38%, transparent);
+    border-color: color-mix(in srgb, var(--wd-visualizer-primary, #b31612) 42%, rgba(156, 7, 5, 0.2));
+  }
+}
+
+@keyframes wdVisualizerBreathe {
+  0% {
+    transform: scale(0.985);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
+
 .wd-player-modal__visualizer-canvas {
   position: absolute;
   inset: 0;

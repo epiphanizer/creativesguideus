@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import type { StaticImageData } from "next/image";
 import { createPortal } from "react-dom";
 import { type ChangeEvent, type CSSProperties, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { FiMusic, FiPause, FiPlay } from "react-icons/fi";
@@ -9,13 +8,6 @@ import type { IconType } from "react-icons";
 import { SiApplemusic, SiBandcamp, SiSoundcloud, SiSpotify, SiTidal, SiYoutubemusic } from "react-icons/si";
 
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
-import decayImage from "@/app/walls-devine/assets/instagram/5.decay.png";
-import gratitudeImage from "@/app/walls-devine/assets/instagram/8.gratitude.png";
-import jointQueenImage from "@/app/walls-devine/assets/instagram/1.joint-queen.png";
-import poetryImage from "@/app/walls-devine/assets/instagram/7.poetry.png";
-import resolveImage from "@/app/walls-devine/assets/instagram/6.resolve.png";
-import spaceCruiserImage from "@/app/walls-devine/assets/instagram/3.space-cruiser.png";
-import stashDaddyImage from "@/app/walls-devine/assets/instagram/2.stash-daddy.png";
 import { Button } from "@/components/ui/Button";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
@@ -74,17 +66,6 @@ type PlayerQueryRequest = {
 
 type AudioContextWindow = Window & typeof globalThis & {
   webkitAudioContext?: typeof AudioContext;
-};
-
-const trackPosterImages: Record<number, StaticImageData> = {
-  1: jointQueenImage,
-  2: stashDaddyImage,
-  3: spaceCruiserImage,
-  4: volOneImage,
-  5: decayImage,
-  6: resolveImage,
-  7: poetryImage,
-  8: gratitudeImage
 };
 
 const trackVisualizerThemes: Record<number, VisualizerTheme> = {
@@ -499,6 +480,22 @@ function drawRadialVisualizer({
     context.stroke();
   }
 
+  // Outer precision compass calibration ticks
+  const tickCount = 72;
+  for (let t = 0; t < tickCount; t += 1) {
+    const tickAngle = (t / tickCount) * tau;
+    const isMajor = t % 18 === 0;
+    const isMedium = t % 6 === 0;
+    const tickInner = isMajor ? outerRadius * 0.92 : isMedium ? outerRadius * 0.945 : outerRadius * 0.965;
+    const tickOuter = outerRadius * 0.985;
+    context.beginPath();
+    context.moveTo(centerX + Math.cos(tickAngle) * tickInner, centerY + Math.sin(tickAngle) * tickInner);
+    context.lineTo(centerX + Math.cos(tickAngle) * tickOuter, centerY + Math.sin(tickAngle) * tickOuter);
+    context.strokeStyle = isMajor ? hexToRgba(theme.primary, 0.55) : hexToRgba(theme.ink, isMedium ? 0.22 : 0.09);
+    context.lineWidth = isMajor ? 1.75 : 1;
+    context.stroke();
+  }
+
   const bars = 72;
   const dynamicValues: number[] = [];
   let energy = 0;
@@ -558,9 +555,33 @@ function drawRadialVisualizer({
     context.stroke();
   });
 
-  context.beginPath();
+  // Dual-trace oscilloscope waveform
   const waveformPoints = 96;
 
+  // Secondary soft glow trace
+  context.beginPath();
+  for (let index = 0; index <= waveformPoints; index += 1) {
+    const angle = (index / waveformPoints) * tau - Math.PI / 2;
+    const waveformSample = isPlaying && waveformData
+      ? (waveformData[Math.min(waveformData.length - 1, Math.floor((index / waveformPoints) * waveformData.length))] - 128) / 128
+      : Math.sin(seed * 0.06 + elapsed * 0.0008 + index * 0.26) * 0.32;
+    const radius = ringRadius + waveformSample * 16;
+    const x = centerX + Math.cos(angle) * radius;
+    const y = centerY + Math.sin(angle) * radius;
+
+    if (index === 0) {
+      context.moveTo(x, y);
+    } else {
+      context.lineTo(x, y);
+    }
+  }
+  context.closePath();
+  context.lineWidth = 4;
+  context.strokeStyle = hexToRgba(theme.primary, 0.25);
+  context.stroke();
+
+  // Primary sharp core trace
+  context.beginPath();
   for (let index = 0; index <= waveformPoints; index += 1) {
     const angle = (index / waveformPoints) * tau - Math.PI / 2;
     const waveformSample = isPlaying && waveformData
@@ -579,7 +600,7 @@ function drawRadialVisualizer({
 
   context.closePath();
   context.lineWidth = 2;
-  context.strokeStyle = hexToRgba(theme.glow, 0.9);
+  context.strokeStyle = hexToRgba(theme.glow, 0.95);
   context.stroke();
 
   context.beginPath();
@@ -687,8 +708,8 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
   const activeTrack = tracks[activeIndex] ?? tracks[0];
   const activeSrc = getTrackAudioSrc(activeTrack.audioFileName);
   const hasPlayableAudio = Boolean(activeSrc);
-  const activePosterImage = trackPosterImages[activeTrack.trackNumber] ?? volOneImage;
-  const activePosterAlt = `${activeTrack.title} cover artwork`;
+  const activePosterImage = volOneImage;
+  const activePosterAlt = `Walls/Devine Volume 1 cover artwork — ${activeTrack.title}`;
   const activeTrackMeta = `Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase} · ${activeTrack.duration}`;
   const activeTrackAlbumMeta = `Walls/Devine Volume 1 · Track ${formatTrackNumber(activeTrack.trackNumber)} · ${activeTrack.phase}`;
   const activeVisualizerTheme = trackVisualizerThemes[activeTrack.trackNumber] ?? trackVisualizerThemes[1];
@@ -1533,7 +1554,11 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                       <section className="wd-player-modal__current" aria-label="Current track player">
                         <div className="wd-player-modal__art">
                           <div
-                            className={cx("wd-player-modal__visualizer", `wd-player-modal__visualizer--${activeVisualizerTheme.motif}`)}
+                            className={cx(
+                              "wd-player-modal__visualizer",
+                              `wd-player-modal__visualizer--${activeVisualizerTheme.motif}`,
+                              isPlaying && "wd-player-modal__visualizer--playing"
+                            )}
                             style={
                               {
                                 "--wd-visualizer-primary": activeVisualizerTheme.primary,
