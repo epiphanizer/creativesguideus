@@ -479,45 +479,45 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        "Cache archival monograph & print inquiries routed directly to the studio print desk.",
+        "Cache adventure series inquiries routed directly to the studio dispatch desk.",
       summary: [
-        "Cache is an archival print monograph and companion lathe-cut record.",
-        "Limited first edition with handset typography, foil stamping, and unreleased studio recordings.",
-        "Institutional acquisitions, gallery reserves, and collector inquiries handled directly."
+        "Cache is an upcoming adventure series.",
+        "Field expeditions, treasure hunting, and the pursuit of things left off the map.",
+        "Coordinates and dispatch details to follow."
       ],
       trustNote:
-        "Direct studio communication. We do not sell collector information or send marketing spam.",
-      noteLabel: "Collector note or edition preference",
-      notePlaceholder: "Specify edition preference (print monograph, lathe-cut vinyl, or slipcase archive) or institutional affiliation.",
-      companyLabel: "Institution, gallery, or collector context",
-      companyPlaceholder: "Gallery, archive, library, or private collector",
+        "Direct studio communication. We do not sell explorer information or send marketing spam.",
+      noteLabel: "Field note, inquiry, or dispatch preference",
+      notePlaceholder: "Share your dispatch preference, field background, or questions about upcoming expeditions.",
+      companyLabel: "Expedition team, organization, or field context",
+      companyPlaceholder: "Team, research collective, or independent explorer",
       steps: [
         {
           id: "intent",
           label: "Confirm request",
-          title: "Inquire About Cache Editions",
-          description: "Reserve a copy or request institutional archival details for the Cache monograph.",
-          helper: "Limited first run produced with handset typography and physical studio ephemera."
+          title: "Inquire About Cache Dispatches",
+          description: "Register for upcoming expedition dispatches and coordinates.",
+          helper: "Field expeditions, treasure hunting, and the pursuit of things left off the map."
         },
         {
           id: "contact",
           label: "Contact details",
-          title: "Collector Details",
-          description: "Use your primary email address for edition notices and reserve confirmations.",
-          helper: "Institutional affiliation is optional but helps with accession documentation."
+          title: "Explorer Details",
+          description: "Use your primary email address for coordinate dispatches and field bulletins.",
+          helper: "Expedition or team affiliation is optional but helps with field documentation."
         },
         {
           id: "details",
-          label: "Edition note",
+          label: "Field note",
           title: "Specify Preferences",
-          description: "Leave a note regarding edition format, slipcase options, or shipping destination.",
-          helper: "Helps the studio reserve your requested edition format."
+          description: "Leave a note regarding field questions, expedition background, or location tips.",
+          helper: "Helps the studio route your dispatch transmission."
         },
         {
           id: "review",
           label: "Review",
-          title: "Review Inquiry",
-          description: "Confirm your details before sending your reserve request to the studio print desk.",
+          title: "Review Request",
+          description: "Confirm your details before transmitting your dispatch request to the studio desk.",
           helper: "Direct dispatch to the studio team."
         }
       ]
@@ -578,7 +578,7 @@ function buildDisplayInquiryLabel(flowId: ContactFlowId, inquiryType: string) {
   }
 
   if (flowId === "cache-early-access") {
-    return "Cache monograph inquiry";
+    return "Cache expedition dispatch";
   }
 
   return getOptionLabel(inquiryTypeOptions, inquiryType) || "Guided intake";
@@ -590,7 +590,7 @@ function buildInterestLabel(flowId: ContactFlowId, inquiryTypeLabel: string) {
   }
 
   if (flowId === "cache-early-access") {
-    return "Cache monograph reserve";
+    return "Cache dispatch request";
   }
 
   return inquiryTypeLabel || "Guided intake";
@@ -642,7 +642,7 @@ function buildSubmissionBrief(flowId: ContactFlowId, form: ContactFormState, rou
 
   if (flowId === "cache-early-access") {
     return [
-      "Request: Cache monograph & editions inquiry.",
+      "Request: Cache adventure series dispatch & updates.",
       trimmedBrief ? `Note: ${trimmedBrief}` : ""
     ]
       .filter(Boolean)
@@ -772,23 +772,23 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
     return [
       {
         label: "Request",
-        value: "Cache monograph reserve",
-        description: "Archival print monograph and companion lathe-cut record."
+        value: "Cache expedition dispatch",
+        description: "Adventure series dispatches and expedition coordinates."
       },
       {
         label: "Contact",
         value: contactValue,
-        description: form.company.trim() || "Private collector or institutional reserve"
+        description: form.company.trim() || "Independent explorer or field researcher"
       },
       {
         label: "Project",
         value: form.projectTitle.trim() || "Cache",
-        description: "Limited first edition reserve."
+        description: "Field expeditions, treasure hunting, and the pursuit of things left off the map."
       },
       {
         label: "Next step",
-        value: "Studio review",
-        description: "Direct response from the print and archival desk."
+        value: "Studio dispatch routing",
+        description: "Dispatches and coordinates transmitted as field routes are released."
       }
     ];
   }
@@ -1129,12 +1129,12 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         return (
           <div className="cg-contact__affirmation-grid">
             <article className="cg-contact__affirmation">
-              <strong>Reserve request received</strong>
-              <p>Your inquiry is logged with the studio print desk for the first edition run of Cache.</p>
+              <strong>Dispatch request received</strong>
+              <p>Your inquiry is logged with the studio dispatch desk for upcoming Cache field expeditions.</p>
             </article>
             <article className="cg-contact__affirmation">
               <strong>What happens next</strong>
-              <p>We will reach out directly with edition details, slipcase options, and publication timing.</p>
+              <p>We will transmit coordinates and expedition bulletins as field operations are scheduled.</p>
             </article>
           </div>
         );

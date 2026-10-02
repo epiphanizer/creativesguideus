@@ -42,7 +42,7 @@ export const cguLaunchState: Record<"wallsDevine" | "bongTour" | "appreesh" | "c
   },
   cache: {
     status: "live",
-    label: "Limited Edition",
+    label: "Adventure Series",
     launchDate: null
   }
 };

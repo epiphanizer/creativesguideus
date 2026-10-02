@@ -4,7 +4,7 @@ import { CacheFeature } from "@/components/cache/CacheFeature";
 
 export const metadata: Metadata = {
   title: "Cache | Creatives Guide Us",
-  description: "A hand-numbered print monograph and archival audio edition from Creatives Guide Us documenting unreleased takes and studio typography."
+  description: "An upcoming adventure series. Field expeditions, treasure hunting, and the pursuit of things left off the map."
 };
 
 export default function CachePage() {

@@ -28,7 +28,7 @@
   margin: 0 auto;
   padding: clamp(2.5rem, 5vh, 4rem) var(--cache-panel-pad);
   display: grid;
-  gap: clamp(2.5rem, 5vh, 3.5rem);
+  gap: clamp(2rem, 4vh, 3rem);
 }
 
 .cache-section-header__eyebrow {
@@ -46,7 +46,7 @@
   gap: 1.25rem;
   max-width: 54rem;
   border-bottom: 2px solid var(--cache-border);
-  padding-bottom: 2.5rem;
+  padding-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
 }
 
 .cache-world__intro h1 {
@@ -66,6 +66,15 @@
   font-size: clamp(1.2rem, 2vw, 1.45rem);
   line-height: 1.45;
   color: var(--cache-ink-soft);
+}
+
+.cache-world__status {
+  margin: 0;
+  font-family: var(--cg-font-mono, "IBM Plex Mono", monospace);
+  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  letter-spacing: 0.04em;
+  color: var(--cache-oxblood);
+  font-weight: 500;
 }
 
 .cache-world__actions {
@@ -113,75 +122,61 @@
   border-color: var(--cache-border);
 }
 
-.cache-world__meta-line {
-  margin: 0;
-  font-family: var(--cg-font-mono, "IBM Plex Mono", monospace);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  line-height: 1.6;
-  color: var(--cache-ink-muted);
-}
+// Field dispatch status card — three-column expedition layout
 
-// Lock card — two-track layout
-
-.cache-world__lock-card {
+.cache-field-dispatch {
   border: 2px solid var(--cache-border);
   background: var(--cache-bg-card);
   overflow: hidden;
 }
 
-.cache-world__lock-grid {
+.cache-field-dispatch__grid {
   display: grid;
+  grid-template-columns: 1fr;
   gap: 0;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
-.cache-world__track {
-  padding: clamp(1.75rem, 3.5vw, 2.75rem);
-  display: grid;
-  gap: 1rem;
-  align-content: start;
-}
-
-.cache-world__track + .cache-world__track {
-  border-top: 2px solid var(--cache-border);
-}
-
-.cache-world__track h2 {
-  margin: 0;
-  font-family: var(--cg-font-serif, "Newsreader", Georgia, serif);
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
-  line-height: 1.15;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--cache-ink);
-}
-
-.cache-world__track p {
-  margin: 0;
-  font-family: var(--cg-font-sans, "Inter", sans-serif);
-  font-size: clamp(0.92rem, 1.2vw, 1rem);
-  line-height: 1.6;
-  color: var(--cache-ink-soft);
-}
-
-.cache-world__track-actions {
+.cache-field-dispatch__item {
+  padding: clamp(1.5rem, 2.5vw, 2.25rem);
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  padding-top: 0.5rem;
-}
+  flex-direction: column;
+  gap: 0.5rem;
 
-.cache-world__track--secondary {
-  background: #f0ebe1;
-}
+  + .cache-field-dispatch__item {
+    border-top: 2px solid var(--cache-border);
 
-@media (min-width: 768px) {
-  .cache-world__lock-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    @media (min-width: 768px) {
+      border-top: 0;
+      border-left: 2px solid var(--cache-border);
+    }
   }
 
-  .cache-world__track + .cache-world__track {
-    border-top: 0;
-    border-left: 2px solid var(--cache-border);
+  strong {
+    font-family: var(--cg-font-serif, "Newsreader", Georgia, serif);
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--cache-ink);
+    line-height: 1.25;
   }
+
+  p {
+    margin: 0;
+    font-family: var(--cg-font-sans, "Inter", sans-serif);
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--cache-ink-soft);
+  }
+}
+
+.cache-field-dispatch__kicker {
+  font-family: var(--cg-font-mono, "IBM Plex Mono", monospace);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cache-oxblood);
 }

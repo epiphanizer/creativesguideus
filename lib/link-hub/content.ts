@@ -64,13 +64,13 @@ const defaultBongTourLink = {
 
 const defaultCacheLink = {
   id: "cache",
-  eyebrow: "Studio Monograph",
-  title: "Cache: Outtakes & Ephemera",
-  description: "A hand-bound monograph of studio outtakes, coffee-stained lyric sheets, blurry Polaroids, and a lathe-cut 7-inch record of unreleased room audio.",
+  eyebrow: "Adventure Series",
+  title: "Cache",
+  description: "An upcoming adventure series. Field expeditions, treasure hunting, and the pursuit of things left off the map. Coordinates and dispatch details to follow.",
   href: "/cache",
-  ctaLabel: "Inspect the edition",
+  ctaLabel: "Request dispatch",
   isFeatured: false,
-  isActive: false
+  isActive: true
 } satisfies LinkHubLink;
 
 const defaultContactLink = {

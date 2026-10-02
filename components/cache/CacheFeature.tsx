@@ -1,9 +1,8 @@
-import Link from "next/link";
-
+import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
 import { albumLaunchCampaignWindow } from "@/lib/launch-state";
 
-const cacheContactHref = buildContactHref({
+const cacheDispatchHref = buildContactHref({
   pathname: "/contact",
   overrides: {
     context: "cache-early-access",
@@ -15,12 +14,12 @@ const cacheContactHref = buildContactHref({
   }
 });
 
-const wallsDevineSignalListHref = buildContactHref({
+const cacheSignalListHref = buildContactHref({
   pathname: "/contact",
   overrides: {
-    context: "walls-devine-mailing-list",
+    context: "cache-early-access",
+    project: "Cache",
     inquiryType: "mailing-list",
-    project: "Walls/Devine",
     surface: "campaign-world",
     sourceRoute: "/cache",
     campaignWindow: albumLaunchCampaignWindow
@@ -32,58 +31,45 @@ export function CacheFeature() {
     <section className="cache-world" aria-label="Cache series">
       <div className="cache-world__shell">
         <header className="cache-world__intro">
-          <p className="cache-section-header__eyebrow">Studio Monograph &amp; Archive · Limited Edition</p>
+          <p className="cache-section-header__eyebrow">Upcoming Adventure Series</p>
           <h1>Cache</h1>
           <p className="cache-world__deck">
-            A hand-numbered archival volume of studio outtakes, spilled-coffee lyric sheets, blurry Polaroids, and woodcut proofs from the tracking sessions. Includes a lathe-cut 7-inch record featuring studio banter, false starts, and unreleased room audio.
+            An upcoming adventure series. Field expeditions, treasure hunting, and the pursuit of things left off the map.
+          </p>
+
+          <p className="cache-world__status">
+            Coordinates and dispatch details to follow.
           </p>
 
           <div className="cache-world__actions">
-            <Link href={cacheContactHref} className="cache-button">
-              Request Edition Notice →
-            </Link>
-            <Link href={wallsDevineSignalListHref} className="cache-button cache-button--outline">
-              Join the Volume 1 Signal List
-            </Link>
+            <ContactModalLink href={cacheDispatchHref} className="cache-button">
+              Request Dispatch →
+            </ContactModalLink>
+            <ContactModalLink href={cacheSignalListHref} className="cache-button cache-button--outline">
+              Join the Signal List
+            </ContactModalLink>
           </div>
-
-          <p className="cache-world__meta-line">
-            Assembled by hand at Creatives Guide Us in Salt Lake City. Proof that records are made by real humans in real rooms, not software plugins.
-          </p>
         </header>
 
-        <article className="cache-world__lock-card">
-          <div className="cache-world__lock-grid">
-            <section className="cache-world__track">
-              <p className="cache-section-header__eyebrow">Archival Edition</p>
-              <h2>Strictly limited hardbound pressing.</h2>
-              <p>
-                The first printing is strictly limited. Printed on heavy archival paper with hand-set typography, paired with a companion lathe-cut vinyl record cut directly in-house. For collectors who appreciate tactile craft and unfiltered room sound.
-              </p>
-              <div className="cache-world__track-actions">
-                <Link href={cacheContactHref} className="cache-button">
-                  Request Edition Notice →
-                </Link>
-              </div>
-            </section>
-
-            <section className="cache-world__track cache-world__track--secondary">
-              <p className="cache-section-header__eyebrow">Debut Album</p>
-              <h2>Walls/Devine Volume 1 is streaming now.</h2>
-              <p>
-                Four songs tracked live late at night with real instruments. Stream all four tracks in the listening room with synchronized lyric journals, or order the physical 12-inch vinyl pressing.
-              </p>
-              <div className="cache-world__track-actions">
-                <Link href="/walls-devine" className="cache-button">
-                  Enter Walls/Devine →
-                </Link>
-                <Link href={wallsDevineSignalListHref} className="cache-button cache-button--outline">
-                  Join the Signal List
-                </Link>
-              </div>
-            </section>
+        <div className="cache-field-dispatch">
+          <div className="cache-field-dispatch__grid">
+            <div className="cache-field-dispatch__item">
+              <span className="cache-field-dispatch__kicker">EXPEDITION LOG</span>
+              <strong>Series 01 in Preparation</strong>
+              <p>Field notes, route scouting, and physical relics recovered from uncharted corridors.</p>
+            </div>
+            <div className="cache-field-dispatch__item">
+              <span className="cache-field-dispatch__kicker">DISPATCH TRANSMISSION</span>
+              <strong>Direct Signal Routing</strong>
+              <p>Coordinates, survey logs, and transmission briefs dispatched exclusively to the signal list.</p>
+            </div>
+            <div className="cache-field-dispatch__item">
+              <span className="cache-field-dispatch__kicker">STUDIO BASE</span>
+              <strong>Salt Lake City · Global</strong>
+              <p>Independent field production, cartography, and narrative dispatches by Creatives Guide Us.</p>
+            </div>
           </div>
-        </article>
+        </div>
       </div>
     </section>
   );
