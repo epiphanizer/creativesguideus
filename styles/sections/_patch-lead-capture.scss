@@ -1,0 +1,830 @@
+// =============================================================================
+// ANALOG PATCH LEAD CAPTURE GATE & CALLIGRAPHIC INK STYLES
+// =============================================================================
+
+.cg-patch-lead-gate {
+  width: 100%;
+  background: var(--cg-color-canvas);
+  position: relative;
+  border-bottom: 2px solid var(--cg-color-border-strong);
+  overflow: hidden;
+  padding: clamp(2rem, 4vw, 3.5rem) 1.5rem clamp(2.5rem, 5vw, 4rem);
+  box-sizing: border-box;
+
+  &__stage {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__header-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--cg-color-border);
+    padding-bottom: 0.75rem;
+    margin-bottom: 2rem;
+  }
+
+  &__tag {
+    font-family: var(--cg-font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cg-color-ink-500);
+  }
+
+  &__header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Audio Toggle & Agent Badge
+// -----------------------------------------------------------------------------
+
+.cg-patch-audio-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: none;
+  border: 1px solid var(--cg-color-border);
+  padding: 0.25rem 0.55rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all var(--cg-transition-fade);
+
+  &:hover {
+    background: var(--cg-color-accent-soft);
+    border-color: var(--cg-color-ink-950);
+  }
+}
+
+.cg-patch-audio-led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cg-color-ink-300);
+  transition: background 200ms ease;
+
+  &--on {
+    background: #10b981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.7);
+  }
+}
+
+.cg-patch-audio-text {
+  font-family: var(--cg-font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  color: var(--cg-color-ink-700);
+  text-transform: uppercase;
+}
+
+.cg-agent-badge {
+  font-family: var(--cg-font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  padding: 0.2rem 0.45rem;
+  background: var(--cg-color-ink-950);
+  color: #fff;
+  border-radius: 2px;
+}
+
+// -----------------------------------------------------------------------------
+// Calligraphic Animated Ink Title (creativesguide.us)
+// -----------------------------------------------------------------------------
+
+.cg-ink-title-wrap {
+  text-align: center;
+  margin-bottom: 2.2rem;
+  user-select: none;
+}
+
+.cg-ink-title {
+  margin: 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  font-family: var(--cg-font-serif);
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(2.8rem, 6.2vw, 5.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #0b0a09;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.cg-ink-char {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  transition: transform 180ms cubic-bezier(0.18, 0.89, 0.32, 1.28), color 140ms ease;
+  animation: cguInkBounce 2.8s ease-in-out infinite alternate;
+
+  &:hover,
+  &--hop {
+    transform: translateY(-14px) rotate(-4deg) scale(1.15) !important;
+    color: #000;
+    text-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+  }
+
+  &--dot {
+    color: var(--cg-color-walls-red);
+    font-weight: 800;
+  }
+}
+
+@keyframes cguInkBounce {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-4px) rotate(-1.5deg);
+  }
+  60% {
+    transform: translateY(2px) rotate(1deg);
+  }
+  85% {
+    transform: translateY(-2px) rotate(-0.5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.cg-ink-title__kicker {
+  margin: 0.6rem 0 0;
+  font-family: var(--cg-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-600);
+}
+
+// -----------------------------------------------------------------------------
+// The Analog Mixing Console Faceplate
+// -----------------------------------------------------------------------------
+
+.cg-patch-console {
+  width: 100%;
+  background: linear-gradient(175deg, #1f1d1b 0%, #161514 100%);
+  border: 2px solid #2d2b28;
+  border-radius: 4px;
+  position: relative;
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6);
+  padding: 1.5rem clamp(1.2rem, 2.5vw, 2.2rem) 1.2rem;
+  box-sizing: border-box;
+  color: #ede8df;
+  overflow: visible;
+
+  &--live {
+    box-shadow:
+      0 16px 36px rgba(0, 0, 0, 0.32),
+      0 0 28px rgba(217, 119, 6, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  }
+}
+
+// Corner Screws
+.cg-console-screw {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #888, #444 70%, #222);
+  border: 1px solid #111;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0, 0, 0, 0.6);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    width: 60%;
+    height: 1.5px;
+    background: #1a1a1a;
+    transform: translateY(-50%) rotate(42deg);
+  }
+
+  &--tl { top: 8px; left: 8px; }
+  &--tr { top: 8px; right: 8px; }
+  &--bl { bottom: 8px; left: 8px; }
+  &--br { bottom: 8px; right: 8px; }
+}
+
+// Console Top Header Plate
+.cg-console-plate {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #33302c;
+  padding-bottom: 0.85rem;
+  margin-bottom: 1.25rem;
+
+  &__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  &__status {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: #0f0e0d;
+    padding: 0.3rem 0.65rem;
+    border-radius: 2px;
+    border: 1px solid #282624;
+  }
+}
+
+.cg-console-brand__title {
+  font-family: var(--cg-font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #dfd8cc;
+}
+
+.cg-console-brand__spec {
+  font-family: var(--cg-font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: #8c857b;
+}
+
+.cg-status-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #444;
+
+  &--connected {
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+  }
+  &--fault_autotune {
+    background: #ef4444;
+    box-shadow: 0 0 8px #ef4444;
+  }
+  &--fault_committee {
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+  }
+  &--dragging {
+    background: #3b82f6;
+    box-shadow: 0 0 8px #3b82f6;
+  }
+}
+
+.cg-status-text {
+  font-family: var(--cg-font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: #d1cbbf;
+}
+
+// -----------------------------------------------------------------------------
+// 3-Column Console Main Grid
+// -----------------------------------------------------------------------------
+
+.cg-console-main-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1.35fr;
+  gap: clamp(1rem, 2vw, 1.8rem);
+  margin-bottom: 1.4rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cg-console-channel {
+  background: #141312;
+  border: 1px solid #2c2a27;
+  border-radius: 2px;
+  padding: 1rem 0.9rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.cg-tape-label {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--cg-font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  background: #eae4d5;
+  color: #1a1715;
+  padding: 0.18rem 0.5rem;
+  border-radius: 1px;
+  margin-bottom: 0.85rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+// -----------------------------------------------------------------------------
+// Column 1: Intake Form
+// -----------------------------------------------------------------------------
+
+.cg-console-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.cg-console-field-label {
+  font-family: var(--cg-font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: #a49e92;
+}
+
+.cg-console-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.cg-console-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #090908;
+  border: 1px solid #36332f;
+  border-radius: 2px;
+  color: #f4efe6;
+  font-family: var(--cg-font-mono);
+  font-size: 0.82rem;
+  padding: 0.55rem 1.8rem 0.55rem 0.65rem;
+  transition: border-color var(--cg-transition-fade);
+
+  &:focus {
+    outline: none;
+    border-color: #d97706;
+    box-shadow: 0 0 6px rgba(217, 119, 6, 0.35);
+  }
+
+  &::placeholder {
+    color: #555048;
+  }
+}
+
+.cg-input-pip {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #444;
+
+  &--valid {
+    background: #10b981;
+    box-shadow: 0 0 6px #10b981;
+  }
+}
+
+.cg-console-hint {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: #8c8579;
+}
+
+.cg-btn-lock-dispatch {
+  margin-top: 0.4rem;
+  background: #c25e1a;
+  color: #fff;
+  border: none;
+  font-family: var(--cg-font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.75rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background var(--cg-transition-fade);
+
+  &:hover {
+    background: #d97706;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Column 2: 12AX7 Tube & VU Meter
+// -----------------------------------------------------------------------------
+
+.cg-meter-tube-bay {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 0.8rem;
+  align-items: center;
+  height: 100%;
+}
+
+.cg-tube-enclosure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.cg-tube-cage {
+  width: 50px;
+  height: 82px;
+  background: #090908;
+  border: 1px solid #333;
+  border-radius: 25px 25px 4px 4px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.9);
+}
+
+.cg-tube-glass {
+  position: absolute;
+  inset: 3px;
+  border-radius: 22px 22px 2px 2px;
+  background: radial-gradient(circle at 35% 20%, rgba(255, 255, 255, 0.12), transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cg-tube-filament {
+  width: 4px;
+  height: 38px;
+  background: #332211;
+  border-radius: 2px;
+  transition: all 400ms ease;
+
+  &--hot {
+    background: #ffaa33;
+    box-shadow:
+      0 0 8px #ff8800,
+      0 0 16px #ff5500;
+  }
+}
+
+.cg-tube-glow {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 140, 0, 0.5), transparent 70%);
+  opacity: 0;
+  transition: opacity 500ms ease;
+
+  &--live {
+    opacity: 1;
+    animation: cguTubePulse 2.4s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes cguTubePulse {
+  0% { transform: scale(0.95); opacity: 0.85; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+.cg-tube-plate-tag,
+.cg-meter-plate-tag {
+  font-family: var(--cg-font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: #777;
+}
+
+.cg-vu-meter-housing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.cg-vu-meter-face {
+  width: 100%;
+  max-width: 135px;
+  aspect-ratio: 120 / 70;
+  background: #eae4d2;
+  border: 2px solid #2a2825;
+  border-radius: 3px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+.cg-vu-meter-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.cg-vu-tick {
+  font-family: var(--cg-font-mono);
+  font-size: 6px;
+  fill: #222;
+
+  &--red {
+    fill: #8c1d18;
+    font-weight: 600;
+  }
+}
+
+.cg-vu-center-tag {
+  font-family: var(--cg-font-mono);
+  font-size: 7px;
+  font-weight: 700;
+  fill: #444;
+}
+
+// -----------------------------------------------------------------------------
+// Column 3: The Patch Bay
+// -----------------------------------------------------------------------------
+
+.cg-patch-sockets-matrix {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  align-items: start;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+}
+
+.cg-patch-jack-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.3rem;
+  background: #0d0c0c;
+  border: 1px solid #262422;
+  border-radius: 2px;
+  padding: 0.55rem 0.35rem;
+  position: relative;
+  transition: border-color var(--cg-transition-fade);
+
+  &--active {
+    border-color: #d97706;
+  }
+
+  &--live {
+    border-color: #10b981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
+  }
+}
+
+.cg-patch-jack-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.cg-jack-kicker {
+  font-family: var(--cg-font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  color: #777;
+
+  &--gold {
+    color: #eab308;
+    font-weight: 600;
+  }
+}
+
+.cg-jack-title {
+  font-family: var(--cg-font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: #eee;
+  white-space: nowrap;
+}
+
+.cg-jack-sub {
+  font-size: 0.52rem;
+  color: #888;
+  line-height: 1.2;
+}
+
+// 1/4" Phone Jack Barrel
+.cg-phone-jack {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #e6d3a3, #8c734b 65%, #3d311f);
+  border: 1px solid #222;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+
+  &--dest {
+    background: radial-gradient(circle at 40% 40%, #c4b5a0, #6e6457 65%, #2c2722);
+  }
+
+  &--true {
+    background: radial-gradient(circle at 40% 40%, #ffd780, #b8860b 65%, #423004);
+  }
+}
+
+.cg-jack-bezel {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #111;
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cg-jack-aperture {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #000;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.95);
+}
+
+// Accessible Agent Trigger Button
+.cg-agent-patch-btn {
+  margin-top: 0.2rem;
+  background: none;
+  border: 1px dashed #3a3734;
+  color: #999;
+  font-family: var(--cg-font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.35rem;
+  border-radius: 1px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all var(--cg-transition-fade);
+
+  &:hover {
+    opacity: 1;
+    border-color: #d97706;
+    color: #fff;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Draggable Cable & Plug
+// -----------------------------------------------------------------------------
+
+.cg-patch-cable-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.cg-draggable-plug {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  margin-left: -19px;
+  margin-top: -19px;
+  z-index: 20;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:active,
+  &--dragging {
+    cursor: grabbing;
+    z-index: 30;
+  }
+
+  &--plugged {
+    cursor: pointer;
+  }
+}
+
+.cg-plug-body {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffd700, #b8860b 60%, #4a3800);
+  border: 2px solid #222;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.7),
+    0 0 6px rgba(255, 215, 0, 0.4);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #111;
+  }
+}
+
+.cg-plug-drag-hint {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+  font-family: var(--cg-font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  background: rgba(0, 0, 0, 0.85);
+  color: #f1ede4;
+  padding: 0.15rem 0.35rem;
+  border-radius: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+// -----------------------------------------------------------------------------
+// Digital LED Readout Strip
+// -----------------------------------------------------------------------------
+
+.cg-console-readout-strip {
+  width: 100%;
+  background: #080807;
+  border: 1px solid #292724;
+  border-radius: 2px;
+  padding: 0.45rem 0.75rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--cg-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+}
+
+.cg-readout-prefix {
+  color: #6a6459;
+}
+
+.cg-readout-message {
+  color: #e5dfd3;
+}
+
+// -----------------------------------------------------------------------------
+// Footer & Broadsheet Jump
+// -----------------------------------------------------------------------------
+
+.cg-patch-lead-gate__footer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.cg-patch-broadsheet-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--cg-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-700);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-bottom: 1px solid var(--cg-color-border-strong);
+  transition: all var(--cg-transition-fade);
+
+  &:hover {
+    color: var(--cg-color-ink-950);
+    border-color: var(--cg-color-ink-950);
+    transform: translateY(2px);
+  }
+}
+
+.cg-jump-arrow {
+  display: inline-block;
+  animation: cguArrowBounce 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes cguArrowBounce {
+  0% { transform: translateY(-2px); }
+  100% { transform: translateY(3px); }
+}

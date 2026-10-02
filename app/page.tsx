@@ -6,12 +6,15 @@ import { buildContactHref } from "@/lib/contact-intake-routing";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
+import AnalogPatchLeadCapture from "@/components/home/AnalogPatchLeadCapture";
 
 const homeConversationHref = buildContactHref({ pathname: "/contact" });
 
 export default function HomePage() {
   return (
-    <main className="cg-page cg-broadsheet-page" id="broadsheet-editorial">
+    <>
+      <AnalogPatchLeadCapture />
+      <main className="cg-page cg-broadsheet-page" id="broadsheet-editorial">
       {/* 1. BROADSHEET MASTHEAD */}
       <header className="cg-masthead" aria-label="Publication masthead">
         <div className="cg-masthead__meta-bar">
@@ -247,5 +250,6 @@ export default function HomePage() {
         </div>
       </section>
     </main>
+  </>
   );
 }
