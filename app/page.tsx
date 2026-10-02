@@ -47,10 +47,10 @@ export default function HomePage() {
         <div className="cg-masthead__statement">
           <p className="cg-masthead__super-kicker">CREATIVES GUIDE US</p>
           <h1 className="cg-masthead__headline">
-            We cut raw records, write screenplays about bad ideas, and print physical things because digital files don&apos;t hold weight like real craft and ink.
+            We play real guitars, chop breaks, write screenplays about bad ideas, and edit everything painstakingly ourselves.
           </h1>
           <p className="cg-masthead__lede">
-            An independent studio and record label based in Salt Lake City, operating globally. No algorithmic playlists, no venture capital, and no pitch decks. Currently streaming Walls/Devine Volume 1 in the listening room.
+            An independent studio and record label based in Salt Lake City, operating globally. Real guitars plugged into loud tube amps, Ableton sessions, SP-404 chops, and zero automated shortcuts. Currently streaming Walls/Devine Volume 1 in the listening room.
           </p>
         </div>
       </header>
@@ -109,7 +109,7 @@ export default function HomePage() {
             </h2>
 
             <p className="cg-cover-feature__prose">
-              Tracked live in the studio with overdriven guitars, Mint-Green P-Bass, and SP-404 chops dialed in Ableton. Volume 1 pairs heavy bass grooves and raw amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions—raw, unvarnished, and delivered with zero digital polite correction.
+              Tracked live in the studio with real guitars, overdriven tube amps, Mint-Green P-Bass, and SP-404 chops dialed in Ableton. We edit every take, bar, and transition painstakingly ourselves—no software auto-tuning, no committee smoothing. Volume 1 pairs heavy bass grooves and raw amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions.
             </p>
 
             <blockquote className="cg-pullquote">
@@ -254,7 +254,7 @@ export default function HomePage() {
               <span className="cg-discipline-item__num">01</span>
               <div className="cg-discipline-item__body">
                 <h3>Sound &amp; Records</h3>
-                <p>Ableton sessions pushed into the red, dirty chops on the SP-404, live P-Bass, and overdriven tube amps. We make records with grit, groove, and intention—pressed to wax and built to last.</p>
+                <p>Real guitars through overdriven tube amps, P-Bass grooves, and SP-404 chops running into Ableton. We track the instruments ourselves and edit every transition, bar, and stem painstakingly by hand—pressed to wax and built to last.</p>
               </div>
             </div>
 
@@ -280,7 +280,7 @@ export default function HomePage() {
               We treat the record, the movie, and the printed jacket as one single piece of work.
             </h3>
             <p className="cg-colophon-unified__prose">
-              The studio takes on a handful of weird, ambitious collaborations each year across original sound production, film packaging, and editorial design. We work directly with directors, musicians, and independent publishers who care about physical craft. No endless email chains with committee feedback, guaranteed.
+              The studio takes on a handful of weird, ambitious collaborations each year across original sound production, film packaging, and editorial design. We play real instruments, write the scripts, and edit every single cut and cue painstakingly ourselves. No endless email chains with committee feedback, guaranteed.
             </p>
             <div className="cg-colophon-unified__actions">
               <ContactModalLink href={homeConversationHref} buttonVariant="primary">

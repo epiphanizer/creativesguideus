@@ -6,7 +6,7 @@ import { buildContactHref } from "@/lib/contact-intake-routing";
 const aboutCards = [
   {
     title: "Sound & Records",
-    body: "Ableton sessions pushed into the red, dirty chops on the SP-404, live P-Bass, and overdriven guitar amps. We make records with sweat, groove, and dirt, not sterile presets."
+    body: "Real guitars, overdriven tube amps, P-Bass, and SP-404 chops running in Ableton. We track the instruments ourselves and edit every bar painstakingly by hand."
   },
   {
     title: "Screenwriting & Story",
@@ -42,7 +42,7 @@ export function ContactLandingPage() {
               Creatives Guide Us collaborates with independent directors, musicians, and publishers who care about physical craft. Whether you need an original score tracked with real instruments, a road comedy script that doesn&apos;t read like an algorithm spat it out, or a hand-printed vinyl sleeve, this is the direct line to our desk.
             </p>
             <p>
-              No account executives, no automated email drip sequences, and no 14-page questionnaires. Just two guys drinking black coffee in a room full of guitar amplifiers, Ableton sessions, and samplers.
+              No account executives, no automated email drip sequences, and no shortcuts. Just two guys drinking black coffee in a room full of real guitars, loud tube amplifiers, and Ableton sessions—editing every bar, page, and proof painstakingly ourselves.
             </p>
           </div>
 
