@@ -57,7 +57,7 @@ const defaultBongTourLink = {
   title: "Bong Tour",
   description: "A comedy about hauling a fragile, six-foot hand-blown glass rig across Route 66 in July heat in a van with a broken radiator. Motels, road food, and original score cues.",
   href: "/bong-tour",
-  ctaLabel: "Read treatment & cues",
+  ctaLabel: "Read screenplay & cues",
   isFeatured: false,
   isActive: true
 } satisfies LinkHubLink;
@@ -70,7 +70,7 @@ const defaultCacheLink = {
   href: "/cache",
   ctaLabel: "Inspect the edition",
   isFeatured: false,
-  isActive: true
+  isActive: false
 } satisfies LinkHubLink;
 
 const defaultContactLink = {

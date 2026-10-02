@@ -3,23 +3,11 @@ import Link from "next/link";
 
 import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
-import { albumLaunchCampaignWindow } from "@/lib/launch-state";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 
 const homeConversationHref = buildContactHref({ pathname: "/contact" });
-const homeSignalListHref = buildContactHref({
-  pathname: "/contact",
-  overrides: {
-    context: "walls-devine-mailing-list",
-    inquiryType: "mailing-list",
-    project: "Walls/Devine",
-    surface: "campaign-world",
-    sourceRoute: "/",
-    campaignWindow: albumLaunchCampaignWindow
-  }
-});
 
 export default function HomePage() {
   return (
@@ -136,15 +124,12 @@ export default function HomePage() {
               >
                 Order Vinyl &amp; Merch ↗
               </a>
-              <ContactModalLink href={homeSignalListHref} buttonVariant="ghost">
-                Join the Signal List
-              </ContactModalLink>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 3. EDITORIAL DISPATCHES (2 BALANCED COLUMNS) */}
+      {/* 3. STUDIO PRODUCTIONS */}
       <section className="cg-dispatches" aria-labelledby="dispatches-title">
         <div className="cg-rule-header">
           <div className="cg-rule-header__left">
@@ -154,78 +139,49 @@ export default function HomePage() {
             </h2>
           </div>
           <div className="cg-rule-header__right">
-            <span className="cg-rule-header__date">FEATURE SCREENPLAY · ARCHIVAL MONOGRAPH</span>
+            <span className="cg-rule-header__date">ORIGINAL SCREENPLAY &amp; SCORE</span>
           </div>
         </div>
 
         <div className="cg-dispatches__grid">
           {/* Dispatch 01: Bong Tour */}
-          <article className="cg-dispatch-column cg-dispatch-column--bong" aria-label="Bong Tour Screenplay">
+          <article className="cg-dispatch-column cg-dispatch-column--bong cg-dispatch-column--featured" aria-label="Bong Tour Screenplay">
             <div className="cg-dispatch-column__mast">
               <span className="cg-meta-kicker cg-meta-kicker--tobacco">DISPATCH 01 · FEATURE FILM</span>
               <span className="cg-dispatch-column__tag">ORIGINAL SCREENPLAY</span>
             </div>
 
-            <figure className="cg-dispatch-column__media">
-              <Link href="/bong-tour" className="cg-dispatch-column__poster-link" aria-label="View Bong Tour Screenplay Portal">
-                <div className="cg-dispatch-column__poster-frame">
-                  <Image
-                    src={posterImage}
-                    alt="Bong Tour concept film poster"
-                    sizes="(max-width: 960px) 90vw, 45vw"
-                    className="cg-dispatch-column__image"
-                  />
-                  <span className="cg-dispatch-column__poster-badge">Read Treatment ↗</span>
+            <div className="cg-dispatch-featured__layout">
+              <figure className="cg-dispatch-column__media">
+                <Link href="/bong-tour" className="cg-dispatch-column__poster-link" aria-label="View Bong Tour Screenplay Portal">
+                  <div className="cg-dispatch-column__poster-frame">
+                    <Image
+                      src={posterImage}
+                      alt="Bong Tour concept film poster"
+                      sizes="(max-width: 960px) 90vw, 420px"
+                      className="cg-dispatch-column__image"
+                    />
+                    <span className="cg-dispatch-column__poster-badge">Read Screenplay ↗</span>
+                  </div>
+                </Link>
+                <figcaption>Original feature screenplay &amp; score suite</figcaption>
+              </figure>
+
+              <div className="cg-dispatch-featured__details">
+                <h3 className="cg-dispatch-column__title">
+                  <Link href="/bong-tour">Bong Tour: A Sun-Baked Masala Road Comedy</Link>
+                </h3>
+
+                <p className="cg-dispatch-column__copy">
+                  An indie band hauls a fragile, hand-blown six-foot glass rig across Route 66 in a van that overheats if you look at it wrong. Between Barstow radiator blowouts, neon-lit motel rooms, and questionable desert pitstops, it&apos;s a sun-baked comedy of stubborn survival.
+                </p>
+
+                <div className="cg-dispatch-column__action">
+                  <Link href="/bong-tour" className="cg-inline-link">
+                    Read Screenplay &amp; Hear Cues →
+                  </Link>
                 </div>
-              </Link>
-              <figcaption>Feature screenplay treatment &amp; original score suite</figcaption>
-            </figure>
-
-            <h3 className="cg-dispatch-column__title">
-              <Link href="/bong-tour">Bong Tour: A Sun-Baked Masala Road Comedy</Link>
-            </h3>
-
-            <p className="cg-dispatch-column__copy">
-              An indie band hauls a fragile, hand-blown six-foot glass rig across Route 66 in a van that overheats if you look at it wrong. Between Barstow radiator blowouts, neon-lit motel rooms, and questionable desert pitstops, it&apos;s a sun-baked comedy of stubborn survival.
-            </p>
-
-            <div className="cg-dispatch-column__action">
-              <Link href="/bong-tour" className="cg-inline-link">
-                Read Treatment &amp; Hear Cues →
-              </Link>
-            </div>
-          </article>
-
-          {/* Dispatch 02: Cache */}
-          <article className="cg-dispatch-column cg-dispatch-column--cache" aria-label="Cache Monograph">
-            <div className="cg-dispatch-column__mast">
-              <span className="cg-meta-kicker">DISPATCH 02 · MONOGRAPH &amp; ARCHIVE</span>
-              <span className="cg-dispatch-column__tag">LIMITED EDITION</span>
-            </div>
-
-            <figure className="cg-dispatch-column__media cg-dispatch-column__media--symbolic">
-              <Link href="/cache" className="cg-dispatch-column__poster-link" aria-label="View Cache Monograph &amp; Archive">
-                <div className="cg-symbolic-block cg-symbolic-block--cache">
-                  <div className="cg-symbolic-block__mark">№ 003</div>
-                  <div className="cg-symbolic-block__title">CACHE</div>
-                  <div className="cg-symbolic-block__sub">Physical Monograph &amp; Companion Audio</div>
-                </div>
-              </Link>
-              <figcaption>Hand-numbered hardbound volume with companion 7-inch lathe cut</figcaption>
-            </figure>
-
-            <h3 className="cg-dispatch-column__title">
-              <Link href="/cache">Cache: Studio Notebooks, Raw Outtakes &amp; Typography</Link>
-            </h3>
-
-            <p className="cg-dispatch-column__copy">
-              A hand-numbered archival volume of studio outtakes, spilled-coffee lyric sheets, blurry Polaroids, and woodcut test prints from the Volume 1 tracking sessions. Bound with a lathe-cut 7-inch record of Terry arguing with an amplifier between takes.
-            </p>
-
-            <div className="cg-dispatch-column__action">
-              <Link href="/cache" className="cg-inline-link">
-                Inspect Archival Edition →
-              </Link>
+              </div>
             </div>
           </article>
         </div>
