@@ -197,6 +197,38 @@ class SoundEngine {
     osc.start(now);
     osc.stop(now + 0.22);
   }
+
+  // 7. Stage Advance / Unlock chime
+  public playStageUnlock() {
+    if (this.isMuted) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    const notes = [
+      { note: 440.0, time: 0.0, dur: 0.09 },
+      { note: 554.37, time: 0.08, dur: 0.09 },
+      { note: 659.25, time: 0.16, dur: 0.1 },
+      { note: 880.0, time: 0.25, dur: 0.35 }
+    ];
+
+    notes.forEach(({ note, time, dur }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(note, now + time);
+
+      gain.gain.setValueAtTime(0.12, now + time);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + time + dur);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + time);
+      osc.stop(now + time + dur);
+    });
+  }
 }
 
 export const soundEngine = new SoundEngine();
