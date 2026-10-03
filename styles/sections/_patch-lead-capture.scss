@@ -333,8 +333,8 @@
     box-shadow: 0 0 10px #10b981;
   }
   &--fault_autotune {
-    background: #ef4444;
-    box-shadow: 0 0 10px #ef4444;
+    background: #d97706;
+    box-shadow: 0 0 12px #f59e0b;
   }
   &--fault_committee {
     background: #f59e0b;
@@ -661,6 +661,11 @@
   &--live {
     border-color: #10b981;
     box-shadow: 0 0 14px rgba(16, 185, 129, 0.5);
+  }
+
+  &--melodyne {
+    border-color: #d97706;
+    box-shadow: 0 0 16px rgba(217, 119, 6, 0.55);
   }
 }
 
@@ -1026,3 +1031,107 @@
     background: rgba(0, 0, 0, 0.04);
   }
 }
+
+// -----------------------------------------------------------------------------
+// Interactive Console Affiliate Profit Center Card
+// -----------------------------------------------------------------------------
+
+.cg-console-affiliate-box {
+  width: 100%;
+  box-sizing: border-box;
+  background: #171513;
+  border: 1.5px solid #d97706;
+  border-radius: 4px;
+  padding: 1.1rem 1.4rem;
+  margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  box-shadow: 0 4px 18px rgba(217, 119, 6, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: cgAffiliateSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cgAffiliateSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cg-console-affiliate-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cg-affiliate-pill {
+  font-family: var(--cg-font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  padding: 0.15rem 0.5rem;
+  background: #d97706;
+  color: #0d0c0b;
+  border-radius: 2px;
+}
+
+.cg-affiliate-badge-sub {
+  font-family: var(--cg-font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #fbbf24;
+}
+
+.cg-console-affiliate-desc {
+  margin: 0;
+  font-family: var(--cg-font-sans);
+  font-size: 0.82rem;
+  line-height: 1.48;
+  color: #e7e5e4;
+}
+
+.cg-console-affiliate-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding-top: 0.25rem;
+}
+
+.cg-btn-melodyne-buy {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  font-family: var(--cg-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  background: #d97706;
+  color: #ffffff;
+  border: 1px solid #f59e0b;
+  border-radius: 3px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.4);
+  transition: all var(--cg-transition-fade);
+
+  &:hover {
+    background: #ea580c;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.5);
+  }
+}
+
+.cg-console-affiliate-fineprint {
+  font-family: var(--cg-font-mono);
+  font-size: 0.62rem;
+  color: #a8a29e;
+  line-height: 1.35;
+}
+

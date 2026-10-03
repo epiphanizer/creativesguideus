@@ -213,7 +213,7 @@ export default function HomePage() {
               Full disclosure: We don&apos;t hate vocal tuning. We are avid, obsessive Celemony Melodyne fans.
             </h2>
             <p className="cg-profit-center-prose">
-              While we track our rhythm section live through screaming tube amplifiers, we refuse to settle for robotic autotune drone presets. Instead, we spend obsessive hours inside Celemony Melodyne manually sculpting vocal formants, vibrato tails, and micro-pitches note-by-note until every lyric sounds like velvet and gravel.
+              While we track our rhythm section live through screaming tube amplifiers, when it comes to vocals, we are proud, obsessive Celemony Melodyne power users. We spend hours inside Melodyne manually sculpting vocal formants, vibrato tails, and micro-pitches note-by-note until every lyric sounds like velvet and gravel.
             </p>
             <p className="cg-profit-center-prose">
               If you want to tune your own records with surgical dignity, buy Melodyne 5 Studio through our studio affiliate link below. Every license sold directly funds our vintage 12AX7 tube amp habit and keeps our soldering irons hot.
