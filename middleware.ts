@@ -35,6 +35,30 @@ function applySecurityHeaders(response: NextResponse): void {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip = getClientIp(request);
+  const host = (
+    request.headers.get("x-forwarded-host") ||
+    request.headers.get("host") ||
+    request.nextUrl.hostname ||
+    ""
+  ).toLowerCase();
+
+  // ── Multi-Domain Routing: johnwalls.rocks & johnwalls.studio ──────────────
+  const isRocksHost = host.includes("johnwalls.rocks") || host.startsWith("rocks.");
+  const isStudioHost = host.includes("johnwalls.studio") || host.startsWith("studio.");
+
+  if (isRocksHost && pathname === "/") {
+    const rewriteUrl = new URL("/johnwalls-rocks", request.url);
+    const response = NextResponse.rewrite(rewriteUrl);
+    applySecurityHeaders(response);
+    return response;
+  }
+
+  if (isStudioHost && pathname === "/") {
+    const rewriteUrl = new URL("/johnwalls-studio", request.url);
+    const response = NextResponse.rewrite(rewriteUrl);
+    applySecurityHeaders(response);
+    return response;
+  }
 
   // ── API Route Protection ──────────────────────────────────────────────────
   if (pathname.startsWith("/api/")) {

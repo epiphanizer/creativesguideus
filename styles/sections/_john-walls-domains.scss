@@ -1,0 +1,730 @@
+// =============================================================================
+// JOHN WALLS DOMAINS: johnwalls.rocks & johnwalls.studio
+// Analog sound lab, calligraphy signature, and D2C generative platform styling
+// =============================================================================
+
+.jw-domain-view {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  color: var(--cg-color-ink-950);
+  background-color: var(--cg-color-canvas);
+  overflow-x: hidden;
+  padding-bottom: 5rem;
+}
+
+.jw-rocks-view {
+  background: radial-gradient(circle at 50% 0%, #fff9f0 0%, #faf6ee 60%, #f3eee3 100%);
+}
+
+.jw-studio-view {
+  background: radial-gradient(circle at 50% 0%, #fbf9f4 0%, #f5efe4 50%, #ede5d5 100%);
+}
+
+.jw-atmosphere-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 550px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
+}
+
+.jw-domain-shell {
+  position: relative;
+  z-index: 1;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 1.5rem clamp(1rem, 3.5vw, 2.5rem);
+}
+
+// ── Top Navigation Bar ────────────────────────────────────────────────────────
+
+.jw-domain-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.9rem 1.25rem;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+
+  @media (max-width: 680px) {
+    border-radius: 16px;
+    padding: 0.85rem 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+
+    &__brand {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    &__links {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+}
+
+.jw-domain-nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.jw-domain-nav__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cg-color-walls-red, #b31b1b);
+  box-shadow: 0 0 8px rgba(179, 27, 27, 0.5);
+
+  &--gold {
+    background: #d49a3d;
+    box-shadow: 0 0 8px rgba(212, 154, 61, 0.6);
+  }
+}
+
+.jw-domain-nav__label {
+  font-family: var(--cg-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-700);
+  font-weight: 600;
+}
+
+.jw-domain-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.jw-domain-pill {
+  font-family: var(--cg-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  padding: 0.32rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: var(--cg-color-ink-600);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 160ms ease;
+
+  &:hover {
+    color: #000;
+    border-color: rgba(0, 0, 0, 0.35);
+    background: #ffffff;
+  }
+
+  &--active {
+    background: #0f0e0d;
+    color: #ffffff !important;
+    border-color: #0f0e0d;
+    font-weight: 600;
+  }
+}
+
+// ── Calligraphic Signature Section ───────────────────────────────────────────
+
+.jw-domain-hero {
+  text-align: center;
+  padding: 2.5rem 0 3.5rem;
+}
+
+.jw-signature-wrap {
+  margin-bottom: 2rem;
+}
+
+.jw-signature-eyebrow-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.jw-signature-eyebrow {
+  font-family: var(--cg-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cg-color-ink-500);
+  font-weight: 600;
+}
+
+.jw-signature-badge {
+  font-family: var(--cg-font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(179, 27, 27, 0.08);
+  border: 1px solid rgba(179, 27, 27, 0.25);
+  color: var(--cg-color-walls-red, #b31b1b);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+
+  &--link {
+    text-decoration: none;
+    transition: background 140ms ease;
+    &:hover {
+      background: rgba(179, 27, 27, 0.16);
+    }
+  }
+}
+
+.jw-signature-ink-title {
+  font-size: clamp(1.8rem, 6.4vw, 5.8rem);
+  white-space: nowrap;
+  max-width: 100%;
+  color: #0c0b0a;
+}
+
+.jw-signature-kicker {
+  max-width: 68ch;
+  margin: 1rem auto 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--cg-color-ink-600);
+  font-family: var(--cg-font-sans);
+}
+
+.jw-hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.8rem;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    width: 100%;
+    .cg-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// ── Catalog Grid (johnwalls.rocks) ───────────────────────────────────────────
+
+.jw-discography-section,
+.jw-pillars-section {
+  margin-top: 2rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.jw-section-header {
+  margin-bottom: 2.5rem;
+  text-align: left;
+
+  &__tag {
+    font-family: var(--cg-font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--cg-color-walls-red, #b31b1b);
+    display: inline-block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    font-family: var(--cg-font-serif);
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    margin: 0 0 0.5rem;
+    color: #0c0b0a;
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  p {
+    font-family: var(--cg-font-sans);
+    font-size: 1rem;
+    color: var(--cg-color-ink-600);
+    margin: 0;
+    max-width: 58ch;
+  }
+}
+
+.jw-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.75rem;
+}
+
+.jw-catalog-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  }
+
+  &--featured {
+    border-color: rgba(179, 27, 27, 0.35);
+    background: linear-gradient(180deg, #ffffff 0%, #fdfcf9 100%);
+    box-shadow: 0 6px 24px rgba(179, 27, 27, 0.06);
+  }
+
+  &__badge {
+    font-family: var(--cg-font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    padding: 0.45rem 1.25rem;
+    background: #0f0e0d;
+    color: #ffffff;
+    text-transform: uppercase;
+
+    &--amber {
+      background: #7a5009;
+    }
+
+    &--neutral {
+      background: #3e3b37;
+    }
+  }
+
+  &__body {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--cg-font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--cg-color-ink-500);
+    margin-bottom: 0.75rem;
+  }
+
+  h3 {
+    font-family: var(--cg-font-serif);
+    font-size: 1.45rem;
+    margin: 0 0 0.75rem;
+    color: #0c0b0a;
+    line-height: 1.25;
+  }
+
+  &__desc {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--cg-color-ink-600);
+    margin: 0 0 1.25rem;
+  }
+
+  &__footer {
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+}
+
+.jw-track-list-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: auto;
+}
+
+.jw-track-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--cg-font-mono);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.65rem;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+  color: var(--cg-color-ink-700);
+
+  svg {
+    color: var(--cg-color-walls-red, #b31b1b);
+    flex-shrink: 0;
+  }
+}
+
+.jw-card-spec-list {
+  list-style: none;
+  padding: 0;
+  margin: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  li {
+    font-family: var(--cg-font-mono);
+    font-size: 0.72rem;
+    color: var(--cg-color-ink-500);
+    position: relative;
+    padding-left: 1rem;
+
+    &::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--cg-color-walls-red, #b31b1b);
+    }
+  }
+}
+
+.jw-link-button {
+  font-family: var(--cg-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: #0c0b0a;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--cg-color-walls-red, #b31b1b);
+    text-decoration: underline;
+  }
+}
+
+// ── Rig Banner ───────────────────────────────────────────────────────────────
+
+.jw-rig-banner,
+.jw-dispatch-banner {
+  margin: 3.5rem 0 2rem;
+  background: #141311;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 2.5rem clamp(1.5rem, 4vw, 3rem);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+  border: 1px solid #36322b;
+}
+
+.jw-rig-banner__inner,
+.jw-dispatch-banner__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.jw-rig-kicker,
+.jw-dispatch-kicker {
+  font-family: var(--cg-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: #d49a3d;
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.jw-rig-banner__content,
+.jw-dispatch-banner__text {
+  max-width: 65ch;
+
+  h3 {
+    font-family: var(--cg-font-serif);
+    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+    margin: 0 0 0.6rem;
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #b5ada2;
+    margin: 0;
+  }
+}
+
+// ── Generative Console (johnwalls.studio) ────────────────────────────────────
+
+.jw-gen-console-section {
+  margin: 2.5rem 0 3.5rem;
+}
+
+.jw-gen-console {
+  background: linear-gradient(180deg, #1f1d1b 0%, #151412 100%);
+  border: 2px solid #4a443b;
+  border-radius: 8px;
+  padding: 1.75rem clamp(1.2rem, 3vw, 2.2rem);
+  color: #ffffff;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  &__led-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__title {
+    font-family: var(--cg-font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    color: #e5ded5;
+  }
+
+  &__chip {
+    font-family: var(--cg-font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    color: #c9bea9;
+  }
+
+  &__body {
+    p {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: #b5ada2;
+      margin: 0 0 1.5rem;
+      max-width: 75ch;
+    }
+  }
+}
+
+.jw-gen-led {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4a443b;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8);
+  transition: all 180ms ease;
+
+  &--active {
+    background: #00ff66;
+    box-shadow: 0 0 12px #00ff66, inset 0 1px 1px #ffffff;
+  }
+}
+
+.jw-gen-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.jw-gen-action-btn {
+  font-family: var(--cg-font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: #d49a3d;
+  color: #12100d;
+  border: none;
+  padding: 0.65rem 1.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(212, 154, 61, 0.35);
+  transition: all 140ms ease;
+
+  &:hover {
+    background: #e2a84c;
+    transform: translateY(-1px);
+  }
+}
+
+.jw-gen-note {
+  font-family: var(--cg-font-mono);
+  font-size: 0.74rem;
+  color: #8c8273;
+  letter-spacing: 0.06em;
+}
+
+// ── Pillars Grid (johnwalls.studio) ──────────────────────────────────────────
+
+.jw-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.jw-pillar-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  transition: all 180ms ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.22);
+  }
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: #0c0b0a;
+    margin-bottom: 1.25rem;
+  }
+
+  &__badge {
+    font-family: var(--cg-font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    color: var(--cg-color-walls-red, #b31b1b);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+
+    &--amber {
+      color: #9c670a;
+    }
+
+    &--neutral {
+      color: #575249;
+    }
+
+    &--gold {
+      color: #b87b1c;
+    }
+  }
+
+  h3 {
+    font-family: var(--cg-font-serif);
+    font-size: 1.35rem;
+    margin: 0 0 0.75rem;
+    color: #0c0b0a;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--cg-color-ink-600);
+    margin: 0 0 1.25rem;
+  }
+}
+
+.jw-pillar-list {
+  list-style: none;
+  padding: 0;
+  margin: auto 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--cg-font-mono);
+    font-size: 0.72rem;
+    color: var(--cg-color-ink-600);
+
+    svg {
+      color: #2b7a3e;
+      flex-shrink: 0;
+    }
+  }
+}
+
+.jw-pillar-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+// ── Domain Footer ────────────────────────────────────────────────────────────
+
+.jw-domain-footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+  &__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-family: var(--cg-font-mono);
+    font-size: 0.72rem;
+    color: var(--cg-color-ink-500);
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &__links {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    a {
+      color: var(--cg-color-ink-600);
+      text-decoration: none;
+
+      &:hover {
+        color: #000;
+        text-decoration: underline;
+      }
+    }
+  }
+}
