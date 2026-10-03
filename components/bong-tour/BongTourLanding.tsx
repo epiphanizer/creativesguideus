@@ -7,14 +7,17 @@ import {
   FiAward,
   FiBookOpen,
   FiCheck,
+  FiChevronLeft,
   FiChevronRight,
   FiCompass,
   FiDownload,
   FiExternalLink,
   FiFilm,
+  FiLock,
   FiMusic,
   FiPause,
   FiPlay,
+  FiUnlock,
   FiVolume2,
   FiVolumeX
 } from "react-icons/fi";
@@ -54,10 +57,98 @@ import {
 import { checkUnlockedAchievements } from "@/lib/bong-tour/achievements";
 import { soundEngine } from "@/lib/bong-tour/sound-effects";
 
+export type BongTourStage = {
+  id: number;
+  roman: string;
+  name: string;
+  shortName: string;
+  kicker: string;
+  subtitle: string;
+  hash: string;
+  hint: string;
+};
+
+export const BONG_TOUR_STAGES: BongTourStage[] = [
+  {
+    id: 1,
+    roman: "I",
+    name: "The Inscription",
+    shortName: "Inscription",
+    kicker: "Folio I · Rivendell-on-Sunset",
+    subtitle: "The Sacred Six-Foot Rig & The Mojave Run",
+    hash: "hero",
+    hint: "Read the story hook & screenplay treatment"
+  },
+  {
+    id: 2,
+    roman: "II",
+    name: "The Arcane Grimoire",
+    shortName: "Grimoire",
+    kicker: "Folio II · The Arcane Grimoire",
+    subtitle: "7 Trading Cards & Fellowship Spellbook",
+    hash: "grimoire",
+    hint: "Inscribe relics & build your spellbook"
+  },
+  {
+    id: 3,
+    roman: "III",
+    name: "Road Encounters",
+    shortName: "Encounters",
+    kicker: "Folio III · Trials Along the Highway",
+    subtitle: "D20 Skill Checks Along Route 66",
+    hash: "encounters",
+    hint: "Roll fate against boiling radiators & shamans"
+  },
+  {
+    id: 4,
+    roman: "IV",
+    name: "The Sacred Bloodline",
+    shortName: "Bloodline",
+    kicker: "Folio IV · The Sacred Bloodline",
+    subtitle: "Diaspora Comps & Baba Gandalfi's Law",
+    hash: "dna",
+    hint: "Discover Western & Desi film lineage"
+  },
+  {
+    id: 5,
+    roman: "V",
+    name: "The Chronicle",
+    shortName: "The 3 Acts",
+    kicker: "Folio V · The Chronicle of Mount Sunset",
+    subtitle: "Acts I, II, & III Script Breakdown",
+    hash: "chronicle",
+    hint: "Follow the script from West Bengal to Hollywood"
+  },
+  {
+    id: 6,
+    roman: "VI",
+    name: "The Bardic Suite",
+    shortName: "Bardic Suite",
+    kicker: "Folio VI · The Bardic Pipe-Organ Suite",
+    subtitle: "Overdriven Tube Amp Film Cues",
+    hash: "soundtrack",
+    hint: "Stream desert fuzz cues from the sound lab"
+  },
+  {
+    id: 7,
+    roman: "VII",
+    name: "Airdrop & Studio Desk",
+    shortName: "Airlock & Studio",
+    kicker: "Folio VII & VIII · Genesis Airdrop & Studio Desk",
+    subtitle: "Solana Allocation Claim & Studio Packaging",
+    hash: "airlock",
+    hint: "Seal your Solana wallet & request circulation"
+  }
+];
+
 declare global {
   interface Window {
     __BONG_TOUR_AGENT__?: {
       getStatus: () => Record<string, unknown>;
+      getStage: () => number;
+      getMaxUnlockedStage: () => number;
+      setStage: (stage: number) => void;
+      unlockAllStages: () => void;
       getCards: () => BongTourCard[];
       getAirdropManifest: () => typeof AIRDROP_AGENT_MANIFEST;
       inscribeCard: (cardId: string) => boolean;
@@ -120,6 +211,11 @@ const soundtrackCues: SoundtrackCue[] = [
 ];
 
 export function BongTourLanding() {
+  // Stage Progression State
+  const [currentStage, setCurrentStage] = useState<number>(1);
+  const [maxUnlockedStage, setMaxUnlockedStage] = useState<number>(1);
+  const [isFreeRoam, setIsFreeRoam] = useState<boolean>(false);
+
   // Appreesh & Card Collection State
   const [appreeshBalance, setAppreeshBalance] = useState<number>(INITIAL_APPREESH_BALANCE);
   const [collectedCards, setCollectedCards] = useState<string[]>(["vishal-scribe"]);
@@ -146,6 +242,53 @@ export function BongTourLanding() {
   // Initialize and persist state to localStorage
   useEffect(() => {
     try {
+      const savedStage = localStorage.getItem("bong_tour_current_stage");
+      const savedMax = localStorage.getItem("bong_tour_unlocked_stage");
+      const savedFreeRoam = localStorage.getItem("bong_tour_free_roam");
+
+      let initialMax = 1;
+      if (savedMax !== null) {
+        initialMax = Math.max(1, Math.min(7, parseInt(savedMax, 10) || 1));
+        setMaxUnlockedStage(initialMax);
+      }
+      if (savedFreeRoam === "true") {
+        setIsFreeRoam(true);
+      }
+
+      if (typeof window !== "undefined") {
+        const hash = window.location.hash.replace("#", "").toLowerCase();
+        if (hash) {
+          const matched = BONG_TOUR_STAGES.find(
+            (s) =>
+              s.hash.toLowerCase() === hash ||
+              s.shortName.toLowerCase() === hash ||
+              `stage-${s.id}` === hash ||
+              (hash === "signal" && s.id === 7) ||
+              (hash === "cards" && s.id === 2) ||
+              (hash === "trials" && s.id === 3)
+          );
+          if (matched) {
+            setCurrentStage(matched.id);
+            if (matched.id > initialMax) {
+              setMaxUnlockedStage(matched.id);
+              try {
+                localStorage.setItem("bong_tour_unlocked_stage", matched.id.toString());
+              } catch {}
+            }
+          } else if (savedStage !== null) {
+            const parsed = parseInt(savedStage, 10);
+            if (parsed >= 1 && parsed <= 7) {
+              setCurrentStage(parsed);
+            }
+          }
+        } else if (savedStage !== null) {
+          const parsed = parseInt(savedStage, 10);
+          if (parsed >= 1 && parsed <= 7) {
+            setCurrentStage(parsed);
+          }
+        }
+      }
+
       const savedBalance = localStorage.getItem("bong_tour_appreesh_balance");
       if (savedBalance !== null) {
         setAppreeshBalance(parseInt(savedBalance, 10) || INITIAL_APPREESH_BALANCE);
@@ -206,6 +349,70 @@ export function BongTourLanding() {
     setTimeout(() => {
       setToastMessage(null);
     }, 4500);
+  };
+
+  const goToStage = (targetStage: number, options?: { force?: boolean }) => {
+    if (targetStage < 1 || targetStage > 7) return;
+
+    if (!isFreeRoam && targetStage > maxUnlockedStage && !options?.force) {
+      soundEngine.playFumble();
+      triggerToast(
+        `🔒 Stage ${targetStage} is locked! Complete Folio ${maxUnlockedStage} first, or toggle Free Roam.`,
+        "spend"
+      );
+      return;
+    }
+
+    let newMax = maxUnlockedStage;
+    if (targetStage > maxUnlockedStage) {
+      newMax = targetStage;
+      setMaxUnlockedStage(newMax);
+      try {
+        localStorage.setItem("bong_tour_unlocked_stage", newMax.toString());
+      } catch {}
+
+      const stageDiscoveryBonus = 50;
+      const newBalance = appreeshBalance + stageDiscoveryBonus;
+      saveBalance(newBalance);
+      soundEngine.playStageUnlock();
+
+      const stageInfo = BONG_TOUR_STAGES.find((s) => s.id === targetStage);
+      triggerToast(
+        `🎉 Folio ${stageInfo?.roman || targetStage} Unlocked: ${stageInfo?.name}! (+${stageDiscoveryBonus} ◈ Discovery Bounty)`,
+        "gain"
+      );
+    } else {
+      soundEngine.playCoin();
+    }
+
+    setCurrentStage(targetStage);
+    try {
+      localStorage.setItem("bong_tour_current_stage", targetStage.toString());
+    } catch {}
+
+    const targetInfo = BONG_TOUR_STAGES.find((s) => s.id === targetStage);
+    if (targetInfo && typeof window !== "undefined") {
+      window.history.replaceState(null, "", `#${targetInfo.hash}`);
+    }
+
+    const scrollContainer = document.querySelector(".bt-scroll-container");
+    if (scrollContainer) {
+      scrollContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const handleToggleFreeRoam = () => {
+    const next = !isFreeRoam;
+    setIsFreeRoam(next);
+    try {
+      localStorage.setItem("bong_tour_free_roam", next ? "true" : "false");
+    } catch {}
+    if (next) {
+      soundEngine.playStageUnlock();
+      triggerToast("⚡ Free Roam Enabled: All 7 Folios Accessible!", "gain");
+    } else {
+      triggerToast("🔒 Free Roam Disabled: Standard Stage Progression Active", "spend");
+    }
   };
 
   const checkAchievements = (
@@ -300,10 +507,24 @@ export function BongTourLanding() {
   };
 
   const handleJumpToSection = (sectionId: string) => {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
+    const cleanId = sectionId.replace("#", "").toLowerCase();
+    let target = 1;
+    if (cleanId === "hero" || cleanId === "stage-1" || cleanId === "inscription") {
+      target = 1;
+    } else if (cleanId === "grimoire" || cleanId === "cards" || cleanId === "stage-2") {
+      target = 2;
+    } else if (cleanId === "encounters" || cleanId === "trials" || cleanId === "stage-3") {
+      target = 3;
+    } else if (cleanId === "dna" || cleanId === "comps" || cleanId === "stage-4" || cleanId === "bloodline") {
+      target = 4;
+    } else if (cleanId === "chronicle" || cleanId === "acts" || cleanId === "stage-5") {
+      target = 5;
+    } else if (cleanId === "soundtrack" || cleanId === "audio" || cleanId === "stage-6") {
+      target = 6;
+    } else if (cleanId === "airlock" || cleanId === "signal" || cleanId === "giveaway" || cleanId === "stage-7") {
+      target = 7;
     }
+    goToStage(target, { force: true });
   };
 
   // Mount Agent Autonomous API (window.__BONG_TOUR_AGENT__)
@@ -316,6 +537,9 @@ export function BongTourLanding() {
           encountersRolledCount
         );
         return {
+          currentStage,
+          maxUnlockedStage,
+          isFreeRoam,
           appreeshBalance,
           collectedCards,
           collectedCardsCount: collectedCards.length,
@@ -324,6 +548,18 @@ export function BongTourLanding() {
           isAirdropClaimed: !!airdropClaim,
           claimRecord: airdropClaim
         };
+      },
+      getStage: () => currentStage,
+      getMaxUnlockedStage: () => maxUnlockedStage,
+      setStage: (stage: number) => goToStage(stage, { force: true }),
+      unlockAllStages: () => {
+        setMaxUnlockedStage(7);
+        setIsFreeRoam(true);
+        try {
+          localStorage.setItem("bong_tour_unlocked_stage", "7");
+          localStorage.setItem("bong_tour_free_roam", "true");
+        } catch {}
+        triggerToast("🔓 All Stages Unlocked! Free Roam Enabled.", "gain");
       },
       getCards: () => BONG_TOUR_CARDS,
       getAirdropManifest: () => AIRDROP_AGENT_MANIFEST,
@@ -360,7 +596,7 @@ export function BongTourLanding() {
         }
         return data;
       },
-      openAirlock: () => handleJumpToSection("airlock"),
+      openAirlock: () => goToStage(7, { force: true }),
       openSpellbook: () => setIsSpellbookOpen(true),
       openReader: () => setIsReaderOpen(true)
     };
@@ -368,7 +604,7 @@ export function BongTourLanding() {
     return () => {
       delete window.__BONG_TOUR_AGENT__;
     };
-  }, [appreeshBalance, collectedCards, encountersRolledCount, airdropClaim]);
+  }, [currentStage, maxUnlockedStage, isFreeRoam, appreeshBalance, collectedCards, encountersRolledCount, airdropClaim]);
 
   // Audio Cue Player
   const activeCue = soundtrackCues[activeCueIndex] ?? soundtrackCues[0];
@@ -431,6 +667,92 @@ export function BongTourLanding() {
     appreeshBalance,
     encountersRolledCount
   );
+
+  const currentStageInfo = BONG_TOUR_STAGES.find((s) => s.id === currentStage) ?? BONG_TOUR_STAGES[0];
+
+  const renderStageNavDock = () => {
+    const prevStage = currentStage > 1 ? BONG_TOUR_STAGES[currentStage - 2] : null;
+    const nextStage = currentStage < 7 ? BONG_TOUR_STAGES[currentStage] : null;
+
+    return (
+      <footer className="bt-stage-dock" aria-label={`Navigation for Folio ${currentStageInfo.roman}`}>
+        <div className="bt-stage-dock__inner">
+          {/* Left: Previous Stage */}
+          <div className="bt-stage-dock__side bt-stage-dock__side--left">
+            {prevStage ? (
+              <Button
+                type="button"
+                variant="secondary"
+                className="bt-stage-dock__btn bt-stage-dock__btn--prev bt-btn-parchment-secondary"
+                onClick={() => goToStage(prevStage.id)}
+              >
+                <FiChevronLeft aria-hidden="true" />
+                <span>Folio {prevStage.roman}: {prevStage.shortName}</span>
+              </Button>
+            ) : (
+              <div className="bt-stage-dock__spacer" aria-hidden="true" />
+            )}
+          </div>
+
+          {/* Center: Stage Pips & Progress */}
+          <div className="bt-stage-dock__center">
+            <div className="bt-stage-pips" role="tablist" aria-label="Stage Pips">
+              {BONG_TOUR_STAGES.map((s) => {
+                const isCurrent = s.id === currentStage;
+                const isUnlocked = s.id <= maxUnlockedStage || isFreeRoam;
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    className={`bt-stage-pip${isCurrent ? " bt-stage-pip--active" : ""}${isUnlocked ? " bt-stage-pip--unlocked" : " bt-stage-pip--locked"}`}
+                    onClick={() => isUnlocked && goToStage(s.id)}
+                    disabled={!isUnlocked}
+                    title={`Folio ${s.roman}: ${s.name}${isCurrent ? " (Current)" : isUnlocked ? " (Unlocked)" : " (Locked)"}`}
+                    aria-label={`Jump to Folio ${s.roman}: ${s.name}`}
+                  >
+                    <span className="bt-stage-pip__dot" />
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="bt-stage-dock__label">
+              <strong>Folio {currentStageInfo.roman} of VII:</strong> {currentStageInfo.name}
+              {currentStage < 7 && currentStage >= maxUnlockedStage && !isFreeRoam && (
+                <span className="bt-stage-dock__bounty-tag">
+                  <GiCoins aria-hidden="true" /> +50 ◈ on advance
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Right: Next Stage or Return */}
+          <div className="bt-stage-dock__side bt-stage-dock__side--right">
+            {nextStage ? (
+              <Button
+                type="button"
+                variant="primary"
+                className="bt-stage-dock__btn bt-stage-dock__btn--next bt-btn-parchment-primary"
+                onClick={() => goToStage(nextStage.id, { force: true })}
+              >
+                <span>Enter Folio {nextStage.roman}: {nextStage.shortName}</span>
+                <FiChevronRight aria-hidden="true" />
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="secondary"
+                className="bt-stage-dock__btn bt-stage-dock__btn--restart bt-btn-parchment-secondary"
+                onClick={() => goToStage(1)}
+              >
+                <span>↺ Return to Folio I</span>
+              </Button>
+            )}
+          </div>
+        </div>
+      </footer>
+    );
+  };
 
   return (
     <>
@@ -538,27 +860,59 @@ export function BongTourLanding() {
           <div className="bt-scroll-roller__ribbon bt-scroll-roller__ribbon--right" />
         </div>
 
-        {/* Sticky Elven Waypoint Ribbon */}
-        <nav className="bt-waypoint-ribbon" aria-label="Scroll waypoints">
-          <div className="bt-waypoint-ribbon__inner">
-            <span className="bt-waypoint-ribbon__label">
-              <FiCompass aria-hidden="true" /> Waypoints:
-            </span>
-            <a href="#hero" className="bt-waypoint-link">I. Inscription</a>
-            <span className="bt-waypoint-sep">·</span>
-            <a href="#grimoire" className="bt-waypoint-link">II. Grimoire (Cards)</a>
-            <span className="bt-waypoint-sep">·</span>
-            <a href="#encounters" className="bt-waypoint-link">III. Road Encounters</a>
-            <span className="bt-waypoint-sep">·</span>
-            <a href="#chronicle" className="bt-waypoint-link">IV. The 3 Acts</a>
-            <span className="bt-waypoint-sep">·</span>
-            <a href="#soundtrack" className="bt-waypoint-link">V. Bardic Suite</a>
-            <span className="bt-waypoint-sep">·</span>
-            <a href="#airlock" className="bt-waypoint-link bt-waypoint-link--highlight">
-              VI. Airdrop Airlock ⚡
-            </a>
-            <span className="bt-waypoint-sep">·</span>
-            <a href="#signal" className="bt-waypoint-link">VII. Packaging Desk</a>
+        {/* Interactive Elven Stage Waypoint Ribbon & Stepper */}
+        <nav className="bt-waypoint-ribbon" aria-label="Folio stage navigation">
+          <div className="bt-waypoint-ribbon__top-bar">
+            <div className="bt-waypoint-ribbon__stage-meta">
+              <span className="bt-waypoint-ribbon__folio-kicker">
+                <FiCompass aria-hidden="true" />
+                Folio {currentStageInfo.roman} of VII · {currentStageInfo.name}
+              </span>
+              <span className="bt-waypoint-ribbon__progress-badge">
+                {Math.round((maxUnlockedStage / 7) * 100)}% Unlocked
+              </span>
+            </div>
+
+            <div className="bt-waypoint-ribbon__controls">
+              <button
+                type="button"
+                className={`bt-free-roam-btn${isFreeRoam ? " bt-free-roam-btn--active" : ""}`}
+                onClick={handleToggleFreeRoam}
+                title={isFreeRoam ? "Free Roam is ON: Click to enforce stage gates" : "Free Roam is OFF: Click to freely jump anywhere"}
+                aria-pressed={isFreeRoam}
+              >
+                {isFreeRoam ? <FiUnlock aria-hidden="true" /> : <FiLock aria-hidden="true" />}
+                <span>Free Roam {isFreeRoam ? "ON" : "OFF"}</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="bt-waypoint-chips-row" role="tablist" aria-label="Stages of Bong Tour">
+            {BONG_TOUR_STAGES.map((s) => {
+              const isActive = s.id === currentStage;
+              const isUnlocked = s.id <= maxUnlockedStage || isFreeRoam;
+
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  className={`bt-stage-chip${isActive ? " bt-stage-chip--active" : ""}${isUnlocked ? " bt-stage-chip--unlocked" : " bt-stage-chip--locked"}`}
+                  onClick={() => goToStage(s.id)}
+                  title={`${s.kicker}: ${s.name} - ${isUnlocked ? "Click to view" : s.hint}`}
+                >
+                  <span className="bt-stage-chip__num">{s.roman}</span>
+                  <span className="bt-stage-chip__title">{s.shortName}</span>
+                  {!isUnlocked && (
+                    <FiLock className="bt-stage-chip__lock" aria-label="Locked stage" />
+                  )}
+                  {isActive && (
+                    <span className="bt-stage-chip__active-pip" aria-hidden="true" />
+                  )}
+                </button>
+              );
+            })}
           </div>
         </nav>
 
@@ -572,111 +926,123 @@ export function BongTourLanding() {
             <span>᚛ ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ ᚺ ᚾ ᛁ ᛃ ᛇ ᛈ ᛉ ᛋ ᛏ ᛒ ᛖ ᛗ ᛚ ᛜ ᛟ ᛞ ◈ ᚜</span>
           </div>
 
-          {/* 1. Prologue & Hero Inscription */}
-          <section id="hero" className="bt-scroll-section bt-scroll-section--hero">
-            <div className="bt-prologue-banner">
-              <span className="bt-illuminated-kicker">
-                <GiScrollUnfurled aria-hidden="true" />
-                Manuscript Folio No. 001 · Rivendell-on-Sunset
-              </span>
-              <h1 className="bt-prologue-title">
-                The Chronicles of Bong Tour
-              </h1>
-              <p className="bt-prologue-subtitle">
-                Where Middle-Earth Lore Collides with Desperate Hollywood Hustle
-              </p>
-            </div>
+          <div key={currentStage} className="bt-stage-screen bt-stage-screen--enter">
+            {/* 1. Prologue & Hero Inscription */}
+            {currentStage === 1 && (
+              <section id="hero" className="bt-scroll-section bt-scroll-section--hero">
+                <div className="bt-prologue-banner">
+                  <span className="bt-illuminated-kicker">
+                    <GiScrollUnfurled aria-hidden="true" />
+                    Manuscript Folio No. 001 · Rivendell-on-Sunset
+                  </span>
+                  <h1 className="bt-prologue-title">
+                    The Chronicles of Bong Tour
+                  </h1>
+                  <p className="bt-prologue-subtitle">
+                    Where Middle-Earth Lore Collides with Desperate Hollywood Hustle
+                  </p>
+                </div>
 
-            <div className="bt-hero__layout">
-              <div className="bt-hero__showcase">
-                <figure className="bt-hero__poster-frame bt-poster-manuscript-frame">
-                  <Image
-                    src={posterImage}
-                    alt="Bong Tour official concept poster"
-                    priority
-                    className="bt-hero__poster-image"
-                    sizes="(max-width: 900px) 85vw, 32vw"
-                  />
-                  <figcaption className="bt-hero__poster-caption">
-                    <span className="bt-hero__caption-badge">A Masala Epic</span>
-                    <p>Conceived by Sean Halls &amp; The Fellowship · Scored by Creatives Guide Us</p>
-                  </figcaption>
-                </figure>
-              </div>
+                <div className="bt-hero__layout">
+                  <div className="bt-hero__showcase">
+                    <figure className="bt-hero__poster-frame bt-poster-manuscript-frame">
+                      <Image
+                        src={posterImage}
+                        alt="Bong Tour official concept poster"
+                        priority
+                        className="bt-hero__poster-image"
+                        sizes="(max-width: 900px) 85vw, 32vw"
+                      />
+                      <figcaption className="bt-hero__poster-caption">
+                        <span className="bt-hero__caption-badge">A Masala Epic</span>
+                        <p>Conceived by Sean Halls &amp; The Fellowship · Scored by Creatives Guide Us</p>
+                      </figcaption>
+                    </figure>
+                  </div>
 
-              <div className="bt-hero__copy">
-                <div className="bt-illuminated-card">
-                  <div className="bt-illuminated-header">
-                    <span className="bt-illuminated-dropcap">T</span>
-                    <div className="bt-illuminated-intro">
-                      <strong>wo broke screenwriters haul a six-foot hand-blown sacred glass rig</strong> across the burning Mojave Desert in an overheating 1994 Dodge Econoline named Shadowfax.
+                  <div className="bt-hero__copy">
+                    <div className="bt-illuminated-card">
+                      <div className="bt-illuminated-header">
+                        <span className="bt-illuminated-dropcap">T</span>
+                        <div className="bt-illuminated-intro">
+                          <strong>wo broke screenwriters haul a six-foot hand-blown sacred glass rig</strong> across the burning Mojave Desert in an overheating 1994 Dodge Econoline named Shadowfax.
+                        </div>
+                      </div>
+
+                      <p className="bt-illuminated-paragraph">
+                        Vishal (The Reluctant Ring-Bearer) and Drew (The Tolkien Berserker) believe they are riding into a high-minded Hollywood studio pitch for an authentic diaspora road saga titled <em>Bhang Tour</em>. But the studio executives smell stoner franchise gold, hear <em>Bong Tour</em>, lock the conference room doors, and try to carve up the script into focus-grouped slop.
+                      </p>
+
+                      <div className="bt-gandalfi-scroll-quote">
+                        <GiSmokingPipe className="bt-quote-pipe-icon" aria-hidden="true" />
+                        <blockquote>
+                          &ldquo;The Bong can only preserve life, Vishal. It cannot extend it. If you sign away the rights for a franchise sequel, your creative soul will be cast into Mount Doom.&rdquo;
+                        </blockquote>
+                        <cite>— Baba Gandalfi, Desert Starsailor</cite>
+                      </div>
+
+                      <div className="bt-hero__actions">
+                        <Button
+                          type="button"
+                          variant="primary"
+                          className="bt-btn-parchment-primary"
+                          onClick={() => setIsReaderOpen(true)}
+                        >
+                          <FiBookOpen aria-hidden="true" />
+                          Read Screenplay Treatment
+                        </Button>
+
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          className="bt-btn-parchment-secondary"
+                          onClick={() => goToStage(2, { force: true })}
+                        >
+                          <GiSpellBook aria-hidden="true" />
+                          Enter Stage II: Collect Cards →
+                        </Button>
+
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="bt-btn-parchment-ghost"
+                          onClick={() => goToStage(7, { force: true })}
+                        >
+                          <GiCoins aria-hidden="true" />
+                          Airdrop Airlock ({airdropStats.tier.multiplier}x)
+                        </Button>
+                      </div>
+
+                      <div className="bt-hero__cross-links">
+                        <button
+                          type="button"
+                          onClick={() => goToStage(6, { force: true })}
+                          className="bt-hero__text-link"
+                        >
+                          Bardic Suite Cues →
+                        </button>
+                        <span aria-hidden="true">/</span>
+                        <button
+                          type="button"
+                          onClick={() => goToStage(7, { force: true })}
+                          className="bt-hero__text-link"
+                        >
+                          Solana Airdrop Tickets →
+                        </button>
+                        <span aria-hidden="true">/</span>
+                        <a href="https://appreesh.org" target="_blank" rel="noreferrer" className="bt-hero__text-link">
+                          appreesh.org <FiExternalLink aria-hidden="true" />
+                        </a>
+                      </div>
                     </div>
                   </div>
-
-                  <p className="bt-illuminated-paragraph">
-                    Vishal (The Reluctant Ring-Bearer) and Drew (The Tolkien Berserker) believe they are riding into a high-minded Hollywood studio pitch for an authentic diaspora road saga titled <em>Bhang Tour</em>. But the studio executives smell stoner franchise gold, hear <em>Bong Tour</em>, lock the conference room doors, and try to carve up the script into focus-grouped slop.
-                  </p>
-
-                  <div className="bt-gandalfi-scroll-quote">
-                    <GiSmokingPipe className="bt-quote-pipe-icon" aria-hidden="true" />
-                    <blockquote>
-                      &ldquo;The Bong can only preserve life, Vishal. It cannot extend it. If you sign away the rights for a franchise sequel, your creative soul will be cast into Mount Doom.&rdquo;
-                    </blockquote>
-                    <cite>— Baba Gandalfi, Desert Starsailor</cite>
-                  </div>
-
-                  <div className="bt-hero__actions">
-                    <Button
-                      type="button"
-                      variant="primary"
-                      className="bt-btn-parchment-primary"
-                      onClick={() => setIsReaderOpen(true)}
-                    >
-                      <FiBookOpen aria-hidden="true" />
-                      Read Screenplay Treatment
-                    </Button>
-
-                    <Button
-                      as="a"
-                      href="#grimoire"
-                      variant="secondary"
-                      className="bt-btn-parchment-secondary"
-                    >
-                      <GiSpellBook aria-hidden="true" />
-                      Collect Fellowship Cards
-                    </Button>
-
-                    <Button
-                      as="a"
-                      href="#airlock"
-                      variant="ghost"
-                      className="bt-btn-parchment-ghost"
-                    >
-                      <GiCoins aria-hidden="true" />
-                      Appreesh Airdrop Airlock ({airdropStats.tier.multiplier}x)
-                    </Button>
-                  </div>
-
-                  <div className="bt-hero__cross-links">
-                    <a href="#soundtrack" className="bt-hero__text-link">
-                      Bardic Suite Cues ↓
-                    </a>
-                    <span aria-hidden="true">/</span>
-                    <a href="#airlock" className="bt-hero__text-link">
-                      Solana Airdrop Tickets ↓
-                    </a>
-                    <span aria-hidden="true">/</span>
-                    <a href="https://appreesh.org" target="_blank" rel="noreferrer" className="bt-hero__text-link">
-                      appreesh.org <FiExternalLink aria-hidden="true" />
-                    </a>
-                  </div>
                 </div>
-              </div>
-            </div>
-          </section>
+              </section>
+            )}
 
-          {/* 2. The Arcane Grimoire: 7 MTG Cards Showcase */}
-          <section id="grimoire" className="bt-scroll-section bt-scroll-section--grimoire">
+            {/* 2. The Arcane Grimoire: 7 MTG Cards Showcase */}
+            {currentStage === 2 && (
+              <section id="grimoire" className="bt-scroll-section bt-scroll-section--grimoire">
             <div className="bt-section-head bt-section-head--scroll">
               <span className="bt-kicker">Folio II · The Arcane Grimoire</span>
               <h2>The Fellowship of the Six-Foot Rig</h2>
@@ -748,8 +1114,10 @@ export function BongTourLanding() {
               </button>
             </div>
           </section>
+        )}
 
-          {/* 3. D&D Skill Check Encounters Along Route 66 */}
+        {/* 3. D&D Skill Check Encounters Along Route 66 */}
+        {currentStage === 3 && (
           <section id="encounters" className="bt-scroll-section bt-scroll-section--encounters">
             <div className="bt-section-head bt-section-head--scroll">
               <span className="bt-kicker">Folio III · Trials Along the Highway</span>
@@ -761,8 +1129,10 @@ export function BongTourLanding() {
 
             <BongTourSkillCheck onReward={handleSkillCheckReward} />
           </section>
+        )}
 
-          {/* 4. Cinematic Bloodline & Comps */}
+        {/* 4. Cinematic Bloodline & Comps */}
+        {currentStage === 4 && (
           <section id="dna" className="bt-scroll-section bt-scroll-section--dna">
             <div className="bt-section-head bt-section-head--scroll">
               <span className="bt-kicker">Folio IV · The Sacred Bloodline</span>
@@ -807,8 +1177,10 @@ export function BongTourLanding() {
               </div>
             </div>
           </section>
+        )}
 
-          {/* 5. The Three-Act Chronicle */}
+        {/* 5. The Three-Act Chronicle */}
+        {currentStage === 5 && (
           <section id="chronicle" className="bt-scroll-section bt-scroll-section--acts">
             <div className="bt-section-head bt-section-head--scroll">
               <span className="bt-kicker">Folio V · The Chronicle of Mount Sunset</span>
@@ -845,8 +1217,10 @@ export function BongTourLanding() {
               </article>
             </div>
           </section>
+        )}
 
-          {/* 6. The Bardic Pipe-Organ Suite (Soundtrack Player) */}
+        {/* 6. The Bardic Pipe-Organ Suite (Soundtrack Player) */}
+        {currentStage === 6 && (
           <section id="soundtrack" className="bt-scroll-section bt-scroll-section--soundtrack">
             <div className="bt-section-head bt-section-head--scroll">
               <span className="bt-kicker">Folio VI · The Bardic Pipe-Organ Suite</span>
@@ -911,66 +1285,75 @@ export function BongTourLanding() {
               </Button>
             </div>
           </section>
+        )}
 
-          {/* 7. The Appreesh Airdrop Airlock & Reward Desk */}
-          <section id="airlock" className="bt-scroll-section bt-scroll-section--giveaway">
-            <div className="bt-section-head bt-section-head--scroll">
-              <span className="bt-kicker">Folio VII · The Appreesh Airdrop Airlock</span>
-              <h2>Reward System &amp; On-Chain Genesis Airdrop</h2>
-              <p>
-                Every card you inscribe and every trial you conquer boosts your $APPREESH allocation tickets. Seal your Solana wallet address in the airlock below to secure your place before the genesis snapshot fires!
-              </p>
-            </div>
-
-            <BongTourAirdropAirlock
-              appreeshBalance={appreeshBalance}
-              collectedCardsCount={collectedCards.length}
-              encountersRolledCount={encountersRolledCount}
-              onOpenSpellbook={() => setIsSpellbookOpen(true)}
-              onClaimSuccess={(claim) => {
-                setAirdropClaim(claim);
-                triggerToast("⚡ Airdrop Registration Locked on Solana Ledger!", "gain");
-                checkAchievements({
-                  collectedCards,
-                  encountersRolledCount,
-                  nat20Count,
-                  nat1Count,
-                  isAirdropClaimed: true
-                }, appreeshBalance);
-              }}
-            />
-          </section>
-
-          {/* 8. Studio Signal & Imperial Packaging Desk */}
-          <section id="signal" className="bt-scroll-section bt-scroll-section--signal">
-            <div className="bt-signal-banner bt-parchment-card">
-              <EcosystemSignupForm
-                className="bt-signal-banner__signup"
-                source="bong-tour-scroll-portal"
-                interest="Bong Tour Screenplay Packaging & Premiere Updates"
-                title="Stay close to the Fellowship"
-                description="Join for private reading copy notifications, casting calls, and festival premiere dispatches from Creatives Guide Us."
-                submitLabel="Join the Fellowship List"
-                successMessage="You are inscribed on the Fellowship list."
-                note="Occasional production notes. Zero fluff."
-                emailOnly
-              />
-
-              <div className="bt-signal-banner__desk">
-                <span className="bt-kicker">Folio VIII · Studio Desk</span>
-                <h2 id="signal-title">Packaging &amp; Private Circulation</h2>
-                <p>For accredited producers, directors, and distribution partners seeking physical bound scripts, budget breakdowns, or lookbook access.</p>
-                <Button
-                  as="a"
-                  href="mailto:contact@creativesguide.us?subject=Bong%20Tour%20Packaging%20Inquiry"
-                  variant="secondary"
-                  className="bt-btn-parchment-secondary"
-                >
-                  Contact Studio Production Desk →
-                </Button>
+        {/* 7. The Appreesh Airdrop Airlock & Studio Packaging Desk */}
+        {currentStage === 7 && (
+          <>
+            <section id="airlock" className="bt-scroll-section bt-scroll-section--giveaway">
+              <div className="bt-section-head bt-section-head--scroll">
+                <span className="bt-kicker">Folio VII · The Appreesh Airdrop Airlock</span>
+                <h2>Reward System &amp; On-Chain Genesis Airdrop</h2>
+                <p>
+                  Every card you inscribe and every trial you conquer boosts your $APPREESH allocation tickets. Seal your Solana wallet address in the airlock below to secure your place before the genesis snapshot fires!
+                </p>
               </div>
-            </div>
-          </section>
+
+              <BongTourAirdropAirlock
+                appreeshBalance={appreeshBalance}
+                collectedCardsCount={collectedCards.length}
+                encountersRolledCount={encountersRolledCount}
+                onOpenSpellbook={() => setIsSpellbookOpen(true)}
+                onClaimSuccess={(claim) => {
+                  setAirdropClaim(claim);
+                  triggerToast("⚡ Airdrop Registration Locked on Solana Ledger!", "gain");
+                  checkAchievements({
+                    collectedCards,
+                    encountersRolledCount,
+                    nat20Count,
+                    nat1Count,
+                    isAirdropClaimed: true
+                  }, appreeshBalance);
+                }}
+              />
+            </section>
+
+            {/* 8. Studio Signal & Imperial Packaging Desk */}
+            <section id="signal" className="bt-scroll-section bt-scroll-section--signal">
+              <div className="bt-signal-banner bt-parchment-card">
+                <EcosystemSignupForm
+                  className="bt-signal-banner__signup"
+                  source="bong-tour-scroll-portal"
+                  interest="Bong Tour Screenplay Packaging & Premiere Updates"
+                  title="Stay close to the Fellowship"
+                  description="Join for private reading copy notifications, casting calls, and festival premiere dispatches from Creatives Guide Us."
+                  submitLabel="Join the Fellowship List"
+                  successMessage="You are inscribed on the Fellowship list."
+                  note="Occasional production notes. Zero fluff."
+                  emailOnly
+                />
+
+                <div className="bt-signal-banner__desk">
+                  <span className="bt-kicker">Folio VIII · Studio Desk</span>
+                  <h2 id="signal-title">Packaging &amp; Private Circulation</h2>
+                  <p>For accredited producers, directors, and distribution partners seeking physical bound scripts, budget breakdowns, or lookbook access.</p>
+                  <Button
+                    as="a"
+                    href="mailto:contact@creativesguide.us?subject=Bong%20Tour%20Packaging%20Inquiry"
+                    variant="secondary"
+                    className="bt-btn-parchment-secondary"
+                  >
+                    Contact Studio Production Desk →
+                  </Button>
+                </div>
+              </div>
+            </section>
+          </>
+        )}
+
+        {/* Interactive Stage Progression Dock */}
+        {renderStageNavDock()}
+      </div>
         </div>
 
         {/* Bottom Carved Scroll Roller with Golden Wax Seal */}
