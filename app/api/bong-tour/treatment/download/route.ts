@@ -2,11 +2,29 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 
+import {
+  decodeTreatmentSession,
+  getTreatmentSessionCookieName
+} from "@/lib/bong-tour/treatment-access";
+
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
+  // Gate screenplay and treatment downloads: require an authorized access session
+  const session = decodeTreatmentSession(
+    request.cookies.get(getTreatmentSessionCookieName())?.value
+  );
+
+  if (!session) {
+    return NextResponse.json(
+      { ok: false, error: "Treatment access pass required to download studio materials." },
+      { status: 401 }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
-  const type = searchParams.get("type") ?? "treatment";
+  const rawType = searchParams.get("type");
+  const type = rawType === "screenplay" ? "screenplay" : "treatment";
 
   const rootDir = process.cwd();
   const fileName =
@@ -28,12 +46,12 @@ export async function GET(request: NextRequest) {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `inline; filename="${downloadName}"`,
-        "Cache-Control": "public, max-age=3600, s-maxage=86400"
+        "Cache-Control": "private, no-store, max-age=0"
       }
     });
   } catch {
     return NextResponse.json(
-      { error: "Requested screenplay document not found." },
+      { ok: false, error: "Requested screenplay document not found." },
       { status: 404 }
     );
   }

@@ -92,7 +92,7 @@ AVAILABLE COMMANDS:
   [Strategic Artha Assets & IP Holdings]
     artha                          ARTHA quant platform ($75k), dedicated Spark GPUs & DSP 2% equity
     bong, bongtour                 Bong Tour feature screenplay ($75k), 7 MTG cards & 6 cue tracks
-    airdrop, appreesh              Solana $APPREESH airdrop pool monitoring (1,000,000 tokens)
+    airdrop, appreesh              Solana $APPREESH airdrop pool monitoring (1,000 tokens max)
     cards [name]                   Inspect 7 MTG-style trading cards or query a specific card
     cues, soundtrack               List all 6 cinematic cues & commercial sync tracks
     treatment                      Feature screenplay act breakdown, logline & pitch notes
@@ -139,7 +139,7 @@ AVAILABLE COMMANDS:
     Scope:        108-page road trip comedy / LOTR parody across Route 66
     Sound Lab:    6 cinematic cues mastered & synced
     Grimoire:     7 MTG-style holographic collectible trading cards
-    Airdrop:      1,000,000 $APPREESH Solana Genesis pool & interactive airlock
+    Airdrop:      1,000 $APPREESH Solana Genesis pool (Max) & interactive airlock
     URL:          /admin/overview?project=bong-tour`;
           break;
 
@@ -210,7 +210,7 @@ AVAILABLE COMMANDS:
     Mechanics:    3D holographic tilt, d20 Route 66 skill-check encounters
 
 [●] APPREESH SOLANA AIRDROP POOL
-    Pool Size:    1,000,000 $APPREESH tokens
+    Pool Size:    1,000 $APPREESH tokens max
     Multiplier:   Neophyte (1.0x) -> Ranger (1.5x) -> Wizard (2.2x) -> Arch-Mage (3.5x)`;
           break;
 
@@ -220,7 +220,7 @@ AVAILABLE COMMANDS:
 ----------------------------------------------------------------------
 [●] REWARD POOL TELEMETRY
     Token:        $APPREESH (Solana SPL Token Standard)
-    Pool Balance: 1,000,000 $APPREESH earmarked for Bong Tour collectors
+    Pool Balance: 1,000 $APPREESH max earmarked for Bong Tour collectors
     Funnel Status:ACTIVE · Interactive Route 66 Scroll & Airlock Live
     Endpoint:     /api/bong-tour/giveaway (Proof-of-claim validation)
 

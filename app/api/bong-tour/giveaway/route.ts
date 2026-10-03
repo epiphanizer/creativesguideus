@@ -34,6 +34,27 @@ const giveawayTiers: Record<
   }
 };
 
+// In-memory cache for deduplication and bot defense: keeps recent claims for 15 minutes
+// to avoid exhausting Firestore write quotas if an automated agent spams submissions
+type CachedClaim = {
+  claim: Record<string, unknown>;
+  createdAt: number;
+};
+
+const recentClaimsByEmail = new Map<string, CachedClaim>();
+const recentClaimsByWallet = new Map<string, CachedClaim>();
+
+function pruneRecentClaims() {
+  const now = Date.now();
+  const maxAgeMs = 15 * 60 * 1000;
+  for (const [key, val] of recentClaimsByEmail.entries()) {
+    if (now - val.createdAt > maxAgeMs) recentClaimsByEmail.delete(key);
+  }
+  for (const [key, val] of recentClaimsByWallet.entries()) {
+    if (now - val.createdAt > maxAgeMs) recentClaimsByWallet.delete(key);
+  }
+}
+
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -44,13 +65,50 @@ function isValidSolanaWallet(wallet: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as {
+    pruneRecentClaims();
+
+    // Enforce body size limit before deep parsing
+    const rawBody = await request.text();
+    if (rawBody.length > 32 * 1024) {
+      return NextResponse.json(
+        { ok: false, error: "Payload exceeds permissible size limit." },
+        { status: 413 }
+      );
+    }
+
+    let body: {
       name?: string;
       email?: string;
       walletAddress?: string;
       tierId?: string;
       note?: string;
+      website?: string;
+      honeypot?: string;
     };
+
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      return NextResponse.json({ ok: false, error: "Invalid JSON format." }, { status: 400 });
+    }
+
+    // ── Bot Honeypot Defense ────────────────────────────────────────────────
+    // If hidden honeypot fields are populated by automated scraping agents,
+    // return a synthetic confirmation without consuming Firestore resources.
+    if (body.website || body.honeypot) {
+      const syntheticId = `claim_bot_${randomBytes(6).toString("hex")}`;
+      return NextResponse.json({
+        ok: true,
+        message: "Your submission has been safely recorded.",
+        claim: {
+          claimId: syntheticId,
+          serialNumber: "BT-APPR-2026-SHADOW",
+          status: "confirmed",
+          tierTitle: "Patron's Mark on the Ledger",
+          allocation: "Underground Ledger"
+        }
+      });
+    }
 
     const email = (body.email ?? "").trim().toLowerCase();
     const name = (body.name ?? "").trim().slice(0, 100);
@@ -78,6 +136,28 @@ export async function POST(request: NextRequest) {
         { ok: false, error: "Please provide a valid Solana wallet address (32-44 base58 characters)." },
         { status: 400 }
       );
+    }
+
+    // ── Deduplication / Agent Spam Protection ──────────────────────────────
+    // Check if this email or wallet already submitted within the last 15 minutes
+    const existingEmailClaim = recentClaimsByEmail.get(email);
+    if (existingEmailClaim) {
+      return NextResponse.json({
+        ok: true,
+        message: `Your Bong Tour giveaway entry for ${selectedTier.title} has already been logged.`,
+        claim: existingEmailClaim.claim
+      });
+    }
+
+    if (walletAddress) {
+      const existingWalletClaim = recentClaimsByWallet.get(walletAddress);
+      if (existingWalletClaim) {
+        return NextResponse.json({
+          ok: true,
+          message: `Your Bong Tour giveaway entry for ${selectedTier.title} has already been logged.`,
+          claim: existingWalletClaim.claim
+        });
+      }
     }
 
     const timestamp = new Date().toISOString();
@@ -133,6 +213,13 @@ export async function POST(request: NextRequest) {
       firestorePersisted,
       timestamp
     };
+
+    // Store in deduplication cache
+    const cacheEntry: CachedClaim = { claim, createdAt: Date.now() };
+    recentClaimsByEmail.set(email, cacheEntry);
+    if (walletAddress) {
+      recentClaimsByWallet.set(walletAddress, cacheEntry);
+    }
 
     return NextResponse.json({
       ok: true,

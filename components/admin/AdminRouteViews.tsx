@@ -1046,7 +1046,7 @@ export function BongTourOverviewRoute() {
 
           <article className="cg-admin__whiteboard-card">
             <span className="cg-admin__whiteboard-card-label">Solana Airdrop Airlock</span>
-            <h3>1,000,000 $APPREESH Genesis Pool</h3>
+            <h3>1,000 $APPREESH Genesis Pool (Max)</h3>
             <p>
               Live on-chain airdrop funnel. Visitors collecting MTG trading cards and passing Route 66 d20 skill checks unlock multipliers from 1.0x (Neophyte) to 3.5x (Arch-Mage).
             </p>
@@ -1070,7 +1070,7 @@ export function BongTourOverviewRoute() {
         <div className="cg-admin__whiteboard-strip">
           <AdminMetricCard label="Cards in Grimoire" value="7 Cards" detail="Holographic 3D foil active" />
           <AdminMetricCard label="Original Cues" value="6 Mastered" detail="Sound lab audio stems synced" />
-          <AdminMetricCard label="Airdrop Pool" value="1.0M $APPREESH" detail="Solana SPL token pool" />
+          <AdminMetricCard label="Airdrop Pool" value="1,000 $APPREESH" detail="Solana SPL token pool (Max)" />
           <AdminMetricCard label="Internal IP Valuation" value="$75,000" detail="100% sole creator equity" />
         </div>
       </section>
