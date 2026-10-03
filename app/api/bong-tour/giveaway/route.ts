@@ -16,21 +16,21 @@ const giveawayTiers: Record<
 > = {
   script_giveaway: {
     id: "script_giveaway",
-    title: "Physical Bound Script & Collector Tribute",
-    description: "First-edition bound screenplay draft with original writer annotations, watermarked reading certificate, and Appreesh tribute receipt.",
-    allocation: "Limited to 50 Numbered Studio Copies"
+    title: "Hand-Bound First Edition Script",
+    description: "Numbered working screenplay draft with studio margin notes and official creator sign-off.",
+    allocation: "50 Pressed Copies"
   },
   premiere_pass: {
     id: "premiere_pass",
-    title: "VIP Premiere Screening & Festival Pass",
-    description: "Festival premiere companion invitation, afterparty RSVP allocation, and early digital access to final cut screening rooms.",
-    allocation: "Studio Guest List Tier"
+    title: "First Screening Pass & Afterparty",
+    description: "Festival premiere seat, booth drinks with the crew, and direct access to the private listening suite.",
+    allocation: "Studio Guest List"
   },
   collector_tribute: {
     id: "collector_tribute",
-    title: "Appreesh On-Chain Producer Tribute",
-    description: "Solana/Anchor tribute receipt recognized in the packaging ledger and early digital backer roll.",
-    allocation: "Open Protocol Drop"
+    title: "Patron's Mark on the Ledger",
+    description: "Direct-to-artist tribute inscribed on the Solana chain via Appreesh. Zero studio middlemen.",
+    allocation: "Underground Ledger"
   }
 };
 

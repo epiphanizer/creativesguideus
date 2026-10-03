@@ -62,7 +62,7 @@ const soundtrackCues: SoundtrackCue[] = [
     act: "Act I / Act II",
     durationLabel: "3:42",
     audioSrc: "/walls-devine/releases/volume1/1. Joint Queen.wav",
-    logline: "An entrance cue with authority and swagger. The screenwriters step into the Hollywood underworld, where champagne fills the bong and 'The Lollipop Guild' sets the terms."
+    logline: "An entrance cue with swagger and overdriven tube amp grit. The writers step into the Hollywood underworld, where champagne fills the bong and the parasites set the terms."
   },
   {
     id: "space-cruiser",
@@ -72,7 +72,7 @@ const soundtrackCues: SoundtrackCue[] = [
     act: "Act I",
     durationLabel: "4:15",
     audioSrc: "/walls-devine/releases/volume1/3. Space Cruiser.wav",
-    logline: "Cosmic stoner propulsion through neon gridlock traffic as Vishal spirals and Drew clutches the Ganges relic like it's their golden ticket."
+    logline: "Fuzz bass and desert momentum through neon gridlock as Vishal spirals and Drew clutches the stolen relic like it's their winning lottery ticket."
   },
   {
     id: "stash-daddy",
@@ -82,7 +82,7 @@ const soundtrackCues: SoundtrackCue[] = [
     act: "Act II",
     durationLabel: "3:58",
     audioSrc: "/walls-devine/releases/volume1/2. Stash Daddy.wav",
-    logline: "Nocturnal groove setting the trap. The A-Lister refuses a pitch, doses DMT into the bong, and asks the moral test: 'Does the little person have to die?'"
+    logline: "Nocturnal groove setting the trap. The A-Lister refuses a pitch, doses DMT into the glass, and asks: 'Does the little person have to die?'"
   },
   {
     id: "poetry",
@@ -92,34 +92,34 @@ const soundtrackCues: SoundtrackCue[] = [
     act: "Act III",
     durationLabel: "4:06",
     audioSrc: "/walls-devine/releases/volume1/7. Poetry.wav",
-    logline: "The inward spiritual core. Language first, ornament second. Baba Gandalfi's law echoes across the river: 'The Bong can only preserve life. It cannot extend it.'"
+    logline: "Raw acoustic resonance and spoken verse. Language first, studio bullshit second. Baba Gandalfi's law echoes across the water: 'The Bong can only preserve life. It cannot extend it.'"
   }
 ];
 
 const characters = [
   {
     name: "Vishal",
-    role: "The Idealist Screenwriter",
+    role: "The Idealist Writer",
     actorType: "Indian-American Lead",
-    bio: "Long-haired, anxious, and brilliant. Caught between his father's heritage and Hollywood validation. He believes the film means something, even when he is too high to stand upright."
+    bio: "Hair down to his shoulders, permanently on edge, and desperately trying to write something that matters while choking on second-hand smoke. Caught between his dad's legendary shadow in Mumbai and a Hollywood executive asking if he can make the lead 'more relatable.'"
   },
   {
     name: "Drew",
     role: "The Volatile Co-Writer",
-    actorType: "Tolkien Superfan",
-    bio: "Loud, reckless, conspiracy-obsessed, and dangerously seduced by industry fame. Drew wants the win at all costs, even if it burns the truth to ash."
+    actorType: "Tolkien Obsessive",
+    bio: "Vishal’s writing partner. Loud, unhinged, obsessed with Tolkien lore, and dangerously vulnerable to anyone offering him a VIP pass. Drew will steer the van into oncoming traffic if he thinks there's a three-picture studio deal on the other side."
   },
   {
     name: "Willie",
     role: "The Grounded Force & Final Cut",
     actorType: "The Moral Center",
-    bio: "She sees through the machine from minute one. She calls out Hollywood nonsense, holds the cricket bat, the line, and ultimately produces the bound final draft: 'One script to rule them all.'"
+    bio: "The only adult in the room. She sees through Hollywood glad-handing five seconds before it happens, keeps a cricket bat behind the van seat, and edits their rambling stoner pages into actual cinema. When the guys lose their minds, Willie holds the steering wheel."
   },
   {
     name: "Montu",
-    role: "Guardian of the Sacred Bong",
+    role: "Guardian of the Relic",
     actorType: "Mythic Hero",
-    bio: "A little person with scars, dignity, and mythic weight. Montu is not a punchline. He is the story's spiritual gravity, carrier of sacrifice, and proof that 'small' is not weak."
+    bio: "Guardian of the relic. Scars from old fires, zero tolerance for bullshit, and carrying real generational weight. Hollywood suits try to cast him as a gimmick punchline; Montu turns out to be the smartest, toughest survivor on either side of the Pacific."
   }
 ];
 
@@ -249,19 +249,19 @@ export function BongTourLanding() {
           <div className="bt-hero__copy">
             <SectionHeader
               id="bong-tour-title"
-              eyebrow="Feature Screenplay & Original Score"
+              eyebrow="Original Screenplay & Original Score"
               title="Bong Tour"
               headingLevel="h1"
-              description="A diaspora masala satire where Hollywood mania collides with Indian myth logic. The MacGuffin is a sacred relic blessed and cursed by the Ganges."
+              description="A sun-baked masala road comedy where desperate Hollywood hustle collides with hard Indian myth. Two broke screenwriters haul a six-foot sacred glass bong from the Ganges to Sunset Boulevard—and find out the town will steal anything that smokes."
             />
 
             <div className="bt-hero__desk-card">
-              <div className="bt-hero__desk-badge">From the Writer&apos;s Desk</div>
+              <div className="bt-hero__desk-badge">From the Writers&apos; Van</div>
               <blockquote className="bt-hero__desk-body">
-                &ldquo;A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters to its smoke-script. They pitch &lsquo;Bhang Tour&rsquo;; Hollywood hears &lsquo;Bong Tour,&rsquo; and the bong rewrites the movie through them, until Mount Doom asks: cash it, or cast it into fire.&rdquo;
+                &ldquo;A hand-blown sacred relic gets dumped into the Ganges and somehow washes up in an overheated Dodge van on Sunset Boulevard. Vishal and Drew pitch a sacred diaspora journey called &lsquo;Bhang Tour.&rsquo; Hollywood hears &lsquo;Bong Tour,&rsquo; smells franchise dollars, and tries to turn it into stoner-bro sludge. The bong has other ideas.&rdquo;
               </blockquote>
               <p className="bt-hero__desk-note">
-                Fame is a drug. The industry is a trip. The only antidote is choosing what is real.
+                Hollywood will happily buy your soul, dilute it into focus-grouped slop, and sell it back to you as a sequel. Keep your hands on the wheel and don&apos;t trust anyone in linen.
               </p>
 
               <div className="bt-hero__actions">
@@ -282,7 +282,7 @@ export function BongTourLanding() {
                   className="bt-hero__btn-secondary"
                 >
                   <FiAward aria-hidden="true" />
-                  Enter Appreesh Giveaway
+                  The Underground Ledger
                 </Button>
 
                 <Button
@@ -307,7 +307,7 @@ export function BongTourLanding() {
                 </Link>
                 <span aria-hidden="true">/</span>
                 <a href="https://appreesh.org" target="_blank" rel="noreferrer" className="bt-hero__text-link">
-                  Appreesh Protocol <FiExternalLink aria-hidden="true" />
+                  The Appreesh Ledger <FiExternalLink aria-hidden="true" />
                 </a>
               </div>
             </div>
@@ -318,9 +318,9 @@ export function BongTourLanding() {
       {/* 2. Comps & Cinematic DNA */}
       <SectionShell id="dna" labelledBy="dna-title" className="bt-section-shell bt-section--dna">
         <div className="bt-section-head">
-          <span className="bt-kicker">Cinematic Positioning & Tone</span>
+          <span className="bt-kicker">The Bloodline</span>
           <h2 id="dna-title">Diaspora Masala Satire with a Sacred Spine</h2>
-          <p>Bong Tour is not &ldquo;India as seasoning.&rdquo; India is the myth engine and the emotional truth. West Bengal is origin. Kolkata is arrival. Rishikesh is reckoning.</p>
+          <p>We aren&apos;t using India as an exotic postcard or spiritual window dressing. Kolkata is raw smog, Ambassador cabs, and family ties you can&apos;t outrun. Rishikesh is where the hangover catches up with the mythology.</p>
         </div>
 
         <div className="bt-comps-grid">
@@ -328,31 +328,31 @@ export function BongTourLanding() {
             <span className="bt-comp-card__tag">Global Lineage</span>
             <h3>The Comps</h3>
             <ul className="bt-comp-card__list">
-              <li><strong>The Big Lebowski</strong> — Stoner philosophy & accidental odyssey</li>
-              <li><strong>Tropic Thunder</strong> — Ruthless Hollywood industry satire</li>
-              <li><strong>Fear and Loathing in Las Vegas</strong> — Unstoppable psychedelic momentum</li>
-              <li><strong>The Player</strong> — Meta studio cynicism and packaging obsession</li>
+              <li><strong>The Big Lebowski</strong> — Stoned road trip philosophy &amp; accidental odysseys</li>
+              <li><strong>Tropic Thunder</strong> — Unforgiving satire of Hollywood egos and industry bullshit</li>
+              <li><strong>Fear and Loathing in Las Vegas</strong> — Psychedelic momentum with the pedal pinned to the floor</li>
+              <li><strong>The Player</strong> — Studio executives turning human tragedy into twenty-word pitches</li>
             </ul>
           </div>
 
           <div className="bt-comp-card">
-            <span className="bt-comp-card__tag">Indian Instinct</span>
-            <h3>Subcontinental Energy</h3>
+            <span className="bt-comp-card__tag">Subcontinental Heat</span>
+            <h3>Desi Lineage</h3>
             <ul className="bt-comp-card__list">
-              <li><strong>Delhi Belly</strong> — Raw, irreverent, grounded dialogue</li>
-              <li><strong>Go Goa Gone</strong> — Kinetic chaos and genre-bending courage</li>
-              <li><strong>Luck By Chance</strong> — Deep insider bite of the star system</li>
-              <li><strong>Lagaan</strong> — Masala crescendo with cricket logic as heroic grammar</li>
+              <li><strong>Delhi Belly</strong> — Fast, dirty, irreverent dialogue that doesn&apos;t apologize</li>
+              <li><strong>Go Goa Gone</strong> — Pure chaotic momentum and genre-bending courage</li>
+              <li><strong>Luck By Chance</strong> — The sharp, razor-wire truth about how film dynasties work</li>
+              <li><strong>Lagaan</strong> — Masala high drama where everything comes down to one heroic over</li>
             </ul>
           </div>
 
           <div className="bt-comp-card bt-comp-card--highlight">
-            <span className="bt-comp-card__tag">The Sacred Law</span>
-            <h3>Baba Gandalfi&apos;s Rule</h3>
+            <span className="bt-comp-card__tag">The Unbreakable Rule</span>
+            <h3>Baba Gandalfi&apos;s Law</h3>
             <blockquote className="bt-comp-card__quote">
               &ldquo;The Bong can only preserve life. It cannot extend it.&rdquo;
             </blockquote>
-            <p>Every puff extracted by Hollywood demands a debt paid in origin. You cannot outrun where you came from.</p>
+            <p>Every hit extracted by Hollywood suits demands a debt paid back at origin. You cannot outrun where you came from, no matter how much money they wave in your face.</p>
           </div>
         </div>
       </SectionShell>
@@ -360,9 +360,9 @@ export function BongTourLanding() {
       {/* 3. The Core Ensemble */}
       <SectionShell id="characters" labelledBy="characters-title" className="bt-section-shell bt-section--characters">
         <div className="bt-section-head">
-          <span className="bt-kicker">The Ensemble</span>
-          <h2 id="characters-title">The Four Leads & The Predators</h2>
-          <p>A film driven by authentic characters navigating the absurdity of validation, heritage, and survival.</p>
+          <span className="bt-kicker">Who&apos;s in the Van</span>
+          <h2 id="characters-title">The Crew &amp; The Parasites</h2>
+          <p>Two desperate writers, an unhinged relic, and a town full of bloodsuckers who smile while they steal your lunch.</p>
         </div>
 
         <div className="bt-characters-grid">
@@ -382,31 +382,31 @@ export function BongTourLanding() {
       {/* 4. Three-Act Masala Structure */}
       <SectionShell id="structure" labelledBy="structure-title" className="bt-section-shell bt-section--structure">
         <div className="bt-section-head">
-          <span className="bt-kicker">Narrative Architecture</span>
-          <h2 id="structure-title">The 3-Act Masala Arc</h2>
-          <p>From the sacred ghats of the Ganges to the backalleys of Sunset Boulevard, and back again.</p>
+          <span className="bt-kicker">The Three Acts</span>
+          <h2 id="structure-title">How the Wheels Come Off</h2>
+          <p>From a muddy Ganges ghat to the back alleys of Sunset Boulevard, and straight back home.</p>
         </div>
 
         <div className="bt-acts-grid">
           <article className="bt-act-card">
             <div className="bt-act-card__num">ACT I</div>
-            <h3>The Bong Enters America</h3>
+            <h3>The Relic Hits Sunset</h3>
             <p className="bt-act-card__lead">West Bengal to Sunset Boulevard</p>
-            <p>A maimed Montu releases the sacred relic afloat into the sacred river. It sinks, absorbs the refuse and holiness of the Ganges, and washes up in Los Angeles. Vishal and Drew clutch the bong in a smoke-filled van heading to pitch their &lsquo;stoner epic&rsquo; amidst industry volatility.</p>
+            <p>West Bengal: Montu sets a hand-blown six-foot glass relic afloat in the sacred river to keep it out of the wrong hands. It sinks, rolls through the holy silt, and somehow resurfaces on Sunset Boulevard. Enter Vishal and Drew, hot-boxing a beat-up Dodge van that smells like radiator fluid and stale tortillas. They think they’re heading into a pitch meeting to sell a high-minded diaspora road comedy called <em>Bhang Tour</em>. Hollywood hears &lsquo;Bong Tour,&rsquo; smells stoner millions, and the trap snaps shut.</p>
           </article>
 
           <article className="bt-act-card">
             <div className="bt-act-card__num">ACT II</div>
-            <h3>The Comedy Store Initiation</h3>
-            <p className="bt-act-card__lead">The Trap Springs & The DMT Council</p>
-            <p>Enter the washed-up C-Lister who rebrands their diaspora story into an industry package. Champagne in the bong. Chemical fire chaos. The A-Lister doses DMT, weeps at the movie in his mind, and greenlights it with casual cruelty: &ldquo;Does the little person have to die?&rdquo;</p>
+            <h3>The Comedy Store &amp; The DMT Shaman</h3>
+            <p className="bt-act-card__lead">Free Champagne, Bad Trips &amp; The Pitch</p>
+            <p>A washed-up C-Lister takes the boys under his greasy wing, swearing &lsquo;The Lollipop Guild runs this town.&rsquo; Backstage at The Comedy Store turns into a chemical free-for-all: champagne poured down the bong stem, paranoia in the green room, and an unhinged A-Lister who refuses to read pages and insists on smoking DMT through the relic instead. Tripping out of his skull, the star weeps, sees the movie in his head, and gives the greenlight with a single callous demand: &ldquo;Does the little person have to die?&rdquo; That&apos;s Hollywood in a nutshell: they&apos;ll make your masterpiece, as long as they can murder its soul.</p>
           </article>
 
           <article className="bt-act-card">
             <div className="bt-act-card__num">ACT III</div>
             <h3>India, Origin, Sacrifice</h3>
-            <p className="bt-act-card__lead">Kolkata, Rishikesh & Willie&apos;s Cut</p>
-            <p>The story bends home into humid Kolkata smog and Rishikesh. Vishal confronts his legendary father. Montu makes the ultimate sacrifice at the Ganges edge. Willie produces the bound screenplay: &ldquo;One script to rule them all.&rdquo; Then Upper Management offers the sequel.</p>
+            <p className="bt-act-card__lead">Kolkata Smog, Cricket Bats &amp; The Final Cut</p>
+            <p>The production spirals all the way back to India. Humid Kolkata alleys, yellow taxi horns, and Vishal facing his estranged movie-star father, who delivers the cold slap of reality: chasing validation in Los Angeles is a fool’s errand when you don&apos;t even respect where you came from. Chaos peaks on a warehouse catwalk over the river—fire, madness, and a brawl where Drew finally realizes the industry won&apos;t love him back. Montu crawls through the smoke to return the relic to the water where it belongs. Just when the dust settles and Willie pulls out the real final draft, Upper Management shows up in a golf cart offering sequel money.</p>
           </article>
         </div>
       </SectionShell>
@@ -478,10 +478,10 @@ export function BongTourLanding() {
       {/* 6. Appreesh In-Browser Giveaway & Tribute Desk (Real Backend) */}
       <SectionShell id="giveaway" labelledBy="giveaway-title" className="bt-section-shell bt-section--giveaway">
         <div className="bt-section-head">
-          <span className="bt-kicker">Ecosystem Integration · Appreesh Protocol</span>
-          <h2 id="giveaway-title">Bong Tour Collector Giveaway & Tribute Pass</h2>
+          <span className="bt-kicker">The Underground Ledger · Direct Patronage</span>
+          <h2 id="giveaway-title">First Editions &amp; The Direct Tab</h2>
           <p>
-            Linked directly to <strong>Appreesh</strong> (our on-chain tribute and gratitude protocol on Solana). Enter in-browser to claim your limited script giveaway entry, VIP screening allocation, or verified producer tribute.
+            No middlemen, no Hollywood gatekeepers taking an 80% cut. We track early supporters and hand-bound script editions on an underground Solana ledger called <strong>Appreesh</strong>—think of it as a digital bar tab stamped directly between the filmmakers and the patrons.
           </p>
         </div>
 
@@ -497,8 +497,8 @@ export function BongTourLanding() {
                     checked={giveawayTier === "script_giveaway"}
                     onChange={() => setGiveawayTier("script_giveaway")}
                   />
-                  <strong>Physical Bound Script Giveaway</strong>
-                  <small>Numbered first-draft bound copy (Limited to 50)</small>
+                  <strong>Hand-Bound Working Draft</strong>
+                  <small>Numbered first-draft script copy with writer margin notes (50 pressed)</small>
                 </label>
 
                 <label className={`bt-tier-pill${giveawayTier === "premiere_pass" ? " bt-tier-pill--active" : ""}`}>
@@ -509,8 +509,8 @@ export function BongTourLanding() {
                     checked={giveawayTier === "premiere_pass"}
                     onChange={() => setGiveawayTier("premiere_pass")}
                   />
-                  <strong>VIP Premiere Screening Pass</strong>
-                  <small>Festival premiere invitation + afterparty RSVP</small>
+                  <strong>First Screening Pass</strong>
+                  <small>Festival premiere seat + booth drinks with the filmmakers</small>
                 </label>
 
                 <label className={`bt-tier-pill${giveawayTier === "collector_tribute" ? " bt-tier-pill--active" : ""}`}>
@@ -521,8 +521,8 @@ export function BongTourLanding() {
                     checked={giveawayTier === "collector_tribute"}
                     onChange={() => setGiveawayTier("collector_tribute")}
                   />
-                  <strong>Appreesh On-Chain Tribute</strong>
-                  <small>Solana/Anchor tribute ledger claim via appreesh.org</small>
+                  <strong>Patron&apos;s Mark on the Ledger</strong>
+                  <small>Direct-to-artist tribute inscribed on the Solana chain via appreesh.org</small>
                 </label>
               </div>
 
@@ -554,7 +554,7 @@ export function BongTourLanding() {
 
                 <div className="bt-form-group bt-form-group--full">
                   <label htmlFor="bt-wallet">
-                    Solana Wallet Address <span className="bt-optional">(Optional — for Appreesh On-Chain Tribute)</span>
+                    Solana Wallet Address <span className="bt-optional">(Optional — for your mark on the ledger)</span>
                   </label>
                   <input
                     id="bt-wallet"
@@ -583,10 +583,10 @@ export function BongTourLanding() {
 
               <div className="bt-giveaway-footer">
                 <Button type="submit" variant="primary" disabled={isSubmittingGiveaway}>
-                  {isSubmittingGiveaway ? "Generating Tribute Claim…" : "Claim In-Browser Giveaway Pass →"}
+                  {isSubmittingGiveaway ? "Inscribing to ledger…" : "Put Your Name on the Ledger →"}
                 </Button>
                 <span className="bt-giveaway-secure">
-                  🔒 Cryptographically signed & linked to <a href="https://appreesh.org" target="_blank" rel="noreferrer">appreesh.org</a>
+                  Direct peer-to-peer ledger. Zero studio gatekeepers. Verified on-chain at <a href="https://appreesh.org" target="_blank" rel="noreferrer">appreesh.org</a>
                 </span>
               </div>
             </form>
@@ -595,7 +595,7 @@ export function BongTourLanding() {
               <div className="bt-certificate__header">
                 <div className="bt-certificate__stamp">
                   <FiCheck aria-hidden="true" />
-                  VERIFIED CLAIM
+                  VERIFIED PATRON // APPREESH LEDGER
                 </div>
                 <span className="bt-certificate__serial">{giveawayClaim.serialNumber}</span>
               </div>
@@ -614,10 +614,10 @@ export function BongTourLanding() {
                     <dd>{giveawayClaim.allocation}</dd>
                   </div>
                   <div>
-                    <dt>Appreesh Protocol</dt>
+                    <dt>Direct Ledger</dt>
                     <dd>
                       <a href={giveawayClaim.appreeshProtocolUrl} target="_blank" rel="noreferrer">
-                        appreesh.org (Solana Program Verified) <FiExternalLink aria-hidden="true" />
+                        appreesh.org (Direct-to-Artist Ledger) <FiExternalLink aria-hidden="true" />
                       </a>
                     </dd>
                   </div>
@@ -724,65 +724,57 @@ export function BongTourLanding() {
               <section className="bt-reader-section">
                 <h3>LOGLINE</h3>
                 <p>
-                  A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters—an Indian-American idealist and a Tolkien superfan—to its smoke-script. They pitch &ldquo;Bhang Tour&rdquo;; Hollywood hears &ldquo;Bong Tour,&rdquo; and the bong rewrites the movie through them, until Mount Doom asks: cash it, or cast it into fire.
+                  A sacred glass relic dumped into the Ganges somehow resurfaces in an overheated Dodge van on Sunset Boulevard. Two broke screenwriters—an anxious Indian-American idealist and a reckless Tolkien nerd—pitch a sacred diaspora road comedy called &ldquo;Bhang Tour.&rdquo; Hollywood hears &ldquo;Bong Tour,&rdquo; smells stoner millions, and turns the town upside down until Mount Doom demands an answer: cash the corporate check, or throw the whole damn thing into the fire.
                 </p>
               </section>
 
               <section className="bt-reader-section">
                 <h3>WHAT IT IS</h3>
                 <p>
-                  Bong Tour is a diaspora masala satire where Hollywood mania collides with Indian myth logic. The MacGuffin is not a ring. It is a bong, blessed and cursed by the Ganges. It plays like a cult comedy, but it lands like a fable. Fame is a drug. The industry is a trip. The only antidote is choosing what is real.
+                  A sun-baked diaspora masala road comedy where desperate Hollywood hustle collides head-on with ancient Indian myth. The MacGuffin isn&apos;t a magic ring—it&apos;s a six-foot hand-blown glass bong cursed and blessed by the sacred river. It plays like a late-night cult comedy, but it lands like reality: the town promises you the world just to strip you of everything authentic, and the only way out is refusing to sell out your roots.
                 </p>
               </section>
 
               <section className="bt-reader-section">
-                <h3>GENRE & COMPS</h3>
-                <p><strong>Genre:</strong> Comedy, satire, adventure, with psychedelic propulsion and a grounded emotional spine.</p>
-                <p><strong>Global Comps:</strong> <em>The Big Lebowski</em> (stoner philosophy), <em>Tropic Thunder</em> (industry satire), <em>Fear and Loathing in Las Vegas</em> (trip momentum), <em>The Player</em> (meta Hollywood).</p>
-                <p><strong>India Comps:</strong> <em>Go Goa Gone</em> (energy), <em>Delhi Belly</em> (irreverence), <em>Luck By Chance</em> (insider bite filtered through diaspora identity).</p>
+                <h3>THE BLOODLINE &amp; COMPS</h3>
+                <p><strong>Global Bloodline:</strong> <em>The Big Lebowski</em> (stoned road trip philosophy), <em>Tropic Thunder</em> (unforgiving industry satire), <em>Fear and Loathing in Las Vegas</em> (desert momentum with the pedal pinned), <em>The Player</em> (studio executives turning human lives into pitch decks).</p>
+                <p><strong>Desi Bloodline:</strong> <em>Delhi Belly</em> (fast, dirty, irreverent dialogue), <em>Go Goa Gone</em> (chaotic energy and genre-bending courage), <em>Luck By Chance</em> (the sharp, razor-wire truth about film dynasties), <em>Lagaan</em> (masala stakes where everything hinges on one heroic over).</p>
               </section>
 
               <section className="bt-reader-section">
-                <h3>IMPORTANT THEMATIC NOTE</h3>
-                <p>
-                  This is not &ldquo;India as seasoning.&rdquo; India is the myth engine and the emotional truth. West Bengal is origin. Kolkata is arrival. Rishikesh is reckoning. And a father embodies the Indian star system ethos: better to be a legend at home than chase mediocrity abroad.
-                </p>
-              </section>
-
-              <section className="bt-reader-section">
-                <h3>THE SACRED RULE: BABA GANDALFI&apos;S LAW</h3>
+                <h3>THE UNBREAKABLE RULE: BABA GANDALFI&apos;S LAW</h3>
                 <blockquote className="bt-reader-quote">
                   &ldquo;The Bong can only preserve life. It cannot extend it.&rdquo;
                 </blockquote>
+                <p>
+                  Every hit extracted by Hollywood parasites demands a debt paid back at origin. You cannot outrun where you came from, no matter how many sequel checks they wave in your face.
+                </p>
               </section>
 
               <section className="bt-reader-section">
-                <h3>ACT BREAKDOWN</h3>
-                <h4>Act I: The Bong Enters America</h4>
+                <h3>HOW THE WHEELS COME OFF (ACT BREAKDOWN)</h3>
+                <h4>Act I: The Relic Hits Sunset</h4>
                 <p>
-                  West Bengal, by the Ganges. A maimed Montu, acid-scarred and bleeding, sets a basket afloat like Moses. Inside is the Bong. It sinks, it fills, it absorbs the refuse of the sacred Ganges. Myth is literal here: sacred and disgusting, holy and hilarious.
-                </p>
-                <p>
-                  Smash cut: Sunset Boulevard. Vishal and Drew are in a van, obliterated, clutching the same bong like it is destiny. They are heading to pitch their &lsquo;stoner epic&rsquo; during a chaotic Hollywood moment full of strikes, volatility, and desperation. Vishal spirals, Drew charges, and neither is sober enough to realize they are walking into a cosmic trap.
+                  West Bengal, by the holy river. Montu, scarred and battered, sets a basket afloat with a sacred hand-blown six-foot glass relic to protect it from scavengers. It sinks into the silt and pops up halfway across the planet on Sunset Boulevard. Vishal and Drew are hot-boxing an overheated Dodge van that smells like radiator leak and cold drive-thru. They think they&apos;re walking into an executive pitch for a thoughtful diaspora road picture called <em>Bhang Tour</em>. Hollywood execs hear <em>Bong Tour</em>, smell weed-comedy box office, and lock the doors behind them.
                 </p>
 
-                <h4>Act II: The Comedy Store Initiation & The Shaman Council</h4>
+                <h4>Act II: The Comedy Store &amp; The DMT Shaman</h4>
                 <p>
-                  Enter the washed-up C-Lister who rebrands &lsquo;Bhang Tour&rsquo; into an industry packaging note. &ldquo;The Lollipop Guild runs this town.&rdquo; It is absurd, until it is not.
+                  A washed-up C-Lister hooks his claws into the boys, preaching that &ldquo;The Lollipop Guild runs this town.&rdquo; Backstage at The Comedy Store devolves into total chemical lunacy: champagne poured down the bong stem, paranoia in the green room, and an untouchable A-Lister who ignores the script entirely and doses DMT through the relic instead.
                 </p>
                 <p>
-                  The Comedy Store sequence escalates into a bacchanal: champagne in the bong, chemical fire, backstage councils. The A-Lister refuses a normal pitch, doses DMT into the bong, and says: <em>no words, just eyes</em>. The trio watches the film inside their minds until the A-Lister weeps and asks the moral question: <strong>&ldquo;Does the little person have to die?&rdquo;</strong> He greenlights it with casual cruelty.
+                  Tripping out of his skull, the movie star weeps, watches the entire film inside his head, and greenlights the production on one heartless condition: <strong>&ldquo;Does the little person have to die?&rdquo;</strong> That&apos;s the studio machine laid bare—they&apos;ll bankroll your dream, as long as they get to butcher its heart.
                 </p>
 
                 <h4>Act III: India, Origin, Sacrifice</h4>
                 <p>
-                  The story bends back toward India as source code. Kolkata with sensory density: smog, horns, Ambassador cabs, humid chaos. Drew&apos;s jealousy grows as Montu and Vishal connect. Rishikesh: Vishal meets his father, alive and hidden, who delivers the truth: fame is different at home; heritage is not optional.
+                  The circus gets dragged all the way back to India. Humid Kolkata streets, deafening yellow cabs, and Vishal coming face-to-face with his estranged movie-star father, who drops the hammer: chasing validation in California is a sucker&apos;s game when you&apos;re embarrassed of your own family.
                 </p>
                 <p>
-                  Masala crescendo: catwalk, fire, obsession, and a mythic fight over the bong. Mid-chaos, a cultural flare hits: &ldquo;LAGAAN!&rdquo; Montu crawls toward the Ganges, intact, and releases the Bong into the water, completing the circle: preserve, do not extend.
+                  Everything detonates on a warehouse catwalk over the Ganges—flames, greed, and a bareknuckle brawl over the relic. Mid-chaos, a cricket bat swings like a war club with a rallying cry straight out of <em>Lagaan</em>. Montu crawls through the smoke to drop the bong back into the sacred water, fulfilling the law: preserve, never extend.
                 </p>
                 <p>
-                  Resolution: Willie reveals authorship with the bound final version: <em>&ldquo;One script to rule them all.&rdquo;</em> Just when it feels like closure, Upper Management arrives with the oldest drug of all: the sequel offer.
+                  Resolution: Willie pulls out the real final shooting draft she wrote while the men were losing their minds: <em>&ldquo;One script to rule them all.&rdquo;</em> Just when they think they&apos;re free, Upper Management pulls up in an air-conditioned golf cart with the ultimate poison: a three-picture franchise deal.
                 </p>
               </section>
 

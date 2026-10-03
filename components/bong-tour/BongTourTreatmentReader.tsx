@@ -37,7 +37,7 @@ export function BongTourTreatmentReader() {
 
       <article className="bt-treatment-doc">
         <header className="bt-treatment-header">
-          <span className="bt-kicker">Feature Film Packaging · Reading Copy</span>
+          <span className="bt-kicker">Hand-Bound Draft · Reading Copy</span>
           <h1 id="treatment-heading">BONG TOUR</h1>
           <p className="bt-treatment-subtitle">A Masala Film</p>
           <div className="bt-treatment-credits">
@@ -45,54 +45,58 @@ export function BongTourTreatmentReader() {
             <span>·</span>
             <span>Creatives Guide Us Sound Lab & Studio</span>
             <span>·</span>
-            <span>Asset Valuation: $75,000+ Baseline</span>
+            <span>Original Screenplay & Score Draft</span>
           </div>
         </header>
 
         <section className="bt-treatment-block">
           <h2>LOGLINE</h2>
           <p className="bt-treatment-lead">
-            A sacred bong vanishes into the Ganges and reappears on Sunset Boulevard, binding two screenwriters—an Indian-American idealist and a Tolkien superfan—to its smoke-script. They pitch &ldquo;Bhang Tour&rdquo;; Hollywood hears &ldquo;Bong Tour,&rdquo; and the bong rewrites the movie through them, until Mount Doom asks: cash it, or cast it into fire.
+            A sacred glass relic dumped into the Ganges somehow resurfaces in an overheated Dodge van on Sunset Boulevard. Two broke screenwriters—an anxious Indian-American idealist and a reckless Tolkien nerd—pitch a sacred diaspora road comedy called &ldquo;Bhang Tour.&rdquo; Hollywood hears &ldquo;Bong Tour,&rdquo; smells stoner millions, and turns the town upside down until Mount Doom demands an answer: cash the corporate check, or throw the whole damn thing into the fire.
           </p>
         </section>
 
         <section className="bt-treatment-block">
           <h2>WHAT IT IS</h2>
           <p>
-            Bong Tour is a diaspora masala satire where Hollywood mania collides with Indian myth logic. The MacGuffin is not a ring. It is a bong, blessed and cursed by the Ganges. It plays like a cult comedy, but it lands like a fable. Fame is a drug. The industry is a trip. The only antidote is choosing what is real.
+            A sun-baked diaspora masala road comedy where desperate Hollywood hustle collides head-on with ancient Indian myth. The MacGuffin isn&apos;t a magic ring—it&apos;s a six-foot hand-blown glass bong cursed and blessed by the sacred river. It plays like a late-night cult comedy, but it lands like reality: the town promises you the world just to strip you of everything authentic, and the only way out is refusing to sell out your roots.
           </p>
         </section>
 
         <section className="bt-treatment-block">
-          <h2>GENRE & TONE</h2>
-          <p>Comedy, satire, adventure, with psychedelic propulsion and a grounded emotional spine.</p>
+          <h2>THE BLOODLINE &amp; COMPS</h2>
+          <p>A fast, irreverent road comedy built on overdriven guitar grit, psychedelic momentum, and an unshakeable moral spine.</p>
           <div className="bt-treatment-comps">
             <div>
-              <h3>Global Comps for Positioning</h3>
+              <h3>Global Bloodline</h3>
               <ul>
-                <li><strong>The Big Lebowski</strong> (stoner philosophy)</li>
-                <li><strong>Tropic Thunder</strong> (industry satire)</li>
-                <li><strong>Fear and Loathing in Las Vegas</strong> (trip momentum)</li>
-                <li><strong>The Player</strong> (meta Hollywood)</li>
+                <li><strong>The Big Lebowski</strong> (stoned road trip philosophy &amp; accidental odysseys)</li>
+                <li><strong>Tropic Thunder</strong> (unforgiving satire of Hollywood egos and industry bullshit)</li>
+                <li><strong>Fear and Loathing in Las Vegas</strong> (desert momentum with the pedal pinned to the floor)</li>
+                <li><strong>The Player</strong> (studio executives boiling human lives into twenty-word pitches)</li>
               </ul>
             </div>
             <div>
-              <h3>India Comps for Instinct</h3>
+              <h3>Desi Bloodline</h3>
               <ul>
-                <li><strong>Go Goa Gone</strong> (energy)</li>
-                <li><strong>Delhi Belly</strong> (irreverence)</li>
-                <li><strong>Luck By Chance</strong> (insider bite, filtered through diaspora identity)</li>
+                <li><strong>Delhi Belly</strong> (fast, dirty, irreverent dialogue that doesn&apos;t apologize)</li>
+                <li><strong>Go Goa Gone</strong> (pure chaotic momentum and genre-bending courage)</li>
+                <li><strong>Luck By Chance</strong> (the sharp, razor-wire truth about how film dynasties work)</li>
+                <li><strong>Lagaan</strong> (masala stakes where everything comes down to one heroic over)</li>
               </ul>
             </div>
           </div>
         </section>
 
         <section className="bt-treatment-block">
-          <h2>THE SACRED RULE</h2>
+          <h2>THE UNBREAKABLE RULE</h2>
           <blockquote className="bt-treatment-rule">
             &ldquo;The Bong can only preserve life. It cannot extend it.&rdquo;
             <footer>— Baba Gandalfi</footer>
           </blockquote>
+          <p>
+            Every hit extracted by Hollywood parasites demands a debt paid back at origin. You cannot outrun where you came from, no matter how many sequel checks they wave in your face.
+          </p>
         </section>
 
         <section className="bt-treatment-block">
@@ -100,109 +104,106 @@ export function BongTourTreatmentReader() {
           <div className="bt-treatment-cast-grid">
             <div className="bt-treatment-cast-item">
               <strong>Vishal</strong>
-              <p>Indian American writer. Long-haired. Anxious and brilliant. Caught between heritage and Hollywood validation. He believes the film means something, even when he is too high to stand upright.</p>
+              <p>Hair down to his shoulders, permanently on edge, and desperately trying to write something that matters while choking on second-hand smoke. Caught between his dad&apos;s legendary shadow in Mumbai and a Hollywood executive asking if he can make the lead &ldquo;more relatable.&rdquo;</p>
             </div>
             <div className="bt-treatment-cast-item">
               <strong>Drew</strong>
-              <p>Vishal’s best friend. Loud, reckless, conspiracy-obsessed, and seduced by fame. Drew wants the win, even if it costs the truth.</p>
+              <p>Vishal’s writing partner. Loud, unhinged, obsessed with Tolkien lore, and dangerously vulnerable to anyone offering him a VIP lanyard. Drew will steer the van into oncoming traffic if he thinks there&apos;s a three-picture studio deal on the other side.</p>
             </div>
             <div className="bt-treatment-cast-item">
               <strong>Willie</strong>
-              <p>The grounded force. She sees the machine clearly, calls out the nonsense, and ultimately becomes the real author of the outcome. She holds the bat, the line, the final cut.</p>
+              <p>The only adult in the room. She sees through Hollywood glad-handing five seconds before it happens, keeps a cricket bat behind the van seat, and edits their rambling stoner pages into actual cinema. When the guys lose their minds, Willie holds the steering wheel and the final cut.</p>
             </div>
             <div className="bt-treatment-cast-item">
               <strong>Montu</strong>
-              <p>A little person with scars, dignity, and mythic weight. He is not a punchline. He is the story’s spiritual gravity. Guardian of the Bong. Carrier of sacrifice. Proof that “small” is not weak.</p>
+              <p>Guardian of the relic. Acid scars from old battles, zero tolerance for bullshit, and carrying real generational weight. Hollywood suits try to cast him as a gimmick punchline; Montu turns out to be the smartest, toughest survivor on either side of the Pacific.</p>
             </div>
             <div className="bt-treatment-cast-item">
-              <strong>The C-Lister & The A-Lister</strong>
-              <p>The C-Lister: a washed-up actor turned parasite mentor. The A-Lister: a Hollywood legend, shaman-paranoid and power drunk. He doesn’t want a pitch; he wants a DMT initiation: <em>&ldquo;Does the little person have to die?&rdquo;</em></p>
+              <strong>The C-Lister &amp; The A-Lister</strong>
+              <p>The C-Lister: washed-up 90s television star turned parasitic mentor who claims &ldquo;The Lollipop Guild runs this town.&rdquo; The A-Lister: a delusional Hollywood titan, paranoid and power-drunk, who refuses to read pages and insists on a DMT initiation through the glass: <em>&ldquo;Does the little person have to die?&rdquo;</em></p>
             </div>
             <div className="bt-treatment-cast-item">
               <strong>Upper Management</strong>
-              <p>Not a person. An ecosystem. The final boss is the industry itself, forever offering the sequel to keep you owned.</p>
+              <p>Not a person—an ecosystem. Polished executives in linen shirts riding golf carts across studio backlots, ready to buy your soul, sanitize it into focus-grouped slop, and lock you into a three-picture sequel contract.</p>
             </div>
           </div>
         </section>
 
         <section className="bt-treatment-block">
-          <h2>ACT BREAKDOWN</h2>
+          <h2>HOW THE WHEELS COME OFF (ACT BREAKDOWN)</h2>
 
           <div className="bt-treatment-act">
-            <h3>Act I: The Bong Enters America</h3>
+            <h3>Act I: The Relic Hits Sunset</h3>
             <p>
-              West Bengal, by the Ganges. A maimed Montu, acid-scarred and bleeding, sets a basket afloat like Moses. Inside is the Bong. It sinks, it fills, it absorbs the refuse of the sacred Ganges. Myth is literal here. Sacred and disgusting. Holy and hilarious.
+              West Bengal, by the holy river. Montu, scarred and battered, sets a basket afloat with a sacred hand-blown six-foot glass relic to protect it from scavengers. It sinks into the silt and pops up halfway across the planet on Sunset Boulevard.
             </p>
             <p>
-              Smash cut: Sunset Boulevard. Vishal and Drew are in a van, obliterated, clutching the same bong like it is destiny. They are heading to pitch their &lsquo;stoner epic&rsquo; during a chaotic Hollywood moment full of strikes, volatility, and desperation.
+              Smash cut: Sunset Boulevard. Vishal and Drew are hot-boxing an overheated Dodge van that smells like radiator leak and cold drive-thru. They think they&apos;re walking into an executive pitch for a thoughtful diaspora road picture called <em>Bhang Tour</em>.
             </p>
             <p>
-              The first act builds their rhythm: Vishal spirals, Drew charges, and neither is sober enough to realize they are walking into a larger game.
+              Hollywood execs hear <em>Bong Tour</em>, smell weed-comedy box office, and lock the doors behind them. Vishal spirals into existential dread, Drew starts mentally spending their first backend points, and neither is sober enough to realize the cosmic trap has already closed.
             </p>
           </div>
 
           <div className="bt-treatment-act">
-            <h3>Act II: The Comedy Store Initiation (and the Trap Springs)</h3>
+            <h3>Act II: The Comedy Store &amp; The DMT Shaman</h3>
             <p>
-              Enter the C-Lister. He &ldquo;helps&rdquo; the writers, then starts shaping them. He clock-punches their naivete and reframes their destiny. Even the title becomes a battleground: &ldquo;Bhang Tour&rdquo; versus &ldquo;Bong Tour.&rdquo; A diaspora cultural detail turns into an industry packaging note.
+              Enter the washed-up C-Lister. He hooks his claws into the writers, promising connections while bleeding them dry. He clocks their naivete instantly, and the title debate gets ugly: &ldquo;Bhang Tour&rdquo; versus &ldquo;Bong Tour.&rdquo; A sacred diaspora cultural detail gets steamrolled into a cheap industry packaging note.
             </p>
             <p>
-              Then comes the warning, played for laughs, landing like a threat: <em>&ldquo;The Lollipop Guild runs this town.&rdquo;</em> It is absurd, until it is not.
+              Then comes the warning, played for laughs, landing like an ice pick: <em>&ldquo;The Lollipop Guild runs this town.&rdquo;</em> It is absurd, until it isn&apos;t.
             </p>
             <p>
-              The Comedy Store sequence escalates into a full bacchanal. Champagne in the bong. Chemical fire chaos. Backstage councils. Performers, hangers-on, a sense the night itself is possessed. Finally, the A-Lister arrives and refuses a normal pitch. He loads DMT into the bong and says: <em>no words, just eyes</em>.
+              The Comedy Store sequence escalates into total chemical lunacy: champagne poured down the bong stem, paranoia in the green room, and an untouchable A-Lister who ignores the script entirely and doses DMT through the relic instead. <em>&ldquo;No words, just eyes.&rdquo;</em>
             </p>
             <p>
-              The trio watches the film inside their minds—joy, heartbreak, terror—until the A-Lister weeps and asks the moral question that becomes the spine of the movie: <strong>&ldquo;Does the little person have to die?&rdquo;</strong>
+              The trio watches the movie inside their minds until the star weeps and asks the moral question that becomes the spine of the story: <strong>&ldquo;Does the little person have to die?&rdquo;</strong>
             </p>
             <p>
-              He greenlights it with the casual cruelty of power. Calls go out. Demands get made. Horses, permissions, favors. We see the real movie they are in: business.
+              He greenlights it with the casual cruelty of power. Demands fly, assistants scramble, and the writers realize what movie they&apos;re really trapped in: business.
             </p>
           </div>
 
           <div className="bt-treatment-act">
-            <h3>Act III: India, Origin, Sacrifice (the Myth Becomes a Weapon)</h3>
+            <h3>Act III: India, Origin, Sacrifice</h3>
             <p>
-              The story bends back toward India, not as a postcard, but as source code. We arrive in Kolkata with sensory density: smog, horns, old-school Ambassadors, that humid specific chaos. Then the journey turns ominous.
+              The circus gets dragged all the way back to India. Humid Kolkata streets, deafening yellow cabs, and the chaotic momentum of the old country. Drew’s jealousy flares as Montu and Vishal bond over the relic. The jokes keep landing, but the knives are out.
             </p>
             <p>
-              The trio is pushed forward through train stations, last calls, bruised friendships. Drew’s jealousy grows as Montu and Vishal connect. The movie keeps joking, but the jokes start cutting.
+              Rishikesh: Vishal comes face-to-face with his estranged movie-star father, who drops the hammer: chasing validation in California is a sucker&apos;s game when you&apos;re embarrassed of your own family.
             </p>
             <p>
-              Rishikesh: Vishal meets his father. Alive. Hidden. Complicated. A legend in his own mind and in India’s star language. He frames the theme with brutal clarity: fame is different at home; heritage is not optional.
+              Flashback noir, Calcutta: a premiere, a chase, violence. The Baba Gandalfi law lands like scripture: <em>&ldquo;The Bong can only preserve life. It cannot extend it.&rdquo;</em>
             </p>
             <p>
-              Flashback noir, Calcutta: a premiere, a chase, violence. The &ldquo;Baba Gandalfi&rdquo; rule lands like scripture: <em>&ldquo;The Bong can only preserve life. It cannot extend it.&rdquo;</em>
+              Climax, masala crescendo: flames, greed, and a bareknuckle brawl over the relic on a warehouse catwalk above the Ganges. Mid-chaos, a cricket bat swings like a war club with a rallying cry straight out of <em>Lagaan</em>.
             </p>
             <p>
-              Climax, masala crescendo: action, betrayal, spectacle. A mythic fight over the Bong. Catwalk, fire, obsession. A brutal fall. Montu crawling toward the river with the Bong intact. A sharp India wink hits mid-chaos: <strong>&ldquo;LAGAAN…&rdquo;</strong> Cricket logic as heroic grammar.
+              Montu crawls through the smoke to drop the bong back into the sacred water, fulfilling the circle: preserve, never extend. His sacrifice anchors the comedy with real consequence.
             </p>
             <p>
-              Montu releases the Bong into the Ganges again, completing the circle of the opening. His sacrifice anchors the comedy with real consequence.
+              Resolution: a helicopter lifts off. The A-Lister is left stranded in the dirt, power stripped, looking ridiculous. Willie stands there with a cricket bat, calm, watchful, unfooled. Then she produces the bound final shooting draft she wrote while the men were losing their minds: <em>&ldquo;One script to rule them all.&rdquo;</em>
             </p>
             <p>
-              Resolution: a helicopter lifts off. The A-Lister is left behind in the dirt, power abandoned, finally made small. Willie stands there with a cricket bat, calm, watchful, unfooled. Then the reveal of authorship: Willie produces the bound final version: <em>&ldquo;One script to rule them all.&rdquo;</em>
-            </p>
-            <p>
-              Coda: we see the premiere of Bong Tour as a movie inside the movie. Just when it feels like closure, Upper Management reappears with the oldest drug of all: the sequel offer.
+              Coda: the movie premieres inside the movie. Just when they think they&apos;ve escaped clean, Upper Management pulls up in an air-conditioned golf cart with the oldest drug in Hollywood: the sequel offer.
             </p>
           </div>
         </section>
 
         <section className="bt-treatment-block">
-          <h2>THEMES & MARKET REALITY</h2>
+          <h2>THE HARD TRUTHS</h2>
           <div className="bt-treatment-themes">
-            <p><strong>Diaspora identity:</strong> You cannot outrun origin; you can only integrate it.</p>
-            <p><strong>Fame as intoxication:</strong> The industry keeps dosing you until you can&apos;t tell the pitch from the life.</p>
-            <p><strong>Power structures:</strong> LA and Mumbai speak the same language; gatekeepers just wear different suits.</p>
-            <p><strong>Representation with a blade:</strong> The little person is not decoration. He is the moral center. The script openly argues about how stories use bodies for catharsis.</p>
+            <p><strong>Roots vs. Validation:</strong> You can&apos;t outrun your heritage by buying a house in Silver Lake. Chasing validation from executives who can&apos;t pronounce your name will only leave you hollowed out.</p>
+            <p><strong>The Hollywood Dosing Machine:</strong> The industry keeps pumping you with attention and free drinks until you can&apos;t tell your real life from a twenty-word pitch deck.</p>
+            <p><strong>Gatekeepers Everywhere:</strong> Sunset Boulevard and Mumbai speak the exact same language. The gatekeepers just trade linen shirts for Nehru jackets, smiling while they steal your intellectual property.</p>
+            <p><strong>No Token Mascots:</strong> Montu isn&apos;t comic relief or an exotic set piece. He&apos;s the spine of the entire story. The script openly mocks an industry that exploits human bodies for sentimental Oscar clips while treating the artists like disposable labor.</p>
           </div>
         </section>
 
         <footer className="bt-treatment-footer">
           <div className="bt-treatment-footer__info">
-            <p>Screenplay draft, character bibles, and production budget available to accredited partners.</p>
-            <small>Contact: contact@creativesguide.us · Creatives Guide Us Studio</small>
+            <p>Screenplay draft, character bibles, and production budget available upon request to genuine collaborators and co-conspirators.</p>
+            <small>Contact: hello@creativesguide.us · Creatives Guide Us Studio &amp; Record Label</small>
           </div>
           <div className="bt-treatment-footer__actions">
             <Button
