@@ -286,7 +286,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
       routingNote:
         "Walls/Devine studio mailing list: vinyl pressings, physical editions, and private listening sessions.",
       summary: [
-        "Direct studio dispatches across Walls/Devine Volume 1, the Bong Tour screenplay, and Cache editions.",
+        "Direct studio dispatches across Walls/Devine Volume 1, original screenplays, and Cache editions.",
         "Direct email dispatches for vinyl announcements, liner notes, and private listening sessions.",
         "Direct studio communication with zero automated marketing loops."
       ],
@@ -381,7 +381,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        "Request a watermarked reading copy and lookbook for Bong Tour.",
+        "Request a watermarked reading copy and lookbook for feature screenplay.",
       summary: [
         "Full screenplay, scene breakdown, and director lookbook held in private circulation.",
         "Watermarked reading copies provided to verified producers, directors, and talent.",
@@ -430,7 +430,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        "Bong Tour film packaging, co-production, and original score inquiries.",
+        "Feature film packaging, co-production, and original score inquiries.",
       summary: [
         "Completed feature screenplay and original soundtrack cues available for production review.",
         "Co-production, financing, music licensing, and distribution conversations.",
@@ -447,7 +447,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "intent",
           label: "Confirm intent",
           title: "Production & Packaging Inquiry",
-          description: "Explore co-production, score licensing, or distribution for Bong Tour.",
+          description: "Explore co-production, score licensing, or distribution for feature productions.",
           helper: "Direct inquiries handled by the studio producing team."
         },
         {
@@ -631,7 +631,7 @@ function buildSubmissionBrief(flowId: ContactFlowId, form: ContactFormState, rou
 
   if (flowId === "bong-treatment") {
     return [
-      "Request: Bong Tour post-launch treatment access.",
+      "Request: Feature post-launch treatment access.",
       routeDetails.relationshipToProject.trim() ? `Relationship to project: ${routeDetails.relationshipToProject.trim()}.` : "",
       routeDetails.readerReason.trim() ? `Reader note: ${routeDetails.readerReason.trim()}` : "",
       trimmedBrief ? `Additional context: ${trimmedBrief}` : ""
@@ -650,7 +650,7 @@ function buildSubmissionBrief(flowId: ContactFlowId, form: ContactFormState, rou
   }
 
   return [
-    "Request: Bong Tour partnership or launch conversation.",
+    "Request: Film partnership or launch conversation.",
     routeDetails.partnershipFocus ? `Focus: ${getOptionLabel(partnershipFocusOptions, routeDetails.partnershipFocus)}.` : "",
     timelineLabel ? `Timing: ${timelineLabel}.` : "",
     budgetRangeLabel ? `Budget range: ${budgetRangeLabel}.` : "",
@@ -732,7 +732,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       },
       {
         label: "Project",
-        value: form.projectTitle.trim() || "Bong Tour",
+        value: form.projectTitle.trim() || "Feature Screenplay",
         description: `Access is reviewed manually before the protected gate opens on ${june30LaunchDateLabel}.`
       },
       {
@@ -747,7 +747,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
     return [
       {
         label: "Focus",
-        value: getOptionLabel(partnershipFocusOptions, routeDetails.partnershipFocus) || "Bong Tour fit conversation",
+        value: getOptionLabel(partnershipFocusOptions, routeDetails.partnershipFocus) || "Film project fit conversation",
         description: `${timelineLabel} · ${budgetRangeLabel}`
       },
       {
@@ -757,7 +757,7 @@ function buildReviewItems(flow: ContactFlow, form: ContactFormState, routeDetail
       },
       {
         label: "Project",
-        value: form.projectTitle.trim() || "Bong Tour",
+        value: form.projectTitle.trim() || "Feature Screenplay",
         description: "Production, soundtrack, and collector-world context stay directly attached to the project."
       },
       {
@@ -843,7 +843,7 @@ function validateStep(flow: ContactFlow, stepId: GuidedStepId, form: ContactForm
 
     if (flow.id === "bong-partnership") {
       if (!routeDetails.partnershipFocus) {
-        return "Choose the closest Bong Tour lane before continuing.";
+        return "Choose the closest project lane before continuing.";
       }
 
       if (!form.brief.trim()) {
@@ -1144,7 +1144,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
         <div className="cg-contact__affirmation-grid">
           <article className="cg-contact__affirmation">
             <strong>Film-fit lane confirmed</strong>
-            <p>This path is for production, soundtrack, collector-world, or broader partnership conversations around Bong Tour.</p>
+            <p>This path is for production, soundtrack, collector-world, or broader partnership conversations around feature productions.</p>
           </article>
           <article className="cg-contact__affirmation">
             <strong>No scheduling layer first</strong>
@@ -1163,7 +1163,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
                 id="contact-project-title"
                 name="projectTitle"
                 type="text"
-                placeholder="Walls/Devine, Bong Tour, or project name"
+                placeholder="Walls/Devine, feature project, or project name"
                 value={form.projectTitle}
                 onChange={handleFieldChange}
               />
@@ -1417,7 +1417,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
                   id="contact-treatment-project-title"
                   name="projectTitle"
                   type="text"
-                  placeholder="Bong Tour"
+                  placeholder="Feature Screenplay"
                   value={form.projectTitle}
                   onChange={handleFieldChange}
                 />
@@ -1468,7 +1468,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
       return (
         <>
           <fieldset className="cg-contact__fieldset">
-            <legend className="cg-contact__legend">Choose the closest Bong Tour lane</legend>
+            <legend className="cg-contact__legend">Choose the closest project lane</legend>
             <p className="cg-contact__field-hint">Pick the focus that best fits the first conversation. The full note can still span production, soundtrack, and collector-world context.</p>
             <GuidedIntakeChoiceGrid
               options={partnershipFocusOptions}
@@ -1589,7 +1589,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
             {submissionState === "submitting" ? "Sending note..." : "Send note to studio"}
           </Button>
         )}
-        privacyText="No spam, no data selling, and zero automated robot emails. Just direct studio correspondence."
+        privacyText="No spam, no third-party lists, and zero automated marketing loops. Just direct studio correspondence."
       />
 
       <p className="cg-contact__direct-link">

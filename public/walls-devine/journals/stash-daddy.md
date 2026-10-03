@@ -17,6 +17,3 @@ Stash Daddy was designed as a late-night power walk cue with danger sitting just
 
 ## Visual Tie-In
 The card emphasizes stack geometry, wiring, and hard red shadows to echo backroom pressure.
-
-## Bong Tour Placement
-Used in Sunset backroom plotting scenes on Bong Tour.

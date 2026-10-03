@@ -1646,14 +1646,13 @@ export function WallsDevinePlayer({ tracks, showDockWhenCollapsed = true }: Wall
                               <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.linkedin} target="_blank" rel="noreferrer" aria-label="Share on LinkedIn" title="Share on LinkedIn">in</a>
                               <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.telegram} target="_blank" rel="noreferrer" aria-label="Share on Telegram" title="Share on Telegram">Tg</a>
                               <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.reddit} target="_blank" rel="noreferrer" aria-label="Share on Reddit" title="Share on Reddit">Rd</a>
-                              <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.email} aria-label="Share by email" title="Share by email">✉</a>
+                              <a className="wd-player-modal__share-platform" href={activeSocialShareLinks.email} aria-label="Share by email" title="Share by email">EM</a>
                             </div>
                           ) : null}
                         </section>
 
                         <div className="wd-player-modal__links">
                           <a href={`/walls-devine/journals/${activeTrack.journalSlug}.md`}>Read journal entry</a>
-                          {activeTrack.bongTourCueId ? <a href={`/bong-tour#${activeTrack.bongTourCueId}`}>View cue on Bong Tour</a> : null}
                         </div>
                       </section>
 

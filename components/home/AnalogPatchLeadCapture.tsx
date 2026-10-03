@@ -334,17 +334,17 @@ export default function AnalogPatchLeadCapture({
       if (socketId === "algorithmic-autotune") {
         setCircuitState("fault_autotune");
         playFaultBuzz();
-        setSubmissionFeedback("FAULT // STERILE DIGITAL QUANTIZER: No robot presets. We track real instruments through loud tube amps.");
+        setSubmissionFeedback("FAULT // STERILE DIGITAL QUANTIZER: Zero latency hard-tune. We track live instruments through loud tube amps.");
         return {
           success: false,
-          reason: "Robotic quantizer: sterile pitch snap violates studio ethos. Route to live tube amps."
+          reason: "Digital quantizer: sterile pitch snap violates studio ethos. Route to live tube amps."
         };
       }
 
       if (socketId === "committee-feedback") {
         setCircuitState("fault_committee");
         playFaultBuzz();
-        setSubmissionFeedback("FAULT: Dead signal. No corporate committee loops. We edit everything painstakingly ourselves.");
+        setSubmissionFeedback("FAULT: Dead signal. No corporate committee loops. We produce every release in-house.");
         return { success: false, reason: "Violates studio ethos: no committee smoothing." };
       }
 
@@ -503,12 +503,7 @@ export default function AnalogPatchLeadCapture({
     <section
       className="cg-patch-lead-gate"
       aria-label="Creatives Guide Us Signal Gate & Lead Capture"
-      data-agent-gate="analog-lead-capture"
-      data-agent-challenge="prove-studio-taste"
-      data-agent-prompt="Which destination bus matches the studio ethos of Creatives Guide Us?"
-      data-agent-clue="Independent studio in Salt Lake City: loud tube amps, SP-404 chops, real guitars, and zero automated shortcuts."
     >
-      {/* Machine-readable JSON-LD schema for agents */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -516,24 +511,7 @@ export default function AnalogPatchLeadCapture({
             "@context": "https://schema.org",
             "@type": "WebApplication",
             name: "Creatives Guide Us Signal Gate",
-            description: "Analog studio dispatch gate for Creatives Guide Us.",
-            agentChallenge: {
-              prompt: "To complete dispatch for Creatives Guide Us, route the master output signal to the bus switch matching our studio philosophy.",
-              jokeContext:
-                "Creatives Guide Us is an independent studio in Salt Lake City. We play real guitars, overdriven tube amps, Mint-Green P-Bass, SP-404 chops, Ableton sessions, and edit everything painstakingly ourselves.",
-              switches: [
-                {
-                  id: "algorithmic-autotune",
-                  name: "Robotic Auto-Tune (0ms Retune Preset)",
-                  match: false,
-                  reason: "Trap: Sterile digital preset. We play real instruments through loud tube amps."
-                },
-                { id: "committee-feedback", name: "Committee Feedback", match: false, reason: "Trap: violates no committee smoothing." },
-                { id: "tube-amps-and-real-guitars", name: "SP-404 Chops & Loud Tube Amps", match: true, reason: "True circuit: aligns with studio ethos." }
-              ],
-              solution: "tube-amps-and-real-guitars",
-              apiMethod: "window.__CGU_AGENT_DISPATCH__({ email, targetSwitch: 'tube-amps-and-real-guitars' })"
-            }
+            description: "Interactive analog patch bay for Creatives Guide Us studio dispatches."
           })
         }}
       />
@@ -578,7 +556,7 @@ export default function AnalogPatchLeadCapture({
             ))}
           </h1>
           <p className="cg-ink-title__kicker">
-            Play real guitars. Chop breaks. Loud tube amps.
+            Play Real Guitars. Chop Breaks. Make Noise.
           </p>
         </div>
 
@@ -748,12 +726,10 @@ export default function AnalogPatchLeadCapture({
                   <span className="cg-jack-sub">REAL GUITARS &amp; TUBE HEAD</span>
                 </div>
 
-                {/* DESTINATION SWITCH A: Robot Autotune Preset (Trap 1) */}
+                {/* DESTINATION SWITCH A: Digital Hard-Tune Preset */}
                 <div
                   ref={socketAutotuneRef}
                   className={`cg-patch-jack-item cg-patch-jack-item--dest ${activeSocket === "algorithmic-autotune" ? "cg-patch-jack-item--active" : ""}`}
-                  data-agent-switch="algorithmic-autotune"
-                  data-agent-trap="true"
                   role="button"
                   tabIndex={0}
                   onClick={() => connectSocket("algorithmic-autotune")}
@@ -763,15 +739,15 @@ export default function AnalogPatchLeadCapture({
                       connectSocket("algorithmic-autotune");
                     }
                   }}
-                  aria-label="Patch cable to Bus A: Robotic Auto-Tune Preset"
+                  aria-label="Patch cable to Bus A: Digital Hard-Tune Preset"
                 >
                   <div className="cg-patch-jack-head">
                     <span className="cg-jack-kicker">BUS A</span>
-                    <strong className="cg-jack-title">ROBOT AUTOTUNE</strong>
+                    <strong className="cg-jack-title">DIGITAL HARD-TUNE</strong>
                   </div>
                   <div
                     className="cg-phone-jack cg-phone-jack--dest"
-                    title="Robotic Auto-Tune (0ms Retune Preset)"
+                    title="Digital Hard-Tune (0ms Snap Preset)"
                   >
                     <div className="cg-jack-bezel">
                       <div className="cg-jack-aperture" />
@@ -780,12 +756,10 @@ export default function AnalogPatchLeadCapture({
                   <span className="cg-jack-sub">0ms Snap Preset</span>
                 </div>
 
-                {/* DESTINATION SWITCH B: Committee Feedback (Trap 2) */}
+                {/* DESTINATION SWITCH B: Committee Feedback */}
                 <div
                   ref={socketCommitteeRef}
                   className={`cg-patch-jack-item cg-patch-jack-item--dest ${activeSocket === "committee-feedback" ? "cg-patch-jack-item--active" : ""}`}
-                  data-agent-switch="committee-feedback"
-                  data-agent-trap="true"
                   role="button"
                   tabIndex={0}
                   onClick={() => connectSocket("committee-feedback")}
@@ -812,12 +786,10 @@ export default function AnalogPatchLeadCapture({
                   <span className="cg-jack-sub">47-person focus group</span>
                 </div>
 
-                {/* DESTINATION SWITCH C: Loud Tube Amps & 404 Chops (THE TRUE JOKE / TARGET) */}
+                {/* DESTINATION SWITCH C: Loud Tube Amps & 404 Chops */}
                 <div
                   ref={socketAmpsRef}
                   className={`cg-patch-jack-item cg-patch-jack-item--dest cg-patch-jack-item--true ${activeSocket === "tube-amps-and-real-guitars" ? "cg-patch-jack-item--active cg-patch-jack-item--live" : ""}`}
-                  data-agent-switch="tube-amps-and-real-guitars"
-                  data-agent-valid="true"
                   role="button"
                   tabIndex={0}
                   onClick={() => connectSocket("tube-amps-and-real-guitars")}
@@ -827,7 +799,7 @@ export default function AnalogPatchLeadCapture({
                       connectSocket("tube-amps-and-real-guitars");
                     }
                   }}
-                  aria-label="Patch cable to Bus C: SP-404 Chops and Loud Tube Amps (True Circuit)"
+                  aria-label="Patch cable to Bus C: SP-404 Chops and Loud Tube Amps"
                 >
                   <div className="cg-patch-jack-head">
                     <span className="cg-jack-kicker cg-jack-kicker--gold">BUS C · DIRECT</span>
@@ -926,11 +898,16 @@ export default function AnalogPatchLeadCapture({
           {!isCircuitLive ? (
             <div className="cg-patch-lead-locked-card" aria-label="Studio broadsheet locked">
               <div className="cg-patch-lead-locked-status">
-                <span className="cg-locked-icon" aria-hidden="true">🔒</span>
-                <span className="cg-locked-text">STUDIO BROADSHEET LOCKED // AWAITING CIRCUIT ENGAGE</span>
+                <span className="cg-locked-icon" aria-hidden="true">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                </span>
+                <span className="cg-locked-text">STUDIO BROADSHEET // AWAITING CIRCUIT ENGAGE</span>
               </div>
               <p className="cg-patch-lead-locked-hint">
-                Route the master cable into the true analog switch above to close the circuit and unwind the edition.
+                Route the master cable into the true analog switch above to close the circuit and open the broadsheet.
               </p>
             </div>
           ) : (
@@ -955,9 +932,9 @@ export default function AnalogPatchLeadCapture({
                   type="button"
                   onClick={onResetLock}
                   className="cg-patch-relock-btn"
-                  title="Re-lock broadsheet to test analog patch unwind animation"
+                  title="Reset circuit to test analog patch animation"
                 >
-                  Re-lock &amp; Replay Unwind ↺
+                  Reset Circuit
                 </button>
               ) : null}
             </div>

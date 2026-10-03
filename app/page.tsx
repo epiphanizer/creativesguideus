@@ -6,7 +6,6 @@ import Link from "next/link";
 
 import ContactModalLink from "@/components/contact/ContactModalLink";
 import { buildContactHref } from "@/lib/contact-intake-routing";
-import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 import AnalogPatchLeadCapture from "@/components/home/AnalogPatchLeadCapture";
@@ -96,10 +95,10 @@ export default function HomePage() {
         <div className="cg-masthead__statement">
           <p className="cg-masthead__super-kicker">CREATIVES GUIDE US</p>
           <h1 className="cg-masthead__headline">
-            We play real guitars, chop breaks, write screenplays about bad ideas, and edit everything painstakingly ourselves.
+            We play real guitars, chop breaks, write screenplays about bad ideas, and produce every record in-house.
           </h1>
           <p className="cg-masthead__lede">
-            An independent studio and record label based in Salt Lake City, operating globally. Real guitars plugged into loud tube amps, Ableton sessions, SP-404 chops, and meticulous analog editing. Currently streaming Walls/Devine Volume 1 in the listening room.
+            An independent studio and record label based in Salt Lake City, operating globally. Vintage tube amplification, SP-404 sampling, and meticulous analog sequencing. Currently streaming Walls/Devine Volume 1 in the listening room.
           </p>
         </div>
       </header>
@@ -158,7 +157,7 @@ export default function HomePage() {
             </h2>
 
             <p className="cg-cover-feature__prose">
-              Tracked live in the studio with real guitars, overdriven tube amps, Mint-Green P-Bass, and SP-404 chops dialed in Ableton. We edit every take, bar, and transition painstakingly ourselves. Volume 1 pairs heavy bass grooves and raw amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions.
+              Tracked live in the studio with overdriven tube amps, Mint-Green P-Bass, and SP-404 samples layered in Ableton. Volume 1 pairs heavy bass grooves and raw amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions.
             </p>
 
             <blockquote className="cg-pullquote">
@@ -193,65 +192,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. STUDIO PRODUCTIONS */}
-      <section className="cg-dispatches" aria-labelledby="dispatches-title">
-        <div className="cg-rule-header">
-          <div className="cg-rule-header__left">
-            <span className="cg-badge">STUDIO PRODUCTIONS</span>
-            <h2 id="dispatches-title" className="cg-rule-header__heading">
-              Current Productions &amp; Editions
-            </h2>
-          </div>
-          <div className="cg-rule-header__right">
-            <span className="cg-rule-header__date">ORIGINAL SCREENPLAY &amp; SCORE</span>
-          </div>
-        </div>
-
-        <div className="cg-dispatches__grid">
-          {/* Dispatch 01: Bong Tour */}
-          <article className="cg-dispatch-column cg-dispatch-column--bong cg-dispatch-column--featured" aria-label="Bong Tour Screenplay">
-            <div className="cg-dispatch-column__mast">
-              <span className="cg-meta-kicker cg-meta-kicker--tobacco">DISPATCH 01 · FEATURE FILM</span>
-              <span className="cg-dispatch-column__tag">ORIGINAL SCREENPLAY</span>
-            </div>
-
-            <div className="cg-dispatch-featured__layout">
-              <figure className="cg-dispatch-column__media">
-                <Link href="/bong-tour" className="cg-dispatch-column__poster-link" aria-label="View Bong Tour Screenplay Portal">
-                  <div className="cg-dispatch-column__poster-frame">
-                    <Image
-                      src={posterImage}
-                      alt="Bong Tour concept film poster"
-                      sizes="(max-width: 960px) 90vw, 420px"
-                      className="cg-dispatch-column__image"
-                    />
-                    <span className="cg-dispatch-column__poster-badge">Read Screenplay ↗</span>
-                  </div>
-                </Link>
-                <figcaption>Original feature screenplay &amp; score suite</figcaption>
-              </figure>
-
-              <div className="cg-dispatch-featured__details">
-                <h3 className="cg-dispatch-column__title">
-                  <Link href="/bong-tour">Bong Tour: A Sun-Baked Masala Road Comedy</Link>
-                </h3>
-
-                <p className="cg-dispatch-column__copy">
-                  An indie band hauls a fragile, hand-blown six-foot glass rig across Route 66 in a van that overheats if you look at it wrong. Between Barstow radiator blowouts, neon-lit motel rooms, and questionable desert pitstops, it&apos;s a sun-baked comedy of stubborn survival.
-                </p>
-
-                <div className="cg-dispatch-column__action">
-                  <Link href="/bong-tour" className="cg-inline-link">
-                    Read Screenplay &amp; Hear Cues →
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      {/* 4. STUDIO PRACTICE & DIRECT INQUIRY */}
+      {/* 3. STUDIO PRACTICE & DIRECT INQUIRY */}
       <section className="cg-studio-practice" aria-labelledby="studio-practice-title">
         <div className="cg-rule-header">
           <div className="cg-rule-header__left">
@@ -271,7 +212,7 @@ export default function HomePage() {
               <span className="cg-discipline-item__num">01</span>
               <div className="cg-discipline-item__body">
                 <h3>Sound &amp; Records</h3>
-                <p>Real guitars through overdriven tube amps, P-Bass grooves, and SP-404 chops running into Ableton. We track the instruments ourselves, dial in every sound, and edit every transition, bar, and stem painstakingly by hand—pressed to wax and built to last.</p>
+                <p>Electric guitars through overdriven tube heads, P-Bass grooves, and SP-404 chops running into Ableton. We track the instruments directly, sculpt the arrangements in the room, and master for vinyl—pressed to wax and built to last.</p>
               </div>
             </div>
 
@@ -297,7 +238,7 @@ export default function HomePage() {
               We treat the record, the movie, and the printed jacket as one single piece of work.
             </h3>
             <p className="cg-colophon-unified__prose">
-              The studio takes on a handful of weird, ambitious collaborations each year across original sound production, film packaging, and editorial design. We play real instruments, write the scripts, and edit every single cut and cue painstakingly ourselves. No endless email chains with committee feedback, guaranteed.
+              The studio takes on a handful of ambitious collaborations each year across original sound production, film packaging, and editorial design. We play the instruments, write the scripts, and direct every cut and cue in-house—with zero corporate committee bloat.
             </p>
             <div className="cg-colophon-unified__actions">
               <ContactModalLink href={homeConversationHref} buttonVariant="primary">

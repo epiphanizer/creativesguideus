@@ -71,7 +71,7 @@ export const songPostCards: SongPostCard[] = [
     hook: "Cosmic drift with ritual propulsion.",
     caption: "Space Cruiser lifts the grid into orbit before dropping back into grit.",
     storySummary:
-      "John wrote the first sketch after a brutal live show, then returned to it when Bong Tour needed a cosmic third door. The finished version became a collage of delays, Indian vocal color, and one last bong-rip blessing.",
+      "John wrote the first sketch after a brutal live show, then returned to it when the album trilogy needed a cosmic third door. The finished version became a collage of delays, Indian vocal color, and one last bong-rip blessing.",
     visualThread: "Celestial beam language tied to the center seal and border corners.",
     journalSlug: "space-cruiser",
     makingNote: "Wrote the ambient bed to mirror the river-return sequence, then reintroduced pulse late to keep narrative momentum.",

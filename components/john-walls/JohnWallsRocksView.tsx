@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import CalligraphicSignatureTitle from "@/components/brand/CalligraphicSignatureTitle";
 import SubtleCalligraphyAtmosphere from "@/components/home/SubtleCalligraphyAtmosphere";
 
@@ -14,19 +13,13 @@ export function JohnWallsRocksView() {
 
       <div className="jw-domain-shell jw-domain-shell--minimal">
         {/* Navigation Bar */}
-        <nav className="jw-domain-nav" aria-label="John Walls Network">
+        <nav className="jw-domain-nav" aria-label="johnwalls.rocks">
           <div className="jw-domain-nav__brand">
             <span className="jw-domain-nav__dot" />
             <span className="jw-domain-nav__label">JOHN WALLS</span>
           </div>
           <div className="jw-domain-nav__links">
             <span className="jw-domain-pill jw-domain-pill--active">johnwalls.rocks</span>
-            <Link href="/johnwalls-studio" className="jw-domain-pill">
-              johnwalls.studio ↗
-            </Link>
-            <Link href="/" className="jw-domain-pill">
-              creativesguide.us ↗
-            </Link>
           </div>
         </nav>
 
@@ -34,23 +27,33 @@ export function JohnWallsRocksView() {
         <main className="jw-domain-hero jw-domain-hero--centered">
           <CalligraphicSignatureTitle
             domain="johnwalls.rocks"
-            eyebrow="MUSIC & MASTER TAPES"
-            badgeText="PLACEHOLDER · FORTHCOMING"
-            kicker="Audio archive, master tapes, and forthcoming releases. Details to be announced."
+            eyebrow="ALL THE MUSIC · MASTER TAPES"
+            badgeText="CATALOG · FORTHCOMING"
+            kicker="Analog master tapes, guitar cuts, live multitracks, and unreleased studio vaults. Pressing and release schedule forthcoming."
           />
 
           <div className="jw-minimal-dispatch">
             <a
-              href="mailto:hello@creativesguide.us?subject=johnwalls.rocks%20inquiry"
+              href="mailto:hello@creativesguide.us?subject=johnwalls.rocks%20Music%20Inquiry"
               className="cg-btn cg-btn--primary"
             >
-              Contact Studio →
+              Contact Music Archive →
             </a>
           </div>
         </main>
 
         <footer className="jw-domain-footer jw-domain-footer--minimal">
-          <p>© {new Date().getFullYear()} John Walls · Creatives Guide Us</p>
+          <p>
+            © {new Date().getFullYear()} John Walls ·{" "}
+            <a
+              href="https://creativesguide.us"
+              target="_blank"
+              rel="noreferrer"
+              className="jw-footer-link"
+            >
+              creativesguide.us ↗
+            </a>
+          </p>
         </footer>
       </div>
     </div>

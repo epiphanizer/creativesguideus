@@ -17,6 +17,3 @@ Space Cruiser had to feel mythic and airborne while still belonging to the same 
 
 ## Visual Tie-In
 Beam motifs and celestial framing connect the top row to the center cover seal.
-
-## Bong Tour Placement
-Used in the Ganges finale and myth-closure moments on Bong Tour.

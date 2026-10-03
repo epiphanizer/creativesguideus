@@ -58,20 +58,21 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 
   @media (max-width: 680px) {
-    border-radius: 16px;
-    padding: 0.85rem 1rem;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
+    border-radius: 999px;
+    padding: 0.65rem 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
 
     &__brand {
-      width: 100%;
+      width: auto;
       justify-content: flex-start;
     }
 
     &__links {
-      width: 100%;
-      justify-content: flex-start;
+      width: auto;
+      justify-content: flex-end;
     }
   }
 }
@@ -768,5 +769,18 @@
     letter-spacing: 0.12em;
     color: var(--cg-color-ink-500);
     text-transform: uppercase;
+  }
+
+  .jw-footer-link {
+    color: var(--cg-color-ink-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+    display: inline-block;
+    transition: color 150ms ease;
+
+    &:hover {
+      color: #000000;
+    }
   }
 }

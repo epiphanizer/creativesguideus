@@ -1,17 +1,6 @@
-import type { Metadata } from "next";
-
-import { BongTourLanding } from "@/components/bong-tour/BongTourLanding";
-
-export const metadata: Metadata = {
-  title: "Bong Tour | A Masala Film | Creatives Guide Us",
-  description: "A diaspora masala satire where Hollywood mania collides with Indian myth logic. Feature screenplay, original sound lab score, and Appreesh giveaway."
-};
+import { redirect } from "next/navigation";
 
 export default function BongTourPage() {
-  return (
-    <main id="hero" className="cg-page bt-page">
-      <BongTourLanding />
-    </main>
-  );
+  // Public route temporarily gated pending alignment and combined review of treatment language and facts
+  redirect("/");
 }
-

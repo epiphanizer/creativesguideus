@@ -1,6 +1,8 @@
 User-agent: *
 Disallow: /api/
 Disallow: /admin/
+Disallow: /bong-tour/
+Disallow: /bong-tour
 Allow: /
 
 # Agent and crawler protection: prevent automated crawl indexing of high-frequency or stateful API endpoints

@@ -70,7 +70,7 @@ const defaultBongTourLink = {
   href: "/bong-tour",
   ctaLabel: "Read screenplay & cues",
   isFeatured: false,
-  isActive: true
+  isActive: false
 } satisfies LinkHubLink;
 
 const defaultCacheLink = {
@@ -100,7 +100,6 @@ const canonicalLinkOrder = [
   "walls-devine-mailing-list",
   "walls-devine-merch-shop",
   "melodyne-affiliate",
-  "bong-tour",
   "cache",
   "contact"
 ] as const;
@@ -115,7 +114,6 @@ export const defaultLinkHubContent: LinkHubContent = {
     defaultWallsDevineSignalListLink,
     defaultWallsDevineMerchLink,
     defaultMelodyneAffiliateLink,
-    defaultBongTourLink,
     defaultCacheLink,
     defaultContactLink
   ]
@@ -178,7 +176,6 @@ function ensureRequiredLinks(links: LinkHubLink[]) {
     defaultWallsDevineLink,
     defaultWallsDevineSignalListLink,
     defaultWallsDevineMerchLink,
-    defaultBongTourLink,
     defaultCacheLink,
     defaultContactLink
   ];

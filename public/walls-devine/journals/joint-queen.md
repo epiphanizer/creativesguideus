@@ -17,6 +17,3 @@ Joint Queen needed to feel like an entrance cue with authority and swagger, not 
 
 ## Visual Tie-In
 The visual language mirrors crown smoke and throne posture, pulling energy toward the center lightning seam.
-
-## Bong Tour Placement
-Used in the Comedy Store takeover sequence on Bong Tour.
