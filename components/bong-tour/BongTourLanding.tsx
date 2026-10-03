@@ -98,16 +98,6 @@ const soundtrackCues: SoundtrackCue[] = [
     logline: "An entrance cue with swagger and overdriven tube amp grit. The writers step into the Hollywood underworld, where champagne fills the bong and the parasites set the terms."
   },
   {
-    id: "space-cruiser",
-    trackNumber: 3,
-    title: "Space Cruiser",
-    scenePlacement: "Sunset Boulevard Van Ride",
-    act: "Act I",
-    durationLabel: "4:15",
-    audioSrc: "/walls-devine/releases/volume1/3. Space Cruiser.wav",
-    logline: "Fuzz bass and desert momentum through neon gridlock as Vishal spirals and Drew clutches the stolen relic like it's their winning lottery ticket."
-  },
-  {
     id: "stash-daddy",
     trackNumber: 2,
     title: "Stash Daddy",
@@ -118,14 +108,14 @@ const soundtrackCues: SoundtrackCue[] = [
     logline: "Nocturnal groove setting the trap. The A-Lister refuses a pitch, doses DMT into the glass, and asks: 'Does the little person have to die?'"
   },
   {
-    id: "poetry",
-    trackNumber: 7,
-    title: "Poetry",
-    scenePlacement: "The Ganges, West Bengal & Montu's Sacrifice",
-    act: "Act III",
-    durationLabel: "4:06",
-    audioSrc: "/walls-devine/releases/volume1/7. Poetry.wav",
-    logline: "Raw acoustic resonance and spoken verse. Language first, studio bullshit second. Baba Gandalfi's law echoes across the water: 'The Bong can only preserve life. It cannot extend it.'"
+    id: "space-cruiser",
+    trackNumber: 3,
+    title: "Space Cruiser",
+    scenePlacement: "Sunset Boulevard Van Ride",
+    act: "Act I",
+    durationLabel: "4:15",
+    audioSrc: "/walls-devine/releases/volume1/3. Space Cruiser.wav",
+    logline: "Fuzz bass and desert momentum through neon gridlock as Vishal spirals and Drew clutches the stolen relic like it's their winning lottery ticket."
   }
 ];
 

@@ -29,18 +29,6 @@ const bongTourCues: BongTourCue[] = [
     albumHref: "/walls-devine"
   },
   {
-    id: "space-cruiser",
-    trackNumber: 3,
-    title: "Space Cruiser",
-    scenePlacement: "Sunset Boulevard Van Ride",
-    act: "Act I",
-    durationLabel: "4:15",
-    audioSrc: "/walls-devine/releases/volume1/3. Space Cruiser.wav",
-    logline: "Cosmic stoner propulsion through neon gridlock traffic as Vishal spirals and Drew clutches the mysterious relic.",
-    albumTitle: "Walls/Devine Volume 1",
-    albumHref: "/walls-devine"
-  },
-  {
     id: "stash-daddy",
     trackNumber: 2,
     title: "Stash Daddy",
@@ -53,14 +41,14 @@ const bongTourCues: BongTourCue[] = [
     albumHref: "/walls-devine"
   },
   {
-    id: "poetry",
-    trackNumber: 7,
-    title: "Poetry",
-    scenePlacement: "The Ganges, West Bengal & Montu's Sacrifice",
-    act: "Act III",
-    durationLabel: "4:06",
-    audioSrc: "/walls-devine/releases/volume1/7. Poetry.wav",
-    logline: "The inward spiritual core. Language first, ornament second. Baba Gandalfi's law echoes: 'The Bong can only preserve life. It cannot extend it.'",
+    id: "space-cruiser",
+    trackNumber: 3,
+    title: "Space Cruiser",
+    scenePlacement: "Sunset Boulevard Van Ride",
+    act: "Act I",
+    durationLabel: "4:15",
+    audioSrc: "/walls-devine/releases/volume1/3. Space Cruiser.wav",
+    logline: "Cosmic stoner propulsion through neon gridlock traffic as Vishal spirals and Drew clutches the mysterious relic.",
     albumTitle: "Walls/Devine Volume 1",
     albumHref: "/walls-devine"
   }
