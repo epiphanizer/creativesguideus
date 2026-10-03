@@ -197,7 +197,6 @@ export function WallsDevineLanding() {
           <div className="wd-hero__showcase">
             <SectionHeader
               id="walls-devine-title"
-              eyebrow={collectorHeroNote.eyebrow}
               title={formattedCollectorHeroTitle}
               headingLevel="h1"
               description="Released September 1, 2026. Enter the listening room, stay close to the story, and carry the record with you."
@@ -253,7 +252,7 @@ export function WallsDevineLanding() {
                     {collectorHeroNote.primaryCtaLabel}
                   </Button>
 
-                  <nav className="wd-hero__collector-secondary-row" aria-label="Release links">
+                  <div className="wd-hero__collector-secondary-row" role="group" aria-label="Release links">
                     <a
                       href={wallsDevineSignalListHref}
                       className="wd-hero__collector-secondary-btn"
@@ -265,7 +264,6 @@ export function WallsDevineLanding() {
                     >
                       Join the email list
                     </a>
-                    <span className="wd-hero__collector-secondary-divider" aria-hidden="true" />
                     <a
                       href={wallsDevineMerchShopHref}
                       className="wd-hero__collector-secondary-btn"
@@ -279,7 +277,7 @@ export function WallsDevineLanding() {
                     >
                       Shop Volume 1
                     </a>
-                  </nav>
+                  </div>
 
                   <p className="wd-hero__signal-helper">Release notes, stories from the record, and occasional merch drops.</p>
                 </div>
