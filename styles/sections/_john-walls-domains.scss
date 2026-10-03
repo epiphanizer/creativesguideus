@@ -728,3 +728,45 @@
     }
   }
 }
+
+// ── Minimal Placeholder View Layout ──────────────────────────────────────────
+
+.jw-domain-shell--minimal {
+  min-height: calc(100vh - 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.jw-domain-hero--centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: auto 0;
+  padding: clamp(2.5rem, 6vw, 5rem) 0;
+}
+
+.jw-minimal-dispatch {
+  margin-top: 2.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.jw-domain-footer--minimal {
+  margin-top: auto;
+  padding: 1.5rem 0 0.5rem;
+  text-align: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+  p {
+    margin: 0;
+    font-family: var(--cg-font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--cg-color-ink-500);
+    text-transform: uppercase;
+  }
+}
