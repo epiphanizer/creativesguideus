@@ -14,6 +14,9 @@ export function Footer() {
           <a className="cg-footer__link" href="/links">
             Links
           </a>
+          <a className="cg-footer__link" href="https://appreesh.org" target="_blank" rel="noopener noreferrer">
+            $APPREESH Protocol
+          </a>
           <a className="cg-footer__link" href="mailto:hello@creativesguide.us">
             hello@creativesguide.us
           </a>
