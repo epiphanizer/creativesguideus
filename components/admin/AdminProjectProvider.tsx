@@ -45,9 +45,9 @@ const adminProjects: Record<AdminProjectId, AdminProject> = {
   "bong-tour": {
     id: "bong-tour",
     label: "Bong Tour",
-    statusLabel: "Next",
-    isLive: false,
-    description: "Treatment, pitch materials, and project assets live here next."
+    statusLabel: "Live",
+    isLive: true,
+    description: "Feature screenplay, cue soundtrack, MTG card grimoire, and Solana Appreesh airdrop pool."
   }
 };
 

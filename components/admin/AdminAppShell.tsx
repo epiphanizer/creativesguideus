@@ -10,6 +10,7 @@ import { cx } from "@/lib/cx";
 
 import { type AdminProjectId, useAdminProject } from "./AdminProjectProvider";
 import { useAdminWorkspace } from "./AdminWorkspaceProvider";
+import { AdminTerminal } from "./AdminTerminal";
 
 const pendingRouteStatuses = {
   overview: "pending",
@@ -21,7 +22,7 @@ const pendingRouteStatuses = {
 
 const projectSwitcherOptions: Array<{ id: AdminProjectId; label: string; statusLabel: string; isLive: boolean }> = [
   { id: "walls-devine", label: "Walls/Devine", statusLabel: "Sep 1", isLive: true },
-  { id: "bong-tour", label: "Bong Tour", statusLabel: "Next", isLive: false }
+  { id: "bong-tour", label: "Bong Tour", statusLabel: "Live", isLive: true }
 ];
 
 export function AdminAppShell({ children }: { children: ReactNode }) {
@@ -340,6 +341,7 @@ export function AdminAppShell({ children }: { children: ReactNode }) {
           </section>
         </div>
       </div>
+      <AdminTerminal />
     </main>
   );
 }

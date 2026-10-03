@@ -30,7 +30,11 @@ import { AdminFirebaseStatus } from "./AdminFirebaseStatus";
 import { AdminLinkHubEditor } from "./AdminLinkHubEditor";
 import { ReleaseDeskTimeline } from "./ReleaseDeskTimeline";
 import { getAdminMarkdownCreateKey, getAdminMarkdownSaveKey, useAdminWorkspace } from "./AdminWorkspaceProvider";
+import { useAdminProject } from "./AdminProjectProvider";
 import { Button } from "@/components/ui/Button";
+import { BONG_TOUR_CARDS } from "@/lib/bong-tour/cards";
+import { AIRDROP_TIERS } from "@/lib/bong-tour/airdrop";
+import { BongTourTreatmentReader } from "@/components/bong-tour/BongTourTreatmentReader";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
@@ -986,7 +990,192 @@ function MarkdownEditorDrawer({
   );
 }
 
+export function BongTourOverviewRoute() {
+  const { buildScopedHref } = useAdminProject();
+
+  const cueTracks = [
+    { num: "01", title: "Leaving Hobbiton in an Econoline", duration: "02:44", genre: "Psychedelic Folk", scene: "Act I · Departure from Los Angeles" },
+    { num: "02", title: "400 Blows at Flagstaff Radiator Shop", duration: "03:18", genre: "Desert Blues Rock", scene: "Act II · Radiator Meltdown in Barstow" },
+    { num: "03", title: "The One Rig Awakening (Sedona Vortex)", duration: "04:12", genre: "Cosmic Ambient Synth", scene: "Act III · Sacred Glass Activation" },
+    { num: "04", title: "Willie's Paladin Stand on Route 66", duration: "02:55", genre: "Desert Stoner Rock", scene: "Act IV · Defending the Van" },
+    { num: "05", title: "Baba Gandalfi's Revelation", duration: "03:40", genre: "Space Rock Oracle", scene: "Act III · Gas Station Prophecy" },
+    { num: "06", title: "Route 66 Sunset (The Road to Mordor)", duration: "03:30", genre: "Acoustic Ballad", scene: "Climax · Casting Rig into the Mountain" }
+  ];
+
+  return (
+    <div className="cg-admin-route">
+      <AdminRouteHeader
+        eyebrow="Operations"
+        title="Bong Tour Command Center"
+        description="Feature screenplay treatment, original cue soundtrack, 7-card holographic grimoire, and Solana Appreesh airdrop pool."
+        actions={
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            <Button as="a" href="/bong-tour" target="_blank" variant="primary" size="sm">
+              Open Live Scroll ↗
+            </Button>
+            <Button as="a" href="/bong-tour#airdrop" target="_blank" variant="secondary" size="sm">
+              Solana Airlock ↗
+            </Button>
+          </div>
+        }
+      />
+
+      <section className="cg-admin__whiteboard" aria-label="Bong Tour Operations Whiteboard">
+        <div className="cg-admin__whiteboard-grid">
+          <article className="cg-admin__whiteboard-card cg-admin__whiteboard-card--goal">
+            <span className="cg-admin__whiteboard-card-label">Strategic Artha IP Asset</span>
+            <h3>Feature Screenplay &amp; Media Universe</h3>
+            <p>
+              $75,000 internal intellectual property valuation held with 100% sole copyright by Sean Halls. 108-page road trip comedy parodies Lord of the Rings down Route 66 in a 1994 Ford Econoline.
+            </p>
+            <p className="cg-admin__whiteboard-card-note">Status: 108-Page Screenplay Locked · Treatment Locked · Pitch Deck Live</p>
+          </article>
+
+          <article className="cg-admin__whiteboard-card">
+            <span className="cg-admin__whiteboard-card-label">Original Sound Lab</span>
+            <h3>6 Cinematic Cues Mastered</h3>
+            <ul className="cg-admin__list">
+              {cueTracks.slice(0, 4).map((cue) => (
+                <li key={cue.num}>
+                  <strong>Cue {cue.num}: {cue.title}</strong>
+                  <span>{cue.duration} · {cue.genre}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+
+          <article className="cg-admin__whiteboard-card">
+            <span className="cg-admin__whiteboard-card-label">Solana Airdrop Airlock</span>
+            <h3>1,000,000 $APPREESH Genesis Pool</h3>
+            <p>
+              Live on-chain airdrop funnel. Visitors collecting MTG trading cards and passing Route 66 d20 skill checks unlock multipliers from 1.0x (Neophyte) to 3.5x (Arch-Mage).
+            </p>
+            <p className="cg-admin__whiteboard-card-note">
+              Airlock Endpoint: /api/bong-tour/giveaway · Baba Gandalfi Agent Guide Active
+            </p>
+          </article>
+
+          <article className="cg-admin__whiteboard-card">
+            <span className="cg-admin__whiteboard-card-label">Navigation Lanes</span>
+            <h3>Bong Tour Control Modules</h3>
+            <div className="cg-admin-route__action-list">
+              <Link href={buildScopedHref("/admin/content", "bong-tour")}>Treatment Studio</Link>
+              <Link href={buildScopedHref("/admin/assets", "bong-tour")}>Pitch Assets &amp; Grimoire</Link>
+              <a href="/bong-tour" target="_blank" rel="noopener noreferrer">Interactive Scroll ↗</a>
+              <a href="/bong-tour#airdrop" target="_blank" rel="noopener noreferrer">Solana Airdrop Airlock ↗</a>
+            </div>
+          </article>
+        </div>
+
+        <div className="cg-admin__whiteboard-strip">
+          <AdminMetricCard label="Cards in Grimoire" value="7 Cards" detail="Holographic 3D foil active" />
+          <AdminMetricCard label="Original Cues" value="6 Mastered" detail="Sound lab audio stems synced" />
+          <AdminMetricCard label="Airdrop Pool" value="1.0M $APPREESH" detail="Solana SPL token pool" />
+          <AdminMetricCard label="Internal IP Valuation" value="$75,000" detail="100% sole creator equity" />
+        </div>
+      </section>
+
+      {/* 7-Card Grimoire Gallery */}
+      <section className="cg-admin__section" style={{ marginTop: "1.5rem" }} aria-label="Grimoire Cards">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", flexWrap: "wrap", gap: "0.5rem" }}>
+          <div>
+            <span className="cg-admin-shell__eyebrow">Grimoire Telemetry</span>
+            <h3 style={{ margin: "0.2rem 0" }}>7 Holographic MTG-Style Trading Cards</h3>
+          </div>
+          <Link href={buildScopedHref("/admin/assets", "bong-tour")} style={{ fontSize: "0.82rem", color: "var(--cg-color-accent, #38bdf8)" }}>
+            Inspect high-res illustrations &amp; assets →
+          </Link>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "1rem", marginTop: "0.8rem" }}>
+          {BONG_TOUR_CARDS.map((card) => (
+            <article
+              key={card.id}
+              style={{
+                background: "rgba(15, 23, 42, 0.6)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: "8px",
+                padding: "1rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.4rem"
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span
+                  style={{
+                    fontSize: "0.68rem",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    color: card.rarity === "mythic" ? "#f59e0b" : card.rarity === "rare" ? "#3b82f6" : "#10b981"
+                  }}
+                >
+                  {card.rarity}
+                </span>
+                <span style={{ fontSize: "0.74rem", fontFamily: "monospace", color: "#94a3b8" }}>{card.manaCost}</span>
+              </div>
+              <strong style={{ fontSize: "0.95rem", color: "#f8fafc" }}>{card.name}</strong>
+              <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>{card.typeLine}</div>
+              <p style={{ fontSize: "0.78rem", color: "#cbd5e1", fontStyle: "italic", margin: "0.3rem 0" }}>
+                {card.flavorText}
+              </p>
+              <div style={{ marginTop: "auto", paddingTop: "0.4rem", borderTop: "1px solid rgba(255, 255, 255, 0.06)", display: "flex", justifyContent: "space-between", fontSize: "0.74rem", color: "#64748b" }}>
+                <span>Parody: {card.lotrEquivalent}</span>
+                <strong style={{ color: "#38bdf8" }}>{card.appreeshCost} APPREESH</strong>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Complete Soundtrack Cues */}
+      <section className="cg-admin__section" style={{ marginTop: "1.5rem" }} aria-label="Original Soundtrack Cues">
+        <span className="cg-admin-shell__eyebrow">Sound Lab</span>
+        <h3 style={{ margin: "0.2rem 0" }}>Bong Tour Original Motion Picture Cues (6 Tracks)</h3>
+        <div style={{ display: "grid", gap: "0.6rem", marginTop: "0.8rem" }}>
+          {cueTracks.map((cue) => (
+            <div
+              key={cue.num}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0.75rem 1rem",
+                background: "rgba(15, 23, 42, 0.5)",
+                border: "1px solid rgba(255, 255, 255, 0.06)",
+                borderRadius: "6px",
+                flexWrap: "wrap",
+                gap: "0.5rem"
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                <span style={{ fontSize: "0.8rem", fontFamily: "monospace", color: "#64748b" }}>{cue.num}</span>
+                <div>
+                  <strong style={{ fontSize: "0.88rem", color: "#f1f5f9" }}>{cue.title}</strong>
+                  <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>{cue.scene}</div>
+                </div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <span style={{ fontSize: "0.75rem", color: "#38bdf8", padding: "0.2rem 0.5rem", background: "rgba(56, 189, 248, 0.1)", borderRadius: "4px" }}>
+                  {cue.genre}
+                </span>
+                <span style={{ fontSize: "0.8rem", fontFamily: "monospace", color: "#94a3b8" }}>{cue.duration}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export function AdminOverviewRoute() {
+  const { currentProjectId } = useAdminProject();
+  if (currentProjectId === "bong-tour") {
+    return <BongTourOverviewRoute />;
+  }
+
   const { adminViewData, bookingLeadMatches, completedChecklist, bookingGoalCountdown, routeStatuses, handleForceSync, dataLoading } = useAdminWorkspace();
   const releaseFocusItems = Array.from(
     new Set([...adminViewData.bookingBoard.goal.nextMoves, ...adminViewData.plan.recommendedSetup, ...adminViewData.plan.guidance])
@@ -1508,7 +1697,37 @@ export function AdminBookingRoute() {
   );
 }
 
+export function BongTourTreatmentRoute() {
+  const { buildScopedHref } = useAdminProject();
+
+  return (
+    <div className="cg-admin-route">
+      <AdminRouteHeader
+        eyebrow="Content Studio"
+        title="Bong Tour Treatment Studio"
+        description="Locked 108-page feature screenplay, treatment breakdown, character bible, and pitch materials."
+        actions={
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <Button as="a" href={buildScopedHref("/admin/overview", "bong-tour")} variant="secondary" size="sm">
+              ← Overview
+            </Button>
+            <Button as="a" href="/bong-tour" target="_blank" variant="primary" size="sm">
+              Live Scroll ↗
+            </Button>
+          </div>
+        }
+      />
+      <BongTourTreatmentReader />
+    </div>
+  );
+}
+
 export function AdminContentRoute() {
+  const { currentProjectId } = useAdminProject();
+  if (currentProjectId === "bong-tour") {
+    return <BongTourTreatmentRoute />;
+  }
+
   const {
     adminViewData,
     collectorHeroNoteSaveState,
@@ -1762,7 +1981,128 @@ export function AdminContentRoute() {
   );
 }
 
+export function BongTourAssetsRoute() {
+  const { buildScopedHref } = useAdminProject();
+
+  return (
+    <div className="cg-admin-route">
+      <AdminRouteHeader
+        eyebrow="System & Assets"
+        title="Bong Tour Pitch Assets & Grimoire"
+        description="High-resolution holographic trading card illustrations, audio stems, and Solana tokenomics."
+        actions={
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <Button as="a" href={buildScopedHref("/admin/overview", "bong-tour")} variant="secondary" size="sm">
+              ← Overview
+            </Button>
+            <Button as="a" href="/bong-tour#airdrop" target="_blank" variant="primary" size="sm">
+              Airdrop Airlock ↗
+            </Button>
+          </div>
+        }
+      />
+
+      <section className="cg-admin__section" aria-label="Card Illustrations">
+        <span className="cg-admin-shell__eyebrow">Grimoire Art</span>
+        <h3 style={{ margin: "0.2rem 0" }}>7 Holographic Trading Cards (3D Tilt &amp; Foil Shaders)</h3>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem", marginTop: "1rem" }}>
+          {BONG_TOUR_CARDS.map((card) => (
+            <div
+              key={card.id}
+              style={{
+                background: "rgba(15, 23, 42, 0.7)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: "8px",
+                overflow: "hidden"
+              }}
+            >
+              <div style={{ position: "relative", height: "180px", background: "#0a0e17" }}>
+                <img
+                  src={card.artSrc}
+                  alt={card.name}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "8px",
+                    right: "8px",
+                    padding: "2px 8px",
+                    borderRadius: "4px",
+                    fontSize: "0.65rem",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    background: "rgba(0, 0, 0, 0.75)",
+                    color: card.rarity === "mythic" ? "#f59e0b" : card.rarity === "rare" ? "#3b82f6" : "#10b981",
+                    backdropFilter: "blur(4px)"
+                  }}
+                >
+                  {card.rarity}
+                </span>
+              </div>
+              <div style={{ padding: "0.85rem" }}>
+                <strong style={{ fontSize: "0.92rem", color: "#f8fafc" }}>{card.name}</strong>
+                <p style={{ fontSize: "0.74rem", color: "#94a3b8", margin: "0.2rem 0 0.5rem 0" }}>{card.subtitle}</p>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", color: "#64748b" }}>
+                  <span>{card.lotrEquivalent}</span>
+                  <span style={{ color: "#38bdf8", fontWeight: 600 }}>{card.appreeshCost} $APPREESH</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="cg-admin__section" style={{ marginTop: "1.5rem" }} aria-label="Solana Tokenomics">
+        <span className="cg-admin-shell__eyebrow">Smart Contract Tokenomics</span>
+        <h3 style={{ margin: "0.2rem 0" }}>Solana SPL Genesis Airdrop Parameters</h3>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "0.75rem",
+            marginTop: "0.8rem"
+          }}
+        >
+          {Object.entries(AIRDROP_TIERS).map(([key, tier]) => (
+            <div
+              key={key}
+              style={{
+                padding: "1rem",
+                background: "rgba(15, 23, 42, 0.6)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: "8px"
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontSize: "0.7rem", color: "#38bdf8", fontWeight: 600 }}>{tier.multiplier}x MULTIPLIER</span>
+                <span style={{ fontSize: "0.72rem", color: "#94a3b8" }}>{tier.minCards}+ Cards</span>
+              </div>
+              <strong style={{ display: "block", fontSize: "0.9rem", color: "#f8fafc", margin: "0.3rem 0" }}>
+                {tier.name}
+              </strong>
+              <div style={{ fontSize: "0.78rem", color: "#10b981", fontWeight: 600 }}>
+                {tier.baseTickets} $APPREESH Base
+              </div>
+              <ul style={{ margin: "0.5rem 0 0 0", paddingLeft: "1rem", fontSize: "0.7rem", color: "#94a3b8" }}>
+                {tier.perks.slice(0, 2).map((perk, i) => (
+                  <li key={i}>{perk}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export function AdminAssetsRoute() {
+  const { currentProjectId } = useAdminProject();
+  if (currentProjectId === "bong-tour") {
+    return <BongTourAssetsRoute />;
+  }
+
   const { authUser, contentSource, isAuthorized, panelError, audioAnalysis, audioLoading, audioError, handleAudioRefresh } = useAdminWorkspace();
   const [selectedFileName, setSelectedFileName] = useState<string | null>(audioAnalysis[0]?.fileName ?? null);
 
