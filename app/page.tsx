@@ -1,3 +1,6 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,15 +9,74 @@ import { buildContactHref } from "@/lib/contact-intake-routing";
 import posterImage from "@/app/bong-tour/assets/bong-tour-poster.png";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
+import { MELODYNE_AFFILIATE } from "@/lib/affiliates";
 import AnalogPatchLeadCapture from "@/components/home/AnalogPatchLeadCapture";
 
 const homeConversationHref = buildContactHref({ pathname: "/contact" });
 
 export default function HomePage() {
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isUnwinding, setIsUnwinding] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("cgu_broadsheet_unlocked");
+      if (saved === "true") {
+        setIsUnlocked(true);
+      }
+    }
+  }, []);
+
+  const handleUnlock = useCallback((unlocked: boolean, triggerAnimation = true) => {
+    setIsUnlocked(unlocked);
+    if (unlocked) {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("cgu_broadsheet_unlocked", "true");
+      }
+      if (triggerAnimation) {
+        setIsUnwinding(true);
+        // Smoothly scroll down after initial fold reveals
+        setTimeout(() => {
+          const broadsheet = document.getElementById("broadsheet-editorial");
+          if (broadsheet) {
+            broadsheet.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 550);
+        // Clear unwinding class after cascade finishes
+        setTimeout(() => {
+          setIsUnwinding(false);
+        }, 2600);
+      }
+    }
+  }, []);
+
+  const handleResetLock = useCallback(() => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("cgu_broadsheet_unlocked");
+    }
+    setIsUnlocked(false);
+    setIsUnwinding(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <>
-      <AnalogPatchLeadCapture />
-      <main className="cg-page cg-broadsheet-page" id="broadsheet-editorial">
+      <AnalogPatchLeadCapture
+        isUnlocked={isUnlocked}
+        onUnlock={handleUnlock}
+        onResetLock={handleResetLock}
+      />
+      {isUnlocked ? (
+        <main
+          className={`cg-page cg-broadsheet-page ${isUnwinding ? "cg-broadsheet-page--unwinding" : ""}`}
+          id="broadsheet-editorial"
+        >
+          {/* Press crease indicator during unwind */}
+          <div className="cg-broadsheet-press-crease" aria-hidden="true">
+            <span className="cg-crease-rule" />
+            <span className="cg-crease-label">EDITION 01 UNWOUND · HOT OFF THE PRESS // INDEPENDENT STUDIO BROADSHEET</span>
+            <span className="cg-crease-rule" />
+          </div>
       {/* 1. BROADSHEET MASTHEAD */}
       <header className="cg-masthead" aria-label="Publication masthead">
         <div className="cg-masthead__meta-bar">
@@ -38,7 +100,7 @@ export default function HomePage() {
             We play real guitars, chop breaks, write screenplays about bad ideas, and edit everything painstakingly ourselves.
           </h1>
           <p className="cg-masthead__lede">
-            An independent studio and record label based in Salt Lake City, operating globally. Real guitars plugged into loud tube amps, Ableton sessions, SP-404 chops, and zero automated shortcuts. Currently streaming Walls/Devine Volume 1 in the listening room.
+            An independent studio and record label based in Salt Lake City, operating globally. Real guitars plugged into loud tube amps, Ableton sessions, SP-404 chops, and unapologetic, obsessive Celemony Melodyne vocal tuning. Currently streaming Walls/Devine Volume 1 in the listening room.
           </p>
         </div>
       </header>
@@ -97,7 +159,7 @@ export default function HomePage() {
             </h2>
 
             <p className="cg-cover-feature__prose">
-              Tracked live in the studio with real guitars, overdriven tube amps, Mint-Green P-Bass, and SP-404 chops dialed in Ableton. We edit every take, bar, and transition painstakingly ourselves—no software auto-tuning, no committee smoothing. Volume 1 pairs heavy bass grooves and raw amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions.
+              Tracked live in the studio with real guitars, overdriven tube amps, Mint-Green P-Bass, and SP-404 chops dialed in Ableton. We edit every take, bar, and transition painstakingly ourselves—and to be completely honest, we are avid, unrepentant Celemony Melodyne fans who hand-sculpt vocal pitch and formants note-by-note until they shimmer. Volume 1 pairs heavy bass grooves and raw amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions.
             </p>
 
             <blockquote className="cg-pullquote">
@@ -132,7 +194,50 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. STUDIO PRODUCTIONS */}
+      {/* 3. STUDIO PROFIT CENTER: AVID MELODYNE FANS */}
+      <section className="cg-profit-center-feature" aria-labelledby="profit-center-title">
+        <div className="cg-rule-header">
+          <div className="cg-rule-header__left">
+            <span className="cg-badge cg-badge--gold">PROFIT CENTER</span>
+            <span className="cg-rule-header__tag">CELEMONY MELODYNE AFFILIATE DESK</span>
+          </div>
+          <div className="cg-rule-header__right">
+            <span className="cg-rule-header__date">AVID FANS SINCE 2009 · HAND-SCULPTED VOCAL PITCH</span>
+          </div>
+        </div>
+
+        <div className="cg-profit-center-box">
+          <div className="cg-profit-center-content">
+            <span className="cg-meta-kicker cg-meta-kicker--gold">OFFICIAL STUDIO MONETIZATION DESK</span>
+            <h2 id="profit-center-title" className="cg-profit-center-title">
+              Full disclosure: We don&apos;t hate vocal tuning. We are avid, obsessive Celemony Melodyne fans.
+            </h2>
+            <p className="cg-profit-center-prose">
+              While we track our rhythm section live through screaming tube amplifiers, we refuse to settle for robotic autotune drone presets. Instead, we spend obsessive hours inside Celemony Melodyne manually sculpting vocal formants, vibrato tails, and micro-pitches note-by-note until every lyric sounds like velvet and gravel.
+            </p>
+            <p className="cg-profit-center-prose">
+              If you want to tune your own records with surgical dignity, buy Melodyne 5 Studio through our studio affiliate link below. Every license sold directly funds our vintage 12AX7 tube amp habit and keeps our soldering irons hot.
+            </p>
+            <div className="cg-profit-center-actions">
+              <a
+                href={MELODYNE_AFFILIATE.affiliateUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="cg-btn cg-btn--gold"
+                data-analytics-event="affiliate_click"
+                data-analytics-param-product="melodyne_5"
+              >
+                Buy Melodyne 5 Studio (Studio Affiliate) ↗
+              </a>
+              <span className="cg-profit-center-disclosure">
+                {MELODYNE_AFFILIATE.commissionDisclosure}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. STUDIO PRODUCTIONS */}
       <section className="cg-dispatches" aria-labelledby="dispatches-title">
         <div className="cg-rule-header">
           <div className="cg-rule-header__left">
@@ -210,7 +315,7 @@ export default function HomePage() {
               <span className="cg-discipline-item__num">01</span>
               <div className="cg-discipline-item__body">
                 <h3>Sound &amp; Records</h3>
-                <p>Real guitars through overdriven tube amps, P-Bass grooves, and SP-404 chops running into Ableton. We track the instruments ourselves and edit every transition, bar, and stem painstakingly by hand—pressed to wax and built to last.</p>
+                <p>Real guitars through overdriven tube amps, P-Bass grooves, and SP-404 chops running into Ableton. We track the instruments ourselves, sculpt vocal pitch meticulously in Celemony Melodyne, and edit every transition, bar, and stem painstakingly by hand—pressed to wax and built to last.</p>
               </div>
             </div>
 
@@ -250,6 +355,7 @@ export default function HomePage() {
         </div>
       </section>
     </main>
+    ) : null}
   </>
   );
 }

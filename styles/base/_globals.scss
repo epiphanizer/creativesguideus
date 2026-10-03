@@ -1,3 +1,18 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 .cg-hero .cg-section-header__content p + p {
   margin-top: var(--cg-space-5xs);
 }
@@ -850,6 +865,9 @@ p + ol {
 }
 
 .cg-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: clamp(var(--cg-space-xl), 4vw, var(--cg-space-2xl))
     clamp(var(--cg-space-md), 5vw, var(--cg-space-xl));
   display: grid;
@@ -1369,6 +1387,9 @@ p + ol {
 
 .cg-section {
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: clamp(var(--cg-space-xl), 6vw, var(--cg-space-3xl)) 0;
   scroll-margin-top: calc(var(--cg-header-height) + var(--cg-space-sm));
 }
@@ -1394,6 +1415,8 @@ p + ol {
 .cg-section__inner {
   margin: 0 auto;
   max-width: 1180px;
+  width: 100%;
+  min-width: 0;
   padding: 0 clamp(var(--cg-space-sm), 4vw, var(--cg-space-xl));
   display: grid;
   gap: clamp(var(--cg-space-md), 3vw, var(--cg-space-xl));
@@ -2012,6 +2035,17 @@ p + ol {
   cursor: pointer;
   white-space: nowrap;
   transition: all var(--cg-transition-fade);
+
+  @media (max-width: 640px) {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.35;
+    height: auto;
+    min-height: 2.45rem;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+  }
 }
 
 .cg-button--md {

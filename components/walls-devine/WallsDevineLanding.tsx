@@ -172,6 +172,24 @@ export function WallsDevineLanding() {
     });
   }
 
+  const formattedCollectorHeroTitle = (() => {
+    const rawTitle = collectorHeroNote.title;
+    const match = rawTitle.match(/^(.*?\s+)?(Volume\s+(?:[IVXLCDM]+|\d+))(.*)$/i);
+    if (match) {
+      const prefix = match[1] ?? "";
+      const volumeStr = match[2].replace(/\s+/, "\u00A0");
+      const suffix = match[3] ?? "";
+      return (
+        <>
+          {prefix}
+          <span className="wd-hero__title-nowrap">{volumeStr}</span>
+          {suffix}
+        </>
+      );
+    }
+    return rawTitle;
+  })();
+
   return (
     <>
       <SectionShell id="hero" labelledBy="walls-devine-title" variant="hero" className="wd-hero-shell" innerClassName="wd-hero">
@@ -180,7 +198,7 @@ export function WallsDevineLanding() {
             <SectionHeader
               id="walls-devine-title"
               eyebrow={collectorHeroNote.eyebrow}
-              title={collectorHeroNote.title}
+              title={formattedCollectorHeroTitle}
               headingLevel="h1"
               description="Released September 1, 2026. Enter the listening room, stay close to the story, and carry the record with you."
             />
@@ -238,7 +256,7 @@ export function WallsDevineLanding() {
                   <nav className="wd-hero__collector-secondary-row" aria-label="Release links">
                     <a
                       href={wallsDevineSignalListHref}
-                      className="wd-hero__text-link"
+                      className="wd-hero__collector-secondary-btn"
                       data-analytics-event="walls_devine_cta_click"
                       data-analytics-param-source="walls_devine"
                       data-analytics-param-cta="hero_signal_list"
@@ -247,10 +265,10 @@ export function WallsDevineLanding() {
                     >
                       Join the email list
                     </a>
-                    <span aria-hidden="true">/</span>
+                    <span className="wd-hero__collector-secondary-divider" aria-hidden="true" />
                     <a
                       href={wallsDevineMerchShopHref}
-                      className="wd-hero__text-link"
+                      className="wd-hero__collector-secondary-btn"
                       target="_blank"
                       rel="noreferrer"
                       data-analytics-event="walls_devine_cta_click"

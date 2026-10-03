@@ -6,7 +6,7 @@ type HeadingLevel = "h1" | "h2" | "h3" | "h4";
 
 type SectionHeaderProps = {
   eyebrow?: string;
-  title: string;
+  title: ReactNode;
   subtitle?: string;
   description?: string;
   headingLevel?: HeadingLevel;

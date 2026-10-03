@@ -22,7 +22,7 @@ const defaultWallsDevineLink = {
   id: "walls-devine",
   eyebrow: "Debut Album",
   title: "Walls/Devine Volume 1",
-  description: "Four songs tracked live in the studio. Raw electric guitars, fuzz bass, spoken Midwestern verse, and zero auto-tune. Loud enough to wake the landlord.",
+  description: "Four songs tracked live in the studio. Raw electric guitars, fuzz bass, spoken Midwestern verse, and surgical Celemony Melodyne vocal care. Loud enough to wake the landlord.",
   href: "/walls-devine",
   ctaLabel: "Enter Listening Room",
   isFeatured: true,
@@ -47,6 +47,17 @@ const defaultWallsDevineMerchLink = {
   description: "Heavyweight hoodies, hand-pulled woodcut prints, and physical artifacts made to outlive your phone (and probably our studio van).",
   href: wallsDevineMerchShopHref,
   ctaLabel: "Shop the collection",
+  isFeatured: false,
+  isActive: true
+} satisfies LinkHubLink;
+
+const defaultMelodyneAffiliateLink = {
+  id: "melodyne-affiliate",
+  eyebrow: "Profit Center // Affiliate",
+  title: "Celemony Melodyne 5 Studio",
+  description: "Avid, unrepentant Melodyne fans since 2009. We sculpt every vocal formant note-by-note. Buy through our affiliate link to fund our vintage tube amp habit.",
+  href: "https://www.pluginboutique.com/product/2-Effects/54-Vocal/7086-Melodyne-5-Studio?a_aid=cgu_studio&a_bid=melodyne_profit_center",
+  ctaLabel: "Buy Melodyne (Studio Affiliate)",
   isFeatured: false,
   isActive: true
 } satisfies LinkHubLink;
@@ -88,6 +99,7 @@ const canonicalLinkOrder = [
   "walls-devine",
   "walls-devine-mailing-list",
   "walls-devine-merch-shop",
+  "melodyne-affiliate",
   "bong-tour",
   "cache",
   "contact"
@@ -102,6 +114,7 @@ export const defaultLinkHubContent: LinkHubContent = {
     defaultWallsDevineLink,
     defaultWallsDevineSignalListLink,
     defaultWallsDevineMerchLink,
+    defaultMelodyneAffiliateLink,
     defaultBongTourLink,
     defaultCacheLink,
     defaultContactLink
