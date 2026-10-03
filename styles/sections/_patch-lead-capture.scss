@@ -98,59 +98,30 @@
   text-transform: uppercase;
 }
 
-.cg-agent-badge {
-  font-family: var(--cg-font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  padding: 0.2rem 0.45rem;
-  background: var(--cg-color-ink-950);
-  color: #fff;
-  border-radius: 2px;
-}
-
-.cg-affiliate-badge {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--cg-font-mono);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  padding: 0.22rem 0.55rem;
-  background: #d97706;
-  color: #ffffff;
-  border: 1px solid #b45309;
-  border-radius: 2px;
-  text-decoration: none;
-  transition: all var(--cg-transition-fade);
-  box-shadow: 0 1px 4px rgba(217, 119, 6, 0.35);
-
-  &:hover {
-    background: #b45309;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(180, 83, 9, 0.5);
-  }
-}
-
 // -----------------------------------------------------------------------------
 // Calligraphic Animated Ink Title (creativesguide.us)
 // -----------------------------------------------------------------------------
 
 .cg-ink-title-wrap {
   text-align: center;
-  margin-bottom: 2.2rem;
+  margin-bottom: clamp(1.4rem, 3vw, 2.2rem);
   user-select: none;
+  max-width: 100%;
+  overflow: visible;
 }
 
 .cg-ink-title {
   margin: 0;
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  max-width: 100%;
   justify-content: center;
   align-items: baseline;
   font-family: var(--cg-font-serif);
   font-style: italic;
   font-weight: 700;
-  font-size: clamp(2.8rem, 6.2vw, 5.2rem);
+  font-size: clamp(1.75rem, 6.4vw, 5.2rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
   color: #0b0a09;
@@ -631,11 +602,11 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.5rem;
-  align-items: start;
+  align-items: stretch;
 
   @media (max-width: 600px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
 }
 
@@ -644,14 +615,31 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  justify-content: space-between;
   gap: 0.35rem;
   background: #151413;
   border: 1.5px solid #48423a;
-  border-radius: 3px;
-  padding: 0.65rem 0.4rem;
+  border-radius: 4px;
+  padding: 0.75rem 0.45rem;
   position: relative;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 6px rgba(0, 0, 0, 0.4);
-  transition: border-color var(--cg-transition-fade), box-shadow var(--cg-transition-fade);
+  transition: border-color var(--cg-transition-fade), box-shadow var(--cg-transition-fade), transform 140ms ease;
+
+  &--dest {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      border-color: #d4a359;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(212, 163, 89, 0.3);
+    }
+
+    &:focus-visible {
+      outline: 2px solid #f59e0b;
+      outline-offset: 2px;
+    }
+  }
 
   &--active {
     border-color: #f59e0b;
@@ -661,11 +649,6 @@
   &--live {
     border-color: #10b981;
     box-shadow: 0 0 14px rgba(16, 185, 129, 0.5);
-  }
-
-  &--melodyne {
-    border-color: #d97706;
-    box-shadow: 0 0 16px rgba(217, 119, 6, 0.55);
   }
 }
 
@@ -691,12 +674,13 @@
 
 .cg-jack-title {
   font-family: var(--cg-font-mono);
-  font-size: 0.64rem;
+  font-size: clamp(0.56rem, 1.8vw, 0.64rem);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: #ffffff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-  white-space: nowrap;
+  white-space: normal;
+  line-height: 1.25;
 }
 
 .cg-jack-sub {
@@ -747,30 +731,6 @@
   border-radius: 50%;
   background: #000;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.95);
-}
-
-// Accessible Agent Trigger Button
-.cg-agent-patch-btn {
-  margin-top: 0.25rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid #5a544b;
-  color: #f0ebe1;
-  font-family: var(--cg-font-mono);
-  font-size: 0.54rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  padding: 0.2rem 0.45rem;
-  border-radius: 2px;
-  cursor: pointer;
-  opacity: 1;
-  transition: all var(--cg-transition-fade);
-
-  &:hover {
-    background: #d97706;
-    border-color: #f59e0b;
-    color: #ffffff;
-    box-shadow: 0 2px 6px rgba(217, 119, 6, 0.4);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1030,108 +990,5 @@
     border-color: var(--cg-color-ink-950);
     background: rgba(0, 0, 0, 0.04);
   }
-}
-
-// -----------------------------------------------------------------------------
-// Interactive Console Affiliate Profit Center Card
-// -----------------------------------------------------------------------------
-
-.cg-console-affiliate-box {
-  width: 100%;
-  box-sizing: border-box;
-  background: #171513;
-  border: 1.5px solid #d97706;
-  border-radius: 4px;
-  padding: 1.1rem 1.4rem;
-  margin-top: 0.85rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  box-shadow: 0 4px 18px rgba(217, 119, 6, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  animation: cgAffiliateSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes cgAffiliateSlide {
-  0% {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.cg-console-affiliate-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.cg-affiliate-pill {
-  font-family: var(--cg-font-mono);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  padding: 0.15rem 0.5rem;
-  background: #d97706;
-  color: #0d0c0b;
-  border-radius: 2px;
-}
-
-.cg-affiliate-badge-sub {
-  font-family: var(--cg-font-mono);
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: #fbbf24;
-}
-
-.cg-console-affiliate-desc {
-  margin: 0;
-  font-family: var(--cg-font-sans);
-  font-size: 0.82rem;
-  line-height: 1.48;
-  color: #e7e5e4;
-}
-
-.cg-console-affiliate-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  padding-top: 0.25rem;
-}
-
-.cg-btn-melodyne-buy {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  font-family: var(--cg-font-mono);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 0.5rem 1rem;
-  background: #d97706;
-  color: #ffffff;
-  border: 1px solid #f59e0b;
-  border-radius: 3px;
-  text-decoration: none;
-  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.4);
-  transition: all var(--cg-transition-fade);
-
-  &:hover {
-    background: #ea580c;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.5);
-  }
-}
-
-.cg-console-affiliate-fineprint {
-  font-family: var(--cg-font-mono);
-  font-size: 0.62rem;
-  color: #a8a29e;
-  line-height: 1.35;
 }
 
