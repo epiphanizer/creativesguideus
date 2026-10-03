@@ -105,9 +105,9 @@ const canonicalLinkOrder = [
 ] as const;
 
 export const defaultLinkHubContent: LinkHubContent = {
-  eyebrow: "Studio Directory",
+  eyebrow: "Creative Epicenter",
   title: "Creatives Guide Us Directory",
-  description: "Original records built on real guitars and SP-404 chops in Ableton, original feature screenplays, and physical editions edited painstakingly ourselves from our studio in Salt Lake City, operating globally. Click around, listen to some tunes, or drop us a line.",
+  description: "The creative epicenter for independent sound, screen, and software craft—built on real guitars and SP-404 chops in Ableton, original feature screenplays, and physical editions edited painstakingly ourselves in Salt Lake City, operating globally. It's really all of what I do in life here.",
   updatedAt: defaultUpdatedAt,
   links: [
     defaultWallsDevineLink,

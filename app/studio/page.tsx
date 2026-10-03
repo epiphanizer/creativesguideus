@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { JohnWallsStudioView } from "@/components/john-walls/JohnWallsStudioView";
 
 export const metadata: Metadata = {
-  title: "johnwalls.studio | Direct Platform & Generative Sound Haven",
-  description: "Direct-to-consumer platform, resource site, and generative music haven by John Walls."
+  title: "johnwalls.studio | The Creative Epicenter · Platform & Generative Sound Lab",
+  description: "The creative epicenter for direct platform architecture, generative audio engines, and studio software craft."
 };
 
 export default function StudioPage() {

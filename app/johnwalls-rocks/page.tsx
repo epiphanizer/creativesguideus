@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { JohnWallsRocksView } from "@/components/john-walls/JohnWallsRocksView";
 
 export const metadata: Metadata = {
-  title: "johnwalls.rocks | All The Music · Official Discography & Master Tapes",
+  title: "johnwalls.rocks | The Creative Epicenter · All The Music",
   description:
-    "Official music archive and listening room for John Walls. Analog recordings, tape machine masters, pressed editions, and soundboard tapes.",
+    "The creative epicenter for guitar cuts, multitrack sessions, original productions, and unreleased studio vaults by John Walls. It's really all of what I do in life here.",
   openGraph: {
-    title: "johnwalls.rocks | John Walls Music Vault",
-    description: "Analog master recordings, vinyl editions, and soundboard cuts direct from the sound lab.",
+    title: "johnwalls.rocks | The Creative Epicenter",
+    description: "The creative epicenter for guitar cuts, multitrack sessions, and unreleased studio vaults.",
     url: "https://johnwalls.rocks",
     siteName: "johnwalls.rocks"
   }

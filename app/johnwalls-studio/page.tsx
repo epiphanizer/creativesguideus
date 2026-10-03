@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { JohnWallsStudioView } from "@/components/john-walls/JohnWallsStudioView";
 
 export const metadata: Metadata = {
-  title: "johnwalls.studio | Direct-to-Consumer Platform & Generative Sound Haven",
+  title: "johnwalls.studio | The Creative Epicenter · Platform & Generative Sound Lab",
   description:
-    "Direct-to-consumer platform, resource site, generative music haven, and artisan tape sample library by John Walls.",
+    "The creative epicenter for direct-to-listener sound architecture, generative engines, and studio software craft by John Walls.",
   openGraph: {
-    title: "johnwalls.studio | Direct Platform & Sound Haven",
-    description: "Generative music engines, 24-bit reel-to-reel analog samples, and producer workflows.",
+    title: "johnwalls.studio | The Creative Epicenter",
+    description: "Direct platform architecture, generative music engines, and studio software craft.",
     url: "https://johnwalls.studio",
     siteName: "johnwalls.studio"
   }

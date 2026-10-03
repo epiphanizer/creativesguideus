@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { JohnWallsRocksView } from "@/components/john-walls/JohnWallsRocksView";
 
 export const metadata: Metadata = {
-  title: "johnwalls.rocks | All The Music · Official Discography",
-  description: "Official music archive and listening room for John Walls."
+  title: "johnwalls.rocks | The Creative Epicenter · All The Music",
+  description: "The creative epicenter for guitar cuts, multitrack sessions, and unreleased studio vaults."
 };
 
 export default function RocksPage() {

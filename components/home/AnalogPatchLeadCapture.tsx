@@ -297,14 +297,14 @@ export default function AnalogPatchLeadCapture({
         return;
       }
 
-      setSubmissionFeedback("Locking in analog dispatch...");
+      setSubmissionFeedback("Locking in creative epicenter dispatch...");
 
       try {
         await createEcosystemLead({
           email: trimmed,
           fullName: "Studio Caller",
-          source: "analog-patch-gate",
-          interest: "Signal List · Loud Tube Amps & 404 Chops"
+          source: "creative-epicenter-gate",
+          interest: "Signal List · Real Guitars & 404 Chops"
         });
       } catch (err) {
         console.warn("Ecosystem lead intake fallback to local memory:", err);
@@ -511,7 +511,7 @@ export default function AnalogPatchLeadCapture({
             "@context": "https://schema.org",
             "@type": "WebApplication",
             name: "Creatives Guide Us Signal Gate",
-            description: "Interactive analog patch bay for Creatives Guide Us studio dispatches."
+            description: "Interactive patch bay for the Creatives Guide Us creative epicenter."
           })
         }}
       />
@@ -519,7 +519,7 @@ export default function AnalogPatchLeadCapture({
       <div className="cg-patch-lead-gate__stage">
         {/* Top Minimal Studio Metadata */}
         <div className="cg-patch-lead-gate__header-bar">
-          <span className="cg-patch-lead-gate__tag">SALT LAKE CITY, UT · INDEPENDENT STUDIO &amp; RECORD LABEL</span>
+          <span className="cg-patch-lead-gate__tag">SALT LAKE CITY, UT · THE CREATIVE EPICENTER</span>
           <div className="cg-patch-lead-gate__header-controls">
             <button
               type="button"
@@ -560,7 +560,7 @@ export default function AnalogPatchLeadCapture({
           </p>
         </div>
 
-        {/* 2. ANALOG MIXING BOARD / CONSOLE */}
+        {/* 2. CREATIVE EPICENTER MIXING CONSOLE */}
         <div
           ref={boardRef}
           className={`cg-patch-console ${circuitState === "connected" ? "cg-patch-console--live" : ""}`}
@@ -575,7 +575,7 @@ export default function AnalogPatchLeadCapture({
           <div className="cg-console-plate">
             <div className="cg-console-plate__brand">
               <span className="cg-console-brand__title">CGU CONSOLIDATED AUDIO LABS</span>
-              <span className="cg-console-brand__spec">MODEL CGU-26 · ANALOG SIGNAL DISPATCH GATE</span>
+              <span className="cg-console-brand__spec">MODEL CGU-26 · CREATIVE EPICENTER DISPATCH GATE</span>
             </div>
             <div className="cg-console-plate__status">
               <span className={`cg-status-led cg-status-led--${circuitState}`} />
@@ -654,7 +654,7 @@ export default function AnalogPatchLeadCapture({
                 </div>
 
                 {/* Vintage Simpson-style VU Meter */}
-                <div className="cg-vu-meter-housing" title="Analog VU Meter">
+                <div className="cg-vu-meter-housing" title="Studio VU Meter">
                   <div className="cg-vu-meter-face">
                     <svg viewBox="0 0 120 70" className="cg-vu-meter-svg">
                       {/* Meter scale arc */}
@@ -697,7 +697,7 @@ export default function AnalogPatchLeadCapture({
                       <circle cx="60" cy="64" r="4.5" fill="#222" />
                     </svg>
                   </div>
-                  <span className="cg-meter-plate-tag">ANALOG BUS LEVEL</span>
+                  <span className="cg-meter-plate-tag">STUDIO BUS LEVEL</span>
                 </div>
               </div>
             </div>
@@ -907,7 +907,7 @@ export default function AnalogPatchLeadCapture({
                 <span className="cg-locked-text">STUDIO BROADSHEET // AWAITING CIRCUIT ENGAGE</span>
               </div>
               <p className="cg-patch-lead-locked-hint">
-                Route the master cable into the true analog switch above to close the circuit and open the broadsheet.
+                Route the master cable into the right switch above to close the circuit and enter the creative epicenter.
               </p>
             </div>
           ) : (
@@ -932,7 +932,7 @@ export default function AnalogPatchLeadCapture({
                   type="button"
                   onClick={onResetLock}
                   className="cg-patch-relock-btn"
-                  title="Reset circuit to test analog patch animation"
+                  title="Reset circuit to test patch animation"
                 >
                   Reset Circuit
                 </button>

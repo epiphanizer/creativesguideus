@@ -79,8 +79,8 @@ export default function HomePage() {
       <header className="cg-masthead" aria-label="Publication masthead">
         <div className="cg-masthead__meta-bar">
           <div className="cg-masthead__meta-col">
-            <span className="cg-meta-kicker">STUDIO &amp; RECORD LABEL</span>
-            <span className="cg-meta-detail">Independent Practice · Est. 2026</span>
+            <span className="cg-meta-kicker">CREATIVE EPICENTER</span>
+            <span className="cg-meta-detail">Independent Studio &amp; Label</span>
           </div>
           <div className="cg-masthead__meta-col cg-masthead__meta-col--center">
             <span className="cg-meta-kicker">EDITION NO. 01</span>
@@ -88,7 +88,7 @@ export default function HomePage() {
           </div>
           <div className="cg-masthead__meta-col cg-masthead__meta-col--right">
             <span className="cg-meta-kicker">DISCIPLINES</span>
-            <span className="cg-meta-detail">Sound · Screen · Print</span>
+            <span className="cg-meta-detail">Sound · Screen · Software</span>
           </div>
         </div>
 
@@ -98,7 +98,7 @@ export default function HomePage() {
             We play real guitars, chop breaks, write screenplays about bad ideas, and produce every record in-house.
           </h1>
           <p className="cg-masthead__lede">
-            An independent studio and record label based in Salt Lake City, operating globally. Vintage tube amplification, SP-404 sampling, and meticulous analog sequencing. Currently streaming Walls/Devine Volume 1 in the listening room.
+            The creative epicenter for independent sound, screen, and software craft—based in Salt Lake City, operating globally. Tube amplification, SP-404 sampling, Ableton sessions, and pure creative independence. It&apos;s really all of what I do in life here. Currently streaming Walls/Devine Volume 1 in the listening room.
           </p>
         </div>
       </header>

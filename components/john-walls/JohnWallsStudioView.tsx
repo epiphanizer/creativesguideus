@@ -27,14 +27,14 @@ export function JohnWallsStudioView() {
         <main className="jw-domain-hero jw-domain-hero--centered">
           <CalligraphicSignatureTitle
             domain="johnwalls.studio"
-            eyebrow="DIRECT PLATFORM & GENERATIVE SOUND LAB"
+            eyebrow="THE CREATIVE EPICENTER · STUDIO PLATFORM & SOUND LAB"
             badgeText="PLATFORM · IN DEVELOPMENT"
-            kicker="Direct-to-consumer sound platform, generative audio tools, and artisan sample lab. Details to be announced."
+            kicker="The creative epicenter for direct-to-listener sound architecture, generative engines, and studio software craft. Details to be announced."
           />
 
           <div className="jw-minimal-dispatch">
             <a
-              href="mailto:hello@creativesguide.us?subject=johnwalls.studio%20Platform%20Inquiry"
+              href="mailto:hello@creativesguide.us?subject=johnwalls.studio%20Creative%20Epicenter%20Inquiry"
               className="cg-btn cg-btn--primary"
             >
               Contact Studio Platform →

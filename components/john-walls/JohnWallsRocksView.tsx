@@ -27,17 +27,17 @@ export function JohnWallsRocksView() {
         <main className="jw-domain-hero jw-domain-hero--centered">
           <CalligraphicSignatureTitle
             domain="johnwalls.rocks"
-            eyebrow="ALL THE MUSIC · MASTER TAPES"
+            eyebrow="THE CREATIVE EPICENTER · ALL THE MUSIC"
             badgeText="CATALOG · FORTHCOMING"
-            kicker="Analog master tapes, guitar cuts, live multitracks, and unreleased studio vaults. Pressing and release schedule forthcoming."
+            kicker="The creative epicenter for guitar cuts, multitrack sessions, original productions, and unreleased studio vaults. It's really all of what I do in life here."
           />
 
           <div className="jw-minimal-dispatch">
             <a
-              href="mailto:hello@creativesguide.us?subject=johnwalls.rocks%20Music%20Inquiry"
+              href="mailto:hello@creativesguide.us?subject=johnwalls.rocks%20Creative%20Epicenter%20Inquiry"
               className="cg-btn cg-btn--primary"
             >
-              Contact Music Archive →
+              Contact Creative Epicenter →
             </a>
           </div>
         </main>

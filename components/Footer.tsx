@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className="cg-footer">
       <div className="cg-footer__inner">
-        <p className="cg-footer__manifesto">Independent creative studio &amp; record label based in Salt Lake City, operating globally. Sound production, screenwriting, and limited physical editions.</p>
+        <p className="cg-footer__manifesto">The creative epicenter for independent sound, screen, and software craft based in Salt Lake City, operating globally. Sound production, screenwriting, and digital/physical editions.</p>
         <div className="cg-footer__links" aria-label="Footer links">
           <a className="cg-footer__link" href="/contact">
             Studio Inquiries
