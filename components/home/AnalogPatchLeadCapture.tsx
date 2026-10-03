@@ -155,11 +155,15 @@ export default function AnalogPatchLeadCapture() {
     if (!board) return;
     const bRect = board.getBoundingClientRect();
 
+    let initialSx = 0;
+    let initialSy = 0;
     if (sourceRef.current) {
       const sRect = sourceRef.current.getBoundingClientRect();
       const sx = sRect.left - bRect.left + sRect.width / 2;
       const sy = sRect.top - bRect.top + sRect.height / 2;
       setSourcePos({ x: sx, y: sy });
+      initialSx = sx;
+      initialSy = sy;
     }
 
     const newSockets: SocketCoordinate[] = [];
@@ -199,14 +203,16 @@ export default function AnalogPatchLeadCapture() {
 
     setSockets(newSockets);
 
-    // If currently patched, align plug
+    // If currently patched, align plug; otherwise hang right under source jack
     if (activeSocket) {
       const matched = newSockets.find((s) => s.id === activeSocket);
       if (matched) {
         setPlugPos({ x: matched.x, y: matched.y });
       }
+    } else if (!isDragging && initialSx > 0) {
+      setPlugPos({ x: initialSx, y: initialSy + 48 });
     }
-  }, [activeSocket]);
+  }, [activeSocket, isDragging]);
 
   useEffect(() => {
     updateCoordinates();
@@ -397,7 +403,7 @@ export default function AnalogPatchLeadCapture() {
       // Spring back to resting dangling position near source
       setCircuitState("idle");
       setActiveSocket(null);
-      setPlugPos({ x: sourcePos.x + 30, y: sourcePos.y + 70 });
+      setPlugPos({ x: sourcePos.x, y: sourcePos.y + 48 });
       setSubmissionFeedback("DRAG OUTPUT CABLE INTO THE MATCHING STUDIO BUS SWITCH");
     }
   };

@@ -910,6 +910,13 @@ p + ol {
   background: rgba(250, 248, 244, 0.95);
   border-bottom: 1px solid var(--cg-color-ink-950);
   box-shadow: none;
+  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 260ms ease;
+
+  &--gate-hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%);
+  }
 }
 
 @supports not (backdrop-filter: blur(0)) {

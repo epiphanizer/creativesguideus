@@ -24,6 +24,28 @@ export function HeaderNav() {
   const { activeId, manuallySetActiveId } = useActiveSection(anchorIds);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPlayerDismissed, setIsPlayerDismissed] = useState(false);
+  const [isPastGate, setIsPastGate] = useState(pathname !== "/");
+
+  useEffect(() => {
+    if (pathname !== "/") {
+      setIsPastGate(true);
+      return;
+    }
+
+    const checkScroll = () => {
+      const broadsheet = document.getElementById("broadsheet-editorial");
+      if (broadsheet) {
+        const rect = broadsheet.getBoundingClientRect();
+        setIsPastGate(rect.top <= 120);
+      } else {
+        setIsPastGate(window.scrollY > 400);
+      }
+    };
+
+    checkScroll();
+    window.addEventListener("scroll", checkScroll, { passive: true });
+    return () => window.removeEventListener("scroll", checkScroll);
+  }, [pathname]);
 
   const closeMenu = useCallback(() => {
     setIsMenuOpen(false);
@@ -129,7 +151,10 @@ export function HeaderNav() {
   }, [isWallsDevineRoute]);
 
   return (
-    <header className="cg-header" role="banner">
+    <header
+      className={["cg-header", pathname === "/" && !isPastGate ? "cg-header--gate-hidden" : ""].filter(Boolean).join(" ")}
+      role="banner"
+    >
       <a className="cg-header__skip" href="#hero">
         Skip to content
       </a>
