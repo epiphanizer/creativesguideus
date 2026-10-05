@@ -1,12 +1,6 @@
-import type { Metadata } from "next";
-
-import ContactLandingPage from "@/components/contact/ContactLandingPage";
-
-export const metadata: Metadata = {
-  title: "Contact | Creatives Guide Us",
-  description: "Direct contact and the studio frame behind Walls/Devine, Appreesh, and broader CGU systems work."
-};
+import { redirect } from "next/navigation";
 
 export default function ContactPage() {
-  return <ContactLandingPage />;
+  // Public contact page retired; route all traffic to the active Walls/Devine listening room
+  redirect("/walls-devine");
 }

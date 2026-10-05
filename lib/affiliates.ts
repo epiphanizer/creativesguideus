@@ -17,6 +17,7 @@ export type AffiliateProduct = {
   secondaryUrl?: string;
   discountNote?: string;
   commissionDisclosure: string;
+  isActive: boolean;
 };
 
 export const MELODYNE_AFFILIATE: AffiliateProduct = {
@@ -24,15 +25,16 @@ export const MELODYNE_AFFILIATE: AffiliateProduct = {
   name: "Celemony Melodyne 5 Studio",
   category: "Vocal Pitch & Formant Editing",
   vendor: "Plugin Boutique / Celemony",
-  headline: "Official Studio Profit Center // Avid Melodyne Fans",
-  tagline: "Unapologetic, obsessive vocal pitch sculptors since 2009.",
+  headline: "Studio Tool // Vocal Pitch Sculpting [DEACTIVATED]",
+  tagline: "Vocal pitch and formant editing software.",
   description:
-    "We don't use robotic drone presets—we are diehard, avid Celemony Melodyne power users. Every vocal take, formant drift, and vibrato curve is lovingly nudged by hand. If you buy Melodyne through our affiliate link, we earn a modest commission that directly subsidizes our vintage 12AX7 tube amp habit.",
+    "Celemony Melodyne studio vocal pitch and formant editing software. Affiliate and profit-center integration is permanently deactivated.",
   affiliateUrl:
-    "https://www.pluginboutique.com/product/2-Effects/54-Vocal/7086-Melodyne-5-Studio?a_aid=cgu_studio&a_bid=melodyne_profit_center",
+    "https://www.pluginboutique.com/product/2-Effects/54-Vocal/7086-Melodyne-5-Studio",
   secondaryUrl:
-    "https://www.sweetwater.com/store/detail/Melodyne5Stu--celemony-melodyne-5-studio?utm_source=creativesguideus&utm_medium=affiliate",
-  discountNote: "Supports independent studio recording · 100% human-tuned",
+    "https://www.sweetwater.com/store/detail/Melodyne5Stu--celemony-melodyne-5-studio",
+  discountNote: "Studio reference only",
   commissionDisclosure:
-    "Affiliate Disclosure: Creatives Guide Us earns an affiliate commission on qualifying software purchases. It keeps our patch bay soldered and the tube amps glowing."
+    "Notice: Creatives Guide Us does not operate an active affiliate profit center or commercial kickback program.",
+  isActive: false
 };

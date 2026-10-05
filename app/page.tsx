@@ -4,13 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import ContactModalLink from "@/components/contact/ContactModalLink";
-import { buildContactHref } from "@/lib/contact-intake-routing";
 import volOneImage from "@/app/walls-devine/assets/covers/WallsDevineVol1.png";
 import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 import AnalogPatchLeadCapture from "@/components/home/AnalogPatchLeadCapture";
-
-const homeConversationHref = buildContactHref({ pathname: "/contact" });
 
 export default function HomePage() {
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -185,7 +181,7 @@ export default function HomePage() {
                 rel="noreferrer"
                 className="cg-btn cg-btn--secondary"
               >
-                Order Vinyl &amp; Merch ↗
+                Shop Merch &amp; Prints ↗
               </a>
             </div>
           </div>
@@ -212,7 +208,7 @@ export default function HomePage() {
               <span className="cg-discipline-item__num">01</span>
               <div className="cg-discipline-item__body">
                 <h3>Sound &amp; Records</h3>
-                <p>Electric guitars through overdriven tube heads, P-Bass grooves, and SP-404 chops running into Ableton. We track the instruments directly, sculpt the arrangements in the room, and master for vinyl—pressed to wax and built to last.</p>
+                <p>Electric guitars through overdriven tube heads, P-Bass grooves, and SP-404 chops running into Ableton. We track the instruments directly, sculpt the arrangements in the room, and mix with analog warmth—built to last.</p>
               </div>
             </div>
 
@@ -241,9 +237,9 @@ export default function HomePage() {
               The studio takes on a handful of ambitious collaborations each year across original sound production, film packaging, and editorial design. We play the instruments, write the scripts, and direct every cut and cue in-house—with zero corporate committee bloat.
             </p>
             <div className="cg-colophon-unified__actions">
-              <ContactModalLink href={homeConversationHref} buttonVariant="primary">
+              <a href="mailto:hello@creativesguide.us" className="cg-btn cg-btn--primary">
                 Write to the Studio →
-              </ContactModalLink>
+              </a>
               <a href="mailto:hello@creativesguide.us" className="cg-btn cg-btn--secondary">
                 hello@creativesguide.us
               </a>

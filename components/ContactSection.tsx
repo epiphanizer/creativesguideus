@@ -110,7 +110,7 @@ const inquiryTypeCardOptions: ContactChoiceOption[] = [
   {
     value: "mailing-list",
     label: "Mailing list",
-    description: "Receive direct studio notices for vinyl pressings, physical editions, and private playback sessions."
+    description: "Receive direct studio notices for new recordings, physical editions, and private playback sessions."
   },
   {
     value: "screening",
@@ -169,7 +169,7 @@ const mailingPreferenceOptions: ContactChoiceOption[] = [
   {
     value: "drop-alerts",
     label: "Release notices",
-    description: "Vinyl pressings, physical merch releases, and major catalog additions."
+    description: "Physical merch releases, studio drops, and major catalog additions."
   },
   {
     value: "listening-room-updates",
@@ -284,10 +284,10 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
     return {
       id: flowId,
       routingNote:
-        "Walls/Devine studio mailing list: vinyl pressings, physical editions, and private listening sessions.",
+        "Walls/Devine studio mailing list: studio recordings, physical editions, and private listening sessions.",
       summary: [
         "Direct studio dispatches across Walls/Devine Volume 1, original screenplays, and Cache editions.",
-        "Direct email dispatches for vinyl announcements, liner notes, and private listening sessions.",
+        "Direct email dispatches for release announcements, liner notes, and private listening sessions.",
         "Direct studio communication with zero automated marketing loops."
       ],
       trustNote: "Direct studio dispatch. We do not sell or share contact information.",
@@ -307,7 +307,7 @@ function buildContactFlow(prefill: ContactPrefill): ContactFlow {
           id: "contact",
           label: "Contact details",
           title: "Your email address",
-          description: "Where should we send vinyl drops and studio notes? No newsletters or corporate spam, ever.",
+          description: "Where should we send release drops and studio notes? No newsletters or corporate spam, ever.",
           helper: "A note on who you are is welcome, but totally optional."
         },
         {
@@ -1104,7 +1104,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
             </article>
             <article className="cg-contact__affirmation">
               <strong>What happens next</strong>
-              <p>We read every submission directly and will reach out with vinyl drops and unreleased room audio.</p>
+              <p>We read every submission directly and will reach out with new releases and unreleased room audio.</p>
             </article>
           </div>
         );
@@ -1309,7 +1309,7 @@ export function ContactSection({ headingLevel = "h2", initialSearch = "", surfac
           <>
             <fieldset className="cg-contact__fieldset">
               <legend className="cg-contact__legend">Choose the updates that matter</legend>
-              <p className="cg-contact__field-hint">Pick one or all three. If you skip, we&apos;ll just keep you posted on major vinyl releases and live sessions.</p>
+              <p className="cg-contact__field-hint">Pick one or all three. If you skip, we&apos;ll just keep you posted on major music releases and live sessions.</p>
               <GuidedIntakeChoiceGrid
                 options={mailingPreferenceOptions}
                 values={routeDetails.updatePreferences}

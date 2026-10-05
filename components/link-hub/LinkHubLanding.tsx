@@ -65,7 +65,7 @@ export function LinkHubLanding() {
             <span>Updated {formatUpdatedAt(linkHub.updatedAt)}</span>
             <div className="cg-link-hub__meta-links">
               <Link href="/">Home</Link>
-              <Link href="/contact">Contact</Link>
+              <Link href="/walls-devine">Walls/Devine</Link>
             </div>
           </div>
         </div>
@@ -109,9 +109,9 @@ export function LinkHubLanding() {
             <article className="cg-link-hub__empty-state">
               <p className="cg-link-hub__card-eyebrow">Signal routes</p>
               <h2>The current dispatch board is being reset.</h2>
-              <p>Check back shortly or head to the studio contact route for the cleanest next step.</p>
-              <Link href="/contact" className="cg-link-hub__card-cta cg-link-hub__card-cta--inline">
-                Open contact
+              <p>Check back shortly or head to the Walls/Devine listening room for the active studio release.</p>
+              <Link href="/walls-devine" className="cg-link-hub__card-cta cg-link-hub__card-cta--inline">
+                Open Walls/Devine
               </Link>
             </article>
           )}

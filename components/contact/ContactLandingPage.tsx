@@ -14,7 +14,7 @@ const aboutCards = [
   },
   {
     title: "Print & Graphic Direction",
-    body: "Hand-pulled woodcut prints, custom letterforms, heavy vinyl sleeves, and limited book editions designed to survive your next three moves."
+    body: "Hand-pulled woodcut prints, custom letterforms, heavy archival paper sleeves, and limited book editions designed to survive your next three moves."
   }
 ];
 
@@ -39,7 +39,7 @@ export function ContactLandingPage() {
               Let&apos;s make something loud, tactile, or slightly unhinged.
             </h1>
             <p className="cg-contact-landing__lede">
-              Creatives Guide Us collaborates with independent directors, musicians, and publishers who care about physical craft. Whether you need an original score tracked with real instruments, a road comedy script that doesn&apos;t read like an algorithm spat it out, or a hand-printed vinyl sleeve, this is the direct line to our desk.
+              Creatives Guide Us collaborates with independent directors, musicians, and publishers who care about physical craft. Whether you need an original score tracked with real instruments, a road comedy script that doesn&apos;t read like an algorithm spat it out, or a hand-printed record sleeve, this is the direct line to our desk.
             </p>
             <p>
               No account executives, no corporate intermediaries, and no PR fluff. Just two guys drinking black coffee in a room full of real guitars, loud tube amplifiers, and Ableton sessions—editing every bar, page, and proof painstakingly ourselves.

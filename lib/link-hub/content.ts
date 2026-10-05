@@ -6,36 +6,26 @@ import { wallsDevineMerchShopHref } from "@/lib/walls-devine/links";
 const defaultUpdatedAt = "";
 const legacyLinkHubTitle = "Active Releases & Studio Directory";
 const legacyLinkHubDescription = "A direct directory of releases, screenplays, and studio contacts for Creatives Guide Us.";
-const wallsDevineSignalListHref = buildContactHref({
-  pathname: "/contact",
-  overrides: {
-    context: "walls-devine-mailing-list",
-    inquiryType: "mailing-list",
-    project: "Walls/Devine",
-    surface: "campaign-world",
-    sourceRoute: "/links",
-    campaignWindow: albumLaunchCampaignWindow
-  }
-});
+const wallsDevineSignalListHref = "/walls-devine#walls-devine-signal";
 
 const defaultWallsDevineLink = {
   id: "walls-devine",
-  eyebrow: "Debut Album",
+  eyebrow: "Debut Album // Listening Room",
   title: "Walls/Devine Volume 1",
-  description: "Four songs tracked live in the studio. Raw electric guitars, fuzz bass, spoken Midwestern verse, and surgical Celemony Melodyne vocal care. Loud enough to wake the landlord.",
+  description: "Four songs tracked live in the studio. Raw electric guitars, fuzz bass, spoken Midwestern verse, and surgical vocal care. Loud enough to wake the landlord.",
   href: "/walls-devine",
-  ctaLabel: "Enter Listening Room",
+  ctaLabel: "Enter Listening Room ↗",
   isFeatured: true,
   isActive: true
 } satisfies LinkHubLink;
 
 const defaultWallsDevineSignalListLink = {
   id: "walls-devine-mailing-list",
-  eyebrow: "Mailing List",
-  title: "Studio Notices & Pressings",
-  description: "Get notified when vinyl pressings drop or when the studio shares rare room audio and session notes. No spam, no marketing fluff, ever.",
+  eyebrow: "Studio Tapes & Updates",
+  title: "Studio Notices & Dispatches",
+  description: "Direct studio notices when new tracks drop or when the studio shares rare room audio and session notes. No spam, no marketing fluff, ever.",
   href: wallsDevineSignalListHref,
-  ctaLabel: "Join the mailing list",
+  ctaLabel: "Join the Studio Notice List",
   isFeatured: true,
   isActive: true
 } satisfies LinkHubLink;
@@ -53,13 +43,13 @@ const defaultWallsDevineMerchLink = {
 
 const defaultMelodyneAffiliateLink = {
   id: "melodyne-affiliate",
-  eyebrow: "Profit Center // Affiliate",
+  eyebrow: "Studio Tools",
   title: "Celemony Melodyne 5 Studio",
-  description: "Avid, unrepentant Melodyne fans since 2009. We sculpt every vocal formant note-by-note. Buy through our affiliate link to fund our vintage tube amp habit.",
-  href: "https://www.pluginboutique.com/product/2-Effects/54-Vocal/7086-Melodyne-5-Studio?a_aid=cgu_studio&a_bid=melodyne_profit_center",
-  ctaLabel: "Buy Melodyne (Studio Affiliate)",
+  description: "Vocal pitch and formant editing tools.",
+  href: "https://www.pluginboutique.com/product/2-Effects/54-Vocal/7086-Melodyne-5-Studio",
+  ctaLabel: "View software",
   isFeatured: false,
-  isActive: true
+  isActive: false
 } satisfies LinkHubLink;
 
 const defaultBongTourLink = {
@@ -81,41 +71,35 @@ const defaultCacheLink = {
   href: "/cache",
   ctaLabel: "Request dispatch",
   isFeatured: false,
-  isActive: true
+  isActive: false
 } satisfies LinkHubLink;
 
 const defaultContactLink = {
   id: "contact",
   eyebrow: "Direct Line",
   title: "Talk to the Studio",
-  description: "Got a film to score, a record to track, or a weird print project in mind? We actually read and answer these ourselves with fresh coffee in hand.",
-  href: "/contact",
+  description: "Direct line to the studio via email at hello@creativesguide.us.",
+  href: "mailto:hello@creativesguide.us",
   ctaLabel: "Say hello",
   isFeatured: false,
-  isActive: true
+  isActive: false
 } satisfies LinkHubLink;
 
 const canonicalLinkOrder = [
   "walls-devine",
   "walls-devine-mailing-list",
-  "walls-devine-merch-shop",
-  "melodyne-affiliate",
-  "cache",
-  "contact"
+  "walls-devine-merch-shop"
 ] as const;
 
 export const defaultLinkHubContent: LinkHubContent = {
   eyebrow: "Creative Epicenter",
   title: "Creatives Guide Us Directory",
-  description: "The creative epicenter for independent sound, screen, and software craft—built on real guitars and SP-404 chops in Ableton, original feature screenplays, and physical editions edited painstakingly ourselves in Salt Lake City, operating globally. It's really all of what I do in life here.",
+  description: "The creative epicenter for independent sound, screen, and software craft—built on real guitars and SP-404 chops in Ableton, original feature screenplays, and physical editions edited painstakingly ourselves in Salt Lake City, operating globally. Currently featuring Walls/Devine Volume 1.",
   updatedAt: defaultUpdatedAt,
   links: [
     defaultWallsDevineLink,
     defaultWallsDevineSignalListLink,
-    defaultWallsDevineMerchLink,
-    defaultMelodyneAffiliateLink,
-    defaultCacheLink,
-    defaultContactLink
+    defaultWallsDevineMerchLink
   ]
 };
 
@@ -145,16 +129,26 @@ export function normalizeLinkHubLink(link: Partial<LinkHubLink> | null | undefin
 
   const title = typeof link?.title === "string" && link.title.trim() ? link.title.trim() : fallback.title;
   const href = typeof link?.href === "string" && link.href.trim() ? link.href.trim() : fallback.href;
+  const id = normalizeLinkHubId(typeof link?.id === "string" && link.id.trim() ? link.id : `${title}-${index + 1}`, index);
+  const isDeactivatedTarget =
+    id === "melodyne-affiliate" ||
+    id === "bong-tour" ||
+    id === "contact" ||
+    id === "cache" ||
+    href.toLowerCase().includes("bong-tour") ||
+    href.toLowerCase().includes("melodyne") ||
+    href.toLowerCase().includes("/contact") ||
+    href.toLowerCase().includes("/cache");
 
   return {
-    id: normalizeLinkHubId(typeof link?.id === "string" && link.id.trim() ? link.id : `${title}-${index + 1}`, index),
+    id,
     eyebrow: typeof link?.eyebrow === "string" && link.eyebrow.trim() ? link.eyebrow.trim() : fallback.eyebrow,
     title,
     description: typeof link?.description === "string" && link.description.trim() ? link.description.trim() : fallback.description,
     href,
     ctaLabel: typeof link?.ctaLabel === "string" && link.ctaLabel.trim() ? link.ctaLabel.trim() : fallback.ctaLabel,
     isFeatured: typeof link?.isFeatured === "boolean" ? link.isFeatured : fallback.isFeatured,
-    isActive: typeof link?.isActive === "boolean" ? link.isActive : fallback.isActive
+    isActive: isDeactivatedTarget ? false : typeof link?.isActive === "boolean" ? link.isActive : fallback.isActive
   };
 }
 
@@ -175,9 +169,7 @@ function ensureRequiredLinks(links: LinkHubLink[]) {
   const requiredLinks = [
     defaultWallsDevineLink,
     defaultWallsDevineSignalListLink,
-    defaultWallsDevineMerchLink,
-    defaultCacheLink,
-    defaultContactLink
+    defaultWallsDevineMerchLink
   ];
 
   requiredLinks.forEach((requiredLink) => {

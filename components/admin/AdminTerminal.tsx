@@ -130,16 +130,16 @@ AVAILABLE COMMANDS:
     ID:           walls-devine
     Status:       Sep 1 Launch [LIVE]
     Scope:        8-Track commercial sync catalog + mixing board lead capture
-    Affiliate:    Celemony Melodyne vocal tuning integration profit center
+    Affiliate:    [DEACTIVATED] Direct release focus
     URL:          /admin/overview?project=walls-devine
 
 [●] BONG TOUR
     ID:           bong-tour
-    Status:       Active / Feature In Development [LIVE]
+    Status:       [DEACTIVATED] Feature In Development (Gated / Not Live)
     Scope:        108-page road trip comedy / LOTR parody across Route 66
     Sound Lab:    6 cinematic cues mastered & synced
     Grimoire:     7 MTG-style holographic collectible trading cards
-    Airdrop:      1,000 $APPREESH Solana Genesis pool (Max) & interactive airlock
+    Airdrop:      [PAUSED] Solana Genesis pool & interactive airlock
     URL:          /admin/overview?project=bong-tour`;
           break;
 
@@ -202,7 +202,7 @@ AVAILABLE COMMANDS:
 [●] SOUNDTRACK CUES & SOUND LAB
     Status:       6 cinematic cues composed & mastered
     Highlights:   Leaving Hobbiton, 400 Blows at Flagstaff, The One Rig Awakening
-    Affiliate:    Melodyne vocal tuning integration profit center
+    Affiliate:    [DEACTIVATED] Studio release focus
 
 [●] MTG-STYLE TRADING CARD GRIMOIRE
     Cards (7):    Vishal (Mythic), Drew (Rare), Willie (Rare), Montu (Uncommon),
@@ -285,7 +285,7 @@ WALLS/DEVINE VOLUME 1 (8-TRACK SYNC CATALOG):
   2. Mojave Drift (03:42)       6. Glass Cathedral (04:01)
   3. Low Tide Soul (02:58)      7. Radiator Springs (03:22)
   4. Silver Needle (03:15)      8. Pacific Starlight (03:55)
-* Profit Center: Celemony Melodyne vocal tuning affiliate integration active.`;
+* Focus: Studio original master recordings; commercial affiliate programs deactivated.`;
           break;
 
         case "treatment":

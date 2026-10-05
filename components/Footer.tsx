@@ -8,14 +8,14 @@ export function Footer() {
       <div className="cg-footer__inner">
         <p className="cg-footer__manifesto">The creative epicenter for independent sound, screen, and software craft based in Salt Lake City, operating globally. Sound production, screenwriting, and digital/physical editions.</p>
         <div className="cg-footer__links" aria-label="Footer links">
-          <a className="cg-footer__link" href="/contact">
-            Studio Inquiries
+          <a className="cg-footer__link" href="/walls-devine">
+            Walls/Devine
           </a>
           <a className="cg-footer__link" href="/links">
             Links
           </a>
-          <a className="cg-footer__link" href="https://appreesh.org" target="_blank" rel="noopener noreferrer">
-            $APPREESH Protocol
+          <a className="cg-footer__link" href="https://walls-devine.myshopify.com" target="_blank" rel="noopener noreferrer">
+            Merch Shop
           </a>
           <a className="cg-footer__link" href="mailto:hello@creativesguide.us">
             hello@creativesguide.us
