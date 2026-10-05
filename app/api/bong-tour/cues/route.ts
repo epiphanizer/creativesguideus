@@ -24,7 +24,7 @@ const bongTourCues: BongTourCue[] = [
     act: "Act I / Act II",
     durationLabel: "3:42",
     audioSrc: "/walls-devine/releases/volume1/1. Joint Queen.wav",
-    logline: "An entrance cue with authority and swagger. The trio crosses the threshold from street desperation into Hollywood underworld madness.",
+    logline: "Heavy groove and raw electric guitars as the trio crosses the threshold from street desperation into Hollywood underworld madness.",
     albumTitle: "Walls/Devine Volume 1",
     albumHref: "/walls-devine"
   },

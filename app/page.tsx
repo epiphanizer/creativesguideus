@@ -153,14 +153,14 @@ export default function HomePage() {
             </h2>
 
             <p className="cg-cover-feature__prose">
-              Tracked live in the studio with overdriven tube amps, Mint-Green P-Bass, and SP-404 samples layered in Ableton. Volume 1 pairs heavy bass grooves and raw amplifiers with spoken Midwestern verse. Four songs about rust, patience, and questionable decisions.
+              Tracked live in the studio with overdriven amps, the Mint-Green P-Bass, and SP-404 samples layered in Ableton. Volume 1 pairs heavy funk grooves and wailing guitars with spoken Midwestern verse and collage editing.
             </p>
 
             <blockquote className="cg-pullquote">
               <p>
-                &ldquo;Joint Queen needed to feel like an entrance cue with authority and swagger, not just a groove loop.&rdquo;
+                &ldquo;The little guitar scratches at the beginning of the song are the sounds of my life making sense for the first time.&rdquo;
               </p>
-              <cite>— Terry Devine, Producer, Composer &amp; Tube Amp Apologist</cite>
+              <cite>— Terry Devine</cite>
             </blockquote>
 
             <div className="cg-cover-feature__actions">

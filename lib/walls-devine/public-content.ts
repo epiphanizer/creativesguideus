@@ -6,9 +6,9 @@ const legacyWallsDevineMailingListHelper =
   "Ask to receive Walls/Devine drop alerts, listening-room updates, and collector unlock notices. Until the dedicated list is live, this request routes through CGU intake.";
 
 export const defaultWallsDevineCollectorHeroNote: WallsDevineCollectorHeroNote = {
-  eyebrow: "Collector experience",
+  eyebrow: "Listening Room",
   title: "Walls/Devine Volume 1",
-  salutation: "Dear Collector,",
+  salutation: "Dear Listener,",
   body: "From my journal to your headphones: thank you for meeting us inside this record. If these songs find you where you are, step into the rooms, listen all the way through, and stay with us for the story behind each chapter.\n\nWith gratitude,\nTerry Devine",
   primaryCtaLabel: "Open Listening Room",
   secondaryCtaLabel: "Shop Volume 1 Merch",

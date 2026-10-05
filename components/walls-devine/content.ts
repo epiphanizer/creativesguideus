@@ -34,14 +34,14 @@ export const songPostCards: SongPostCard[] = [
     duration: "2:07",
     audioFileName: "1. Joint Queen.wav",
     phase: "Released September 1, 2026",
-    hook: "Mythic command and smoke-crowned swagger.",
-    caption: "Joint Queen opens the room like a coronation with sparks in every corner.",
+    hook: "Funk bass, living room joy, and pure groove.",
+    caption: "The open sonic landscape where the record began.",
     storySummary:
-      "Terry frames Joint Queen as the moment the project stopped sounding like two separate catalogs and finally sounded like Us. Its groove is the joy thesis of Volume 1 and the first real door into the record's identity.",
-    visualThread: "Crown, throne energy, and smoke plumes bending toward center lightning.",
+      "Inspired by the joy Peace Feather brought into John and Terry's lives. John tracked that funky Mint-Green P-Bass groove, and Terry knew right then that music was joy again. 'The little guitar scratches at the beginning of the song are the sounds of my life making sense for the first time.'",
+    visualThread: "Crown motifs, gold warmth, and smoke plumes.",
     journalSlug: "joint-queen",
-    makingNote: "Built from a live bass pass first, then the brass hooks were written as call-and-response to match the character power dynamic.",
-    technicalNote: "Layer stack: fuzz bass + dry DI blend, short spring reverb on brass, parallel drum crush bus for poster-like punch.",
+    makingNote: "Built around John's one-take P-Bass groove, layered with live guitar scratches and brass response hooks.",
+    technicalNote: "Mint-Green P-Bass through tube drive, layered with SP-404 vinyl simulation and brass call-and-response.",
     bongTourCueId: "score-joint-queen",
     bongTourContext: "Featured in Bong Tour's Comedy Store takeover montage."
   },
@@ -51,14 +51,14 @@ export const songPostCards: SongPostCard[] = [
     duration: "3:35",
     audioFileName: "2. Stash Daddy.wav",
     phase: "Released September 1, 2026",
-    hook: "Backroom confidence with raw overdrive.",
-    caption: "Stash Daddy runs on low-end pressure and late-night authority.",
+    hook: "Unrehearsed guitar, late-night pulse, and kitchen-table laughs.",
+    caption: "Low-end pressure, loop jams, and zero rehearsal.",
     storySummary:
-      "Born from a kitchen-table joke and a loose studio loop, Stash Daddy became Terry's first proof that recording could be relaxed, direct, and alive in real time. Its swagger comes from creation without rehearsal or ritualized fear.",
-    visualThread: "Stacks, records, and wired speaker geometry with hard red shadows.",
+      "Born at the kitchen table with a joke logo taped to the mirror. John looped the track, walked out of the room, and left Terry alone with the headphones to play with no rehearsal or filters: 'Stash Daddy is the sound of my heart being set free.'",
+    visualThread: "Stack geometry, wiring, and deep red shadows.",
     journalSlug: "stash-daddy",
-    makingNote: "Started as a one-bar loop from a modular jam and expanded around dialogue pacing from the screenplay sequences.",
-    technicalNote: "Primary pulse from mono synth + sub octave, tabla accents side-chained to kick for movement without mud.",
+    makingNote: "Started from an unrehearsed loop jam, letting the guitar respond naturally to the pulse.",
+    technicalNote: "Mono synth bass and sub octave pulse, layered with live guitar and tabla accents.",
     bongTourCueId: "score-stash-daddy",
     bongTourContext: "Featured in Bong Tour's Sunset backroom plotting scenes."
   },
@@ -68,14 +68,14 @@ export const songPostCards: SongPostCard[] = [
     duration: "3:12",
     audioFileName: "3. Space Cruiser.wav",
     phase: "Released September 1, 2026",
-    hook: "Cosmic drift with ritual propulsion.",
-    caption: "Space Cruiser lifts the grid into orbit before dropping back into grit.",
+    hook: "Cosmic delays, Indian classical vocals, and late-night studio atmosphere.",
+    caption: "Written the morning after a brutal gig, built into a cosmic collage.",
     storySummary:
-      "John wrote the first sketch after a brutal live show, then returned to it when the album trilogy needed a cosmic third door. The finished version became a collage of delays, Indian vocal color, and one last bong-rip blessing.",
-    visualThread: "Celestial beam language tied to the center seal and border corners.",
+      "John wrote the sketch the morning after a brutal live show in September 2025 just to clear the taste out of his mouth. It grew into a collage of delays, Indian sargam vocals by Ishan Thakur, and one historically significant bong rip on the live studio mic.",
+    visualThread: "Deep celestial beams, cosmic orbit seals, and warm amber light.",
     journalSlug: "space-cruiser",
-    makingNote: "Wrote the ambient bed to mirror the river-return sequence, then reintroduced pulse late to keep narrative momentum.",
-    technicalNote: "Processed tanpura texture + vocal pad layers, 5/4 time grid with delayed downbeat to sustain lift.",
+    makingNote: "Collaged together from delayed takes, ambient beds, and Ishan Thakur's sargam vocal parts.",
+    technicalNote: "Processed tanpura textures, delayed downbeats in 5/4 phrasing, and live atmospheric sampling.",
     bongTourCueId: "score-space-cruiser",
     bongTourContext: "Featured in Bong Tour's Ganges finale and myth closure."
   },
@@ -85,14 +85,14 @@ export const songPostCards: SongPostCard[] = [
     duration: "4:20",
     audioFileName: "4. Conviction.wav",
     phase: "Released September 1, 2026",
-    hook: "Hard-edged nerve held against forward pressure.",
-    caption: "Conviction holds the fourth chapter with discipline, pressure, and chosen forward motion.",
+    hook: "A steady line held under pressure.",
+    caption: "Discipline, heavy tone, and forward motion.",
     storySummary:
-      "Conviction turns the fourth chapter into a statement of nerve, discipline, and forward motion, holding its line at the center of Volume 1.",
-    visualThread: "Red-thread geometry, steel diagonals, and sealed typography that reads like a vow under pressure.",
+      "A statement of nerve and focus at the midpoint of Volume 1, turning the record from cosmic lift into its raw, heavy second half.",
+    visualThread: "Clean steel lines, deep red borders, and grounded typography.",
     journalSlug: "conviction",
-    makingNote: "Conviction is sequenced as the record's fourth pressure point, grounding the turn from cosmic lift into the album's heavier second half.",
-    technicalNote: "The listening room serves the final 24-bit, 48 kHz stereo WAV master."
+    makingNote: "Sequenced as the record's midpoint pivot, moving from cosmic space into heavy live guitars.",
+    technicalNote: "24-bit, 48 kHz stereo master tracked with tube saturation and forward bass presence."
   },
   {
     trackNumber: 5,
@@ -100,14 +100,14 @@ export const songPostCards: SongPostCard[] = [
     duration: "2:43",
     audioFileName: "5. Decay.wav",
     phase: "Released September 1, 2026",
-    hook: "Beautiful ruin with stubborn pulse.",
-    caption: "Decay is where vines, amps, and memory collapse into one final sermon.",
+    hook: "Screaming guitars, full-volume wails, and death expressed as life.",
+    caption: "Our metal song: wild guitars and spoken-word testimony.",
     storySummary:
-      "Terry heard John's invitation to treat Decay as the metal song and finally trusted his own instincts at full volume. The result turns collapse into testimony, with screaming guitars and spoken-word fragments carrying death-expressed-as-life energy.",
-    visualThread: "Overgrowth motifs, cracked objects, and high-contrast rot textures.",
+      "John smiled and told Terry: 'This is gonna be our metal song.' Terry plugged in and trusted his instincts at full volume, layering hours of screaming guitars over John's spoken line: 'Death was contained in me / Expressed as life.'",
+    visualThread: "Weathered textures, high-contrast dark tones, and raw grain.",
     journalSlug: "decay",
-    makingNote: "Composed from fragments of earlier sessions to reflect collapse and reconstruction in the song arc.",
-    technicalNote: "Resampled guitar harmonics through granular chain, then filtered for decayed top-end texture."
+    makingNote: "Hours of screaming guitar takes tracked straight through cranked amps, edited into a single coherent wail.",
+    technicalNote: "Resampled guitar feedback through granular chains, balanced against dry DI wail and vocal room mics."
   },
   {
     trackNumber: 6,
@@ -115,14 +115,14 @@ export const songPostCards: SongPostCard[] = [
     duration: "3:15",
     audioFileName: "6. Resolve.wav",
     phase: "Released September 1, 2026",
-    hook: "The ignition track that lights the campaign fuse.",
-    caption: "Resolve lands first and sets the terms for everything that follows.",
+    hook: "Rising above the noise with integrity and commitment.",
+    caption: "Mind and body in congruence: practice becoming resolve.",
     storySummary:
-      "Resolve is the campaign spark: a song about choosing the self that survives the crucible. The story underneath it is discipline becoming instinct and self-contract turning into action.",
-    visualThread: "Fist-forward iconography, hard lightning diagonals, and pressure lines.",
+      "Written about the moments where you have a simple choice: rise above or drown. 'Some selves are meant to burn. Not to be erased, but to be refined and released so the truer thing can rise.'",
+    visualThread: "Sharp angular lines, bold red marks, and forward momentum.",
     journalSlug: "resolve",
-    makingNote: "Written as the campaign spark with a deliberate, immediate chorus entry for first-listen impact.",
-    technicalNote: "Fast transient shaping on drums, dual guitar buses, and a narrow vocal slap for forward focus."
+    makingNote: "Fast-driving tempo with an immediate vocal entry and driving rhythm section.",
+    technicalNote: "Dual guitar buses for wide stereo separation, punchy drum transients, and tight slap vocal delay."
   },
   {
     trackNumber: 7,
@@ -130,14 +130,14 @@ export const songPostCards: SongPostCard[] = [
     duration: "4:31",
     audioFileName: "7. Poetry.wav",
     phase: "Released September 1, 2026",
-    hook: "Writerly nerve and scarred tenderness.",
-    caption: "Poetry is the heart chamber of Volume 1 and a strong album-focus pitch.",
+    hook: "Finding the genuine thing underneath the performance.",
+    caption: "Heartbreak turned into shared humanity: language first, raw guitar second.",
     storySummary:
-      "John started Poetry in breakup fallout and chased the genuine thing beneath performance, vanity, and heartbreak. Terry's additions widened it from private confession into a shared statement about humanity and self-authorship.",
-    visualThread: "Notebook relics, pen marks, and inward smoke forms from the Walls side.",
+      "Started by John during a breakup, borrowing Marianne Moore's line: 'I too, dislike it... but, there is in it after all, a place for the genuine.' When Terry stepped in, he added the cry: 'You are poetry. You are fiercity. Write your life. Share your humanity!'",
+    visualThread: "Notebook scans, handwritten margins, and spilled ink textures.",
     journalSlug: "poetry",
-    makingNote: "Core lyric was cut from notebook scans and rebuilt into the final arrangement line by line.",
-    technicalNote: "Midrange-forward mix, restrained low-end, and close vocal room reflections to keep language intimate."
+    makingNote: "Arranged around spoken word phrasing, notebook lyric fragments, and Terry's vocal additions.",
+    technicalNote: "Midrange-focused vocal presence, gentle acoustic and guitar beds, leaving room for the lyric to breathe."
   },
   {
     trackNumber: 8,
@@ -145,13 +145,13 @@ export const songPostCards: SongPostCard[] = [
     duration: "3:30",
     audioFileName: "8. Gratitude.wav",
     phase: "Released September 1, 2026",
-    hook: "Open-hearted lift after the storm.",
-    caption: "Gratitude holds the final glow and keeps the record emotionally open.",
+    hook: "Closing the record with peace, brotherhood, and a full heart.",
+    caption: "The emotional closing note: gratitude for the music, the friendship, and the journey.",
     storySummary:
-      "The closer deepened for Terry once it locked into the final slot on the album. Gratitude carries the sound of real arrival: peace, brotherhood, and devotion to something larger than the self.",
-    visualThread: "Sunrise motifs, floral arcs, and soft radiance under engraved borders.",
+      "Terry wept listening to John's arrangement, recognizing the anchor he had sought over decades: 'Being a part of this record has changed my life. Thank you John Walls for hearing the music in me and bringing me along. I love you brother.'",
+    visualThread: "Warm sunrise glow, soft golden arcs, and open borders.",
     journalSlug: "gratitude",
-    makingNote: "Finished last to function as the emotional exhale after the record's denser chapters.",
-    technicalNote: "Wide harmony stack with soft bus compression and high shelf lift for final-scene brightness."
+    makingNote: "Written and recorded to serve as the exhale at the end of the journey.",
+    technicalNote: "Warm vocal harmony stacks, gentle bus compression, and high-end air for a peaceful fade."
   }
 ];

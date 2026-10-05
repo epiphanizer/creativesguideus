@@ -30,22 +30,22 @@ const collectorLetterQuotes: readonly CollectorLetterQuote[] = [
   {
     source: "Joint Queen",
     author: "Terry Devine",
-    text: "Joint Queen needed to feel like an entrance cue with authority and swagger, not just a groove loop."
+    text: "The little guitar scratches at the beginning of the song are the sounds of my life making sense for the first time."
   },
   {
     source: "Poetry",
     author: "John Walls",
-    text: "Poetry is the inward core of Volume 1: language first, ornament second."
-  },
-  {
-    source: "Conviction",
-    author: "John Walls",
-    text: "Conviction is the pressure point that turns discipline into forward motion."
+    text: "I hope this song hits you when you are messy — when your life feels like ink spilling out. Those are the moments that make you human."
   },
   {
     source: "Decay",
     author: "Terry Devine",
-    text: "Decay is meant to sound like memory collapsing and reforming at the same time."
+    text: "When I hold a screaming guitar in my hands, I am Home. These guitars are the sound of my soul."
+  },
+  {
+    source: "Space Cruiser",
+    author: "John Walls",
+    text: "Some people sample drums. Some people sample grief. Some people, with reckless abandon, sample the atmosphere."
   }
 ];
 

@@ -1,19 +1,19 @@
 # Stash Daddy — Studio Journal
 
-Date window: Volume 1 sessions
+**By Terry Devine**
 
-## Intent
-Stash Daddy was designed as a late-night power walk cue with danger sitting just under the surface.
+We were all sitting at the kitchen table. I dunno how the conversation came around to the concept of Stash Daddy. But I grabbed a piece of paper and wrote a little creative logo of the words Stash and Daddy and John stuck it to the mirror on the wall next to the table. And we all had a good laugh. I don’t honestly know if John had titled this track before that, but knowing the title when I recorded the first guitar parts contributed to my carefree approach to “recording”.
 
-## Making Notes
-- Started from a one-bar modular pulse and built outward around scene pacing.
-- Focused on repetitive confidence rather than melodic drift.
-- Arranged for momentum in short visual edits.
+You see, I didn’t understand yet what was happening. The only experiences I ever had with recording music were ritualized, sacrosanct… expensive processes. Lock the songs, rehearse like crazy before going in the studio. Have a terrible time with an engineer who acted like he didn’t want to be there.
 
-## Technical Notes
-- Mono synth and sub octave layers form the center mass.
-- Tabla accents are side-chained to maintain movement around kick energy.
-- Midrange carve keeps low-end authority from clouding vocal space.
+Imagine my surprise to be relaxing after a joint, John setting up the extant tracks to loop with my guitar recording… and he leaves the room. No thoughts or advices… just… record some guitars.
 
-## Visual Tie-In
-The card emphasizes stack geometry, wiring, and hard red shadows to echo backroom pressure.
+The first time this happened, my mind was clenched from previous recording experiences. What Do I Play? I didn’t REHEARSE anything. Gaah.!
+
+There WAS no rehearsing. There was only creating. Purely. Standing there by myself with Stash Daddy thumping in the headphones, I played. At first I was playing along. The parts were fine. I think it took two more iterations of this process of JW leaving me alone to play whatever I wanted before I understood that my creative force could actually happen in real time. And that I had to SAY SOMETHING. With my guitar. With my voice. With my heart. No filter.
+
+“I feel too much. Its not enough.”
+
+John Walls wrote and delivered that line. But to say it represents me is… understated. Stash Daddy is the sound of my heart being set free.
+
+— Terry Devine

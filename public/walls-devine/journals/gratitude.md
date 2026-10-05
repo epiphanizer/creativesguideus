@@ -1,19 +1,21 @@
 # Gratitude — Studio Journal
 
-Date window: Final album sessions
+**By Terry Devine**
 
-## Intent
-Gratitude serves as the emotional exhale and leaves the project open rather than closed-off.
+This song had meaning for me from the beginning of my experience with John’s composition. But… when we started looking at a prospective order for the songs and JW shared his lineup, something deepened in my relationship with this song. Emotionally. Vocally. In the sound of my guitar.
 
-## Making Notes
-- Completed at the end of the sequence to reflect full-record perspective.
-- Focused on lift, not spectacle.
-- Balanced intimacy with final-scene brightness.
+Something about a song called Gratitude — our song — closing our first album. I cannot aptly describe the feeling of flow state, recognizing that this was always… always in my vision of Terry Devine. Being truly, deeply committed to something larger than myself…
 
-## Technical Notes
-- Wide harmony stack with controlled bus compression.
-- Subtle high-shelf lift for post-storm clarity.
-- Minimal transient aggression to keep ending gentle.
+I have wept an ocean of wounded soul listening to this song. But I feel the joy of being grateful becoming my anchor with each day that passes. This isn’t a dashed dream that I cried myself to sleep to.
 
-## Visual Tie-In
-Sunrise and floral arc motifs support the post-release sustain tone.
+Nope. This is real.
+
+I am filled with a gratitude beyond anything I ever imagined in this present moment as I write to you. Being a part of this record has changed my life. I am filled with a vitality that can only come from peace within. My wish is for you to find your path to peace as well.
+
+Thank you John Walls for hearing the music in me and bringing me along. I love you brother.
+
+Thank you friends.
+
+With love,
+
+— Terry Devine

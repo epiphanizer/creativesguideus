@@ -186,7 +186,7 @@ const soundtrackCues: SoundtrackCue[] = [
     act: "Act I / Act II",
     durationLabel: "3:42",
     audioSrc: "/walls-devine/releases/volume1/1. Joint Queen.wav",
-    logline: "An entrance cue with swagger and overdriven tube amp grit. The writers step into the Hollywood underworld, where champagne fills the bong and the parasites set the terms."
+    logline: "Heavy groove and raw electric guitars as the writers step into the Hollywood underworld, where champagne fills the bong and the parasites set the terms."
   },
   {
     id: "stash-daddy",
