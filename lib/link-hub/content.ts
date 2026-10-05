@@ -41,28 +41,6 @@ const defaultWallsDevineMerchLink = {
   isActive: true
 } satisfies LinkHubLink;
 
-const defaultMelodyneAffiliateLink = {
-  id: "melodyne-affiliate",
-  eyebrow: "Studio Tools",
-  title: "Celemony Melodyne 5 Studio",
-  description: "Vocal pitch and formant editing tools.",
-  href: "https://www.pluginboutique.com/product/2-Effects/54-Vocal/7086-Melodyne-5-Studio",
-  ctaLabel: "View software",
-  isFeatured: false,
-  isActive: false
-} satisfies LinkHubLink;
-
-const defaultBongTourLink = {
-  id: "bong-tour",
-  eyebrow: "Feature Screenplay",
-  title: "Bong Tour",
-  description: "A comedy about hauling a fragile, six-foot hand-blown glass rig across Route 66 in July heat in a van with a broken radiator. Motels, road food, and original score cues.",
-  href: "/bong-tour",
-  ctaLabel: "Read screenplay & cues",
-  isFeatured: false,
-  isActive: false
-} satisfies LinkHubLink;
-
 const defaultCacheLink = {
   id: "cache",
   eyebrow: "Adventure Series",
@@ -152,15 +130,29 @@ export function normalizeLinkHubLink(link: Partial<LinkHubLink> | null | undefin
   };
 }
 
-function orderCanonicalLinks(links: LinkHubLink[]) {
-  return [...links].sort((left, right) => {
-    const leftIndex = canonicalLinkOrder.indexOf(left.id as (typeof canonicalLinkOrder)[number]);
-    const rightIndex = canonicalLinkOrder.indexOf(right.id as (typeof canonicalLinkOrder)[number]);
-    const normalizedLeft = leftIndex === -1 ? Number.MAX_SAFE_INTEGER : leftIndex;
-    const normalizedRight = rightIndex === -1 ? Number.MAX_SAFE_INTEGER : rightIndex;
+function isDisallowedLink(link?: Partial<LinkHubLink> | null): boolean {
+  if (!link) return true;
+  const id = (link.id ?? "").toLowerCase();
+  const href = (link.href ?? "").toLowerCase();
+  return (
+    id === "bong-tour" ||
+    href.includes("bong-tour") ||
+    id === "melodyne-affiliate" ||
+    href.includes("melodyne")
+  );
+}
 
-    return normalizedLeft - normalizedRight;
-  });
+function orderCanonicalLinks(links: LinkHubLink[]) {
+  return [...links]
+    .filter((link) => !isDisallowedLink(link))
+    .sort((left, right) => {
+      const leftIndex = canonicalLinkOrder.indexOf(left.id as (typeof canonicalLinkOrder)[number]);
+      const rightIndex = canonicalLinkOrder.indexOf(right.id as (typeof canonicalLinkOrder)[number]);
+      const normalizedLeft = leftIndex === -1 ? Number.MAX_SAFE_INTEGER : leftIndex;
+      const normalizedRight = rightIndex === -1 ? Number.MAX_SAFE_INTEGER : rightIndex;
+
+      return normalizedLeft - normalizedRight;
+    });
 }
 
 function ensureRequiredLinks(links: LinkHubLink[]) {
@@ -191,9 +183,13 @@ function ensureRequiredLinks(links: LinkHubLink[]) {
 }
 
 export function normalizeLinkHubContent(content?: Partial<LinkHubContent> | null): LinkHubContent {
-  const links = ensureRequiredLinks(
-    Array.isArray(content?.links) && content?.links.length ? content.links.map((link, index) => normalizeLinkHubLink(link, index)) : defaultLinkHubContent.links
-  );
+  const rawLinks = Array.isArray(content?.links) && content?.links.length
+    ? content.links
+        .filter((link) => !isDisallowedLink(link))
+        .map((link, index) => normalizeLinkHubLink(link, index))
+    : defaultLinkHubContent.links;
+
+  const links = ensureRequiredLinks(rawLinks);
 
   return {
     eyebrow: typeof content?.eyebrow === "string" && content.eyebrow.trim() ? content.eyebrow.trim() : defaultLinkHubContent.eyebrow,

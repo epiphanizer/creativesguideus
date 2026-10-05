@@ -7,7 +7,6 @@ export type AnchorConfig = {
 
 const anchorRegistry: AnchorConfig[] = [
   { href: "/walls-devine", label: "Walls/Devine" },
-  { href: "/contact", label: "Studio" },
   { href: "/links", label: "Links" }
 ];
 

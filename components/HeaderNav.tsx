@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { buildContactHref } from "@/lib/contact-intake-routing";
 import { anchors } from "./nav/anchors";
 import {
   openWallsDevineListeningRoomShortcut,
@@ -230,11 +229,11 @@ export function HeaderNav() {
                 type="button"
                 className="cg-header__cta"
                 onClick={() => {
-                  router.push(buildContactHref({ pathname: pathname ?? "/" }), { scroll: false });
+                  router.push("/walls-devine");
                   closeMenu();
                 }}
               >
-                Start a Conversation
+                Walls/Devine
               </button>
             )}
 
