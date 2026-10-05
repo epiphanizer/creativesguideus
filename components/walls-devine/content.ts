@@ -40,8 +40,8 @@ export const songPostCards: SongPostCard[] = [
       "Inspired by the joy Peace Feather brought into John and Terry's lives. John tracked that funky Mint-Green P-Bass groove, and Terry knew right then that music was joy again. 'The little guitar scratches at the beginning of the song are the sounds of my life making sense for the first time.'",
     visualThread: "Crown motifs, gold warmth, and smoke plumes.",
     journalSlug: "joint-queen",
-    makingNote: "Built around John's one-take P-Bass groove, layered with live guitar scratches and brass response hooks.",
-    technicalNote: "Mint-Green P-Bass through tube drive, layered with SP-404 vinyl simulation and brass call-and-response.",
+    makingNote: "Built around John's Mint-Green P-Bass groove, layered with Terry's live guitar scratches and studio collage elements.",
+    technicalNote: "Fender P-Bass through tube drive, layered with live electric guitar scratches and room collage textures.",
     bongTourCueId: "score-joint-queen",
     bongTourContext: "Featured in Bong Tour's Comedy Store takeover montage."
   },
@@ -58,7 +58,7 @@ export const songPostCards: SongPostCard[] = [
     visualThread: "Stack geometry, wiring, and deep red shadows.",
     journalSlug: "stash-daddy",
     makingNote: "Started from an unrehearsed loop jam, letting the guitar respond naturally to the pulse.",
-    technicalNote: "Mono synth bass and sub octave pulse, layered with live guitar and tabla accents.",
+    technicalNote: "Loop groove bed with direct live electric guitar tracking, captured in unrehearsed room sessions.",
     bongTourCueId: "score-stash-daddy",
     bongTourContext: "Featured in Bong Tour's Sunset backroom plotting scenes."
   },
@@ -75,7 +75,7 @@ export const songPostCards: SongPostCard[] = [
     visualThread: "Deep celestial beams, cosmic orbit seals, and warm amber light.",
     journalSlug: "space-cruiser",
     makingNote: "Collaged together from delayed takes, ambient beds, and Ishan Thakur's sargam vocal parts.",
-    technicalNote: "Processed tanpura textures, delayed downbeats in 5/4 phrasing, and live atmospheric sampling.",
+    technicalNote: "Harmonium bed with collage delay editing, Indian sargam vocals by Ishan Thakur, and live studio atmospheric sampling.",
     bongTourCueId: "score-space-cruiser",
     bongTourContext: "Featured in Bong Tour's Ganges finale and myth closure."
   },
@@ -92,7 +92,7 @@ export const songPostCards: SongPostCard[] = [
     visualThread: "Clean steel lines, deep red borders, and grounded typography.",
     journalSlug: "conviction",
     makingNote: "Sequenced as the record's midpoint pivot, moving from cosmic space into heavy live guitars.",
-    technicalNote: "24-bit, 48 kHz stereo master tracked with tube saturation and forward bass presence."
+    technicalNote: "Tracked with tube saturation and forward bass presence."
   },
   {
     trackNumber: 5,
@@ -107,7 +107,7 @@ export const songPostCards: SongPostCard[] = [
     visualThread: "Weathered textures, high-contrast dark tones, and raw grain.",
     journalSlug: "decay",
     makingNote: "Hours of screaming guitar takes tracked straight through cranked amps, edited into a single coherent wail.",
-    technicalNote: "Resampled guitar feedback through granular chains, balanced against dry DI wail and vocal room mics."
+    technicalNote: "Overdriven electric guitars through cranked tube amps, balanced with spoken-word vocal takes."
   },
   {
     trackNumber: 6,

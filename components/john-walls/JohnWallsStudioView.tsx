@@ -207,7 +207,7 @@ export function JohnWallsStudioView() {
                     marginBottom: "4px",
                   }}
                 >
-                  NOW AUDITIONING · {activeTrack.dawSource || "Ableton Live"}
+                  NOW PLAYING · {activeTrack.dawSource || "Album Master"}
                 </span>
                 <h2 style={{ fontSize: "1.5rem", fontWeight: 700, margin: "0 0 6px 0", color: "#f8fafc" }}>
                   {activeTrack.title}
