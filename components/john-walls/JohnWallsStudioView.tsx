@@ -163,13 +163,13 @@ export function JohnWallsStudioView() {
             isPlaying={isPlaying}
             preset={currentPreset}
             bpm={activeTrack ? activeTrack.bpm : 120}
-            trackTitle={activeTrack ? activeTrack.title : "Studio Stream"}
+            trackTitle={activeTrack ? activeTrack.title : "Standby Oscilloscope"}
             onPresetChange={setCurrentPreset}
           />
         </section>
 
         {/* Audio Player & Track Deck */}
-        {activeTrack && (
+        {activeTrack ? (
           <section
             style={{
               background: "rgba(255, 255, 255, 0.8)",
@@ -200,23 +200,27 @@ export function JohnWallsStudioView() {
                 <h2 style={{ fontSize: "1.5rem", fontWeight: 700, margin: "0 0 6px 0", color: "#0f172a" }}>
                   {activeTrack.title}
                 </h2>
-                <p style={{ margin: 0, fontSize: "0.9rem", color: "#475569" }}>
-                  {activeTrack.description || "Captured live direct from Ableton Live session."}
-                </p>
+                {activeTrack.description ? (
+                  <p style={{ margin: 0, fontSize: "0.9rem", color: "#475569" }}>
+                    {activeTrack.description}
+                  </p>
+                ) : null}
               </div>
 
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                <span style={{ padding: "4px 10px", background: "rgba(0,0,0,0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#334155" }}>
-                  BPM {activeTrack.bpm}
-                </span>
+                {activeTrack.bpm > 0 && (
+                  <span style={{ padding: "4px 10px", background: "rgba(0,0,0,0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#334155" }}>
+                    BPM {activeTrack.bpm}
+                  </span>
+                )}
+                {activeTrack.barLength > 0 && (
+                  <span style={{ padding: "4px 10px", background: "rgba(0,0,0,0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#334155" }}>
+                    {activeTrack.barLength} BARS
+                  </span>
+                )}
                 {activeTrack.keySignature && (
                   <span style={{ padding: "4px 10px", background: "rgba(0,0,0,0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#334155" }}>
                     KEY {activeTrack.keySignature}
-                  </span>
-                )}
-                {activeTrack.barLength && (
-                  <span style={{ padding: "4px 10px", background: "rgba(0,0,0,0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#334155" }}>
-                    {activeTrack.barLength} BARS
                   </span>
                 )}
                 <a
@@ -278,6 +282,39 @@ export function JohnWallsStudioView() {
                 {formatTime(duration || activeTrack.durationSeconds || 0)}
               </span>
             </div>
+          </section>
+        ) : (
+          <section
+            style={{
+              background: "rgba(255, 255, 255, 0.7)",
+              backdropFilter: "blur(12px)",
+              border: "1px dashed rgba(224, 185, 116, 0.5)",
+              borderRadius: "14px",
+              padding: "2rem 1.5rem",
+              marginBottom: "3rem",
+              textAlign: "center",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-block",
+                fontSize: "11px",
+                fontFamily: "ui-monospace, monospace",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "#92400e",
+                fontWeight: 600,
+                marginBottom: "8px",
+              }}
+            >
+              STUDIO STREAM // STANDBY
+            </span>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: 700, margin: "0 0 8px 0", color: "#0f172a" }}>
+              Awaiting Live Dispatch from Ableton Live
+            </h2>
+            <p style={{ margin: "0 auto", maxWidth: "540px", fontSize: "0.9rem", color: "#64748b", lineHeight: 1.6 }}>
+              Arm the <code>johnwalls.studio</code> plugin in Ableton Live, click <strong>[DISPATCH]</strong> in the top menu, record a take, and ship it direct to this stream.
+            </p>
           </section>
         )}
 

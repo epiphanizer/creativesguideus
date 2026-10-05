@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { saveFirestorePublishedTake } from "@/lib/firebase/johnwalls-takes";
 
 export const dynamic = "force-dynamic";
 
@@ -124,6 +125,9 @@ export async function POST(request: Request) {
       tags: Array.isArray(metaObj.tags) ? (metaObj.tags as string[]) : ["ableton", "sound-lab", "supercollider"],
       publishedAt: new Date().toISOString(),
     };
+
+    // Persist to Firestore database
+    await saveFirestorePublishedTake(trackRecord);
 
     const existingTracks = readTracks();
     const updatedTracks = [trackRecord, ...existingTracks.filter((t) => t.id !== trackId)];
