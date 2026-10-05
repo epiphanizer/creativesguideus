@@ -106,47 +106,27 @@ export function JohnWallsStudioView() {
   };
 
   return (
-    <div className="jw-domain-view jw-studio-view" style={{ background: "#07090d", minHeight: "100vh", color: "#f8fafc" }}>
-      {/* Background Atmosphere */}
-      <div className="jw-atmosphere-container" style={{ opacity: 0.35 }}>
+    <div className="jw-domain-view jw-studio-view">
+      {/* Background Atmosphere: Archival parchment and subtle gold glow */}
+      <div className="jw-atmosphere-container">
         <SubtleCalligraphyAtmosphere />
       </div>
 
       <div className="jw-domain-shell">
-        {/* Navigation Bar (Dark Mode) */}
-        <nav
-          className="jw-domain-nav"
-          aria-label="johnwalls.studio"
-          style={{
-            background: "rgba(13, 17, 23, 0.8)",
-            backdropFilter: "blur(16px)",
-            border: "1px solid rgba(224, 185, 116, 0.25)",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.6)",
-          }}
-        >
+        {/* Navigation Bar (Light Mode) */}
+        <nav className="jw-domain-nav" aria-label="johnwalls.studio">
           <div className="jw-domain-nav__brand">
             <span className="jw-domain-nav__dot jw-domain-nav__dot--gold" />
-            <span className="jw-domain-nav__label" style={{ color: "#f8fafc", fontWeight: 700 }}>
-              JOHN WALLS
-            </span>
+            <span className="jw-domain-nav__label">JOHN WALLS</span>
           </div>
           <div className="jw-domain-nav__links">
-            <span
-              className="jw-domain-pill jw-domain-pill--active"
-              style={{
-                background: "rgba(224, 185, 116, 0.15)",
-                borderColor: "#e0b974",
-                color: "#e0b974",
-              }}
-            >
-              johnwalls.studio
-            </span>
+            <span className="jw-domain-pill jw-domain-pill--active">johnwalls.studio</span>
             <span
               className="jw-domain-pill"
               style={{
-                background: "rgba(45, 212, 191, 0.1)",
-                color: "#2dd4bf",
-                borderColor: "rgba(45, 212, 191, 0.3)",
+                color: "#0d9488",
+                borderColor: "rgba(13, 148, 136, 0.3)",
+                background: "rgba(13, 148, 136, 0.08)",
               }}
             >
               ● ABLETON DISPATCH LIVE
@@ -154,7 +134,7 @@ export function JohnWallsStudioView() {
           </div>
         </nav>
 
-        {/* Hero Section */}
+        {/* Hero Section (Light Mode Calligraphy Ink Title) */}
         <header className="jw-domain-hero jw-domain-hero--centered" style={{ marginBottom: "2rem" }}>
           <CalligraphicSignatureTitle
             domain="johnwalls.studio"
@@ -189,8 +169,8 @@ export function JohnWallsStudioView() {
           />
         )}
 
-        {/* Lean, Rock-Solid SuperCollider Visualizer */}
-        <section style={{ marginBottom: "2.5rem" }}>
+        {/* SuperCollider Visualizer (Sleek Dark Mode Console) */}
+        <section style={{ marginBottom: "1.5rem" }}>
           <SuperColliderVisualizer
             audioElement={audioRef.current}
             isPlaying={isPlaying}
@@ -201,17 +181,16 @@ export function JohnWallsStudioView() {
           />
         </section>
 
-        {/* Audio Player & Track Deck (Pure Studio Dark Mode) */}
+        {/* Audio Player Deck (Dark Mode Hardware Console) */}
         {activeTrack ? (
           <section
             style={{
-              background: "rgba(13, 17, 23, 0.9)",
-              backdropFilter: "blur(14px)",
-              border: "1px solid rgba(224, 185, 116, 0.3)",
+              background: "#0c0f14",
+              border: "1px solid rgba(224, 185, 116, 0.35)",
               borderRadius: "14px",
               padding: "1.5rem",
               marginBottom: "3rem",
-              boxShadow: "0 12px 32px rgba(0, 0, 0, 0.5)",
+              boxShadow: "0 14px 36px rgba(0, 0, 0, 0.22)",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem", marginBottom: "1rem" }}>
@@ -242,29 +221,34 @@ export function JohnWallsStudioView() {
 
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                 {activeTrack.bpm > 0 && (
-                  <span style={{ padding: "4px 10px", background: "rgba(224, 185, 116, 0.12)", border: "1px solid rgba(224, 185, 116, 0.25)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#e0b974" }}>
+                  <span style={{ padding: "4px 10px", background: "rgba(224, 185, 116, 0.15)", border: "1px solid rgba(224, 185, 116, 0.3)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#e0b974" }}>
                     BPM {activeTrack.bpm}
                   </span>
                 )}
                 {activeTrack.barLength > 0 && (
-                  <span style={{ padding: "4px 10px", background: "rgba(255, 255, 255, 0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#94a3b8" }}>
+                  <span style={{ padding: "4px 10px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#cbd5e1" }}>
                     {activeTrack.barLength} BARS
                   </span>
                 )}
                 {activeTrack.keySignature && (
-                  <span style={{ padding: "4px 10px", background: "rgba(255, 255, 255, 0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#94a3b8" }}>
+                  <span style={{ padding: "4px 10px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#cbd5e1" }}>
                     KEY {activeTrack.keySignature}
                   </span>
                 )}
                 <a
                   href={activeTrack.audioUrl}
                   download={activeTrack.fileName || "take.wav"}
-                  className="cg-btn cg-btn--outline"
+                  className="cg-btn"
                   style={{
                     padding: "4px 12px",
                     fontSize: "12px",
-                    borderColor: "rgba(224, 185, 116, 0.4)",
+                    background: "rgba(224, 185, 116, 0.12)",
+                    border: "1px solid rgba(224, 185, 116, 0.4)",
                     color: "#e0b974",
+                    borderRadius: "6px",
+                    textDecoration: "none",
+                    display: "inline-flex",
+                    alignItems: "center",
                   }}
                 >
                   Download WAV ↗
@@ -324,12 +308,13 @@ export function JohnWallsStudioView() {
         ) : (
           <section
             style={{
-              background: "rgba(13, 17, 23, 0.8)",
-              border: "1px dashed rgba(224, 185, 116, 0.3)",
+              background: "#0c0f14",
+              border: "1px dashed rgba(224, 185, 116, 0.35)",
               borderRadius: "14px",
               padding: "2rem 1.5rem",
               marginBottom: "3rem",
               textAlign: "center",
+              boxShadow: "0 14px 36px rgba(0, 0, 0, 0.22)",
             }}
           >
             <span
@@ -355,24 +340,24 @@ export function JohnWallsStudioView() {
           </section>
         )}
 
-        {/* Sound Archive: Published Album & Ableton Takes List (Dark Mode) */}
+        {/* Sound Archive: Published Album & Ableton Takes List (Light Mode on Parchment) */}
         <section style={{ marginBottom: "4rem" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem" }}>
-            <h3 style={{ fontSize: "1.25rem", fontWeight: 700, margin: 0, color: "#f8fafc" }}>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: 700, margin: 0, color: "#0f172a" }}>
               STUDIO SOUND ARCHIVE ({tracks.length})
             </h3>
             <button
               type="button"
               onClick={loadTracks}
               style={{
-                background: "rgba(255, 255, 255, 0.05)",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
+                background: "rgba(255, 255, 255, 0.65)",
+                border: "1px solid rgba(0, 0, 0, 0.12)",
                 padding: "4px 10px",
                 borderRadius: "6px",
                 fontSize: "11px",
                 fontFamily: "ui-monospace, monospace",
                 cursor: "pointer",
-                color: "#94a3b8",
+                color: "#475569",
               }}
             >
               ↻ REFRESH STREAM
@@ -380,11 +365,11 @@ export function JohnWallsStudioView() {
           </div>
 
           {isLoading ? (
-            <div style={{ textAlign: "center", padding: "2rem", color: "#64748b" }}>
+            <div style={{ textAlign: "center", padding: "2rem", color: "#94a3b8" }}>
               Loading studio sound archive...
             </div>
           ) : tracks.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "3rem", background: "rgba(13, 17, 23, 0.6)", borderRadius: "12px", color: "#94a3b8" }}>
+            <div style={{ textAlign: "center", padding: "3rem", background: "rgba(255, 255, 255, 0.6)", borderRadius: "12px", color: "#64748b" }}>
               No tracks published yet. Record a take in Ableton Live and hit <strong>"Ship to johnwalls.studio"</strong> in the plugin!
             </div>
           ) : (
@@ -401,10 +386,11 @@ export function JohnWallsStudioView() {
                       justifyContent: "space-between",
                       padding: "1rem 1.25rem",
                       borderRadius: "10px",
-                      background: isSelected ? "rgba(224, 185, 116, 0.15)" : "rgba(13, 17, 23, 0.7)",
-                      border: isSelected ? "1px solid #e0b974" : "1px solid rgba(255, 255, 255, 0.08)",
+                      background: isSelected ? "rgba(224, 185, 116, 0.18)" : "rgba(255, 255, 255, 0.75)",
+                      border: isSelected ? "1px solid #e0b974" : "1px solid rgba(0, 0, 0, 0.08)",
                       cursor: "pointer",
                       transition: "all 0.2s ease",
+                      boxShadow: isSelected ? "0 4px 12px rgba(224, 185, 116, 0.2)" : "0 2px 6px rgba(0, 0, 0, 0.02)",
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -413,8 +399,8 @@ export function JohnWallsStudioView() {
                           width: "32px",
                           height: "32px",
                           borderRadius: "50%",
-                          background: isSelected && isPlaying ? "#e0b974" : "rgba(255, 255, 255, 0.06)",
-                          color: isSelected && isPlaying ? "#080a0e" : "#cbd5e1",
+                          background: isSelected && isPlaying ? "#0f172a" : isSelected ? "rgba(224, 185, 116, 0.3)" : "rgba(0, 0, 0, 0.06)",
+                          color: isSelected && isPlaying ? "#e0b974" : isSelected ? "#0f172a" : "#475569",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -425,10 +411,10 @@ export function JohnWallsStudioView() {
                         {isSelected && isPlaying ? "❚❚" : idx + 1}
                       </span>
                       <div>
-                        <div style={{ fontWeight: 600, color: "#f8fafc", fontSize: "0.95rem" }}>
+                        <div style={{ fontWeight: 600, color: "#0f172a", fontSize: "0.95rem" }}>
                           {track.title}
                         </div>
-                        <div style={{ fontSize: "0.8rem", color: "#94a3b8", display: "flex", gap: "12px", marginTop: "2px" }}>
+                        <div style={{ fontSize: "0.8rem", color: "#64748b", display: "flex", gap: "12px", marginTop: "2px" }}>
                           <span>{track.artist}</span>
                           <span>•</span>
                           <span>{track.dawSource || "Ableton Live"}</span>
@@ -443,10 +429,10 @@ export function JohnWallsStudioView() {
                     </div>
 
                     <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                      <span style={{ fontSize: "11px", fontFamily: "ui-monospace, monospace", color: "#e0b974", background: "rgba(224, 185, 116, 0.15)", padding: "2px 8px", borderRadius: "4px", border: "1px solid rgba(224, 185, 116, 0.25)" }}>
+                      <span style={{ fontSize: "11px", fontFamily: "ui-monospace, monospace", color: "#b45309", background: "rgba(224, 185, 116, 0.22)", padding: "2px 8px", borderRadius: "4px" }}>
                         {track.bpm} BPM
                       </span>
-                      <span style={{ fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#94a3b8" }}>
+                      <span style={{ fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#64748b" }}>
                         {formatTime(track.durationSeconds || 0)}
                       </span>
                     </div>
@@ -457,16 +443,15 @@ export function JohnWallsStudioView() {
           )}
         </section>
 
-        {/* Minimal Footer */}
-        <footer className="jw-domain-footer jw-domain-footer--minimal" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "1.5rem" }}>
-          <p style={{ color: "#64748b" }}>
+        {/* Minimal Footer (Light Mode) */}
+        <footer className="jw-domain-footer jw-domain-footer--minimal">
+          <p>
             © {new Date().getFullYear()} John Walls ·{" "}
             <a
               href="https://creativesguide.us"
               target="_blank"
               rel="noreferrer"
               className="jw-footer-link"
-              style={{ color: "#94a3b8" }}
             >
               creativesguide.us ↗
             </a>
