@@ -18,7 +18,37 @@
 }
 
 .jw-studio-view {
-  background: radial-gradient(circle at 50% 0%, #fbf9f4 0%, #f5efe4 50%, #ede5d5 100%);
+  background: radial-gradient(circle at 50% 0%, #0d1117 0%, #080a0d 60%, #030406 100%);
+  color: #f1f5f9;
+
+  .jw-signature-ink-title {
+    color: #f8fafc;
+  }
+  .jw-signature-eyebrow {
+    color: #e0b974;
+  }
+  .jw-signature-kicker {
+    color: #94a3b8;
+  }
+  .jw-domain-nav {
+    background: rgba(15, 23, 42, 0.75);
+    border-color: rgba(224, 185, 116, 0.25);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+  .jw-domain-nav__label {
+    color: #f8fafc;
+  }
+  .jw-domain-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #94a3b8;
+
+    &--active {
+      background: rgba(224, 185, 116, 0.15);
+      border-color: #e0b974;
+      color: #e0b974;
+    }
+  }
 }
 
 .jw-atmosphere-container {

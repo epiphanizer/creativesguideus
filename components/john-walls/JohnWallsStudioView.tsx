@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import CalligraphicSignatureTitle from "@/components/brand/CalligraphicSignatureTitle";
 import SubtleCalligraphyAtmosphere from "@/components/home/SubtleCalligraphyAtmosphere";
-import { SuperColliderVisualizer, VisualizerPreset, VisualizerConfig } from "./SuperColliderVisualizer";
+import { SuperColliderVisualizer, VisualizerPreset } from "./SuperColliderVisualizer";
 
 export interface PublishedTrack {
   id: string;
@@ -20,10 +20,15 @@ export interface PublishedTrack {
   keySignature?: string;
   dawSource: string;
   alsProject?: string;
-  visualizerPreset: VisualizerPreset;
-  visualizerConfig?: Partial<VisualizerConfig>;
+  visualizerPreset?: string;
   tags: string[];
   publishedAt: string;
+}
+
+function mapPreset(p?: string): VisualizerPreset {
+  if (p === "spectral-waterfall" || p === "waterfall") return "waterfall";
+  if (p === "sumi-ink-pulse" || p === "mandala" || p === "golden-mandala") return "mandala";
+  return "lissajous";
 }
 
 export function JohnWallsStudioView() {
@@ -32,7 +37,7 @@ export function JohnWallsStudioView() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const [currentPreset, setCurrentPreset] = useState<VisualizerPreset>("supercollider-lissajous");
+  const [currentPreset, setCurrentPreset] = useState<VisualizerPreset>("lissajous");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -45,7 +50,7 @@ export function JohnWallsStudioView() {
       if (data.ok && Array.isArray(data.tracks) && data.tracks.length > 0) {
         setTracks(data.tracks);
         if (data.tracks[0]?.visualizerPreset) {
-          setCurrentPreset(data.tracks[0].visualizerPreset);
+          setCurrentPreset(mapPreset(data.tracks[0].visualizerPreset));
         }
       }
     } catch (err) {
@@ -75,7 +80,7 @@ export function JohnWallsStudioView() {
     setActiveTrackIndex(index);
     const selected = tracks[index];
     if (selected?.visualizerPreset) {
-      setCurrentPreset(selected.visualizerPreset);
+      setCurrentPreset(mapPreset(selected.visualizerPreset));
     }
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
@@ -101,22 +106,49 @@ export function JohnWallsStudioView() {
   };
 
   return (
-    <div className="jw-domain-view jw-studio-view">
-      {/* Background Canvas: Archival Sumi Ink & Studio Gold Glow */}
-      <div className="jw-atmosphere-container">
+    <div className="jw-domain-view jw-studio-view" style={{ background: "#07090d", minHeight: "100vh", color: "#f8fafc" }}>
+      {/* Background Atmosphere */}
+      <div className="jw-atmosphere-container" style={{ opacity: 0.35 }}>
         <SubtleCalligraphyAtmosphere />
       </div>
 
       <div className="jw-domain-shell">
-        {/* Navigation Bar */}
-        <nav className="jw-domain-nav" aria-label="johnwalls.studio">
+        {/* Navigation Bar (Dark Mode) */}
+        <nav
+          className="jw-domain-nav"
+          aria-label="johnwalls.studio"
+          style={{
+            background: "rgba(13, 17, 23, 0.8)",
+            backdropFilter: "blur(16px)",
+            border: "1px solid rgba(224, 185, 116, 0.25)",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.6)",
+          }}
+        >
           <div className="jw-domain-nav__brand">
             <span className="jw-domain-nav__dot jw-domain-nav__dot--gold" />
-            <span className="jw-domain-nav__label">JOHN WALLS</span>
+            <span className="jw-domain-nav__label" style={{ color: "#f8fafc", fontWeight: 700 }}>
+              JOHN WALLS
+            </span>
           </div>
           <div className="jw-domain-nav__links">
-            <span className="jw-domain-pill jw-domain-pill--active">johnwalls.studio</span>
-            <span className="jw-domain-pill" style={{ color: "#2dd4bf", borderColor: "rgba(45, 212, 191, 0.3)" }}>
+            <span
+              className="jw-domain-pill jw-domain-pill--active"
+              style={{
+                background: "rgba(224, 185, 116, 0.15)",
+                borderColor: "#e0b974",
+                color: "#e0b974",
+              }}
+            >
+              johnwalls.studio
+            </span>
+            <span
+              className="jw-domain-pill"
+              style={{
+                background: "rgba(45, 212, 191, 0.1)",
+                color: "#2dd4bf",
+                borderColor: "rgba(45, 212, 191, 0.3)",
+              }}
+            >
               ● ABLETON DISPATCH LIVE
             </span>
           </div>
@@ -149,7 +181,6 @@ export function JohnWallsStudioView() {
             }}
             onEnded={() => {
               setIsPlaying(false);
-              // Auto advance
               if (tracks.length > 1) {
                 handleTrackChange((activeTrackIndex + 1) % tracks.length);
               }
@@ -158,30 +189,29 @@ export function JohnWallsStudioView() {
           />
         )}
 
-        {/* Interactive SuperCollider Visualizer */}
+        {/* Lean, Rock-Solid SuperCollider Visualizer */}
         <section style={{ marginBottom: "2.5rem" }}>
           <SuperColliderVisualizer
             audioElement={audioRef.current}
             isPlaying={isPlaying}
-            preset={currentPreset}
             bpm={activeTrack ? activeTrack.bpm : 120}
-            trackTitle={activeTrack ? activeTrack.title : "Standby Oscilloscope"}
-            trackVisualizerConfig={activeTrack?.visualizerConfig}
+            trackTitle={activeTrack ? activeTrack.title : "Standby Scope"}
+            initialPreset={currentPreset}
             onPresetChange={setCurrentPreset}
           />
         </section>
 
-        {/* Audio Player & Track Deck */}
+        {/* Audio Player & Track Deck (Pure Studio Dark Mode) */}
         {activeTrack ? (
           <section
             style={{
-              background: "rgba(255, 255, 255, 0.8)",
-              backdropFilter: "blur(12px)",
-              border: "1px solid rgba(224, 185, 116, 0.4)",
+              background: "rgba(13, 17, 23, 0.9)",
+              backdropFilter: "blur(14px)",
+              border: "1px solid rgba(224, 185, 116, 0.3)",
               borderRadius: "14px",
               padding: "1.5rem",
               marginBottom: "3rem",
-              boxShadow: "0 8px 24px rgba(0, 0, 0, 0.05)",
+              boxShadow: "0 12px 32px rgba(0, 0, 0, 0.5)",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem", marginBottom: "1rem" }}>
@@ -193,18 +223,18 @@ export function JohnWallsStudioView() {
                     fontFamily: "ui-monospace, monospace",
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
-                    color: "#b45309",
+                    color: "#e0b974",
                     fontWeight: 600,
                     marginBottom: "4px",
                   }}
                 >
                   NOW AUDITIONING · {activeTrack.dawSource || "Ableton Live"}
                 </span>
-                <h2 style={{ fontSize: "1.5rem", fontWeight: 700, margin: "0 0 6px 0", color: "#0f172a" }}>
+                <h2 style={{ fontSize: "1.5rem", fontWeight: 700, margin: "0 0 6px 0", color: "#f8fafc" }}>
                   {activeTrack.title}
                 </h2>
                 {activeTrack.description ? (
-                  <p style={{ margin: 0, fontSize: "0.9rem", color: "#475569" }}>
+                  <p style={{ margin: 0, fontSize: "0.9rem", color: "#94a3b8", lineHeight: 1.5 }}>
                     {activeTrack.description}
                   </p>
                 ) : null}
@@ -212,17 +242,17 @@ export function JohnWallsStudioView() {
 
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                 {activeTrack.bpm > 0 && (
-                  <span style={{ padding: "4px 10px", background: "rgba(0,0,0,0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#334155" }}>
+                  <span style={{ padding: "4px 10px", background: "rgba(224, 185, 116, 0.12)", border: "1px solid rgba(224, 185, 116, 0.25)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#e0b974" }}>
                     BPM {activeTrack.bpm}
                   </span>
                 )}
                 {activeTrack.barLength > 0 && (
-                  <span style={{ padding: "4px 10px", background: "rgba(0,0,0,0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#334155" }}>
+                  <span style={{ padding: "4px 10px", background: "rgba(255, 255, 255, 0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#94a3b8" }}>
                     {activeTrack.barLength} BARS
                   </span>
                 )}
                 {activeTrack.keySignature && (
-                  <span style={{ padding: "4px 10px", background: "rgba(0,0,0,0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#334155" }}>
+                  <span style={{ padding: "4px 10px", background: "rgba(255, 255, 255, 0.06)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#94a3b8" }}>
                     KEY {activeTrack.keySignature}
                   </span>
                 )}
@@ -230,7 +260,12 @@ export function JohnWallsStudioView() {
                   href={activeTrack.audioUrl}
                   download={activeTrack.fileName || "take.wav"}
                   className="cg-btn cg-btn--outline"
-                  style={{ padding: "4px 12px", fontSize: "12px" }}
+                  style={{
+                    padding: "4px 12px",
+                    fontSize: "12px",
+                    borderColor: "rgba(224, 185, 116, 0.4)",
+                    color: "#e0b974",
+                  }}
                 >
                   Download WAV ↗
                 </a>
@@ -246,8 +281,8 @@ export function JohnWallsStudioView() {
                   width: "48px",
                   height: "48px",
                   borderRadius: "50%",
-                  background: isPlaying ? "#0f172a" : "#e0b974",
-                  color: isPlaying ? "#f8fafc" : "#0f172a",
+                  background: isPlaying ? "#f8fafc" : "#e0b974",
+                  color: "#0a0d12",
                   border: "none",
                   display: "flex",
                   alignItems: "center",
@@ -255,7 +290,7 @@ export function JohnWallsStudioView() {
                   cursor: "pointer",
                   fontSize: "18px",
                   fontWeight: 700,
-                  boxShadow: "0 4px 12px rgba(224, 185, 116, 0.4)",
+                  boxShadow: "0 4px 16px rgba(224, 185, 116, 0.4)",
                   transition: "all 0.2s ease",
                 }}
                 aria-label={isPlaying ? "Pause" : "Play"}
@@ -263,7 +298,7 @@ export function JohnWallsStudioView() {
                 {isPlaying ? "❚❚" : "▶"}
               </button>
 
-              <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "12px", minWidth: "42px", color: "#64748b" }}>
+              <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "12px", minWidth: "42px", color: "#94a3b8" }}>
                 {formatTime(currentTime)}
               </span>
 
@@ -281,7 +316,7 @@ export function JohnWallsStudioView() {
                 }}
               />
 
-              <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "12px", minWidth: "42px", color: "#64748b" }}>
+              <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "12px", minWidth: "42px", color: "#94a3b8" }}>
                 {formatTime(duration || activeTrack.durationSeconds || 0)}
               </span>
             </div>
@@ -289,9 +324,8 @@ export function JohnWallsStudioView() {
         ) : (
           <section
             style={{
-              background: "rgba(255, 255, 255, 0.7)",
-              backdropFilter: "blur(12px)",
-              border: "1px dashed rgba(224, 185, 116, 0.5)",
+              background: "rgba(13, 17, 23, 0.8)",
+              border: "1px dashed rgba(224, 185, 116, 0.3)",
               borderRadius: "14px",
               padding: "2rem 1.5rem",
               marginBottom: "3rem",
@@ -305,40 +339,40 @@ export function JohnWallsStudioView() {
                 fontFamily: "ui-monospace, monospace",
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
-                color: "#92400e",
+                color: "#e0b974",
                 fontWeight: 600,
                 marginBottom: "8px",
               }}
             >
               STUDIO STREAM // STANDBY
             </span>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: 700, margin: "0 0 8px 0", color: "#0f172a" }}>
+            <h2 style={{ fontSize: "1.25rem", fontWeight: 700, margin: "0 0 8px 0", color: "#f8fafc" }}>
               Awaiting Live Dispatch from Ableton Live
             </h2>
-            <p style={{ margin: "0 auto", maxWidth: "540px", fontSize: "0.9rem", color: "#64748b", lineHeight: 1.6 }}>
+            <p style={{ margin: "0 auto", maxWidth: "540px", fontSize: "0.9rem", color: "#94a3b8", lineHeight: 1.6 }}>
               Arm the <code>johnwalls.studio</code> plugin in Ableton Live, click <strong>[DISPATCH]</strong> in the top menu, record a take, and ship it direct to this stream.
             </p>
           </section>
         )}
 
-        {/* Sound Archive: Published Ableton Takes List */}
+        {/* Sound Archive: Published Album & Ableton Takes List (Dark Mode) */}
         <section style={{ marginBottom: "4rem" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem" }}>
-            <h3 style={{ fontSize: "1.25rem", fontWeight: 700, margin: 0, color: "#0f172a" }}>
+            <h3 style={{ fontSize: "1.25rem", fontWeight: 700, margin: 0, color: "#f8fafc" }}>
               STUDIO SOUND ARCHIVE ({tracks.length})
             </h3>
             <button
               type="button"
               onClick={loadTracks}
               style={{
-                background: "transparent",
-                border: "1px solid rgba(0,0,0,0.15)",
+                background: "rgba(255, 255, 255, 0.05)",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
                 padding: "4px 10px",
                 borderRadius: "6px",
                 fontSize: "11px",
                 fontFamily: "ui-monospace, monospace",
                 cursor: "pointer",
-                color: "#64748b",
+                color: "#94a3b8",
               }}
             >
               ↻ REFRESH STREAM
@@ -346,11 +380,11 @@ export function JohnWallsStudioView() {
           </div>
 
           {isLoading ? (
-            <div style={{ textAlign: "center", padding: "2rem", color: "#94a3b8" }}>
+            <div style={{ textAlign: "center", padding: "2rem", color: "#64748b" }}>
               Loading studio sound archive...
             </div>
           ) : tracks.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "3rem", background: "rgba(255,255,255,0.5)", borderRadius: "12px", color: "#64748b" }}>
+            <div style={{ textAlign: "center", padding: "3rem", background: "rgba(13, 17, 23, 0.6)", borderRadius: "12px", color: "#94a3b8" }}>
               No tracks published yet. Record a take in Ableton Live and hit <strong>"Ship to johnwalls.studio"</strong> in the plugin!
             </div>
           ) : (
@@ -367,8 +401,8 @@ export function JohnWallsStudioView() {
                       justifyContent: "space-between",
                       padding: "1rem 1.25rem",
                       borderRadius: "10px",
-                      background: isSelected ? "rgba(224, 185, 116, 0.15)" : "rgba(255, 255, 255, 0.6)",
-                      border: isSelected ? "1px solid #e0b974" : "1px solid rgba(0, 0, 0, 0.08)",
+                      background: isSelected ? "rgba(224, 185, 116, 0.15)" : "rgba(13, 17, 23, 0.7)",
+                      border: isSelected ? "1px solid #e0b974" : "1px solid rgba(255, 255, 255, 0.08)",
                       cursor: "pointer",
                       transition: "all 0.2s ease",
                     }}
@@ -379,8 +413,8 @@ export function JohnWallsStudioView() {
                           width: "32px",
                           height: "32px",
                           borderRadius: "50%",
-                          background: isSelected && isPlaying ? "#0f172a" : "rgba(0,0,0,0.06)",
-                          color: isSelected && isPlaying ? "#e0b974" : "#475569",
+                          background: isSelected && isPlaying ? "#e0b974" : "rgba(255, 255, 255, 0.06)",
+                          color: isSelected && isPlaying ? "#080a0e" : "#cbd5e1",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -391,10 +425,10 @@ export function JohnWallsStudioView() {
                         {isSelected && isPlaying ? "❚❚" : idx + 1}
                       </span>
                       <div>
-                        <div style={{ fontWeight: 600, color: "#0f172a", fontSize: "0.95rem" }}>
+                        <div style={{ fontWeight: 600, color: "#f8fafc", fontSize: "0.95rem" }}>
                           {track.title}
                         </div>
-                        <div style={{ fontSize: "0.8rem", color: "#64748b", display: "flex", gap: "12px" }}>
+                        <div style={{ fontSize: "0.8rem", color: "#94a3b8", display: "flex", gap: "12px", marginTop: "2px" }}>
                           <span>{track.artist}</span>
                           <span>•</span>
                           <span>{track.dawSource || "Ableton Live"}</span>
@@ -409,10 +443,10 @@ export function JohnWallsStudioView() {
                     </div>
 
                     <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                      <span style={{ fontSize: "11px", fontFamily: "ui-monospace, monospace", color: "#b45309", background: "rgba(224, 185, 116, 0.2)", padding: "2px 8px", borderRadius: "4px" }}>
+                      <span style={{ fontSize: "11px", fontFamily: "ui-monospace, monospace", color: "#e0b974", background: "rgba(224, 185, 116, 0.15)", padding: "2px 8px", borderRadius: "4px", border: "1px solid rgba(224, 185, 116, 0.25)" }}>
                         {track.bpm} BPM
                       </span>
-                      <span style={{ fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#64748b" }}>
+                      <span style={{ fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#94a3b8" }}>
                         {formatTime(track.durationSeconds || 0)}
                       </span>
                     </div>
@@ -424,14 +458,15 @@ export function JohnWallsStudioView() {
         </section>
 
         {/* Minimal Footer */}
-        <footer className="jw-domain-footer jw-domain-footer--minimal">
-          <p>
+        <footer className="jw-domain-footer jw-domain-footer--minimal" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "1.5rem" }}>
+          <p style={{ color: "#64748b" }}>
             © {new Date().getFullYear()} John Walls ·{" "}
             <a
               href="https://creativesguide.us"
               target="_blank"
               rel="noreferrer"
               className="jw-footer-link"
+              style={{ color: "#94a3b8" }}
             >
               creativesguide.us ↗
             </a>
