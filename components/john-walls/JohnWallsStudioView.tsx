@@ -3,10 +3,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import CalligraphicSignatureTitle from "@/components/brand/CalligraphicSignatureTitle";
 import SubtleCalligraphyAtmosphere from "@/components/home/SubtleCalligraphyAtmosphere";
-import { SuperColliderVisualizer, VisualizerPreset } from "./SuperColliderVisualizer";
+import { SuperColliderVisualizer, VisualizerPreset, VisualizerConfig } from "./SuperColliderVisualizer";
 
 export interface PublishedTrack {
   id: string;
+  trackNumber?: number;
   title: string;
   artist: string;
   description: string;
@@ -20,6 +21,7 @@ export interface PublishedTrack {
   dawSource: string;
   alsProject?: string;
   visualizerPreset: VisualizerPreset;
+  visualizerConfig?: Partial<VisualizerConfig>;
   tags: string[];
   publishedAt: string;
 }
@@ -164,6 +166,7 @@ export function JohnWallsStudioView() {
             preset={currentPreset}
             bpm={activeTrack ? activeTrack.bpm : 120}
             trackTitle={activeTrack ? activeTrack.title : "Standby Oscilloscope"}
+            trackVisualizerConfig={activeTrack?.visualizerConfig}
             onPresetChange={setCurrentPreset}
           />
         </section>

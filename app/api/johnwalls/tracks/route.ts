@@ -9,20 +9,44 @@ const DATA_FILE = path.join(process.cwd(), "data", "johnwalls_tracks.json");
 
 export async function GET() {
   try {
-    // Primary: fetch from database
-    const dbTracks = await getFirestorePublishedTakes(50);
-    if (dbTracks.length > 0) {
-      return NextResponse.json({ ok: true, tracks: dbTracks }, { status: 200 });
-    }
-
-    // Fallback: check file-system cache
+    // 1. Load base tracks from data/johnwalls_tracks.json
+    let baseTracks: any[] = [];
     if (fs.existsSync(DATA_FILE)) {
-      const raw = fs.readFileSync(DATA_FILE, "utf-8");
-      const tracks = JSON.parse(raw);
-      return NextResponse.json({ ok: true, tracks: Array.isArray(tracks) ? tracks : [] }, { status: 200 });
+      try {
+        const raw = fs.readFileSync(DATA_FILE, "utf-8");
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          baseTracks = parsed;
+        }
+      } catch (e) {
+        console.error("Failed to parse data/johnwalls_tracks.json:", e);
+      }
     }
 
-    return NextResponse.json({ ok: true, tracks: [] }, { status: 200 });
+    // 2. Fetch live takes from Firestore
+    let dbTracks: any[] = [];
+    try {
+      dbTracks = await getFirestorePublishedTakes(50);
+    } catch (e) {
+      console.warn("Firestore query error (falling back to base tracks):", e);
+    }
+
+    // 3. Merge: db takes override or prepend base tracks by ID
+    const trackMap = new Map<string, any>();
+    for (const t of baseTracks) {
+      if (t && t.id) trackMap.set(t.id, t);
+    }
+    for (const t of dbTracks) {
+      if (t && t.id) trackMap.set(t.id, t);
+    }
+
+    const allTracks = Array.from(trackMap.values()).sort((a, b) => {
+      const timeA = new Date(a.publishedAt || 0).getTime();
+      const timeB = new Date(b.publishedAt || 0).getTime();
+      return timeB - timeA;
+    });
+
+    return NextResponse.json({ ok: true, tracks: allTracks }, { status: 200 });
   } catch (error) {
     console.error("Failed to load tracks:", error);
     return NextResponse.json(
