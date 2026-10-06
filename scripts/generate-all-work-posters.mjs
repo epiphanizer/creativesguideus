@@ -307,9 +307,9 @@ const posters = [
     lede1: "Custom WordPress brand system pairing a bespoke theme with",
     lede2: "reveal-driven storytelling and editorial contact surfaces.",
     chip1Title: "EDITORIAL UX & NARRATIVE REVEALS",
-    chip1Text: "IntersectionObserver transitions · Zero-jank fluid typography",
+    chip1Text: "Signature wipe-down/wipe-up overlays · IntersectionObserver transitions",
     chip2Title: "BESPOKE THEME ARCHITECTURE",
-    chip2Text: "WordPress headless hybrid · High-res architectural media pipeline",
+    chip2Text: "Hello Elementor Child theme · Architectural project portfolio",
     windowTitle: "CLUCK_STUDIO // ARCHITECTURAL_INDEX",
     statusPillText: "CAD ACTIVE",
     badge1: "Custom Theme",
@@ -333,29 +333,29 @@ const posters = [
         <g transform="translate(24, 24)">
           <rect width="240" height="152" rx="6" fill="#180c05" stroke="rgba(249, 115, 22, 0.4)" stroke-width="1"/>
           <rect x="12" y="12" width="216" height="84" rx="4" fill="rgba(249, 115, 22, 0.1)"/>
-          <text x="20" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fb923c">CAMDEN COMMONS</text>
-          <text x="20" y="52" font-family="Helvetica, Arial, sans-serif" font-size="9" fill="#94a3b8">Multi-Use Residential · Built 2024</text>
-          <text x="20" y="80" font-family="Courier, monospace" font-size="8.5" fill="#f97316">18,400 SQ FT · CHARLOTTE NC</text>
-          <rect x="12" y="108" width="80" height="16" rx="3" fill="rgba(249, 115, 22, 0.2)"/>
-          <text x="20" y="120" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="bold" fill="#fed7aa">CASE STUDY ↗</text>
+          <text x="20" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fb923c">INKWELL APARTMENTS</text>
+          <text x="20" y="52" font-family="Helvetica, Arial, sans-serif" font-size="9" fill="#94a3b8">NoDa Arts District · 4 Stories</text>
+          <text x="20" y="80" font-family="Courier, monospace" font-size="8.5" fill="#f97316">65 UNITS + GROUND RETAIL</text>
+          <rect x="12" y="108" width="90" height="16" rx="3" fill="rgba(249, 115, 22, 0.2)"/>
+          <text x="20" y="120" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="bold" fill="#fed7aa">CHARLOTTE, NC ↗</text>
         </g>
         <g transform="translate(278, 24)">
           <rect width="240" height="152" rx="6" fill="#180c05" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
           <rect x="12" y="12" width="216" height="84" rx="4" fill="rgba(255, 255, 255, 0.05)"/>
-          <text x="20" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">SOUTHTOWN ADAPTIVE</text>
-          <text x="20" y="52" font-family="Helvetica, Arial, sans-serif" font-size="9" fill="#94a3b8">Historic Mill Transformation</text>
-          <text x="20" y="80" font-family="Courier, monospace" font-size="8.5" fill="#94a3b8">32,000 SQ FT · ADAPTIVE REUSE</text>
-          <rect x="12" y="108" width="70" height="16" rx="3" fill="rgba(255, 255, 255, 0.08)"/>
-          <text x="20" y="120" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="bold" fill="#e2e8f0">FEATURED</text>
+          <text x="20" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">PHAT BURRITO</text>
+          <text x="20" y="52" font-family="Helvetica, Arial, sans-serif" font-size="9" fill="#94a3b8">Beloved South End Landmark</text>
+          <text x="20" y="80" font-family="Courier, monospace" font-size="8.5" fill="#94a3b8">LOSO VILLAGE RESTORATION</text>
+          <rect x="12" y="108" width="70" height="16" rx="3" fill="rgba(236, 0, 140, 0.25)"/>
+          <text x="20" y="120" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="bold" fill="#f472b6">#EC008C</text>
         </g>
       </g>
       <g transform="translate(0, 214)">
         <rect width="542" height="148" rx="8" fill="#050201" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
         <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">INTERACTION ENGINE &amp; SPATIAL GRID</text>
-        <text x="16" y="52" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[VIEWPORT] 12-Column fluid spatial grid · Aspect-ratio preservation</text>
-        <text x="16" y="74" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[ANIMATION] Scroll-triggered parallax reveals via IntersectionObserver</text>
-        <text x="16" y="96" font-family="Courier, monospace" font-size="11" fill="#fb923c">[IMAGE PIPELINE] Next-gen WebP responsive srcset · 98 Lighthouse score</text>
-        <text x="16" y="118" font-family="Courier, monospace" font-size="11" fill="#fed7aa">[CONTACT UX] Low-friction client discovery &amp; consultation capture</text>
+        <text x="16" y="52" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[THEME] Hello Elementor Child · Custom reveal.php architecture</text>
+        <text x="16" y="74" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[ANIMATION] Signature wipe-down / wipe-up overlay triggers</text>
+        <text x="16" y="96" font-family="Courier, monospace" font-size="11" fill="#fb923c">[PROJECTS] Inkwell (NoDa), Phat Burrito (LoSo), E.L.K (Monroe)</text>
+        <text x="16" y="118" font-family="Courier, monospace" font-size="11" fill="#fed7aa">[CTA SURFACES] &apos;Find out what Cluck can do for you&apos; · Get-in-touch reveal</text>
       </g>
     </g>`
   },
@@ -374,16 +374,16 @@ const posters = [
     subtitle: "Athlete Grant Portal & Donor Campaign Platform",
     lede1: "Athlete-first WordPress ecosystem clarifying grant pathways",
     lede2: "and accelerating donor momentum for world-class athletes.",
-    chip1Title: "GRANT ALLOCATION PIPELINE",
-    chip1Text: "Multi-stage application review · Transparent committee scoring",
-    chip2Title: "CAMPAIGN MOMENTUM ENGINE",
-    chip2Text: "Direct Stripe donation processing · 501(c)(3) automated tax receipts",
+    chip1Title: "HISTORICAL IMPACT ALLOCATION",
+    chip1Text: "Over $7,000,000 granted to elite snowsport athletes since inception",
+    chip2Title: "FOUNDED BY ATHLETES FOR ATHLETES",
+    chip2Text: "Founded by US Ski Team athletes Bryon Friedman, Scott Macartney & Erik Schlopy",
     windowTitle: "WCD_FOUNDATION // GRANT_ALLOCATION_MONITOR",
-    statusPillText: "ACTIVE CAMPAIGN",
-    badge1: "Athlete Grant Portal",
-    b1Width: 175,
-    badge2: "Campaign Engine",
-    b2Width: 160,
+    statusPillText: "501(c)(3) ACTIVE",
+    badge1: "$7M+ Granted",
+    b1Width: 145,
+    badge2: "By & For Athletes",
+    b2Width: 165,
     badge3: "WordPress Core",
     b3Width: 150,
     domain: "WORLDCUPDREAMS.ORG",
@@ -393,45 +393,44 @@ const posters = [
     <g transform="translate(18, 50)">
       <g>
         <rect width="542" height="74" rx="8" fill="#071b29" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1"/>
-        <text x="18" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#7dd3fc">ANNUAL ELITE ATHLETE GRANT FUND</text>
-        <text x="18" y="46" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#ffffff">$214,800</text>
-        <text x="114" y="46" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#94a3b8">/ $250,000 GOAL</text>
+        <text x="18" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#7dd3fc">HISTORIC ATHLETE GRANT DISBURSEMENTS</text>
+        <text x="18" y="46" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#ffffff">$7,000,000+</text>
+        <text x="160" y="46" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#94a3b8">GRANTED TO ELITE ATHLETES</text>
         <rect x="340" y="22" width="180" height="24" rx="4" fill="rgba(56, 189, 248, 0.2)"/>
-        <text x="360" y="38" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#38bdf8">86% FUNDED · 42 DAYS</text>
-        <rect x="18" y="58" width="506" height="5" rx="2.5" fill="rgba(255,255,255,0.08)"/>
-        <rect x="18" y="58" width="435" height="5" rx="2.5" fill="#38bdf8"/>
+        <text x="355" y="38" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">BY THE ATHLETE · FOR THE ATHLETE</text>
+        <rect x="18" y="58" width="506" height="5" rx="2.5" fill="#38bdf8"/>
       </g>
       <g transform="translate(0, 86)">
         <rect width="542" height="152" rx="8" fill="#040e16" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">ACTIVE ATHLETE GRANT DISPATCH</text>
+        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">ACTIVE WCDF GRANT PROGRAM SUITE</text>
         <g transform="translate(16, 34)">
           <circle cx="6" cy="10" r="4" fill="#38bdf8"/>
-          <text x="20" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">A. MILLER (DOWNHILL)</text>
-          <text x="220" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Tier 1 International Travel Grant</text>
+          <text x="20" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">T2 ON THE RISE GRANT</text>
+          <text x="220" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Top 300 World-Ranked Competitors</text>
           <rect x="420" y="2" width="86" height="18" rx="3" fill="rgba(16, 185, 129, 0.2)"/>
-          <text x="430" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#34d399">APPROVED ✓</text>
+          <text x="430" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#34d399">ACTIVE GRANT ✓</text>
         </g>
         <g transform="translate(16, 68)">
           <circle cx="6" cy="10" r="4" fill="#38bdf8"/>
-          <text x="20" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">K. BRENNAN (SUPER-G)</text>
-          <text x="220" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">High-Performance Equipment Stipend</text>
+          <text x="20" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">T2 WORLD CUP GRANT</text>
+          <text x="220" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">World Cup &amp; Olympic Chasers</text>
           <rect x="420" y="2" width="86" height="18" rx="3" fill="rgba(56, 189, 248, 0.2)"/>
-          <text x="435" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#7dd3fc">FUNDED ✓</text>
+          <text x="435" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#7dd3fc">ACTIVE GRANT ✓</text>
         </g>
         <g transform="translate(16, 102)">
-          <circle cx="6" cy="10" r="4" fill="#fbbf24"/>
-          <text x="20" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">T. LARSEN (SLALOM)</text>
-          <text x="220" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Post-Injury Recovery Rehabilitation</text>
-          <rect x="420" y="2" width="86" height="18" rx="3" fill="rgba(251, 191, 36, 0.2)"/>
-          <text x="435" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#fbbf24">REVIEW</text>
+          <circle cx="6" cy="10" r="4" fill="#38bdf8"/>
+          <text x="20" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">ARCO &amp; FREESTYLE GRANTS</text>
+          <text x="220" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Need-Based Financial Support</text>
+          <rect x="420" y="2" width="86" height="18" rx="3" fill="rgba(56, 189, 248, 0.2)"/>
+          <text x="435" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#7dd3fc">ACTIVE GRANT ✓</text>
         </g>
       </g>
       <g transform="translate(0, 250)">
         <rect width="542" height="112" rx="8" fill="#02080d" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">DONATION ARCHITECTURE &amp; COMPLIANCE</text>
-        <text x="16" y="50" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[STRIPE] Automated recurrence engine · Zero donor dropoff</text>
-        <text x="16" y="72" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[TAX] 501(c)(3) instant PDF tax receipt generation on capture</text>
-        <text x="16" y="94" font-family="Courier, monospace" font-size="11" fill="#7dd3fc">[IMPACT] 100% of donor funding routed directly to active grant pool</text>
+        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">FOUNDATION LEADERSHIP &amp; DONOR INFRASTRUCTURE</text>
+        <text x="16" y="50" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[FOUNDERS] Former US Ski Team Athletes B. Friedman, S. Macartney, E. Schlopy</text>
+        <text x="16" y="72" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[MISSION] 501(c)(3) empowering winter athletes to overcome financial barriers</text>
+        <text x="16" y="94" font-family="Courier, monospace" font-size="11" fill="#7dd3fc">[STRIPE] Automated recurrence engine · Direct donor-to-athlete funding</text>
       </g>
     </g>`
   },
@@ -450,18 +449,18 @@ const posters = [
     subtitle: "Gratitude Gifting Protocol & Tribute Workspace",
     lede1: "Ritual-first gratitude prototype pairing a live public web surface",
     lede2: "with a Solana/Anchor tribute workspace and protocol mechanics.",
-    chip1Title: "SOLANA / ANCHOR SMART CONTRACTS",
-    chip1Text: "Non-fungible tribute minting · Immutable on-chain gratitude proofs",
-    chip2Title: "RITUAL-FIRST PRODUCT EXPERIENCE",
-    chip2Text: "Next.js 14 reactive interface · Arweave decentralized media archive",
-    windowTitle: "APPREESH // SOLANA_ANCHOR_RPC_MONITOR",
-    statusPillText: "MAINNET ACTIVE",
-    badge1: "Next.js 14",
-    b1Width: 135,
-    badge2: "Solana / Anchor",
-    b2Width: 165,
-    badge3: "Tribute Protocol",
-    b3Width: 165,
+    chip1Title: "SOLANA MAINNET TOKEN-2022",
+    chip1Text: "Official Mint: ErPxU4cjMDHg5ZKuxVFnnw7hZW5SvkCCThJJNxsWjWRr",
+    chip2Title: "SQUADS 2-OF-3 MULTISIG CUSTODY",
+    chip2Text: "3,000,000 Fixed Supply · 0% Inflation · Sovereign tribute routing",
+    windowTitle: "APPREESH // SOLANA_MAINNET_VERIFICATION",
+    statusPillText: "TOKEN LIVE",
+    badge1: "Solana Token-2022",
+    b1Width: 165,
+    badge2: "Squads Multisig",
+    b2Width: 155,
+    badge3: "3M Fixed Supply",
+    b3Width: 155,
     domain: "APPREESH.ORG",
     domainPillX: 930,
     domainPillWidth: 202,
@@ -469,35 +468,35 @@ const posters = [
     <g transform="translate(18, 50)">
       <g>
         <rect width="542" height="42" rx="8" fill="#140924" stroke="rgba(192, 132, 252, 0.3)" stroke-width="1"/>
-        <text x="20" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#e9d5ff">CLUSTER: MAINNET-BETA</text>
-        <text x="220" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">SLOT: 294,821</text>
-        <text x="420" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#c084fc">TPS: 2,410</text>
+        <text x="20" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#e9d5ff">CLUSTER: SOLANA MAINNET-BETA</text>
+        <text x="230" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">TOKEN-2022 STANDARD</text>
+        <text x="400" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#c084fc">3M FIXED SUPPLY</text>
       </g>
       <g transform="translate(0, 52)">
         <rect width="542" height="154" rx="8" fill="#0d0417" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
         <g transform="translate(20, 20)">
           <circle cx="36" cy="36" r="32" fill="rgba(192, 132, 252, 0.15)" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1"/>
           <path d="M 36 18 C 30 28, 26 34, 30 42 C 33 48, 42 48, 44 42 C 46 36, 40 32, 36 18 Z" fill="#c084fc"/>
-          <text x="88" y="24" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff">GENESIS TRIBUTE TOKEN #042</text>
-          <text x="88" y="44" font-family="Courier, monospace" font-size="11" fill="#c084fc">MINT: 7xKJ8...9zQw2 (Solana SPL)</text>
-          <text x="88" y="64" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Tribute To: Mentor &amp; Collaborator · Ritual: GRATITUDE_PASS</text>
-          <text x="88" y="84" font-family="Courier, monospace" font-size="10.5" fill="#a855f7">ARWEAVE HASH: ar://z84L...w19P · 100% PERMANENT STORAGE</text>
-          <rect x="88" y="94" width="130" height="20" rx="4" fill="rgba(192, 132, 252, 0.2)"/>
-          <text x="98" y="108" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#e9d5ff">VERIFIED ON-CHAIN ✓</text>
+          <text x="88" y="24" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff">$APPREESH — THE TOKEN OF GRATITUDE</text>
+          <text x="88" y="44" font-family="Courier, monospace" font-size="10" fill="#c084fc">MINT: ErPxU4cjMDHg5ZKuxVFnnw7hZW5SvkCCThJJNxsWjWRr</text>
+          <text x="88" y="64" font-family="Georgia, serif" font-size="11.5" font-style="italic" fill="#e2e8f0">&quot;Gratitude is the only sovereign currency.&quot;</text>
+          <text x="88" y="84" font-family="Courier, monospace" font-size="10" fill="#a855f7">CUSTODY: SQUADS 2-OF-3 MULTISIG (v4.squads.so)</text>
+          <rect x="88" y="94" width="165" height="20" rx="4" fill="rgba(192, 132, 252, 0.2)"/>
+          <text x="96" y="108" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#e9d5ff">VERIFIED MAINNET MINT ✓</text>
         </g>
       </g>
       <g transform="translate(0, 218)">
         <rect width="542" height="144" rx="8" fill="#06010a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">TRANSACTION STREAM &amp; PDA STATE LOG</text>
+        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">PROTOCOL SURFACES &amp; VERIFICATION LOG</text>
         <g transform="translate(16, 46)">
           <circle cx="4" cy="6" r="3" fill="#c084fc"/>
-          <text x="16" y="10" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[MINT] TX: 4mz8...81b · 0.05 SOL Tribute Minted · 32 confirmations</text>
+          <text x="16" y="10" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[SECTIONS] Send Appreciation (/tribute) · Appreeshonomics (/tokenomics)</text>
           <circle cx="4" cy="28" r="3" fill="#c084fc"/>
-          <text x="16" y="32" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[ANCHOR] Program ID: Appr5g...x9Q · State transition: INITIALIZED</text>
+          <text x="16" y="32" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[GOVERNANCE] Council &amp; DAO (/dao) · Lore Bible (/lore) · Manifest JSON</text>
           <circle cx="4" cy="50" r="3" fill="#e9d5ff"/>
-          <text x="16" y="54" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[EVENT] GratitudeMessageEmitted(recipient=Sean, sender=Community)</text>
+          <text x="16" y="54" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[TOKENOMICS] 3,000,000 Fixed Supply · 0% Inflation · Sovereign Protocol</text>
           <circle cx="4" cy="72" r="3" fill="#a855f7"/>
-          <text x="16" y="76" font-family="Courier, monospace" font-size="11" fill="#94a3b8">[METRIC] Zero gas friction · Phantom &amp; Solflare wallet adapters live</text>
+          <text x="16" y="76" font-family="Courier, monospace" font-size="11" fill="#94a3b8">[SECURITY] Squads 2-of-3 Multisig custody · Zero mint authority exploit</text>
         </g>
       </g>
     </g>`
@@ -574,7 +573,7 @@ const posters = [
     </g>`
   },
 
-  // 07: Occupational Career Consulting
+  // 07: Outplacement Career Consulting
   {
     slug: "occupational-career-consulting",
     accent: "#0ea5e9",
@@ -584,22 +583,22 @@ const posters = [
     glow100: "#03090e",
     tag: "[ 07 // WORKFORCE OUTPLACEMENT · OCC.CONSULTING ]",
     tagWidth: 430,
-    title: "Occupational Career",
-    subtitle: "Workforce Outplacement & Executive Coaching Platform",
-    lede1: "Human-led outplacement platform helping employers manage workforce",
-    lede2: "transitions with structure, care, dignity, and high-touch coaching.",
-    chip1Title: "EXECUTIVE TRANSITION WORKFLOWS",
-    chip1Text: "Structured milestone tracking from notice to senior executive placement",
-    chip2Title: "CONFIDENTIAL EMPLOYER DISPATCH",
-    chip2Text: "Role-gated corporate portal with anonymized progress metrics",
-    windowTitle: "OCC_OUTPLACEMENT // TRANSITION_PORTAL",
-    statusPillText: "SOC2 SECURE",
-    badge1: "Outplacement Portal",
-    b1Width: 175,
+    title: "Outplacement Career",
+    subtitle: "Human-Led Workforce Outplacement & Executive Transition",
+    lede1: "Structured outplacement platform helping employers manage workforce",
+    lede2: "transitions with clarity, care, dignity, and high-touch coaching.",
+    chip1Title: "STRUCTURED OUTPLACEMENT FRAMEWORK",
+    chip1Text: "Human-led process from notification to placement with outcomes measurement",
+    chip2Title: "CHANGE MANAGEMENT INTEGRATION",
+    chip2Text: "Documented employer experience reducing strain while protecting brand",
+    windowTitle: "OCC_OUTPLACEMENT // TRANSITION_FRAMEWORK",
+    statusPillText: "FRAMEWORK ACTIVE",
+    badge1: "Outplacement Platform",
+    b1Width: 180,
     badge2: "Executive Coaching",
     b2Width: 170,
-    badge3: "Employer Dispatch",
-    b3Width: 165,
+    badge3: "Change Management",
+    b3Width: 175,
     domain: "OCC.CONSULTING",
     domainPillX: 910,
     domainPillWidth: 222,
@@ -613,42 +612,42 @@ const posters = [
         <line x1="90" y1="26" x2="130" y2="26" stroke="#0ea5e9" stroke-width="2"/>
         <circle cx="145" cy="26" r="10" fill="#0ea5e9"/>
         <text x="141" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">✓</text>
-        <text x="162" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">RESUME</text>
-        <line x1="214" y1="26" x2="254" y2="26" stroke="#0ea5e9" stroke-width="2"/>
-        <circle cx="270" cy="26" r="11" fill="rgba(14, 165, 233, 0.3)" stroke="#38bdf8" stroke-width="2"/>
-        <text x="267" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">3</text>
-        <text x="288" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">COACHING</text>
-        <line x1="356" y1="26" x2="396" y2="26" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-        <circle cx="412" cy="26" r="10" fill="rgba(255,255,255,0.08)"/>
-        <text x="408" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#94a3b8">4</text>
-        <text x="428" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">PLACEMENT</text>
+        <text x="162" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">ASSESSMENT</text>
+        <line x1="240" y1="26" x2="280" y2="26" stroke="#0ea5e9" stroke-width="2"/>
+        <circle cx="295" cy="26" r="11" fill="rgba(14, 165, 233, 0.3)" stroke="#38bdf8" stroke-width="2"/>
+        <text x="292" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">3</text>
+        <text x="312" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">COACHING</text>
+        <line x1="380" y1="26" x2="420" y2="26" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+        <circle cx="436" cy="26" r="10" fill="rgba(255,255,255,0.08)"/>
+        <text x="432" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#94a3b8">4</text>
+        <text x="452" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">PLACEMENT</text>
       </g>
       <g transform="translate(0, 64)">
         <rect width="542" height="166" rx="8" fill="#040f17" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="18" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#38bdf8">ACTIVE CANDIDATE DOSSIER // CONFIDENTIAL</text>
+        <text x="18" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#38bdf8">HUMAN-LED OUTPLACEMENT PHILOSOPHY // OCC</text>
         <g transform="translate(18, 42)">
-          <text x="0" y="14" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff">VP OF ENGINEERING · FORTUNE 500 TRANSITION</text>
-          <text x="0" y="36" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Executive Coach Assigned: Senior Partner · Week 3 of 8</text>
-          <text x="0" y="58" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">1-on-1 Sessions Completed: 4 of 6 · Target Company Matrix Built</text>
+          <text x="0" y="14" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#ffffff">&quot;Effective outplacement addresses both sides: people and organization.&quot;</text>
+          <text x="0" y="36" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Documented Outplacement Experience · Reduced Operational Strain</text>
+          <text x="0" y="58" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Equitable, Role-Appropriate Employee Support · In-Depth Measurement</text>
           <g transform="translate(0, 74)">
             <rect width="506" height="6" rx="3" fill="rgba(255,255,255,0.08)"/>
-            <rect width="340" height="6" rx="3" fill="#0ea5e9"/>
-            <text x="0" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">PROGRAM PROGRESS: 68%</text>
-            <text x="360" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">EXECUTIVE READY ✓</text>
+            <rect width="440" height="6" rx="3" fill="#0ea5e9"/>
+            <text x="0" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">FRAMEWORK DELIVERY: CONSISTENT &amp; REPEATABLE</text>
+            <text x="375" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">HR-INFORMED ✓</text>
           </g>
         </g>
       </g>
       <g transform="translate(0, 242)">
         <rect width="542" height="120" rx="8" fill="#02080d" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">CORPORATE SPONSOR &amp; PRIVACY TELEMETRY</text>
-        <text x="16" y="52" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[EMPLOYER] Role-gated dashboard · Anonymized engagement metrics</text>
-        <text x="16" y="74" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[SECURITY] SOC2 Type II certified data isolation · Zero PII leaks</text>
-        <text x="16" y="96" font-family="Courier, monospace" font-size="11" fill="#38bdf8">[OUTCOME] 92% successful placement within 90 days of program start</text>
+        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">EMPLOYER CHANGE MANAGEMENT INTEGRATION</text>
+        <text x="16" y="52" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[INTEGRATION] Directly integrates with employer Change Management</text>
+        <text x="16" y="74" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[BRAND PROTECTION] Protects employer reputation while honoring employees</text>
+        <text x="16" y="96" font-family="Courier, monospace" font-size="11" fill="#38bdf8">[PLATFORM] Technology-enabled efficiency + high-touch human partnership</text>
       </g>
     </g>`
   },
 
-  // 08: Western Management
+  // 08: Western Management Associates
   {
     slug: "western-management",
     accent: "#eab308",
@@ -656,24 +655,24 @@ const posters = [
     glow0: "#261d06",
     glow45: "#140e02",
     glow100: "#070501",
-    tag: "[ 08 // REAL ESTATE OPERATIONS · WESTERN.MANAGEMENT ]",
-    tagWidth: 460,
+    tag: "[ 08 // WASATCH FRONT ASSET MANAGEMENT · WESTERN.MANAGEMENT ]",
+    tagWidth: 480,
     title: "Western Management",
-    subtitle: "Commercial Property Operations & Management Platform",
-    lede1: "Commercial real estate leasing and operations platform streamlining",
-    lede2: "leasing inquiries, maintenance tickets, and property listings.",
-    chip1Title: "TENANT DISPATCH & WORK ORDERS",
-    chip1Text: "Real-time maintenance triage · Automated contractor dispatch",
-    chip2Title: "COMMERCIAL LEASING DIRECTORY",
-    chip2Text: "Interactive vacant suite listings · Direct broker inquiry queue",
-    windowTitle: "WESTERN_OPS // PROPERTY_DISPATCH_CONSOLE",
-    statusPillText: "PORTFOLIO 96%",
-    badge1: "Commercial Hub",
-    b1Width: 155,
+    subtitle: "Wasatch Front Asset Management & Commercial Property Operations",
+    lede1: "Utah asset management experts for over 40+ years, providing commercial leasing",
+    lede2: "and property operations along the Wasatch Front at western.management.",
+    chip1Title: "UTAH ASSET MANAGEMENT LEADERSHIP",
+    chip1Text: "Over 40+ years of trusted commercial real estate operations in Utah",
+    chip2Title: "TENANT DISPATCH & LEASING PORTAL",
+    chip2Text: "Streamlined maintenance dispatch, tenant workflows & vacancy directory",
+    windowTitle: "WESTERN_MANAGEMENT // ASSET_DISPATCH_CONSOLE",
+    statusPillText: "40+ YEARS UTAH",
+    badge1: "Wasatch Front",
+    b1Width: 150,
     badge2: "Tenant Dispatch",
     b2Width: 160,
-    badge3: "React & Node",
-    b3Width: 145,
+    badge3: "WordPress & Divi",
+    b3Width: 165,
     domain: "WESTERN.MANAGEMENT",
     domainPillX: 890,
     domainPillWidth: 242,
@@ -681,47 +680,44 @@ const posters = [
     <g transform="translate(18, 50)">
       <g>
         <rect width="542" height="42" rx="8" fill="#141004" stroke="rgba(234, 179, 8, 0.3)" stroke-width="1"/>
-        <text x="20" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#fde047">PORTFOLIO: 14 PROPERTIES</text>
-        <text x="230" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">OCCUPANCY: 96.4%</text>
-        <text x="420" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#eab308">TICKETS: 3 ACTIVE</text>
+        <text x="20" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#fde047">WASATCH FRONT COMMERCIAL PORTFOLIO</text>
+        <text x="290" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">40+ YEARS IN UTAH</text>
+        <text x="430" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#eab308">DISPATCH: ACTIVE</text>
       </g>
       <g transform="translate(0, 52)">
         <rect width="542" height="180" rx="8" fill="#0b0802" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">TENANT DISPATCH WORK ORDER QUEUE</text>
+        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">TENANT DISPATCH &amp; MAINTENANCE WORK ORDERS</text>
         <g transform="translate(16, 36)">
           <rect width="510" height="40" rx="4" fill="#140f04" stroke="rgba(234, 179, 8, 0.2)" stroke-width="1"/>
           <circle cx="16" cy="20" r="4" fill="#ef4444"/>
           <text x="28" y="24" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">WO #492</text>
-          <text x="110" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Bldg C · Suite 304 HVAC Fan</text>
-          <rect x="310" y="10" width="86" height="20" rx="3" fill="rgba(239, 68, 68, 0.2)"/>
-          <text x="320" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#f87171">URGENT</text>
-          <text x="410" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fde047">DISPATCHED ✓</text>
+          <text x="110" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Wasatch Front Office · HVAC System Calibration</text>
+          <rect x="370" y="10" width="86" height="20" rx="3" fill="rgba(239, 68, 68, 0.2)"/>
+          <text x="380" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#f87171">DISPATCHED</text>
         </g>
         <g transform="translate(16, 84)">
           <rect width="510" height="40" rx="4" fill="#080602" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
           <circle cx="16" cy="20" r="4" fill="#eab308"/>
           <text x="28" y="24" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">WO #493</text>
-          <text x="110" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Bldg A · Suite 112 Keycard Access</text>
-          <rect x="310" y="10" width="86" height="20" rx="3" fill="rgba(234, 179, 8, 0.15)"/>
-          <text x="325" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#eab308">ROUTINE</text>
-          <text x="410" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#94a3b8">ASSIGNED</text>
+          <text x="110" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Commercial Property · Suite Keycard Calibration</text>
+          <rect x="370" y="10" width="86" height="20" rx="3" fill="rgba(234, 179, 8, 0.15)"/>
+          <text x="385" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#eab308">ASSIGNED</text>
         </g>
         <g transform="translate(16, 132)">
           <rect width="510" height="40" rx="4" fill="#080602" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
           <circle cx="16" cy="20" r="4" fill="#10b981"/>
           <text x="28" y="24" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">WO #494</text>
-          <text x="110" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Bldg B · Roof Membrane Check</text>
-          <rect x="310" y="10" width="86" height="20" rx="3" fill="rgba(16, 185, 129, 0.15)"/>
-          <text x="320" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#34d399">SCHEDULED</text>
-          <text x="410" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#34d399">OCT 08</text>
+          <text x="110" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Industrial Park · Exterior Facility Inspection</text>
+          <rect x="370" y="10" width="86" height="20" rx="3" fill="rgba(16, 185, 129, 0.15)"/>
+          <text x="380" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#34d399">SCHEDULED</text>
         </g>
       </g>
       <g transform="translate(0, 244)">
         <rect width="542" height="118" rx="8" fill="#050401" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">FEATURED VACANCY &amp; BROKER INQUIRIES</text>
-        <text x="16" y="52" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff">DOWNTOWN PLAZA · SUITE 400 · 3,450 RSF</text>
-        <text x="16" y="74" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Move-In Ready Creative Office · 6 Active Broker Inquiries Queued</text>
-        <text x="16" y="96" font-family="Courier, monospace" font-size="11" fill="#fde047">[LEASING] Direct inquiry pipeline to property manager · 0% latency</text>
+        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">UTAH ASSET MANAGEMENT EXPERT FOR 40+ YEARS</text>
+        <text x="16" y="52" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff">WASATCH FRONT COMMERCIAL REAL ESTATE &amp; LEASING</text>
+        <text x="16" y="74" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Asset Management · Property Maintenance · Direct Broker Inquiries</text>
+        <text x="16" y="96" font-family="Courier, monospace" font-size="11" fill="#fde047">[PLATFORM] WordPress + Divi · Active commercial inquiry pipeline</text>
       </g>
     </g>`
   },
