@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   }
 };
 
+export const dynamic = "force-dynamic";
+
 export default function StudioAppPage() {
   const studioAppPath = path.join(process.cwd(), "public", "studio-app", "index.html");
   const isDeployed = fs.existsSync(studioAppPath);
