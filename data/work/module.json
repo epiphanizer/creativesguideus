@@ -27,7 +27,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://www.livetbm.com",
       "siteLabel": "Visit livetbm.com",
-      "previewImageUrl": "/assets/projects/total-body-modification.png"
+      "previewImageUrl": "/assets/projects/total-body-modification.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/total-body-modification-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/total-body-modification-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/total-body-modification-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "followup-care",
@@ -51,7 +74,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://app.followup.care",
       "siteLabel": "Visit app.followup.care",
-      "previewImageUrl": "/assets/projects/followup-care.png"
+      "previewImageUrl": "/assets/projects/followup-care.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/followup-care-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/followup-care-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/followup-care-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "cluck-design",
@@ -74,7 +120,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://cluckdesign.com",
       "siteLabel": "Visit cluckdesign.com",
-      "previewImageUrl": "/assets/projects/cluck-design.png"
+      "previewImageUrl": "/assets/projects/cluck-design.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/cluck-design-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/cluck-design-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/cluck-design-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "world-cup-dreams",
@@ -98,7 +167,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://www.worldcupdreams.org",
       "siteLabel": "Visit worldcupdreams.org",
-      "previewImageUrl": "/assets/projects/world-cup-dreams.png"
+      "previewImageUrl": "/assets/projects/world-cup-dreams.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/world-cup-dreams-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/world-cup-dreams-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/world-cup-dreams-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "appreesh",
@@ -120,7 +212,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://appreesh.org",
       "siteLabel": "Visit appreesh.org",
-      "previewImageUrl": "/assets/projects/appreesh.png"
+      "previewImageUrl": "/assets/projects/appreesh.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/appreesh-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/appreesh-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/appreesh-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "lead-me-guide-me",
@@ -144,7 +259,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://leadmeguideme.org",
       "siteLabel": "Visit leadmeguideme.org",
-      "previewImageUrl": "/assets/projects/lead-me-guide-me.png"
+      "previewImageUrl": "/assets/projects/lead-me-guide-me.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/lead-me-guide-me-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/lead-me-guide-me-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/lead-me-guide-me-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "occupational-career-consulting",
@@ -168,7 +306,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://occ.consulting",
       "siteLabel": "Visit occ.consulting",
-      "previewImageUrl": "/assets/projects/occupational-career-consulting.png"
+      "previewImageUrl": "/assets/projects/occupational-career-consulting.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/occupational-career-consulting-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/occupational-career-consulting-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/occupational-career-consulting-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "western-management",
@@ -192,7 +353,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://western.management",
       "siteLabel": "Visit western.management",
-      "previewImageUrl": "/assets/projects/western-management.png"
+      "previewImageUrl": "/assets/projects/western-management.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/western-management-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/western-management-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/western-management-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "creatives-guide-us",
@@ -215,7 +399,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://creativesguide.us",
       "siteLabel": "Visit creativesguide.us",
-      "previewImageUrl": "/assets/projects/creatives-guide-us.png"
+      "previewImageUrl": "/assets/projects/creatives-guide-us.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/creatives-guide-us-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/creatives-guide-us-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/creatives-guide-us-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "namastay-online",
@@ -239,7 +446,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://namastay.online",
       "siteLabel": "Visit namastay.online",
-      "previewImageUrl": "/assets/projects/namastay-online.png"
+      "previewImageUrl": "/assets/projects/namastay-online.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/namastay-online-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/namastay-online-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/namastay-online-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "namastay-yoga",
@@ -263,7 +493,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://namastay.yoga",
       "siteLabel": "Visit namastay.yoga",
-      "previewImageUrl": "/assets/projects/namastay-yoga.png"
+      "previewImageUrl": "/assets/projects/namastay-yoga.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/namastay-yoga-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/namastay-yoga-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/namastay-yoga-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "johnwalls-studio",
@@ -288,7 +541,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://johnwalls.studio",
       "siteLabel": "Visit johnwalls.studio",
-      "previewImageUrl": "/assets/projects/johnwalls-studio.png"
+      "previewImageUrl": "/assets/projects/johnwalls-studio.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/johnwalls-studio-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/johnwalls-studio-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/johnwalls-studio-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     },
     {
       "slug": "walls-devine",
@@ -312,7 +588,30 @@
       "caseStudyUrl": "",
       "siteHref": "https://johnwalls.rocks",
       "siteLabel": "Visit johnwalls.rocks",
-      "previewImageUrl": "/assets/projects/walls-devine.png"
+      "previewImageUrl": "/assets/projects/walls-devine.png",
+      "screenshots": [
+        {
+          "type": "desktop",
+          "label": "Live Site · Desktop View",
+          "url": "/assets/projects/screenshots/walls-devine-desktop.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "content",
+          "label": "Live Site · Content Layout",
+          "url": "/assets/projects/screenshots/walls-devine-content.png",
+          "width": 1440,
+          "height": 900
+        },
+        {
+          "type": "mobile",
+          "label": "Live Site · Mobile Portrait",
+          "url": "/assets/projects/screenshots/walls-devine-mobile.png",
+          "width": 390,
+          "height": 844
+        }
+      ]
     }
   ]
 }

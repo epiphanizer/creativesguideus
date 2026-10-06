@@ -48,6 +48,7 @@ async function syncWorkModule() {
       siteHref: study.siteHref || "",
       siteLabel: study.siteLabel || (study.siteHref ? `Visit ${study.slug}` : ""),
       previewImageUrl: study.previewImageUrl || "",
+      screenshots: Array.isArray(study.screenshots) ? study.screenshots : [],
       sortOrder: idx + 1,
       published: true
     }))
