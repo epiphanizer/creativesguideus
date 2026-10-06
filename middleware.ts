@@ -60,12 +60,21 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
+  if (isStudioHost && (pathname === "/app" || pathname === "/lab" || pathname === "/interactive")) {
+    const rewriteUrl = new URL("/johnwalls-studio/app", request.url);
+    const response = NextResponse.rewrite(rewriteUrl);
+    applySecurityHeaders(response);
+    return response;
+  }
+
   // ── API Route Protection ──────────────────────────────────────────────────
   if (pathname.startsWith("/api/")) {
     // 1. Content-Length check to reject memory-exhaustion payloads immediately
     const contentLength = parseInt(request.headers.get("content-length") || "0", 10);
     const maxPayloadBytes = pathname.startsWith("/api/bong-tour/giveaway")
       ? 32 * 1024 // 32KB max for giveaway form
+      : pathname.startsWith("/api/johnwalls/deploy") || pathname.startsWith("/api/johnwalls/publish")
+      ? 100 * 1024 * 1024 // 100MB max for studio app deployments & raw audio takes
       : 256 * 1024; // 256KB max for general API calls
 
     if (contentLength > maxPayloadBytes) {
@@ -95,8 +104,8 @@ export function middleware(request: NextRequest) {
       limit = 5;
       windowMs = 5 * 60 * 1000;
       routeKey = "authgate";
-    } else if (pathname.startsWith("/api/admin/")) {
-      // Admin endpoints: max 30 attempts per minute per IP
+    } else if (pathname.startsWith("/api/admin/") || pathname.startsWith("/api/johnwalls/deploy")) {
+      // Admin & deploy endpoints: max 30 attempts per minute per IP
       limit = 30;
       windowMs = 60 * 1000;
       routeKey = "admin";
