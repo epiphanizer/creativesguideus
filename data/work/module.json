@@ -260,6 +260,55 @@
       "siteHref": "https://namastay.yoga",
       "siteLabel": "Visit namastay.yoga",
       "previewImageUrl": ""
+    },
+    {
+      "slug": "johnwalls-studio",
+      "title": "johnwalls.studio",
+      "eyebrow": "Generative Audio DSP Lab & Ableton Live VST3/AU Plugin",
+      "description": "Generative audio DSP engineering lab bridging Ableton Live 12, JUCE C++ audio processing, SuperCollider OSC synthesis, and an interactive browser-based visualizer and take-publishing canvas at johnwalls.studio.",
+      "workIndexDescription": "Generative audio DSP workstation and Ableton Live VST3/AU plugin suite with real-time OSC telemetry, SuperCollider synthesis, and web-publishing canvas at johnwalls.studio.",
+      "tags": [
+        "Audio DSP",
+        "JUCE C++",
+        "VST3 / AU",
+        "SuperCollider",
+        "Ableton Live 12",
+        "Web Audio API"
+      ],
+      "proof": [
+        "Native macOS VST3 / AU binaries",
+        "Real-time WebSocket telemetry engine",
+        "Direct take capture & web publishing"
+      ],
+      "caseStudyPath": "",
+      "caseStudyUrl": "",
+      "siteHref": "https://johnwalls.studio",
+      "siteLabel": "Visit johnwalls.studio",
+      "previewImageUrl": ""
+    },
+    {
+      "slug": "walls-devine",
+      "title": "Walls/Devine — Volume 1",
+      "eyebrow": "Debut 8-Track Studio Master & Direct Sync Catalog",
+      "description": "Debut 8-track studio album released with 100% master and sync publishing rights retained for direct synchronization, film/TV placement, and streaming at johnwalls.rocks.",
+      "workIndexDescription": "Debut 8-track studio master tracked live on 2-inch tape in Los Angeles, cleared for 100% direct sync licensing and companion score packaging at johnwalls.rocks.",
+      "tags": [
+        "Music IP",
+        "Sync Licensing",
+        "Studio Master",
+        "Rock & Funk",
+        "2-Inch Tape"
+      ],
+      "proof": [
+        "8 master tracks tracked on 2-inch tape",
+        "100% direct sync & master ownership",
+        "Zero major-label middleman lock-in"
+      ],
+      "caseStudyPath": "",
+      "caseStudyUrl": "",
+      "siteHref": "https://johnwalls.rocks",
+      "siteLabel": "Visit johnwalls.rocks",
+      "previewImageUrl": ""
     }
   ]
 }
