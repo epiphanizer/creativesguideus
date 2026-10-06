@@ -6,8 +6,30 @@ import AnalyticsBootstrap from "@/components/analytics/AnalyticsBootstrap";
 import GlobalChrome from "@/components/GlobalChrome";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://creativesguide.us"),
   title: "Creatives Guide Us",
-  description: "Independent creative studio & record label. Sound, screen, and tactile editions."
+  description: "Independent creative studio & record label. Sound, screen, and tactile editions.",
+  openGraph: {
+    title: "Creatives Guide Us",
+    description: "Independent creative studio & record label. Sound, screen, and tactile editions.",
+    url: "https://creativesguide.us",
+    siteName: "Creatives Guide Us",
+    images: [
+      {
+        url: "/images/cgu-og.png",
+        width: 1200,
+        height: 630,
+        alt: "Creatives Guide Us — Studio & Label"
+      }
+    ],
+    type: "website"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Creatives Guide Us",
+    description: "Independent creative studio & record label. Sound, screen, and tactile editions.",
+    images: ["/images/cgu-og.png"]
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

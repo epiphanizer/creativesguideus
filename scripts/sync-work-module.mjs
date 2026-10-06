@@ -47,6 +47,7 @@ async function syncWorkModule() {
       caseStudyUrl: study.caseStudyUrl || "",
       siteHref: study.siteHref || "",
       siteLabel: study.siteLabel || (study.siteHref ? `Visit ${study.slug}` : ""),
+      previewImageUrl: study.previewImageUrl || "",
       sortOrder: idx + 1,
       published: true
     }))

@@ -27,7 +27,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://www.livetbm.com",
       "siteLabel": "Visit livetbm.com",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/total-body-modification.webp"
     },
     {
       "slug": "followup-care",
@@ -51,7 +51,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://app.followup.care",
       "siteLabel": "Visit app.followup.care",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/followup-care.png"
     },
     {
       "slug": "cluck-design",
@@ -74,7 +74,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://cluckdesign.com",
       "siteLabel": "Visit cluckdesign.com",
-      "previewImageUrl": "https://www.cluckdesign.com/wp-content/uploads/2026/04/nightswim_hero_sqsh-1024x683.webp"
+      "previewImageUrl": "/assets/projects/cluck-design.webp"
     },
     {
       "slug": "world-cup-dreams",
@@ -98,7 +98,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://www.worldcupdreams.org",
       "siteLabel": "Visit worldcupdreams.org",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/world-cup-dreams.jpg"
     },
     {
       "slug": "appreesh",
@@ -120,7 +120,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://appreesh.org",
       "siteLabel": "Visit appreesh.org",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/appreesh.png"
     },
     {
       "slug": "lead-me-guide-me",
@@ -142,7 +142,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://leadmeguideme.org",
       "siteLabel": "Visit leadmeguideme.org",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/lead-me-guide-me.png"
     },
     {
       "slug": "occupational-career-consulting",
@@ -165,7 +165,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://occ.consulting",
       "siteLabel": "Visit occ.consulting",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/occupational-career-consulting.jpg"
     },
     {
       "slug": "western-management",
@@ -188,7 +188,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://western.management",
       "siteLabel": "Visit western.management",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/western-management.jpg"
     },
     {
       "slug": "creatives-guide-us",
@@ -211,7 +211,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://creativesguide.us",
       "siteLabel": "Visit creativesguide.us",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/creatives-guide-us.png"
     },
     {
       "slug": "namastay-online",
@@ -235,7 +235,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://namastay.online",
       "siteLabel": "Visit namastay.online",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/namastay-online.png"
     },
     {
       "slug": "namastay-yoga",
@@ -259,7 +259,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://namastay.yoga",
       "siteLabel": "Visit namastay.yoga",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/namastay-yoga.png"
     },
     {
       "slug": "johnwalls-studio",
@@ -284,7 +284,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://johnwalls.studio",
       "siteLabel": "Visit johnwalls.studio",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/johnwalls-studio.png"
     },
     {
       "slug": "walls-devine",
@@ -308,7 +308,7 @@
       "caseStudyUrl": "",
       "siteHref": "https://johnwalls.rocks",
       "siteLabel": "Visit johnwalls.rocks",
-      "previewImageUrl": ""
+      "previewImageUrl": "/assets/projects/walls-devine.png"
     }
   ]
 }
