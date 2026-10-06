@@ -507,7 +507,7 @@ export function JohnWallsStudioView() {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://github.com/epiphanizer/johnwalls.studio/actions/workflows/nightly.yml/badge.svg"
+                  src="https://github.com/epiphanizer/johnwalls.studio/workflows/Nightly%20VST%20Build%20&%20Release/badge.svg"
                   alt="Nightly VST Build Status"
                   style={{ height: "20px", borderRadius: "3px" }}
                 />
