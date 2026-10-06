@@ -125,18 +125,20 @@
     {
       "slug": "lead-me-guide-me",
       "title": "Lead Me Guide Me",
-      "eyebrow": "Gospel Choir Rehearsal Companion & Scripture App",
-      "description": "iOS scripture companion pairing daily prompts with original rehearsal cues for gospel choirs.",
-      "workIndexDescription": "SwiftUI scripture companion aligning daily meditations with choir rehearsal flows.",
+      "eyebrow": "Shared Scripture Study & Group Annotation iOS App",
+      "description": "Native Swift iOS application anchoring families and study groups through shared Book of Mormon reading, collaborative verse highlighting, color-coded study circles, and discussion boards at leadmeguideme.org.",
+      "workIndexDescription": "Native Swift iOS app enabling collaborative scripture study circles, shared highlights, group annotations, and real-time Firebase sync at leadmeguideme.org.",
       "tags": [
-        "Product",
-        "Music",
-        "Story"
+        "Native Swift iOS",
+        "Shared Scripture Study",
+        "Firebase Firestore",
+        "Collaborative Annotations",
+        "Mobile App"
       ],
       "proof": [
-        "12-week beta",
-        "SwiftUI iOS",
-        "Product · UX · Score"
+        "Native Swift iOS App",
+        "Firebase Firestore Sync",
+        "Collaborative Study Circles"
       ],
       "caseStudyPath": "",
       "caseStudyUrl": "",

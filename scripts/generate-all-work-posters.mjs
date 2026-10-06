@@ -1,6 +1,6 @@
-import { execSync } from "node:child_process";
 import { writeFileSync, copyFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
+import { chromium } from "playwright";
 
 const cguPublicImages = "/Users/seanhalls/Desktop/sh/cgu_master/public/images";
 const shoPublicAssets = "/Users/seanhalls/Desktop/sh/seanhalls_online/public/assets";
@@ -17,7 +17,7 @@ mkdirSync(namastayClient, { recursive: true });
 mkdirSync(tbmThemeImages, { recursive: true });
 
 function escapeXml(unsafe) {
-  return unsafe
+  return String(unsafe || "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -25,186 +25,222 @@ function escapeXml(unsafe) {
     .replace(/'/g, "&apos;");
 }
 
-function buildPosterSvg(cfg) {
-  const titleFontSize = cfg.titleFontSize || (cfg.title.length > 20 ? 35 : (cfg.title.length > 16 ? 38 : 42));
+function buildLightPosterSvg(cfg) {
+  const titleFontSize = cfg.titleFontSize || (cfg.title.length > 22 ? 31 : (cfg.title.length > 17 ? 35 : 39));
   
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
-    <radialGradient id="bg_${cfg.slug}" cx="60%" cy="30%" r="85%">
-      <stop offset="0%" stop-color="${cfg.glow0}"/>
-      <stop offset="45%" stop-color="${cfg.glow45}"/>
-      <stop offset="100%" stop-color="${cfg.glow100}"/>
-    </radialGradient>
-    <pattern id="grid_${cfg.slug}" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="rgba(255,255,255,0.022)" stroke-width="1"/>
+    <!-- Background Dot Grid -->
+    <pattern id="dotgrid_${cfg.slug}" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.1" fill="#cbd5e1" fill-opacity="0.6"/>
     </pattern>
-    <linearGradient id="accentGrad_${cfg.slug}" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="${cfg.accent}"/>
-      <stop offset="60%" stop-color="${cfg.accentLight}"/>
-      <stop offset="100%" stop-color="#ffffff"/>
-    </linearGradient>
+    <filter id="cardShadow" x="-3%" y="-3%" width="106%" height="108%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.06"/>
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.04"/>
+    </filter>
   </defs>
 
-  <!-- Background -->
-  <rect width="1200" height="630" fill="url(#bg_${cfg.slug})"/>
-  <rect width="1200" height="630" fill="url(#grid_${cfg.slug})"/>
+  <!-- Base Canvas Background -->
+  <rect width="1200" height="630" fill="#f8fafc"/>
+  <rect width="1200" height="630" fill="url(#dotgrid_${cfg.slug})"/>
 
-  <!-- Outer Double Borders -->
-  <rect x="36" y="36" width="1128" height="558" rx="16" fill="none" stroke="${cfg.accent}" stroke-opacity="0.28" stroke-width="1.5"/>
-  <rect x="44" y="44" width="1112" height="542" rx="12" fill="none" stroke="rgba(255, 255, 255, 0.04)" stroke-width="1"/>
+  <!-- Outer Architectural Card -->
+  <rect x="24" y="24" width="1152" height="582" rx="14" fill="#ffffff" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1.5" filter="url(#cardShadow)"/>
+  <rect x="32" y="32" width="1136" height="566" rx="10" fill="none" stroke="rgba(15, 23, 42, 0.03)" stroke-width="1"/>
 
   <!-- Corner Crosshairs -->
-  <path d="M 30 36 L 42 36 M 36 30 L 36 42" stroke="${cfg.accent}" stroke-opacity="0.6" stroke-width="1.5"/>
-  <path d="M 1158 36 L 1170 36 M 1164 30 L 1164 42" stroke="${cfg.accent}" stroke-opacity="0.6" stroke-width="1.5"/>
-  <path d="M 30 594 L 42 594 M 36 588 L 36 600" stroke="${cfg.accent}" stroke-opacity="0.6" stroke-width="1.5"/>
-  <path d="M 1158 594 L 1170 594 M 1164 588 L 1164 600" stroke="${cfg.accent}" stroke-opacity="0.6" stroke-width="1.5"/>
+  <path d="M 18 24 L 30 24 M 24 18 L 24 30" stroke="${cfg.accent}" stroke-opacity="0.85" stroke-width="1.5"/>
+  <path d="M 1170 24 L 1182 24 M 1176 18 L 1176 30" stroke="${cfg.accent}" stroke-opacity="0.85" stroke-width="1.5"/>
+  <path d="M 18 606 L 30 606 M 24 600 L 24 612" stroke="${cfg.accent}" stroke-opacity="0.85" stroke-width="1.5"/>
+  <path d="M 1170 606 L 1182 606 M 1176 600 L 1176 612" stroke="${cfg.accent}" stroke-opacity="0.85" stroke-width="1.5"/>
 
-  <!-- Top System Tag -->
-  <g transform="translate(68, 64)">
-    <rect width="${cfg.tagWidth || 430}" height="30" rx="5" fill="${cfg.accent}" fill-opacity="0.08" stroke="${cfg.accent}" stroke-opacity="0.35" stroke-width="1"/>
-    <text x="14" y="19" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="${cfg.accent}">${escapeXml(cfg.tag)}</text>
+  <!-- Top System Tag Pill -->
+  <g transform="translate(56, 50)">
+    <rect width="${cfg.tagWidth || 430}" height="28" rx="5" fill="${cfg.accent}" fill-opacity="0.09" stroke="${cfg.accent}" stroke-opacity="0.35" stroke-width="1"/>
+    <text x="14" y="18" font-family="'JetBrains Mono', 'SF Mono', Menlo, monospace" font-size="11" font-weight="700" fill="${cfg.accentDark}">${escapeXml(cfg.tag)}</text>
   </g>
 
-  <!-- Left Narrative Display -->
-  <text x="68" y="142" font-family="Helvetica, Arial, sans-serif" font-size="${titleFontSize}" font-weight="bold" fill="#ffffff">${escapeXml(cfg.title)}</text>
-  <text x="68" y="174" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" fill="${cfg.accentLight}">${escapeXml(cfg.subtitle)}</text>
+  <!-- Top Right Case Study Badge -->
+  <g transform="translate(860, 50)">
+    <rect width="250" height="28" rx="5" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.1)" stroke-width="1"/>
+    <circle cx="16" cy="14" r="3.5" fill="#10b981"/>
+    <text x="28" y="18" font-family="'JetBrains Mono', 'SF Mono', Menlo, monospace" font-size="10.5" font-weight="700" fill="#475569">CASE STUDY // VERIFIED PROOF</text>
+  </g>
 
-  <text x="68" y="216" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#94a3b8">${escapeXml(cfg.lede1)}</text>
-  <text x="68" y="238" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#94a3b8">${escapeXml(cfg.lede2)}</text>
+  <!-- Left Narrative Column -->
+  <!-- Title -->
+  <text x="56" y="128" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-size="${titleFontSize}" font-weight="850" letter-spacing="-0.03em" fill="#0f172a">${escapeXml(cfg.title)}</text>
+  
+  <!-- Subtitle -->
+  <text x="56" y="158" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-size="14.5" font-weight="700" fill="${cfg.accentDark}">${escapeXml(cfg.subtitle)}</text>
+
+  <!-- Narrative Lede -->
+  <text x="56" y="194" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="12.5" fill="#334155">${escapeXml(cfg.lede1)}</text>
+  <text x="56" y="214" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="12.5" fill="#334155">${escapeXml(cfg.lede2)}</text>
+  ${cfg.lede3 ? `<text x="56" y="234" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="12.5" fill="#334155">${escapeXml(cfg.lede3)}</text>` : ""}
 
   <!-- Left Architecture Cards -->
-  <g transform="translate(68, 276)">
+  <g transform="translate(56, 252)">
     <!-- Card 1 -->
-    <rect width="456" height="74" rx="8" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
-    <circle cx="22" cy="26" r="5" fill="${cfg.accent}"/>
-    <text x="36" y="29" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#e2e8f0">${escapeXml(cfg.chip1Title)}</text>
-    <text x="36" y="51" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#94a3b8">${escapeXml(cfg.chip1Text)}</text>
-    
+    <rect width="456" height="70" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+    <rect width="4" height="70" rx="2" fill="${cfg.accent}"/>
+    <text x="20" y="25" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11.5" font-weight="750" fill="#0f172a">${escapeXml(cfg.chip1Title)}</text>
+    <text x="20" y="47" font-family="'Inter', system-ui, sans-serif" font-size="11.5" fill="#475569">${escapeXml(cfg.chip1Text)}</text>
+
     <!-- Card 2 -->
-    <g transform="translate(0, 88)">
-      <rect width="456" height="74" rx="8" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
-      <circle cx="22" cy="26" r="5" fill="${cfg.accentLight}"/>
-      <text x="36" y="29" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#e2e8f0">${escapeXml(cfg.chip2Title)}</text>
-      <text x="36" y="51" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#94a3b8">${escapeXml(cfg.chip2Text)}</text>
+    <g transform="translate(0, 82)">
+      <rect width="456" height="70" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <rect width="4" height="70" rx="2" fill="${cfg.accentLight || cfg.accent}"/>
+      <text x="20" y="25" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="11.5" font-weight="750" fill="#0f172a">${escapeXml(cfg.chip2Title)}</text>
+      <text x="20" y="47" font-family="'Inter', system-ui, sans-serif" font-size="11.5" fill="#475569">${escapeXml(cfg.chip2Text)}</text>
     </g>
   </g>
 
-  <!-- Right Branded Dark-Mode Workspace (Live UI/Product Surface Preview) -->
-  <g transform="translate(554, 64)">
-    <!-- Workspace Outer Window -->
-    <rect width="578" height="428" rx="10" fill="#060a0f" stroke="${cfg.accent}" stroke-opacity="0.35" stroke-width="1.2"/>
+  <!-- Left Bottom Badges -->
+  <g transform="translate(56, 422)">
+    <g transform="translate(0, 0)">
+      <rect width="${cfg.b1Width || 140}" height="32" rx="6" fill="#f1f5f9" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="${(cfg.b1Width || 140)/2}" y="20" font-family="'Inter', sans-serif" font-size="11" font-weight="600" fill="#1e293b" text-anchor="middle">${escapeXml(cfg.badge1)}</text>
+    </g>
+    <g transform="translate(${(cfg.b1Width || 140) + 10}, 0)">
+      <rect width="${cfg.b2Width || 160}" height="32" rx="6" fill="#f1f5f9" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="${(cfg.b2Width || 160)/2}" y="20" font-family="'Inter', sans-serif" font-size="11" font-weight="600" fill="#1e293b" text-anchor="middle">${escapeXml(cfg.badge2)}</text>
+    </g>
+    <g transform="translate(${(cfg.b1Width || 140) + (cfg.b2Width || 160) + 20}, 0)">
+      <rect width="${cfg.b3Width || 145}" height="32" rx="6" fill="#f1f5f9" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+      <text x="${(cfg.b3Width || 145)/2}" y="20" font-family="'Inter', sans-serif" font-size="11" font-weight="600" fill="#1e293b" text-anchor="middle">${escapeXml(cfg.badge3)}</text>
+    </g>
+
+    <!-- Outbound Domain Link Badge -->
+    <g transform="translate(0, 42)">
+      <rect width="${cfg.domainPillWidth || 220}" height="32" rx="6" fill="${cfg.accent}" fill-opacity="0.09" stroke="${cfg.accent}" stroke-opacity="0.35" stroke-width="1"/>
+      <circle cx="16" cy="16" r="3.5" fill="${cfg.accentDark}"/>
+      <text x="28" y="20" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" fill="${cfg.accentDark}">${escapeXml(cfg.domain)} ↗</text>
+    </g>
+  </g>
+
+  <!-- Right Product / Architectural Surface Window -->
+  <g transform="translate(540, 94)">
+    <!-- Outer Window -->
+    <rect width="612" height="476" rx="10" fill="#ffffff" stroke="rgba(15, 23, 42, 0.12)" stroke-width="1.2"/>
     
     <!-- Window Header -->
-    <path d="M 0 10 Q 0 0 10 0 L 568 0 Q 578 0 578 10 L 578 36 L 0 36 Z" fill="rgba(255, 255, 255, 0.04)"/>
-    <line x1="0" y1="36" x2="578" y2="36" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
-    
-    <!-- Window Controls -->
-    <circle cx="20" cy="18" r="4.5" fill="#ef4444" opacity="0.8"/>
-    <circle cx="34" cy="18" r="4.5" fill="#f59e0b" opacity="0.8"/>
-    <circle cx="48" cy="18" r="4.5" fill="#10b981" opacity="0.8"/>
-    
+    <path d="M 0 10 Q 0 0 10 0 L 602 0 Q 612 0 612 10 L 612 36 L 0 36 Z" fill="#f8fafc"/>
+    <line x1="0" y1="36" x2="612" y2="36" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+
+    <!-- Window Dots -->
+    <circle cx="18" cy="18" r="4.5" fill="#f87171"/>
+    <circle cx="34" cy="18" r="4.5" fill="#fbbf24"/>
+    <circle cx="50" cy="18" r="4.5" fill="#34d399"/>
+
     <!-- Window Title -->
-    <text x="68" y="22" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="${cfg.accentLight}">${escapeXml(cfg.windowTitle)}</text>
-    
-    <!-- Live Status Pill on Right -->
-    <rect x="${cfg.statusPillX || 460}" y="9" width="${cfg.statusPillWidth || 102}" height="18" rx="4" fill="${cfg.accent}" fill-opacity="0.15" stroke="${cfg.accent}" stroke-opacity="0.4" stroke-width="0.8"/>
-    <circle cx="${(cfg.statusPillX || 460) + 12}" cy="18" r="3" fill="${cfg.accent}"/>
-    <text x="${(cfg.statusPillX || 460) + 20}" y="21" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="${cfg.accentLight}">${escapeXml(cfg.statusPillText || "ONLINE")}</text>
+    <text x="72" y="22" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="700" fill="#475569">${escapeXml(cfg.windowTitle)}</text>
 
-    <!-- Inner UI Surface Content -->
+    <!-- Status Pill -->
+    <g transform="translate(${cfg.statusPillX || 444}, 8)">
+      <rect width="${cfg.statusPillWidth || 154}" height="20" rx="4" fill="${cfg.accent}" fill-opacity="0.1" stroke="${cfg.accent}" stroke-opacity="0.3" stroke-width="0.8"/>
+      <circle cx="10" cy="10" r="3" fill="${cfg.accentDark}"/>
+      <text x="18" y="14" font-family="system-ui, sans-serif" font-size="9" font-weight="750" fill="${cfg.accentDark}">${escapeXml(cfg.statusPillText)}</text>
+    </g>
+
+    <!-- Inner Case-Study Content -->
     ${cfg.innerWorkspaceSvg}
-  </g>
-
-  <!-- Bottom Badges (Left) -->
-  <g transform="translate(68, 528)">
-    <rect x="0" y="0" width="${cfg.b1Width || 155}" height="38" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.12)"/>
-    <text x="${(cfg.b1Width || 155) / 2}" y="24" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#e2e8f0" text-anchor="middle">${escapeXml(cfg.badge1)}</text>
-
-    <rect x="${(cfg.b1Width || 155) + 15}" y="0" width="${cfg.b2Width || 175}" height="38" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.12)"/>
-    <text x="${(cfg.b1Width || 155) + 15 + ((cfg.b2Width || 175) / 2)}" y="24" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#e2e8f0" text-anchor="middle">${escapeXml(cfg.badge2)}</text>
-
-    <rect x="${(cfg.b1Width || 155) + 15 + (cfg.b2Width || 175) + 15}" y="0" width="${cfg.b3Width || 165}" height="38" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.12)"/>
-    <text x="${(cfg.b1Width || 155) + 15 + (cfg.b2Width || 175) + 15 + ((cfg.b3Width || 165) / 2)}" y="24" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#e2e8f0" text-anchor="middle">${escapeXml(cfg.badge3)}</text>
-  </g>
-
-  <!-- Bottom Domain Pill (Right) -->
-  <g transform="translate(${cfg.domainPillX || 920}, 528)">
-    <rect width="${cfg.domainPillWidth || 212}" height="38" rx="6" fill="${cfg.accent}" fill-opacity="0.12" stroke="${cfg.accent}" stroke-opacity="0.45"/>
-    <text x="${(cfg.domainPillWidth || 212) / 2}" y="24" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="${cfg.accentLight}" text-anchor="middle">${escapeXml(cfg.domain)} ↗</text>
   </g>
 </svg>`;
 }
 
 const posters = [
-  // 01: Total Body Modification
+  // 01: Total Body Modification (TBM)
   {
     slug: "total-body-modification",
-    accent: "#10b981",
-    accentLight: "#34d399",
-    glow0: "#0d261e",
-    glow45: "#071510",
-    glow100: "#030806",
-    tag: "[ 01 // DUAL-SURFACE WELLNESS · LIVETBM.COM ]",
-    tagWidth: 410,
+    accent: "#0284c7",
+    accentLight: "#38bdf8",
+    accentDark: "#0369a1",
+    tag: "[ 01 // DUAL-SURFACE WELLNESS PLATFORM · LIVETBM.COM ]",
+    tagWidth: 470,
     title: "Total Body Modification",
     subtitle: "Dual-Surface Wellness Platform & Live Session Rooms",
-    lede1: "Commerce-to-session platform linking WooCommerce scheduling,",
-    lede2: "practitioner workflows, assessments, and real-time rooms.",
-    chip1Title: "CONNECT SERVICE RUNTIME",
-    chip1Text: "Node.js + Socket.IO · WebRTC Mesh · 12ms Telemetry Loop",
-    chip2Title: "SOURCE OF TRUTH ARCHITECTURE",
-    chip2Text: "WordPress + WooCommerce · Attunement Lifecycle & Assessments",
-    windowTitle: "TBM_CONNECT // LIVE_SESSION_ROOM",
-    statusPillText: "ROOM ACTIVE",
-    badge1: "WordPress + Woo",
-    b1Width: 155,
-    badge2: "Node.js + Socket.IO",
-    b2Width: 175,
-    badge3: "Live Session Room",
-    b3Width: 165,
+    lede1: "Dual-surface wellness platform pairing WooCommerce memberships",
+    lede2: "and certified practitioner scheduling with custom practitioner portals",
+    lede3: "and real-time WebRTC live session rooms at livetbm.com.",
+    chip1Title: "COMMERCE & PRACTITIONER TIERS",
+    chip1Text: "WooCommerce memberships · Certification tiers & digital training paths",
+    chip2Title: "WEBRTC & WEBSOCKET ENGINE",
+    chip2Text: "Encrypted live consultation rooms · Intake health assessment questionnaires",
+    windowTitle: "TBM_CONNECT // PRACTITIONER_WORKSPACE",
+    statusPillText: "WEBRTC LIVE SESSION",
+    statusPillX: 436,
+    statusPillWidth: 162,
+    badge1: "WordPress / Woo",
+    b1Width: 135,
+    badge2: "Node.js & WebSockets",
+    b2Width: 165,
+    badge3: "WebRTC Video",
+    b3Width: 125,
     domain: "LIVETBM.COM",
-    domainPillX: 940,
-    domainPillWidth: 192,
+    domainPillWidth: 180,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="262" height="160" rx="8" fill="#0b1a14" stroke="rgba(16, 185, 129, 0.25)" stroke-width="1"/>
-        <circle cx="131" cy="70" r="30" fill="rgba(16, 185, 129, 0.12)" stroke="rgba(16, 185, 129, 0.3)" stroke-width="1"/>
-        <path d="M 113 95 C 113 85, 149 85, 149 95 Z" fill="rgba(16, 185, 129, 0.25)"/>
-        <rect x="10" y="10" width="145" height="20" rx="4" fill="rgba(0,0,0,0.65)"/>
-        <text x="18" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff">DR. PRACTITIONER · HOST</text>
-        <rect x="10" y="132" width="90" height="16" rx="3" fill="rgba(0,0,0,0.65)"/>
-        <rect x="16" y="137" width="60" height="6" rx="2" fill="#10b981"/>
+        <rect width="580" height="96" rx="8" fill="#f0f9ff" stroke="rgba(2, 132, 199, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="144" height="22" rx="4" fill="#bae6fd"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#0369a1">SESSION ACTIVE #084</text>
+          <text x="156" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#0c4a6e">Dr. Practitioner · 1-on-1 Health Assessment</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">P2P Encrypted WebRTC Video Consultation · Zero third-party cloud recording</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#10b981"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#047857">STATUS: CONNECTED (24ms)</text>
+            <text x="210" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">AUDIO/VIDEO: 1080p 60fps</text>
+          </g>
+        </g>
       </g>
-      <g transform="translate(280, 0)">
-        <rect width="262" height="160" rx="8" fill="#0b1a14" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
-        <circle cx="131" cy="70" r="30" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
-        <path d="M 113 95 C 113 85, 149 85, 149 95 Z" fill="rgba(255, 255, 255, 0.15)"/>
-        <rect x="10" y="10" width="130" height="20" rx="4" fill="rgba(0,0,0,0.65)"/>
-        <text x="18" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#94a3b8">CLIENT SESSION ROOM</text>
-        <rect x="172" y="132" width="80" height="16" rx="3" fill="rgba(16, 185, 129, 0.2)"/>
-        <text x="180" y="143" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#6ee7b7">1080p WebRTC</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">PRACTITIONER INTAKE &amp; ASSESSMENT PIPELINE</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#e0f2fe"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Patient Health History</text>
+          <text x="195" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Digital intake form verified</text>
+          <rect x="424" y="2" width="124" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="444" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">VERIFIED ✓</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#e0f2fe"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Vitals &amp; Bio-Assessment</text>
+          <text x="195" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Real-time practitioner notes</text>
+          <rect x="424" y="2" width="124" height="20" rx="4" fill="#eff6ff"/>
+          <text x="448" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">IN PROGRESS</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#f1f5f9"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#64748b">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Care Protocol Dispatch</text>
+          <text x="195" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Automated PDF care plan</text>
+          <rect x="424" y="2" width="124" height="20" rx="4" fill="#f8fafc"/>
+          <text x="456" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#64748b">QUEUED</text>
+        </g>
       </g>
-    </g>
-    <g transform="translate(18, 226)">
-      <rect width="542" height="186" rx="8" fill="#030806" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
-      <rect width="542" height="28" rx="8 8 0 0" fill="rgba(255,255,255,0.02)"/>
-      <text x="14" y="18" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">SESSION TELEMETRY &amp; ASSESSMENT PIPELINE</text>
-      <text x="450" y="18" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#10b981">LATENCY: 12ms</text>
-      <g transform="translate(14, 44)">
-        <circle cx="4" cy="6" r="3" fill="#10b981"/>
-        <text x="16" y="10" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[AUTH] Token verified via WordPress REST API · Attunement #A-7419</text>
-        <circle cx="4" cy="28" r="3" fill="#10b981"/>
-        <text x="16" y="32" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[WEBRTC] Peer connection established · ICE state: CONNECTED</text>
-        <circle cx="4" cy="50" r="3" fill="#34d399"/>
-        <text x="16" y="54" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[ASSESS] Intake questionnaire gated &amp; synced · Practitioner notes ready</text>
-        <circle cx="4" cy="72" r="3" fill="#6ee7b7"/>
-        <text x="16" y="76" font-family="Courier, monospace" font-size="11" fill="#94a3b8">[SOCKET] Room heartbeat active · 60s attune_log buffer flushed</text>
-        <g transform="translate(0, 94)">
-          <rect width="514" height="6" rx="3" fill="rgba(255, 255, 255, 0.08)"/>
-          <rect width="390" height="6" rx="3" fill="#10b981"/>
-          <text x="0" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">SESSION ELAPSED: 38:15 / 50:00</text>
-          <text x="410" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#34d399">76% COMPLETED</text>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">SYSTEM ARCHITECTURE &amp; SERVICE SPECS</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[COMMERCE]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">WordPress + WooCommerce subscriptions, course certifications</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[WEBRTC]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">P2P encrypted live rooms via Node.js WebSockets signaling server</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[INTAKE]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Structured client health assessments synced to practitioner console</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[TELEMETRY]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#0369a1">Automated session validation, duration tracking, and room logs</text>
         </g>
       </g>
     </g>`
@@ -213,81 +249,95 @@ const posters = [
   // 02: Followup Care Operations
   {
     slug: "followup-care",
-    accent: "#2dd4bf",
-    accentLight: "#5eead4",
-    glow0: "#0d262d",
-    glow45: "#07161b",
-    glow100: "#030a0d",
-    tag: "[ 02 // HEALTHCARE OPERATIONS · APP.FOLLOWUP.CARE ]",
-    tagWidth: 430,
-    title: "Followup Care Operations",
-    titleFontSize: 34,
-    subtitle: "Clinical Queue Orchestration & Care-Team Coordination",
-    lede1: "Healthcare ops platform modernizing patient queues, notifications,",
-    lede2: "compliance telemetry, and admin control across clinical programs.",
-    chip1Title: "CLINICAL DISCHARGE QUEUE",
-    chip1Text: "High-volume patient tracking · Automated SLA escalation triggers",
-    chip2Title: "CARE-TEAM DISPATCH ENGINE",
-    chip2Text: "Role-gated task assignment · Encrypted HIPAA-compliant audit logs",
-    windowTitle: "FOLLOWUP_OPS // PATIENT_QUEUE_MONITOR",
-    statusPillText: "QUEUE LIVE",
+    accent: "#059669",
+    accentLight: "#10b981",
+    accentDark: "#047857",
+    tag: "[ 02 // CLINICAL CARE OPERATIONS · APP.FOLLOWUP.CARE ]",
+    tagWidth: 460,
+    title: "Followup Care Ops",
+    subtitle: "Clinical Follow-Up Queues & Care-Team Coordination",
+    lede1: "Care-team operations platform modernizing patient follow-up queues,",
+    lede2: "automated reminders, clinic compliance logging, and multi-location",
+    lede3: "coordinator triage workflows at app.followup.care.",
+    chip1Title: "CARE COORDINATOR QUEUES",
+    chip1Text: "Patient cohort triage · Multi-clinic assignment · Automated reminders",
+    chip2Title: "ANGULAR & NODE.JS SQL PIPELINE",
+    chip2Text: "Ionic cross-device frontend · Versioned relational SQL migration engine",
+    windowTitle: "FOLLOWUP_OPS // CLINICAL_QUEUE_CONSOLE",
+    statusPillText: "CLINICAL OPS ACTIVE",
+    statusPillX: 430,
+    statusPillWidth: 168,
     badge1: "Angular + Ionic",
-    b1Width: 150,
-    badge2: "Node.js + SQL",
-    b2Width: 150,
-    badge3: "Clinical Telemetry",
-    b3Width: 175,
+    b1Width: 135,
+    badge2: "Node.js SQL API",
+    b2Width: 145,
+    badge3: "Compliance Telemetry",
+    b3Width: 165,
     domain: "APP.FOLLOWUP.CARE",
-    domainPillX: 910,
-    domainPillWidth: 222,
+    domainPillWidth: 195,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="542" height="42" rx="8" fill="#07181f" stroke="rgba(45, 212, 191, 0.25)" stroke-width="1"/>
-        <text x="20" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#5eead4">ACTIVE QUEUE: 48</text>
-        <text x="210" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">DISCHARGE SYNC: 100%</text>
-        <text x="410" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#2dd4bf">SLA ON-TRACK: 99.8%</text>
+        <rect width="580" height="96" rx="8" fill="#ecfdf5" stroke="rgba(5, 150, 105, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="154" height="22" rx="4" fill="#a7f3d0"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#065f46">ACTIVE CLINIC COHORT</text>
+          <text x="166" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#064e3b">Post-Discharge Outreach · 4 Clinic Locations</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">Automated patient outreach queue · SMS &amp; voice outreach telemetry</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#10b981"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#047857">QUEUE HEALTH: 98.4% COMPLETED</text>
+            <text x="240" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">AUDIT: HIPAA ENCRYPTED</text>
+          </g>
+        </g>
       </g>
-      <g transform="translate(0, 52)">
-        <rect width="542" height="26" rx="4" fill="rgba(255,255,255,0.03)"/>
-        <text x="14" y="17" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#64748b">PATIENT ENCOUNTER</text>
-        <text x="180" y="17" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#64748b">CLINICAL DEPARTMENT</text>
-        <text x="360" y="17" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#64748b">SLA STATUS</text>
-        <text x="460" y="17" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#64748b">ACTION</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">PATIENT DISCHARGE OUTREACH QUEUE</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#d1fae5"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#059669">✓</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Patient #4821 (Post-Op Day 3)</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Pain medication check confirmed</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="458" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">CONTACTED</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#fef3c7"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#d97706">!</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Patient #4829 (Cardiology Followup)</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Coordinator callback queued</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#fefce8"/>
+          <text x="466" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#b45309">TRIAGE ⚠️</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#e0f2fe"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">→</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Patient #4834 (Discharge Routine)</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Automated reminder SMS sent</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="456" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">SCHEDULED</text>
+        </g>
       </g>
-      <g transform="translate(0, 84)">
-        <rect width="542" height="48" rx="6" fill="#040c10" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <circle cx="16" cy="24" r="4" fill="#ef4444"/>
-        <text x="28" y="28" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">ID #10842</text>
-        <text x="180" y="28" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Post-Op Cardiology</text>
-        <rect x="360" y="14" width="76" height="20" rx="3" fill="rgba(239, 68, 68, 0.2)"/>
-        <text x="372" y="28" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#f87171">HIGH PRIORITY</text>
-        <text x="460" y="28" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#5eead4">DISPATCHED ✓</text>
-      </g>
-      <g transform="translate(0, 138)">
-        <rect width="542" height="48" rx="6" fill="#040c10" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <circle cx="16" cy="24" r="4" fill="#2dd4bf"/>
-        <text x="28" y="28" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">ID #10843</text>
-        <text x="180" y="28" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Pulmonary Recovery</text>
-        <rect x="360" y="14" width="68" height="20" rx="3" fill="rgba(45, 212, 191, 0.15)"/>
-        <text x="372" y="28" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#2dd4bf">ROUTINE</text>
-        <text x="460" y="28" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#94a3b8">CALL SENT</text>
-      </g>
-      <g transform="translate(0, 192)">
-        <rect width="542" height="48" rx="6" fill="#040c10" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <circle cx="16" cy="24" r="4" fill="#10b981"/>
-        <text x="28" y="28" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">ID #10844</text>
-        <text x="180" y="28" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Orthopedic Day Stay</text>
-        <rect x="360" y="14" width="68" height="20" rx="3" fill="rgba(16, 185, 129, 0.15)"/>
-        <text x="372" y="28" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#34d399">RESOLVED</text>
-        <text x="460" y="28" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#34d399">CLOSED ✓</text>
-      </g>
-      <g transform="translate(0, 252)">
-        <rect width="542" height="110" rx="8" fill="#02070a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">CARE COORDINATION TELEMETRY</text>
-        <text x="16" y="50" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[ORCHESTRATION] Daily census batch synced: 320 encounters</text>
-        <text x="16" y="72" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[HIPAA] TLS 1.3 encrypted end-to-end · Audit trail verified</text>
-        <text x="16" y="94" font-family="Courier, monospace" font-size="11" fill="#5eead4">[METRIC] Mean time to patient follow-up: 4.2 hours (Target &lt; 24h)</text>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">ENTERPRISE CLINICAL ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[FRONTEND]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Angular 14 + Ionic responsive care-coordinator workspace</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[BACKEND]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Node.js API service with relational SQL migration pipelines</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[QUEUES]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Role-gated coordinator assignment and clinic location routing</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[AUDIT]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#047857">Immutable compliance action log &amp; healthcare operational telemetry</text>
+        </g>
       </g>
     </g>`
   },
@@ -295,67 +345,95 @@ const posters = [
   // 03: Cluck Design
   {
     slug: "cluck-design",
-    accent: "#f97316",
-    accentLight: "#fb923c",
-    glow0: "#2a1408",
-    glow45: "#160b04",
-    glow100: "#080402",
-    tag: "[ 03 // ARCHITECTURAL BRAND SYSTEM · CLUCKDESIGN.COM ]",
-    tagWidth: 440,
+    accent: "#ea580c",
+    accentLight: "#f97316",
+    accentDark: "#c2410c",
+    tag: "[ 03 // ARCHITECTURAL STUDIO PLATFORM · CLUCKDESIGN.COM ]",
+    tagWidth: 480,
     title: "Cluck Design",
     subtitle: "Architectural Studio Brand Presence & Project Showcase",
-    lede1: "Custom WordPress brand system pairing a bespoke theme with",
-    lede2: "reveal-driven storytelling and editorial contact surfaces.",
-    chip1Title: "EDITORIAL UX & NARRATIVE REVEALS",
-    chip1Text: "Signature wipe-down/wipe-up overlays · IntersectionObserver transitions",
-    chip2Title: "BESPOKE THEME ARCHITECTURE",
-    chip2Text: "Hello Elementor Child theme · Architectural project portfolio",
-    windowTitle: "CLUCK_STUDIO // ARCHITECTURAL_INDEX",
-    statusPillText: "CAD ACTIVE",
-    badge1: "Custom Theme",
+    lede1: "Bespoke WordPress theme pairing custom Elementor Pro template structures",
+    lede2: "with fluid spatial project showcases, curated architectural photography,",
+    lede3: "and secure server-side Mailchimp inquiry capture at cluckdesign.com.",
+    chip1Title: "BESPOKE ARCHITECTURAL THEME",
+    chip1Text: "Custom spatial grid layout · Tailored project taxonomy filters",
+    chip2Title: "PERFORMANCE & CLIENT DISCOVERY",
+    chip2Text: "High-res photography optimization · Server-side Mailchimp subscriber API",
+    windowTitle: "CLUCK_STUDIO // SPATIAL_PROJECT_TAXONOMY",
+    statusPillText: "WORDPRESS PRO",
+    statusPillX: 446,
+    statusPillWidth: 152,
+    badge1: "Custom WP Theme",
     b1Width: 145,
-    badge2: "WordPress Core",
-    b2Width: 155,
-    badge3: "Editorial UX",
-    b3Width: 145,
+    badge2: "Elementor Pro",
+    b2Width: 130,
+    badge3: "Spatial Layouts",
+    b3Width: 135,
     domain: "CLUCKDESIGN.COM",
-    domainPillX: 910,
-    domainPillWidth: 222,
+    domainPillWidth: 195,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="542" height="200" rx="8" fill="#0d0703" stroke="rgba(249, 115, 22, 0.25)" stroke-width="1"/>
-        <line x1="20" y1="40" x2="522" y2="40" stroke="rgba(249, 115, 22, 0.15)" stroke-dasharray="4 4"/>
-        <line x1="20" y1="100" x2="522" y2="100" stroke="rgba(249, 115, 22, 0.15)" stroke-dasharray="4 4"/>
-        <line x1="20" y1="160" x2="522" y2="160" stroke="rgba(249, 115, 22, 0.15)" stroke-dasharray="4 4"/>
-        <line x1="180" y1="20" x2="180" y2="180" stroke="rgba(249, 115, 22, 0.15)" stroke-dasharray="4 4"/>
-        <line x1="360" y1="20" x2="360" y2="180" stroke="rgba(249, 115, 22, 0.15)" stroke-dasharray="4 4"/>
-        <g transform="translate(24, 24)">
-          <rect width="240" height="152" rx="6" fill="#180c05" stroke="rgba(249, 115, 22, 0.4)" stroke-width="1"/>
-          <rect x="12" y="12" width="216" height="84" rx="4" fill="rgba(249, 115, 22, 0.1)"/>
-          <text x="20" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fb923c">INKWELL APARTMENTS</text>
-          <text x="20" y="52" font-family="Helvetica, Arial, sans-serif" font-size="9" fill="#94a3b8">NoDa Arts District · 4 Stories</text>
-          <text x="20" y="80" font-family="Courier, monospace" font-size="8.5" fill="#f97316">65 UNITS + GROUND RETAIL</text>
-          <rect x="12" y="108" width="90" height="16" rx="3" fill="rgba(249, 115, 22, 0.2)"/>
-          <text x="20" y="120" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="bold" fill="#fed7aa">CHARLOTTE, NC ↗</text>
-        </g>
-        <g transform="translate(278, 24)">
-          <rect width="240" height="152" rx="6" fill="#180c05" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
-          <rect x="12" y="12" width="216" height="84" rx="4" fill="rgba(255, 255, 255, 0.05)"/>
-          <text x="20" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">PHAT BURRITO</text>
-          <text x="20" y="52" font-family="Helvetica, Arial, sans-serif" font-size="9" fill="#94a3b8">Beloved South End Landmark</text>
-          <text x="20" y="80" font-family="Courier, monospace" font-size="8.5" fill="#94a3b8">LOSO VILLAGE RESTORATION</text>
-          <rect x="12" y="108" width="70" height="16" rx="3" fill="rgba(236, 0, 140, 0.25)"/>
-          <text x="20" y="120" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="bold" fill="#f472b6">#EC008C</text>
+        <rect width="580" height="96" rx="8" fill="#fff7ed" stroke="rgba(234, 88, 12, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="168" height="22" rx="4" fill="#ffedd5"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#9a3412">ARCHITECTURAL PORTFOLIO</text>
+          <text x="180" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#7c2d12">Spatial Design Showcase &amp; Taxonomies</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">Curated high-density spatial project portfolios · Fluid editorial reveals</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#ea580c"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#c2410c">THEME: CLUCK CUSTOM STACK</text>
+            <text x="230" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">PERFORMANCE: 98 LIGHTHOUSE</text>
+          </g>
         </g>
       </g>
-      <g transform="translate(0, 214)">
-        <rect width="542" height="148" rx="8" fill="#050201" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">INTERACTION ENGINE &amp; SPATIAL GRID</text>
-        <text x="16" y="52" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[THEME] Hello Elementor Child · Custom reveal.php architecture</text>
-        <text x="16" y="74" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[ANIMATION] Signature wipe-down / wipe-up overlay triggers</text>
-        <text x="16" y="96" font-family="Courier, monospace" font-size="11" fill="#fb923c">[PROJECTS] Inkwell (NoDa), Phat Burrito (LoSo), E.L.K (Monroe)</text>
-        <text x="16" y="118" font-family="Courier, monospace" font-size="11" fill="#fed7aa">[CTA SURFACES] &apos;Find out what Cluck can do for you&apos; · Get-in-touch reveal</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">PROJECT TAXONOMIES &amp; CURATED SPATIAL STUDIES</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#ffedd5"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#ea580c">A</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Commercial &amp; Adaptive Reuse</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Historic brewery conversions</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#fff7ed"/>
+          <text x="462" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#c2410c">COMMERCIAL</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#ffedd5"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#ea580c">B</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Public &amp; Community Architecture</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Urban gathering pavilions</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="468" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">CIVIC SPACE</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#ffedd5"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#ea580c">C</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Bespoke Residential Studios</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Modern architectural dwellings</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="462" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">RESIDENTIAL</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">STUDIO PLATFORM ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[FRAMEWORK]</text>
+          <text x="100" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">WordPress core with Elementor Pro dynamic template hierarchy</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[SPATIAL]</text>
+          <text x="100" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Custom responsive 12-column grid preserving architectural scale</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[MAILCHIMP]</text>
+          <text x="100" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Server-side subscriber intake without exposing client secrets</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[ASSETS]</text>
+          <text x="100" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#c2410c">High-resolution retina photography pipelines with zero plugin bloat</text>
+        </g>
       </g>
     </g>`
   },
@@ -363,286 +441,383 @@ const posters = [
   // 04: World Cup Dreams Foundation
   {
     slug: "world-cup-dreams",
-    accent: "#38bdf8",
-    accentLight: "#7dd3fc",
-    glow0: "#0c2438",
-    glow45: "#061320",
-    glow100: "#030a12",
+    accent: "#0284c7",
+    accentLight: "#38bdf8",
+    accentDark: "#0369a1",
     tag: "[ 04 // ATHLETE GRANT PORTAL · WORLDCUPDREAMS.ORG ]",
-    tagWidth: 440,
+    tagWidth: 460,
     title: "World Cup Dreams",
     subtitle: "Athlete Grant Portal & Donor Campaign Platform",
-    lede1: "Athlete-first WordPress ecosystem clarifying grant pathways",
-    lede2: "and accelerating donor momentum for world-class athletes.",
-    chip1Title: "HISTORICAL IMPACT ALLOCATION",
-    chip1Text: "Over $7,000,000 granted to elite snowsport athletes since inception",
-    chip2Title: "FOUNDED BY ATHLETES FOR ATHLETES",
-    chip2Text: "Founded by US Ski Team athletes Bryon Friedman, Scott Macartney & Erik Schlopy",
-    windowTitle: "WCD_FOUNDATION // GRANT_ALLOCATION_MONITOR",
-    statusPillText: "501(c)(3) ACTIVE",
-    badge1: "$7M+ Granted",
-    b1Width: 145,
-    badge2: "By & For Athletes",
+    lede1: "Athlete-first 501(c)(3) foundation platform funding elite alpine snowsport",
+    lede2: "talent, streamlining grant application pipelines and accelerating",
+    lede3: "donor campaign momentum at worldcupdreams.org.",
+    chip1Title: "ATHLETE GRANT ALLOCATION",
+    chip1Text: "Over $7M+ granted to elite athletes · Multi-stage committee review",
+    chip2Title: "DONOR CAMPAIGN ARCHITECTURE",
+    chip2Text: "Kadence WordPress ecosystem · Stripe processing & automated 501(c)(3) receipts",
+    windowTitle: "WCD_FOUNDATION // ATHLETE_GRANT_PLATFORM",
+    statusPillText: "501(C)(3) NONPROFIT",
+    statusPillX: 436,
+    statusPillWidth: 162,
+    badge1: "Athlete Grants",
+    b1Width: 135,
+    badge2: "WordPress Kadence",
     b2Width: 165,
-    badge3: "WordPress Core",
-    b3Width: 150,
+    badge3: "$7M+ Distributed",
+    b3Width: 145,
     domain: "WORLDCUPDREAMS.ORG",
-    domainPillX: 890,
-    domainPillWidth: 242,
+    domainPillWidth: 215,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="542" height="74" rx="8" fill="#071b29" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1"/>
-        <text x="18" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#7dd3fc">HISTORIC ATHLETE GRANT DISBURSEMENTS</text>
-        <text x="18" y="46" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#ffffff">$7,000,000+</text>
-        <text x="160" y="46" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#94a3b8">GRANTED TO ELITE ATHLETES</text>
-        <rect x="340" y="22" width="180" height="24" rx="4" fill="rgba(56, 189, 248, 0.2)"/>
-        <text x="355" y="38" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">BY THE ATHLETE · FOR THE ATHLETE</text>
-        <rect x="18" y="58" width="506" height="5" rx="2.5" fill="#38bdf8"/>
-      </g>
-      <g transform="translate(0, 86)">
-        <rect width="542" height="152" rx="8" fill="#040e16" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">ACTIVE WCDF GRANT PROGRAM SUITE</text>
-        <g transform="translate(16, 34)">
-          <circle cx="6" cy="10" r="4" fill="#38bdf8"/>
-          <text x="20" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">T2 ON THE RISE GRANT</text>
-          <text x="220" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Top 300 World-Ranked Competitors</text>
-          <rect x="420" y="2" width="86" height="18" rx="3" fill="rgba(16, 185, 129, 0.2)"/>
-          <text x="430" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#34d399">ACTIVE GRANT ✓</text>
-        </g>
-        <g transform="translate(16, 68)">
-          <circle cx="6" cy="10" r="4" fill="#38bdf8"/>
-          <text x="20" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">T2 WORLD CUP GRANT</text>
-          <text x="220" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">World Cup &amp; Olympic Chasers</text>
-          <rect x="420" y="2" width="86" height="18" rx="3" fill="rgba(56, 189, 248, 0.2)"/>
-          <text x="435" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#7dd3fc">ACTIVE GRANT ✓</text>
-        </g>
-        <g transform="translate(16, 102)">
-          <circle cx="6" cy="10" r="4" fill="#38bdf8"/>
-          <text x="20" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">ARCO &amp; FREESTYLE GRANTS</text>
-          <text x="220" y="14" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Need-Based Financial Support</text>
-          <rect x="420" y="2" width="86" height="18" rx="3" fill="rgba(56, 189, 248, 0.2)"/>
-          <text x="435" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#7dd3fc">ACTIVE GRANT ✓</text>
-        </g>
-      </g>
-      <g transform="translate(0, 250)">
-        <rect width="542" height="112" rx="8" fill="#02080d" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">FOUNDATION LEADERSHIP &amp; DONOR INFRASTRUCTURE</text>
-        <text x="16" y="50" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[FOUNDERS] Former US Ski Team Athletes B. Friedman, S. Macartney, E. Schlopy</text>
-        <text x="16" y="72" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[MISSION] 501(c)(3) empowering winter athletes to overcome financial barriers</text>
-        <text x="16" y="94" font-family="Courier, monospace" font-size="11" fill="#7dd3fc">[STRIPE] Automated recurrence engine · Direct donor-to-athlete funding</text>
-      </g>
-    </g>`
-  },
-
-  // 05: Appreesh
-  {
-    slug: "appreesh",
-    accent: "#c084fc",
-    accentLight: "#e9d5ff",
-    glow0: "#220e36",
-    glow45: "#12071d",
-    glow100: "#07020c",
-    tag: "[ 05 // GRATITUDE PROTOCOL · APPREESH.ORG ]",
-    tagWidth: 390,
-    title: "Appreesh Protocol",
-    subtitle: "Gratitude Gifting Protocol & Tribute Workspace",
-    lede1: "Ritual-first gratitude prototype pairing a live public web surface",
-    lede2: "with a Solana/Anchor tribute workspace and protocol mechanics.",
-    chip1Title: "SOLANA MAINNET TOKEN-2022",
-    chip1Text: "Official Mint: ErPxU4cjMDHg5ZKuxVFnnw7hZW5SvkCCThJJNxsWjWRr",
-    chip2Title: "SQUADS 2-OF-3 MULTISIG CUSTODY",
-    chip2Text: "3,000,000 Fixed Supply · 0% Inflation · Sovereign tribute routing",
-    windowTitle: "APPREESH // SOLANA_MAINNET_VERIFICATION",
-    statusPillText: "TOKEN LIVE",
-    badge1: "Solana Token-2022",
-    b1Width: 165,
-    badge2: "Squads Multisig",
-    b2Width: 155,
-    badge3: "3M Fixed Supply",
-    b3Width: 155,
-    domain: "APPREESH.ORG",
-    domainPillX: 930,
-    domainPillWidth: 202,
-    innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
-      <g>
-        <rect width="542" height="42" rx="8" fill="#140924" stroke="rgba(192, 132, 252, 0.3)" stroke-width="1"/>
-        <text x="20" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#e9d5ff">CLUSTER: SOLANA MAINNET-BETA</text>
-        <text x="230" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">TOKEN-2022 STANDARD</text>
-        <text x="400" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#c084fc">3M FIXED SUPPLY</text>
-      </g>
-      <g transform="translate(0, 52)">
-        <rect width="542" height="154" rx="8" fill="#0d0417" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <g transform="translate(20, 20)">
-          <circle cx="36" cy="36" r="32" fill="rgba(192, 132, 252, 0.15)" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1"/>
-          <path d="M 36 18 C 30 28, 26 34, 30 42 C 33 48, 42 48, 44 42 C 46 36, 40 32, 36 18 Z" fill="#c084fc"/>
-          <text x="88" y="24" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff">$APPREESH — THE TOKEN OF GRATITUDE</text>
-          <text x="88" y="44" font-family="Courier, monospace" font-size="10" fill="#c084fc">MINT: ErPxU4cjMDHg5ZKuxVFnnw7hZW5SvkCCThJJNxsWjWRr</text>
-          <text x="88" y="64" font-family="Georgia, serif" font-size="11.5" font-style="italic" fill="#e2e8f0">&quot;Gratitude is the only sovereign currency.&quot;</text>
-          <text x="88" y="84" font-family="Courier, monospace" font-size="10" fill="#a855f7">CUSTODY: SQUADS 2-OF-3 MULTISIG (v4.squads.so)</text>
-          <rect x="88" y="94" width="165" height="20" rx="4" fill="rgba(192, 132, 252, 0.2)"/>
-          <text x="96" y="108" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#e9d5ff">VERIFIED MAINNET MINT ✓</text>
-        </g>
-      </g>
-      <g transform="translate(0, 218)">
-        <rect width="542" height="144" rx="8" fill="#06010a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">PROTOCOL SURFACES &amp; VERIFICATION LOG</text>
-        <g transform="translate(16, 46)">
-          <circle cx="4" cy="6" r="3" fill="#c084fc"/>
-          <text x="16" y="10" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[SECTIONS] Send Appreciation (/tribute) · Appreeshonomics (/tokenomics)</text>
-          <circle cx="4" cy="28" r="3" fill="#c084fc"/>
-          <text x="16" y="32" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[GOVERNANCE] Council &amp; DAO (/dao) · Lore Bible (/lore) · Manifest JSON</text>
-          <circle cx="4" cy="50" r="3" fill="#e9d5ff"/>
-          <text x="16" y="54" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[TOKENOMICS] 3,000,000 Fixed Supply · 0% Inflation · Sovereign Protocol</text>
-          <circle cx="4" cy="72" r="3" fill="#a855f7"/>
-          <text x="16" y="76" font-family="Courier, monospace" font-size="11" fill="#94a3b8">[SECURITY] Squads 2-of-3 Multisig custody · Zero mint authority exploit</text>
-        </g>
-      </g>
-    </g>`
-  },
-
-  // 06: Lead Me Guide Me
-  {
-    slug: "lead-me-guide-me",
-    accent: "#fbbf24",
-    accentLight: "#fde68a",
-    glow0: "#2a1c07",
-    glow45: "#160e03",
-    glow100: "#080501",
-    tag: "[ 06 // GOSPEL REHEARSAL COMPANION · LEADMEGUIDEME.ORG ]",
-    tagWidth: 460,
-    title: "Lead Me Guide Me",
-    subtitle: "Gospel Choir Rehearsal Companion & Scripture App",
-    lede1: "SwiftUI iOS companion pairing daily scripture meditations with",
-    lede2: "original gospel choir rehearsal cues and score stems.",
-    chip1Title: "MULTI-VOICE STEM MIXER",
-    chip1Text: "Independent Soprano / Alto / Tenor playback · Dynamic vocal isolation",
-    chip2Title: "DAILY SCRIPTURE & MEDITATION",
-    chip2Text: "Daily devotionals mapped directly to choral arrangements",
-    windowTitle: "LMGM_SCORE // REHEARSAL_FLOW_WORKSPACE",
-    statusPillText: "STEMS LIVE",
-    badge1: "SwiftUI iOS",
-    b1Width: 140,
-    badge2: "Rehearsal Companion",
-    b2Width: 180,
-    badge3: "Score Architecture",
-    b3Width: 165,
-    domain: "LEADMEGUIDEME.ORG",
-    domainPillX: 880,
-    domainPillWidth: 252,
-    innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
-      <g>
-        <rect width="542" height="66" rx="8" fill="#181105" stroke="rgba(251, 191, 36, 0.3)" stroke-width="1"/>
-        <text x="20" y="24" font-family="Georgia, serif" font-size="13" font-style="italic" fill="#fde68a">"Guide my steps according to your word; let no iniquity rule over me."</text>
-        <text x="20" y="46" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fbbf24">DAILY MEDITATION · PSALM 119:133 · CHOIR CUE #14</text>
-        <rect x="420" y="16" width="102" height="24" rx="4" fill="rgba(251, 191, 36, 0.15)"/>
-        <text x="430" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fde68a">DAY 42 OF 60</text>
-      </g>
-      <g transform="translate(0, 78)">
-        <rect width="542" height="160" rx="8" fill="#0f0a03" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">CHORAL STEM SEPARATION MIXER</text>
-        <g transform="translate(16, 36)">
-          <text x="0" y="16" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">SOPRANO</text>
-          <rect x="90" y="6" width="320" height="12" rx="6" fill="rgba(255,255,255,0.08)"/>
-          <rect x="90" y="6" width="280" height="12" rx="6" fill="#fbbf24"/>
-          <text x="430" y="16" font-family="Courier, monospace" font-size="11" fill="#fde68a">92% VOL</text>
-        </g>
-        <g transform="translate(16, 72)">
-          <text x="0" y="16" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">ALTO</text>
-          <rect x="90" y="6" width="320" height="12" rx="6" fill="rgba(255,255,255,0.08)"/>
-          <rect x="90" y="6" width="260" height="12" rx="6" fill="#fbbf24"/>
-          <text x="430" y="16" font-family="Courier, monospace" font-size="11" fill="#fde68a">88% VOL</text>
-        </g>
-        <g transform="translate(16, 108)">
-          <text x="0" y="16" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">TENOR</text>
-          <rect x="90" y="6" width="320" height="12" rx="6" fill="rgba(255,255,255,0.08)"/>
-          <rect x="90" y="6" width="300" height="12" rx="6" fill="#f59e0b"/>
-          <rect x="424" y="2" width="70" height="20" rx="3" fill="rgba(251, 191, 36, 0.25)"/>
-          <text x="435" y="16" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fbbf24">SOLO ON</text>
-        </g>
-      </g>
-      <g transform="translate(0, 250)">
-        <rect width="542" height="112" rx="8" fill="#070401" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">REHEARSAL PLAYHEAD SYNCHRONIZATION</text>
-        <text x="16" y="50" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[BAR] Measure 24.3 · Key of E-flat Major · 78 BPM Gospel Groove</text>
-        <text x="16" y="72" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[AUDIO] AVAudioEngine multi-channel graph · Zero latency scrubbing</text>
-        <text x="16" y="94" font-family="Courier, monospace" font-size="11" fill="#fbbf24">[SYNC] Choir director rehearsal notes broadcasted in real-time</text>
-      </g>
-    </g>`
-  },
-
-  // 07: Outplacement Career Consulting
-  {
-    slug: "occupational-career-consulting",
-    accent: "#0ea5e9",
-    accentLight: "#38bdf8",
-    glow0: "#0c2033",
-    glow45: "#06111c",
-    glow100: "#03090e",
-    tag: "[ 07 // WORKFORCE OUTPLACEMENT · OCC.CONSULTING ]",
-    tagWidth: 430,
-    title: "Outplacement Career",
-    subtitle: "Human-Led Workforce Outplacement & Executive Transition",
-    lede1: "Structured outplacement platform helping employers manage workforce",
-    lede2: "transitions with clarity, care, dignity, and high-touch coaching.",
-    chip1Title: "STRUCTURED OUTPLACEMENT FRAMEWORK",
-    chip1Text: "Human-led process from notification to placement with outcomes measurement",
-    chip2Title: "CHANGE MANAGEMENT INTEGRATION",
-    chip2Text: "Documented employer experience reducing strain while protecting brand",
-    windowTitle: "OCC_OUTPLACEMENT // TRANSITION_FRAMEWORK",
-    statusPillText: "FRAMEWORK ACTIVE",
-    badge1: "Outplacement Platform",
-    b1Width: 180,
-    badge2: "Executive Coaching",
-    b2Width: 170,
-    badge3: "Change Management",
-    b3Width: 175,
-    domain: "OCC.CONSULTING",
-    domainPillX: 910,
-    domainPillWidth: 222,
-    innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
-      <g>
-        <rect width="542" height="52" rx="8" fill="#081826" stroke="rgba(14, 165, 233, 0.3)" stroke-width="1"/>
-        <circle cx="28" cy="26" r="10" fill="#0ea5e9"/>
-        <text x="24" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">✓</text>
-        <text x="44" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">INTAKE</text>
-        <line x1="90" y1="26" x2="130" y2="26" stroke="#0ea5e9" stroke-width="2"/>
-        <circle cx="145" cy="26" r="10" fill="#0ea5e9"/>
-        <text x="141" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">✓</text>
-        <text x="162" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">ASSESSMENT</text>
-        <line x1="240" y1="26" x2="280" y2="26" stroke="#0ea5e9" stroke-width="2"/>
-        <circle cx="295" cy="26" r="11" fill="rgba(14, 165, 233, 0.3)" stroke="#38bdf8" stroke-width="2"/>
-        <text x="292" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">3</text>
-        <text x="312" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">COACHING</text>
-        <line x1="380" y1="26" x2="420" y2="26" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
-        <circle cx="436" cy="26" r="10" fill="rgba(255,255,255,0.08)"/>
-        <text x="432" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#94a3b8">4</text>
-        <text x="452" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">PLACEMENT</text>
-      </g>
-      <g transform="translate(0, 64)">
-        <rect width="542" height="166" rx="8" fill="#040f17" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="18" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#38bdf8">HUMAN-LED OUTPLACEMENT PHILOSOPHY // OCC</text>
-        <g transform="translate(18, 42)">
-          <text x="0" y="14" font-family="Georgia, serif" font-size="12" font-style="italic" fill="#ffffff">&quot;Effective outplacement addresses both sides: people and organization.&quot;</text>
-          <text x="0" y="36" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Documented Outplacement Experience · Reduced Operational Strain</text>
-          <text x="0" y="58" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Equitable, Role-Appropriate Employee Support · In-Depth Measurement</text>
-          <g transform="translate(0, 74)">
-            <rect width="506" height="6" rx="3" fill="rgba(255,255,255,0.08)"/>
-            <rect width="440" height="6" rx="3" fill="#0ea5e9"/>
-            <text x="0" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">FRAMEWORK DELIVERY: CONSISTENT &amp; REPEATABLE</text>
-            <text x="375" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">HR-INFORMED ✓</text>
+        <rect width="580" height="96" rx="8" fill="#f0f9ff" stroke="rgba(2, 132, 199, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="180" height="22" rx="4" fill="#bae6fd"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#0369a1">WCDF ANNUAL GRANT POOL</text>
+          <text x="190" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#0c4a6e">Funding Elite US Alpine Athletes</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">By the Athlete &amp; For the Athlete · Founded by US Ski Team World Cup Veterans</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#0284c7"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0369a1">TOTAL IMPACT: $7M+ GRANTED</text>
+            <text x="240" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">STATUS: ACTIVE APPLICATION CYCLE</text>
           </g>
         </g>
       </g>
-      <g transform="translate(0, 242)">
-        <rect width="542" height="120" rx="8" fill="#02080d" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">EMPLOYER CHANGE MANAGEMENT INTEGRATION</text>
-        <text x="16" y="52" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[INTEGRATION] Directly integrates with employer Change Management</text>
-        <text x="16" y="74" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[BRAND PROTECTION] Protects employer reputation while honoring employees</text>
-        <text x="16" y="96" font-family="Courier, monospace" font-size="11" fill="#38bdf8">[PLATFORM] Technology-enabled efficiency + high-touch human partnership</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">ATHLETE GRANT DISPATCH &amp; COMMITTEE REVIEW</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#dbeafe"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#1e40af">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">International Competition Grant</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">World Cup circuit travel tier</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="458" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">ALLOCATED ✓</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#dbeafe"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#1e40af">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">High-Performance Equipment</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Racing skis, boots, and tuning</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="466" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">FUNDED ✓</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#dbeafe"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#1e40af">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Injury Recovery Rehabilitation</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Return-to-snow medical support</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#fefce8"/>
+          <text x="454" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#b45309">IN REVIEW</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">NONPROFIT PLATFORM ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[CMS]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">WordPress platform with Kadence design blocks framework</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[GRANTS]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Athlete grant submission portals with committee review rubrics</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[DONATIONS]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Direct online payment processing with automated 501(c)(3) receipts</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[ATHLETES]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#0369a1">Athlete profile storytelling and donor community campaign hubs</text>
+        </g>
+      </g>
+    </g>`
+  },
+
+  // 05: Appreesh Protocol
+  {
+    slug: "appreesh",
+    accent: "#9333ea",
+    accentLight: "#a855f7",
+    accentDark: "#7e22ce",
+    tag: "[ 05 // GRATITUDE PROTOCOL · APPREESH.ORG ]",
+    tagWidth: 410,
+    title: "Appreesh Protocol",
+    subtitle: "Gratitude Gifting Protocol & Tribute Workspace",
+    lede1: "Ritual-first gratitude prototype pairing a live Next.js web application",
+    lede2: "with Solana SPL Token-2022 smart contracts, Arweave media records,",
+    lede3: "and Squads 2-of-3 multisig custody at appreesh.org.",
+    chip1Title: "SOLANA TOKEN-2022 & MULTISIG",
+    chip1Text: "3,000,000 fixed supply · Squads 2-of-3 multisig · Mint authority revoked",
+    chip2Title: "RITUAL-FIRST PRODUCT WORKSPACE",
+    chip2Text: "Next.js reactive UI · Phantom and Solflare wallet adapter integration",
+    windowTitle: "APPREESH // SOLANA_ANCHOR_WORKSPACE",
+    statusPillText: "SQUADS MULTISIG",
+    statusPillX: 444,
+    statusPillWidth: 154,
+    badge1: "Solana / Anchor",
+    b1Width: 140,
+    badge2: "Squads 2-of-3",
+    b2Width: 130,
+    badge3: "Next.js 14",
+    b3Width: 120,
+    domain: "APPREESH.ORG",
+    domainPillWidth: 175,
+    innerWorkspaceSvg: `
+    <g transform="translate(16, 50)">
+      <g>
+        <rect width="580" height="96" rx="8" fill="#faf5ff" stroke="rgba(147, 51, 234, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="180" height="22" rx="4" fill="#e9d5ff"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#6b21a8">SQUADS 2-OF-3 MULTISIG</text>
+          <text x="190" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#581c87">Vault PDA: BENYpvm3...GK47</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">3,000,000 APPREESH Fixed Supply · Mint &amp; Freeze Authorities Revoked</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#9333ea"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#7e22ce">26 TRANSACTIONS VERIFIED</text>
+            <text x="240" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">TESTS: 28 PROGRAM TESTS (100%)</text>
+          </g>
+        </g>
+      </g>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">ON-CHAIN TRIBUTE TOKEN &amp; PERMANENT ARWEAVE ARCHIVE</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#f3e8ff"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#9333ea">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Genesis Tribute Token #042</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Solana SPL Token-2022 mint</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#faf5ff"/>
+          <text x="460" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#7e22ce">ON-CHAIN ✓</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#f3e8ff"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#9333ea">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Permanent Media Archive</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Arweave hash verification</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="464" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">IMMUTABLE</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#f3e8ff"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#9333ea">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Wallet Signature Verification</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Phantom &amp; Solflare adapters</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="458" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">VERIFIED ✓</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">SMART CONTRACT &amp; PROTOCOL ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[PROGRAM]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Solana Anchor program with deterministic PDA state derivation</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[CUSTODY]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Squads multisig protocol requiring 2 of 3 independent signer keys</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[UI STACK]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Next.js 14 reactive interface with client-side RPC state hydration</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[SECURITY]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#7e22ce">Comprehensive custody runbook and permanent authority revocation</text>
+        </g>
+      </g>
+    </g>`
+  },
+
+  // 06: Lead Me Guide Me — FACT-GROUNDED
+  {
+    slug: "lead-me-guide-me",
+    accent: "#d97706",
+    accentLight: "#f59e0b",
+    accentDark: "#b45309",
+    tag: "[ 06 // SHARED SCRIPTURE STUDY · LEADMEGUIDEME.ORG ]",
+    tagWidth: 460,
+    title: "Lead Me Guide Me",
+    subtitle: "Shared Scripture Study & Group Annotation iOS App",
+    lede1: "Native Swift iOS application anchoring families and study groups",
+    lede2: "through shared Book of Mormon reading, collaborative verse highlighting,",
+    lede3: "color-coded study circles, and discussion boards at leadmeguideme.org.",
+    chip1Title: "COLLABORATIVE STUDY GROUPS",
+    chip1Text: "Color-coded study circles · Shared Book of Mormon reading & annotations",
+    chip2Title: "SWIFT IOS & FIREBASE BACKEND",
+    chip2Text: "Real-time Firestore sync · OneSignal push notifications · Sentry error tracking",
+    windowTitle: "LMGM_IOS // SCRIPTURE_STUDY_SYNC",
+    statusPillText: "SWIFT 5.9 · FIREBASE",
+    statusPillX: 436,
+    statusPillWidth: 162,
+    badge1: "Native Swift iOS",
+    b1Width: 145,
+    badge2: "Shared Annotations",
+    b2Width: 155,
+    badge3: "Firebase Firestore",
+    b3Width: 145,
+    domain: "LEADMEGUIDEME.ORG",
+    domainPillWidth: 205,
+    innerWorkspaceSvg: `
+    <g transform="translate(16, 50)">
+      <g>
+        <rect width="580" height="96" rx="8" fill="#fefce8" stroke="rgba(217, 119, 6, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="138" height="22" rx="4" fill="#fef08a"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#854d0e">2 NEPHI 2:25</text>
+          <text x="150" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#713f12">Family Study Circle (4 Active)</text>
+          <text x="0" y="44" font-family="Georgia, serif" font-size="13" font-style="italic" fill="#1e293b">"Adam fell that men might be; and men are, that they might have joy."</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#f59e0b"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#b45309">Mom (Annotation):</text>
+            <text x="145" y="9" font-family="system-ui, sans-serif" font-size="11" fill="#475569">"Great reminder for our family devotional this morning."</text>
+          </g>
+        </g>
+      </g>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">STUDY GROUP COLLABORATION &amp; CIRCLES</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#dbeafe"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#1e40af">D</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Dad</text>
+          <text x="75" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Highlighted 2 Nephi 2:27 in Blue</text>
+          <rect x="424" y="2" width="124" height="20" rx="4" fill="#eff6ff"/>
+          <text x="436" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">SHARED TO CIRCLE</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#fef3c7"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#92400e">E</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Emma</text>
+          <text x="75" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Added comment on agency &amp; choice</text>
+          <rect x="424" y="2" width="124" height="20" rx="4" fill="#fefce8"/>
+          <text x="446" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#b45309">NEW NOTE 💬</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#dcfce7"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#166534">S</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Sam</text>
+          <text x="75" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Completed daily reading goal · 12-day streak</text>
+          <rect x="424" y="2" width="124" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="442" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#15803d">GOAL REACHED ✓</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">VERIFIED PRODUCT ARCHITECTURE &amp; SERVICE SPECS</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[IOS APP]</text>
+          <text x="80" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Native Swift 5.9 with UIKit &amp; SwiftUI · Xcode project</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[FIREBASE]</text>
+          <text x="80" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Auth (Apple/Email) + Cloud Firestore real-time snapshot sync</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[ONESIGNAL]</text>
+          <text x="80" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Push notification dispatch on shared group notes &amp; activity</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[SENTRY]</text>
+          <text x="80" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#b45309">SentrySDK native crash reporting &amp; real-time performance telemetry</text>
+        </g>
+      </g>
+    </g>`
+  },
+
+  // 07: Outplacement Career Consulting (OCC)
+  {
+    slug: "occupational-career-consulting",
+    accent: "#0284c7",
+    accentLight: "#38bdf8",
+    accentDark: "#0369a1",
+    tag: "[ 07 // WORKFORCE OUTPLACEMENT · OCC.CONSULTING ]",
+    tagWidth: 450,
+    title: "Outplacement Career",
+    subtitle: "Workforce Outplacement & Executive Career Transition",
+    lede1: "Structured workforce-transition platform supporting employers and impacted",
+    lede2: "professionals with clarity, dignity, and high-touch 1-on-1 executive coaching",
+    lede3: "along with transition frameworks at occ.consulting.",
+    chip1Title: "STRUCTURED TRANSITION FRAMEWORK",
+    chip1Text: "Responsible employer offboarding · Clear career milestone roadmaps",
+    chip2Title: "EXECUTIVE COACHING PLATFORM",
+    chip2Text: "Resume & LinkedIn optimization · Offer review & negotiation advisory",
+    windowTitle: "OCC_CONSULTING // TRANSITION_FRAMEWORK",
+    statusPillText: "EXECUTIVE COACHING",
+    statusPillX: 430,
+    statusPillWidth: 168,
+    badge1: "Outplacement Framework",
+    b1Width: 180,
+    badge2: "Executive Coaching",
+    b2Width: 150,
+    badge3: "WordPress Kadence",
+    b3Width: 150,
+    domain: "OCC.CONSULTING",
+    domainPillWidth: 175,
+    innerWorkspaceSvg: `
+    <g transform="translate(16, 50)">
+      <g>
+        <rect width="580" height="96" rx="8" fill="#f0f9ff" stroke="rgba(2, 132, 199, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="180" height="22" rx="4" fill="#bae6fd"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#0369a1">TRANSITION ROADMAP // 4 STAGES</text>
+          <text x="194" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#0c4a6e">Corporate Outplacement Support</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">Empowering displaced employees · Protecting employer brand and culture</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#0284c7"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0369a1">METHOD: HUMAN-LED COACHING</text>
+            <text x="235" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">OUTCOMES: HIGH PLACEMENT RATE</text>
+          </g>
+        </g>
+      </g>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">CAREER TRANSITION MILESTONE PIPELINE</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#e0f2fe"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Intake &amp; Career Assessment</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Skills audit and target matrix</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="458" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">COMPLETED ✓</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#e0f2fe"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Resume &amp; LinkedIn Optimization</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Executive branding rewrite</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="462" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">VERIFIED ✓</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#e0f2fe"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Mock Interviews &amp; Negotiations</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Live coaching sessions</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#fefce8"/>
+          <text x="460" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#b45309">ACTIVE 🎯</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">OUTPLACEMENT PLATFORM ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[PLATFORM]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">WordPress deployment with Kadence design blocks at occ.consulting</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[OFFBOARD]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Turnkey offboarding packages protecting corporate employer brand</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[COACHING]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">High-touch 1-on-1 career strategy, resume development, interview prep</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[OUTCOMES]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#0369a1">Offer evaluation, total compensation guidance &amp; placement tracking</text>
+        </g>
       </g>
     </g>`
   },
@@ -650,149 +825,191 @@ const posters = [
   // 08: Western Management Associates
   {
     slug: "western-management",
-    accent: "#eab308",
-    accentLight: "#fde047",
-    glow0: "#261d06",
-    glow45: "#140e02",
-    glow100: "#070501",
-    tag: "[ 08 // WASATCH FRONT ASSET MANAGEMENT · WESTERN.MANAGEMENT ]",
-    tagWidth: 480,
+    accent: "#ca8a04",
+    accentLight: "#eab308",
+    accentDark: "#a16207",
+    tag: "[ 08 // ASSET MANAGEMENT · WESTERN.MANAGEMENT ]",
+    tagWidth: 450,
     title: "Western Management",
-    subtitle: "Wasatch Front Asset Management & Commercial Property Operations",
-    lede1: "Utah asset management experts for over 40+ years, providing commercial leasing",
-    lede2: "and property operations along the Wasatch Front at western.management.",
-    chip1Title: "UTAH ASSET MANAGEMENT LEADERSHIP",
-    chip1Text: "Over 40+ years of trusted commercial real estate operations in Utah",
-    chip2Title: "TENANT DISPATCH & LEASING PORTAL",
-    chip2Text: "Streamlined maintenance dispatch, tenant workflows & vacancy directory",
-    windowTitle: "WESTERN_MANAGEMENT // ASSET_DISPATCH_CONSOLE",
-    statusPillText: "40+ YEARS UTAH",
-    badge1: "Wasatch Front",
+    subtitle: "Wasatch Front Commercial & HOA Property Operations",
+    lede1: "Utah asset management experts for over 40+ years, providing comprehensive",
+    lede2: "property management for commercial portfolios and residential HOA",
+    lede3: "communities along the Wasatch Front at western.management.",
+    chip1Title: "40+ YEARS UTAH EXPERTISE",
+    chip1Text: "Family owned since 1982 in Holladay, UT · Commercial & residential HOAs",
+    chip2Title: "RESIDENT PORTAL & OPERATIONS",
+    chip2Text: "24/7 online resident payment portal · Emergency maintenance dispatch coordination",
+    windowTitle: "WESTERN_OPS // ASSET_MANAGEMENT_PORTAL",
+    statusPillText: "ESTABLISHED 1982",
+    statusPillX: 444,
+    statusPillWidth: 154,
+    badge1: "Wasatch Front Ops",
     b1Width: 150,
-    badge2: "Tenant Dispatch",
-    b2Width: 160,
-    badge3: "WordPress & Divi",
-    b3Width: 165,
+    badge2: "HOA & Commercial",
+    b2Width: 150,
+    badge3: "WordPress Divi",
+    b3Width: 135,
     domain: "WESTERN.MANAGEMENT",
-    domainPillX: 890,
-    domainPillWidth: 242,
+    domainPillWidth: 215,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="542" height="42" rx="8" fill="#141004" stroke="rgba(234, 179, 8, 0.3)" stroke-width="1"/>
-        <text x="20" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#fde047">WASATCH FRONT COMMERCIAL PORTFOLIO</text>
-        <text x="290" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">40+ YEARS IN UTAH</text>
-        <text x="430" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#eab308">DISPATCH: ACTIVE</text>
-      </g>
-      <g transform="translate(0, 52)">
-        <rect width="542" height="180" rx="8" fill="#0b0802" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">TENANT DISPATCH &amp; MAINTENANCE WORK ORDERS</text>
-        <g transform="translate(16, 36)">
-          <rect width="510" height="40" rx="4" fill="#140f04" stroke="rgba(234, 179, 8, 0.2)" stroke-width="1"/>
-          <circle cx="16" cy="20" r="4" fill="#ef4444"/>
-          <text x="28" y="24" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">WO #492</text>
-          <text x="110" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Wasatch Front Office · HVAC System Calibration</text>
-          <rect x="370" y="10" width="86" height="20" rx="3" fill="rgba(239, 68, 68, 0.2)"/>
-          <text x="380" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#f87171">DISPATCHED</text>
-        </g>
-        <g transform="translate(16, 84)">
-          <rect width="510" height="40" rx="4" fill="#080602" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-          <circle cx="16" cy="20" r="4" fill="#eab308"/>
-          <text x="28" y="24" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">WO #493</text>
-          <text x="110" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Commercial Property · Suite Keycard Calibration</text>
-          <rect x="370" y="10" width="86" height="20" rx="3" fill="rgba(234, 179, 8, 0.15)"/>
-          <text x="385" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#eab308">ASSIGNED</text>
-        </g>
-        <g transform="translate(16, 132)">
-          <rect width="510" height="40" rx="4" fill="#080602" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-          <circle cx="16" cy="20" r="4" fill="#10b981"/>
-          <text x="28" y="24" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">WO #494</text>
-          <text x="110" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Industrial Park · Exterior Facility Inspection</text>
-          <rect x="370" y="10" width="86" height="20" rx="3" fill="rgba(16, 185, 129, 0.15)"/>
-          <text x="380" y="24" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#34d399">SCHEDULED</text>
+        <rect width="580" height="96" rx="8" fill="#fefce8" stroke="rgba(202, 138, 4, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="170" height="22" rx="4" fill="#fef08a"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#854d0e">ESTABLISHED 1982 // UTAH</text>
+          <text x="184" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#713f12">Holladay, UT · Wasatch Front Operations</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">Commercial Asset Portfolios &amp; Residential Home Owners Associations</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#ca8a04"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#a16207">EXPERIENCE: 40+ YEARS</text>
+            <text x="210" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">PORTAL: 24/7 ONLINE ACCESS</text>
+          </g>
         </g>
       </g>
-      <g transform="translate(0, 244)">
-        <rect width="542" height="118" rx="8" fill="#050401" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">UTAH ASSET MANAGEMENT EXPERT FOR 40+ YEARS</text>
-        <text x="16" y="52" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff">WASATCH FRONT COMMERCIAL REAL ESTATE &amp; LEASING</text>
-        <text x="16" y="74" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Asset Management · Property Maintenance · Direct Broker Inquiries</text>
-        <text x="16" y="96" font-family="Courier, monospace" font-size="11" fill="#fde047">[PLATFORM] WordPress + Divi · Active commercial inquiry pipeline</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">PROPERTY PORTFOLIO OPERATIONS &amp; RESIDENT SERVICES</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#fef9c3"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#ca8a04">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">HOA Community Management</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Board liaison, budgeting &amp; rules</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#fefce8"/>
+          <text x="462" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#a16207">HOA OPS ✓</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#fef9c3"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#ca8a04">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Commercial Asset Portfolios</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Leasing inquiries &amp; tenant coordination</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="458" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">COMMERCIAL</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#fef9c3"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#ca8a04">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Online Owner Payment Portal</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">24/7 Dues, statements &amp; records</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="458" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">ACTIVE 24/7</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">MANAGEMENT SYSTEMS ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[PLATFORM]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">WordPress site built with Divi layout engine at western.management</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[PORTAL]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Secure resident portal login for association dues &amp; account records</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[MAINTENANCE]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">24/7 emergency dispatch service and contractor management</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[LEASING]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#a16207">Direct commercial broker and vacancy inquiries for business spaces</text>
+        </g>
       </g>
     </g>`
   },
 
-  // 09: Creatives Guide Us
+  // 09: Creatives Guide Us (CGU)
   {
     slug: "creatives-guide-us",
-    accent: "#d4af37",
-    accentLight: "#fef08a",
-    glow0: "#221c08",
-    glow45: "#120f04",
-    glow100: "#070501",
-    tag: "[ 09 // INDEPENDENT CREATIVE STUDIO & OS · CREATIVESGUIDE.US ]",
-    tagWidth: 470,
+    accent: "#0f172a",
+    accentLight: "#334155",
+    accentDark: "#0284c7",
+    tag: "[ 09 // CREATIVE AGENCY STUDIO · CREATIVESGUIDE.US ]",
+    tagWidth: 450,
     title: "Creatives Guide Us",
-    subtitle: "Independent Studio Platform & Agency Operating System",
-    lede1: "Independent studio operating system connecting Next.js brand surfaces,",
-    lede2: "analog master audio releases, and boutique client productions.",
-    chip1Title: "STUDIO OPERATING SYSTEM",
-    chip1Text: "Multi-tenant workspace architecture · Direct asset delivery pipeline",
-    chip2Title: "SOUND, SCREEN & TACTILE EDITIONS",
-    chip2Text: "Unified creative direction across digital, analog tape, and print",
-    windowTitle: "CGU_STUDIO_OS // MULTI_SURFACE_PIPELINE",
-    statusPillText: "PROD HEALTH 200",
-    badge1: "Studio OS",
-    b1Width: 125,
-    badge2: "Brand Systems",
-    b2Width: 155,
-    badge3: "Tactile Editions",
-    b3Width: 165,
+    subtitle: "Creative Agency & Brand Systems Studio",
+    lede1: "Creative agency platform pairing multidisciplinary brand design systems,",
+    lede2: "editorial portfolios, analog vinyl calligraphy, and client delivery",
+    lede3: "workspaces at creativesguide.us.",
+    chip1Title: "BRAND IDENTITY SYSTEMS",
+    chip1Text: "Visual identity design · Art direction · Typography & print production",
+    chip2Title: "STUDIO OS & CLIENT WORKSPACES",
+    chip2Text: "Next.js web platform · Case study archives · Client delivery workspaces",
+    windowTitle: "CGU_STUDIO // BRAND_SYSTEMS_PLATFORM",
+    statusPillText: "NEXT.JS STUDIO",
+    statusPillX: 454,
+    statusPillWidth: 144,
+    badge1: "Brand Systems",
+    b1Width: 135,
+    badge2: "Art Direction",
+    b2Width: 130,
+    badge3: "Next.js Platform",
+    b3Width: 140,
     domain: "CREATIVESGUIDE.US",
-    domainPillX: 880,
-    domainPillWidth: 252,
+    domainPillWidth: 205,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="542" height="42" rx="8" fill="#141004" stroke="rgba(212, 175, 55, 0.3)" stroke-width="1"/>
-        <text x="20" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#fef08a">AGENCY OS: CLUSTER ACTIVE</text>
-        <text x="240" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">NEXT.JS 16 WEBPACK</text>
-        <text x="440" y="26" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#d4af37">PM2: ONLINE</text>
+        <rect width="580" height="96" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="180" height="22" rx="4" fill="#e2e8f0"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#0f172a">CREATIVES GUIDE US STUDIO</text>
+          <text x="194" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#334155">Brand Identity &amp; Digital Production</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">Multidisciplinary Design Direction · Analog Vinyl Calligraphy · Bespoke Web</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#0284c7"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0284c7">AGENCY OS: NEXT.JS 14</text>
+            <text x="210" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">PORTFOLIO: 13 CASE STUDIES</text>
+          </g>
+        </g>
       </g>
-      <g transform="translate(0, 52)">
-        <rect width="542" height="186" rx="8" fill="#0b0802" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">STUDIO MULTI-SURFACE DELIVERY STAGES</text>
-        <g transform="translate(16, 36)">
-          <rect width="510" height="42" rx="6" fill="#140e03" stroke="rgba(212, 175, 55, 0.25)" stroke-width="1"/>
-          <circle cx="16" cy="21" r="5" fill="#d4af37"/>
-          <text x="30" y="25" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">SURFACE 01: BRAND SYSTEM</text>
-          <text x="210" y="25" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Next.js Webpack · Creatives Guide Us</text>
-          <rect x="420" y="11" width="76" height="20" rx="3" fill="rgba(212, 175, 55, 0.2)"/>
-          <text x="432" y="25" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#fef08a">DEPLOYED ✓</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">BRAND IDENTITY &amp; DIGITAL PRODUCTION DELIVERABLES</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#e2e8f0"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0f172a">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Brand Identity Systems</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Logotypes, custom typography, palettes</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f1f5f9"/>
+          <text x="466" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#0f172a">SYSTEMS ✓</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#e2e8f0"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0f172a">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Analog Calligraphy Craft</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Hand-cut vinyl, sumi ink, physical craft</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="462" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">HAND-CRAFT</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#e2e8f0"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0f172a">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Digital Surfaces &amp; Code</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Modern React, Next.js, tactile motion</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="468" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">DEPLOYED</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">STUDIO PLATFORM ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[NEXT.JS]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">High-presence agency platform at creativesguide.us</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[SYSTEMS]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">End-to-end identity design guidelines and component libraries</text>
         </g>
         <g transform="translate(16, 86)">
-          <rect width="510" height="42" rx="6" fill="#140e03" stroke="rgba(212, 175, 55, 0.25)" stroke-width="1"/>
-          <circle cx="16" cy="21" r="5" fill="#eab308"/>
-          <text x="30" y="25" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">SURFACE 02: ANALOG MASTER</text>
-          <text x="210" y="25" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">2-Inch Tape Master Vault · 8 Tracks</text>
-          <rect x="420" y="11" width="76" height="20" rx="3" fill="rgba(234, 179, 8, 0.2)"/>
-          <text x="432" y="25" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#fde047">CLEARED ✓</text>
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[HANDOFF]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Direct Git repositories, Figma design systems &amp; production assets</text>
         </g>
-        <g transform="translate(16, 136)">
-          <rect width="510" height="42" rx="6" fill="#140e03" stroke="rgba(212, 175, 55, 0.25)" stroke-width="1"/>
-          <circle cx="16" cy="21" r="5" fill="#fef08a"/>
-          <text x="30" y="25" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">SURFACE 03: TACTILE EDITIONS</text>
-          <text x="210" y="25" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Print Editions &amp; Direct Vinyl Editions</text>
-          <rect x="420" y="11" width="76" height="20" rx="3" fill="rgba(254, 240, 138, 0.2)"/>
-          <text x="430" y="25" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#fef08a">IN PRESS</text>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[SYNDICATE]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#0284c7">Canonical work module synchronization across studio ecosystem</text>
         </g>
-      </g>
-      <g transform="translate(0, 250)">
-        <rect width="542" height="112" rx="8" fill="#050301" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">STUDIO INFRASTRUCTURE &amp; SYNDICATION</text>
-        <text x="16" y="50" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[CENTRAL] cgu_master module.json single source of truth</text>
-        <text x="16" y="72" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[SYNDICATE] Automated distribution to seanhalls_online &amp; clients</text>
-        <text x="16" y="94" font-family="Courier, monospace" font-size="11" fill="#fef08a">[SERVER] Cloud deployment at 136.118.46.53 · All services healthy</text>
       </g>
     </g>`
   },
@@ -800,66 +1017,95 @@ const posters = [
   // 10: Namastay Online
   {
     slug: "namastay-online",
-    accent: "#f59e0b",
-    accentLight: "#fbbf24",
-    glow0: "#241506",
-    glow45: "#130b03",
-    glow100: "#070401",
+    accent: "#b45309",
+    accentLight: "#d97706",
+    accentDark: "#92400e",
     tag: "[ 10 // CONSCIOUS FASHION ATELIER · NAMASTAY.ONLINE ]",
-    tagWidth: 460,
+    tagWidth: 470,
     title: "Namastay Online",
-    subtitle: "Conscious Fashion & Direct Textile Atelier",
-    lede1: "Conscious movement wear atelier connecting master",
-    lede2: "Bangladesh handloom mills with direct ethical importing.",
-    chip1Title: "ETHICAL BANGLADESH MILL PIPELINE",
-    chip1Text: "Direct relationships with master artisan weavers · Zero middleman markups",
-    chip2Title: "LIVING CALLIGRAPHY ENGINE",
-    chip2Text: "Animated dot calligraphy canvas · Light linen aesthetic translated to web",
-    windowTitle: "NAMASTAY // TEXTILE_ATELIER_ENGINE",
-    statusPillText: "ATELIER ACTIVE",
-    badge1: "Artisan Handloom",
-    b1Width: 165,
-    badge2: "Direct Mill Pipeline",
-    b2Width: 175,
+    subtitle: "Conscious Fashion & Artisan Textile Atelier",
+    lede1: "Conscious movement wear and textile atelier connecting master mills",
+    lede2: "in Bangladesh for direct ethical importing with an interactive",
+    lede3: "dot-calligraphy digital canvas at namastay.online.",
+    chip1Title: "DIRECT BANGLADESH TEXTILES",
+    chip1Text: "Artisan linen & cotton imports · Ethical transparency storytelling",
+    chip2Title: "DOT-CALLIGRAPHY CANVAS ENGINE",
+    chip2Text: "Interactive browser-based animation · Cormorant Garamond editorial styling",
+    windowTitle: "NAMASTAY // ARTISAN_TEXTILE_ATELIER",
+    statusPillText: "ETHICAL ATELIER",
+    statusPillX: 444,
+    statusPillWidth: 154,
+    badge1: "Direct Imports",
+    b1Width: 130,
+    badge2: "Canvas Animation",
+    b2Width: 150,
     badge3: "Linen Atelier",
-    b3Width: 145,
+    b3Width: 130,
     domain: "NAMASTAY.ONLINE",
-    domainPillX: 900,
-    domainPillWidth: 232,
+    domainPillWidth: 195,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="542" height="60" rx="8" fill="#140c03" stroke="rgba(245, 158, 11, 0.3)" stroke-width="1"/>
-        <text x="20" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fbbf24">DIRECT BANGLADESH IMPORT MANIFEST</text>
-        <text x="20" y="44" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff">LOT #BD-2026-08 // DHAKA HANDLOOM MILLS</text>
-        <rect x="420" y="16" width="102" height="24" rx="4" fill="rgba(245, 158, 11, 0.2)"/>
-        <text x="432" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fde68a">ETHICAL PASS</text>
-      </g>
-      <g transform="translate(0, 72)">
-        <rect width="542" height="166" rx="8" fill="#0b0601" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">ORGANIC LINEN &amp; HANDLOOM WEAVE METRICS</text>
-        <g transform="translate(16, 36)">
-          <rect width="510" height="38" rx="4" fill="#120a02" stroke="rgba(245, 158, 11, 0.2)" stroke-width="1"/>
-          <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">MATERIAL: 100% ORGANIC BENGAL LINEN</text>
-          <text x="290" y="24" font-family="Courier, monospace" font-size="11" fill="#fbbf24">WEIGHT: 180 GSM · BREATHABLE</text>
-        </g>
-        <g transform="translate(16, 82)">
-          <rect width="510" height="38" rx="4" fill="#120a02" stroke="rgba(245, 158, 11, 0.2)" stroke-width="1"/>
-          <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">DYE: PLANT-BASED NATURAL INDIGO</text>
-          <text x="290" y="24" font-family="Courier, monospace" font-size="11" fill="#fbbf24">BATCH: SUN-CURED COTTON MESH</text>
-        </g>
-        <g transform="translate(16, 128)">
-          <rect width="510" height="32" rx="4" fill="#070401"/>
-          <circle cx="10" cy="16" r="4" fill="#10b981"/>
-          <text x="24" y="20" font-family="Courier, monospace" font-size="10.5" fill="#34d399">DIRECT IMPORTER LICENSED // 100% ARTISAN CO-OP OWNED</text>
+        <rect width="580" height="96" rx="8" fill="#fefce8" stroke="rgba(180, 83, 9, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="180" height="22" rx="4" fill="#fef3c7"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#92400e">ETHICAL TEXTILE PIPELINE</text>
+          <text x="194" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#78350f">Master Mills in Bangladesh · Direct Imports</text>
+          <text x="0" y="44" font-family="Georgia, serif" font-size="13" font-style="italic" fill="#334155">"Connecting artisan craftsmanship with conscious, mindful movement wear."</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#b45309"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#92400e">SOURCE: BANGLADESH ARTISAN MILLS</text>
+            <text x="250" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">PORTAL: NAMASTAY.ONLINE</text>
+          </g>
         </g>
       </g>
-      <g transform="translate(0, 250)">
-        <rect width="542" height="112" rx="8" fill="#050301" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">INTERACTIVE DOT CALLIGRAPHY ENGINE</text>
-        <text x="16" y="50" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[CANVAS] HTML5 fluid particle engine · 60 FPS cursor attraction</text>
-        <text x="16" y="72" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[DESIGN] Editorial linen palette · Pure light-mode digital gallery</text>
-        <text x="16" y="94" font-family="Courier, monospace" font-size="11" fill="#fbbf24">[ETHEREAL] Harmonious blend of physical craftsmanship &amp; reactive code</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">LIVING DOT-CALLIGRAPHY CANVAS &amp; FABRIC ATELIER</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#fef3c7"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#b45309">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Organic Linen &amp; Cotton Weaves</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Master artisan loomed fabrics</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#fefce8"/>
+          <text x="466" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#92400e">SOURCED ✓</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#fef3c7"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#b45309">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Living Dot-Calligraphy Canvas</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Interactive HTML5 canvas particle flow</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="458" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">CANVAS LIVE</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#fef3c7"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#b45309">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Direct Ethical Sourcing</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">100% transparent artisan trade</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="462" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">ETHICAL ✓</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">DIGITAL ATELIER ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[TYPOGRAPHY]</text>
+          <text x="100" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Cormorant Garamond serif &amp; Montserrat sans pairing</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[CANVAS]</text>
+          <text x="100" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">High-performance 60fps particle physics simulating fluid calligraphy</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[SUPPLY]</text>
+          <text x="100" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Direct import tracking connecting weavers to finished garments</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[COMMERCE]</text>
+          <text x="100" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#92400e">Low-friction checkout and conscious brand storytelling</text>
+        </g>
       </g>
     </g>`
   },
@@ -867,68 +1113,95 @@ const posters = [
   // 11: Namastay Yoga & Hilo Sanctuary
   {
     slug: "namastay-yoga",
-    accent: "#f59e0b",
-    accentLight: "#fbbf24",
-    glow0: "#1a1e28",
-    glow45: "#10131b",
-    glow100: "#080a0e",
-    tag: "[ 11 // YOGA SANCTUARY & STUDIO · NAMASTAY.YOGA ]",
-    tagWidth: 440,
-    title: "Namastay Yoga",
-    subtitle: "Movement Studio & Mixed-Use Sanctuary Prospect",
-    lede1: "Holistic wellness brand pairing certified yoga instruction with",
-    lede2: "an active sanctuary acquisition pipeline in Downtown Hilo.",
-    chip1Title: "DOWNTOWN HILO PROPERTY PIPELINE",
-    chip1Text: "Commercial/residential sanctuary prospect · Historic Hilo district",
-    chip2Title: "CERTIFIED MOVEMENT & BOUTIQUE RETAIL",
-    chip2Text: "Sean Halls certified instruction · On-site artisan apparel showcase",
-    windowTitle: "HILO_SANCTUARY // STUDIO_PROSPECTUS",
-    statusPillText: "PIPELINE ACTIVE",
+    accent: "#059669",
+    accentLight: "#10b981",
+    accentDark: "#047857",
+    tag: "[ 11 // MOVEMENT STUDIO & SANCTUARY · NAMASTAY.YOGA ]",
+    tagWidth: 470,
+    title: "Namastay Sanctuary",
+    subtitle: "Movement Studio & Hilo Sanctuary Initiative",
+    lede1: "Holistic wellness sanctuary pairing certified yoga instruction curriculum",
+    lede2: "with a mixed commercial/residential acquisition pipeline near Downtown",
+    lede3: "Hilo, Hawaiʻi at namastay.yoga.",
+    chip1Title: "CERTIFIED YOGA INSTRUCTION",
+    chip1Text: "Somatic movement curriculum · Community wellness workshops",
+    chip2Title: "DOWNTOWN HILO PROPERTY PIPELINE",
+    chip2Text: "Physical studio sanctuary & on-site artisan boutique retail in development",
+    windowTitle: "NAMASTAY // HILO_SANCTUARY_WORKSPACE",
+    statusPillText: "HILO, HAWAIʻI",
+    statusPillX: 464,
+    statusPillWidth: 134,
     badge1: "Downtown Hilo",
-    b1Width: 150,
-    badge2: "Certified Instructor",
-    b2Width: 175,
-    badge3: "Boutique Retail",
-    b3Width: 155,
+    b1Width: 135,
+    badge2: "Certified Yoga",
+    b2Width: 130,
+    badge3: "Sanctuary Venture",
+    b3Width: 150,
     domain: "NAMASTAY.YOGA",
-    domainPillX: 910,
-    domainPillWidth: 222,
+    domainPillWidth: 180,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="542" height="60" rx="8" fill="#131720" stroke="rgba(245, 158, 11, 0.3)" stroke-width="1"/>
-        <text x="20" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fbbf24">SANCTUARY ACQUISITION PROSPECTUS</text>
-        <text x="20" y="44" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff">DOWNTOWN HILO · COMMERCIAL/RESIDENTIAL</text>
-        <rect x="420" y="16" width="102" height="24" rx="4" fill="rgba(245, 158, 11, 0.2)"/>
-        <text x="430" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#fbbf24">STAGE 02</text>
-      </g>
-      <g transform="translate(0, 72)">
-        <rect width="542" height="166" rx="8" fill="#0a0c12" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">SANCTUARY MOVEMENT &amp; MEDITATION SCHEDULE</text>
-        <g transform="translate(16, 36)">
-          <rect width="510" height="38" rx="4" fill="#121620" stroke="rgba(245, 158, 11, 0.2)" stroke-width="1"/>
-          <text x="16" y="24" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#fbbf24">07:00 AM</text>
-          <text x="100" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">Sunrise Vinyasa Flow · Sean Halls Certified RYT</text>
-          <text x="420" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#34d399">STUDIO A</text>
-        </g>
-        <g transform="translate(16, 82)">
-          <rect width="510" height="38" rx="4" fill="#121620" stroke="rgba(245, 158, 11, 0.2)" stroke-width="1"/>
-          <text x="16" y="24" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#fbbf24">10:30 AM</text>
-          <text x="100" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff">Restorative Breathwork &amp; Sound Immersion</text>
-          <text x="420" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">GARDEN</text>
-        </g>
-        <g transform="translate(16, 128)">
-          <rect width="510" height="32" rx="4" fill="#080a0e"/>
-          <circle cx="10" cy="16" r="4" fill="#fbbf24"/>
-          <text x="24" y="20" font-family="Courier, monospace" font-size="10.5" fill="#fde68a">ON-SITE RETAIL: Artisan Bangladesh Handloom Movement Wear</text>
+        <rect width="580" height="96" rx="8" fill="#ecfdf5" stroke="rgba(5, 150, 105, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="170" height="22" rx="4" fill="#a7f3d0"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#065f46">DOWNTOWN HILO SANCTUARY</text>
+          <text x="184" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#064e3b">Big Island, Hawaiʻi · Property Development</text>
+          <text x="0" y="44" font-family="Georgia, serif" font-size="13" font-style="italic" fill="#334155">"Intentional movement studio, on-site artisan retail, and community gathering space."</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#059669"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#047857">STATUS: ACQUISITION PIPELINE</text>
+            <text x="240" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">TRACK: CERTIFIED YOGA TEACHER</text>
+          </g>
         </g>
       </g>
-      <g transform="translate(0, 250)">
-        <rect width="542" height="112" rx="8" fill="#050608" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">COMMUNITY SANCTUARY FOUNDATION</text>
-        <text x="16" y="50" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[COMMUNITY] Welcoming local Big Island practitioners &amp; retreat guests</text>
-        <text x="16" y="72" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[INTEGRATION] Direct synergy with Namastay Online retail apparel</text>
-        <text x="16" y="94" font-family="Courier, monospace" font-size="11" fill="#fbbf24">[VISION] Long-term intentional living &amp; movement arts anchor</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">SANCTUARY DEVELOPMENT &amp; SOMATIC CURRICULUM</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#d1fae5"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#059669">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Physical Sanctuary Acquisition</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Mixed-use commercial/residential site</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#ecfdf5"/>
+          <text x="466" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#047857">PROSPECT</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#d1fae5"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#059669">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Certified Yoga Curriculum</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Somatic flows &amp; restorative classes</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="460" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">CERTIFIED ✓</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#d1fae5"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#059669">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Boutique Retail &amp; Community</text>
+          <text x="245" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Artisan movement wear &amp; wellness goods</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="462" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">RETAIL HUB</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">SANCTUARY VENTURE ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[LOCATION]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Historic Downtown Hilo mixed-use property acquisition</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[STUDIO]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Physical movement space hosting daily intentional classes</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[COMMERCE]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">On-site boutique paired with namastay.online direct imports</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[COMMUNITY]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#047857">Holistic sound baths, meditation workshops &amp; community gatherings</text>
+        </g>
       </g>
     </g>`
   },
@@ -936,72 +1209,95 @@ const posters = [
   // 12: johnwalls.studio
   {
     slug: "johnwalls-studio",
-    accent: "#38bdf8",
-    accentLight: "#7dd3fc",
-    glow0: "#0c2033",
-    glow45: "#06121e",
-    glow100: "#03090f",
-    tag: "[ 12 // GENERATIVE AUDIO DSP LAB · JOHNWALLS.STUDIO ]",
+    accent: "#0284c7",
+    accentLight: "#38bdf8",
+    accentDark: "#0369a1",
+    tag: "[ 12 // AUDIO DSP LAB & VST PLUGIN · JOHNWALLS.STUDIO ]",
     tagWidth: 470,
     title: "johnwalls.studio",
-    subtitle: "Generative Audio DSP Lab & Ableton Live VST3/AU Plugin",
-    lede1: "Generative audio DSP workstation and Ableton Live plugin suite",
-    lede2: "with real-time OSC telemetry and SuperCollider synthesis.",
-    chip1Title: "NATIVE C++ JUCE AUDIO ENGINE",
-    chip1Text: "VST3 and AU plugin binaries · Low-latency 64-sample internal buffer",
-    chip2Title: "SUPERCOLLIDER & WEBSOCKET BRIDGE",
-    chip2Text: "Bi-directional OSC server · Real-time DAW transport streaming",
-    windowTitle: "JUCE_DSP // ABLETON_LIVE_12_BRIDGE",
-    statusPillText: "DAW SYNCED",
+    subtitle: "Generative Audio DSP & Ableton Live VST3/AU Plugin",
+    lede1: "Generative audio DSP lab bridging Ableton Live 12, JUCE C++ plugins,",
+    lede2: "SuperCollider OSC synthesis, and an interactive browser-based visualizer",
+    lede3: "canvas at johnwalls.studio.",
+    chip1Title: "JUCE C++ VST3 & AU BINARIES",
+    chip1Text: "Native macOS compilation · Custom filter matrices & DSP algorithms",
+    chip2Title: "REAL-TIME OSC & WEBSOCKET BRIDGE",
+    chip2Text: "SuperCollider scsynth integration · Live parameter streaming to web canvas",
+    windowTitle: "JOHNWALLS // DSP_TELEMETRY_CONSOLE",
+    statusPillText: "ABLETON LIVE 12",
+    statusPillX: 444,
+    statusPillWidth: 154,
     badge1: "JUCE C++",
-    b1Width: 125,
-    badge2: "VST3 / AU",
-    b2Width: 135,
+    b1Width: 115,
+    badge2: "VST3 / AU Plugin",
+    b2Width: 150,
     badge3: "SuperCollider OSC",
-    b3Width: 175,
+    b3Width: 155,
     domain: "JOHNWALLS.STUDIO",
-    domainPillX: 890,
-    domainPillWidth: 242,
+    domainPillWidth: 205,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="542" height="110" rx="8" fill="#06121c" stroke="rgba(56, 189, 248, 0.35)" stroke-width="1"/>
-        <line x1="20" y1="55" x2="522" y2="55" stroke="rgba(56, 189, 248, 0.15)" stroke-dasharray="4 4"/>
-        <line x1="135" y1="10" x2="135" y2="100" stroke="rgba(56, 189, 248, 0.1)"/>
-        <line x1="270" y1="10" x2="270" y2="100" stroke="rgba(56, 189, 248, 0.1)"/>
-        <line x1="405" y1="10" x2="405" y2="100" stroke="rgba(56, 189, 248, 0.1)"/>
-        <path d="M 20 55 Q 60 15, 100 55 T 180 55 T 260 55 T 340 55 T 420 55 T 500 55" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
-        <path d="M 20 55 Q 60 30, 100 55 T 180 55 T 260 55 T 340 55 T 420 55 T 500 55" fill="none" stroke="#22d3ee" stroke-width="1.2" opacity="0.6"/>
-        <text x="20" y="24" font-family="Courier, monospace" font-size="10" font-weight="bold" fill="#7dd3fc">OSCILLOSCOPE CH 1/2 · 44.1kHz · 64 SAMPLES</text>
-        <rect x="420" y="14" width="102" height="20" rx="3" fill="rgba(56, 189, 248, 0.2)"/>
-        <text x="430" y="28" font-family="Courier, monospace" font-size="9" font-weight="bold" fill="#7dd3fc">PEAK: -0.3 dB</text>
-      </g>
-      <g transform="translate(0, 122)">
-        <rect width="542" height="110" rx="8" fill="#040c14" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">ABLETON LIVE 12 TRANSPORT &amp; DSP BUFFER</text>
-        <g transform="translate(16, 36)">
-          <rect width="160" height="54" rx="6" fill="#091824" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1"/>
-          <text x="14" y="20" font-family="Courier, monospace" font-size="10" font-weight="bold" fill="#7dd3fc">TRANSPORT BPM</text>
-          <text x="14" y="44" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#ffffff">124.0</text>
-          <text x="75" y="44" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#34d399">PLAY ▶</text>
-        </g>
-        <g transform="translate(186, 36)">
-          <rect width="160" height="54" rx="6" fill="#091824" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1"/>
-          <text x="14" y="20" font-family="Courier, monospace" font-size="10" font-weight="bold" fill="#7dd3fc">PLAYHEAD POSITION</text>
-          <text x="14" y="44" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#ffffff">BAR 32.1</text>
-        </g>
-        <g transform="translate(356, 36)">
-          <rect width="170" height="54" rx="6" fill="#091824" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1"/>
-          <text x="14" y="20" font-family="Courier, monospace" font-size="10" font-weight="bold" fill="#7dd3fc">INTERNAL LATENCY</text>
-          <text x="14" y="44" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#38bdf8">0.8 ms</text>
+        <rect width="580" height="96" rx="8" fill="#f0f9ff" stroke="rgba(2, 132, 199, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="180" height="22" rx="4" fill="#bae6fd"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#0369a1">JUCE C++ ENGINE // ACTIVE</text>
+          <text x="194" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#0c4a6e">Ableton Live 12 · Sample Rate: 48.0 kHz</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">Native macOS VST3 &amp; AU binaries installed · Real-time WebSocket telemetry</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#10b981"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#047857">BUFFER: 128 SAMPLES (2.6ms)</text>
+            <text x="240" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">DSP LOAD: 3.8% · ZERO DROP</text>
+          </g>
         </g>
       </g>
-      <g transform="translate(0, 244)">
-        <rect width="542" height="118" rx="8" fill="#02070c" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">SUPERCOLLIDER OSC &amp; WEBSOCKET ROUTING</text>
-        <text x="16" y="50" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[OSC] scsynth UDP connected at port 57120 · SynthDef active</text>
-        <text x="16" y="72" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[WEBSOCKET] Telemetry server listening on port 8080 · Visualizer synced</text>
-        <text x="16" y="94" font-family="Courier, monospace" font-size="11" fill="#38bdf8">[VST3/AU] Native binaries installed in Ableton Live Studio path</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">AUDIO DSP TELEMETRY &amp; REAL-TIME OSC STREAM</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#e0f2fe"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">JUCE C++ Audio Processor</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Biquad filters &amp; non-linear delay</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="466" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">COMPILED ✓</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#e0f2fe"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">SuperCollider OSC Scsynth</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">UDP port 57120 parameter bridge</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="464" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">OSC SYNCED</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#e0f2fe"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Interactive Web Visualizer</text>
+          <text x="235" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Live audio take publishing canvas</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="462" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">PUBLISHED ✓</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">AUDIO DSP SYSTEM ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[PLUGINS]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Native macOS VST3 and AU plugins built with CMake &amp; JUCE 7</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[WEBSOCKET]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">High-speed telemetry server streaming real-time DSP events</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[ABLETON]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Live 12 track hosting with automated build &amp; reload pipelines</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[WEB CANVAS]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#0369a1">Interactive React canvas for take capture at johnwalls.studio</text>
+        </g>
       </g>
     </g>`
   },
@@ -1009,83 +1305,95 @@ const posters = [
   // 13: Walls/Devine — Volume 1
   {
     slug: "walls-devine",
-    accent: "#f43f5e",
-    accentLight: "#fda4af",
-    glow0: "#28101a",
-    glow45: "#16080e",
-    glow100: "#090306",
+    accent: "#e11d48",
+    accentLight: "#f43f5e",
+    accentDark: "#be123c",
     tag: "[ 13 // STUDIO MASTER & SYNC CATALOG · JOHNWALLS.ROCKS ]",
     tagWidth: 470,
     title: "Walls/Devine — Vol. 1",
     subtitle: "Debut 8-Track Studio Master & Direct Sync Catalog",
-    lede1: "Debut 8-track studio master tracked live on 2-inch tape in Los Angeles,",
-    lede2: "cleared for 100% direct sync licensing and companion score packaging.",
+    lede1: "Debut 8-track studio master album tracked live on 2-inch tape in Los Angeles,",
+    lede2: "cleared for 100% direct sync licensing and companion score packaging",
+    lede3: "at johnwalls.rocks.",
     chip1Title: "2-INCH ANALOG TAPE TRACKING",
-    chip1Text: "Tracked live in Los Angeles · Zero digital plugins in the recording path",
+    chip1Text: "Tracked live in Los Angeles · Studer A800 24-track · Zero digital plugins",
     chip2Title: "100% DIRECT SYNC OWNERSHIP",
-    chip2Text: "100% master and sync publishing rights retained · Film/TV placement ready",
+    chip2Text: "100% master and publishing rights retained · Film/TV supervisor cue ready",
     windowTitle: "STUDIO_MASTER // 2_INCH_TAPE_VAULT",
-    statusPillText: "100% SYNC READY",
+    statusPillText: "100% DIRECT SYNC",
+    statusPillX: 440,
+    statusPillWidth: 158,
     badge1: "2-Inch Analog Tape",
-    b1Width: 175,
+    b1Width: 160,
     badge2: "8 Master Cuts",
-    b2Width: 140,
+    b2Width: 130,
     badge3: "100% Direct Sync",
-    b3Width: 160,
+    b3Width: 150,
     domain: "JOHNWALLS.ROCKS",
-    domainPillX: 900,
-    domainPillWidth: 232,
+    domainPillWidth: 195,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="542" height="110" rx="8" fill="#180a11" stroke="rgba(244, 63, 94, 0.35)" stroke-width="1"/>
-        <g transform="translate(20, 16)">
-          <rect width="240" height="78" rx="6" fill="#0d0409" stroke="rgba(244, 63, 94, 0.25)" stroke-width="1"/>
-          <path d="M 20 65 Q 120 20, 220 65" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-          <path d="M 180 43 Q 200 52, 220 65" fill="none" stroke="#ef4444" stroke-width="2.5"/>
-          <line x1="120" y1="75" x2="195" y2="40" stroke="#f43f5e" stroke-width="2"/>
-          <circle cx="120" cy="75" r="5" fill="#f43f5e"/>
-          <text x="14" y="20" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#fda4af">VU METER · CH A (LEFT)</text>
-          <text x="195" y="20" font-family="Courier, monospace" font-size="9" font-weight="bold" fill="#ef4444">+2 dB</text>
-        </g>
-        <g transform="translate(282, 16)">
-          <rect width="240" height="78" rx="6" fill="#0d0409" stroke="rgba(244, 63, 94, 0.25)" stroke-width="1"/>
-          <path d="M 20 65 Q 120 20, 220 65" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-          <path d="M 180 43 Q 200 52, 220 65" fill="none" stroke="#ef4444" stroke-width="2.5"/>
-          <line x1="120" y1="75" x2="190" y2="42" stroke="#f43f5e" stroke-width="2"/>
-          <circle cx="120" cy="75" r="5" fill="#f43f5e"/>
-          <text x="14" y="20" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#fda4af">VU METER · CH B (RIGHT)</text>
-          <text x="195" y="20" font-family="Courier, monospace" font-size="9" font-weight="bold" fill="#ef4444">+1.5 dB</text>
+        <rect width="580" height="96" rx="8" fill="#fff1f2" stroke="rgba(225, 29, 72, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="180" height="22" rx="4" fill="#fecdd3"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#9f1239">STUDER A800 2-INCH TAPE</text>
+          <text x="194" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#881337">24-Track Live Recording in Los Angeles</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">Sean Halls &amp; Terry Devine · ATR Magnetics Master Tape at 30 IPS</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#e11d48"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#be123c">RIGHTS: 100% MASTER &amp; SYNC</text>
+            <text x="240" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">TRACKS: 8 COMPLETED CUTS</text>
+          </g>
         </g>
       </g>
-      <g transform="translate(0, 122)">
-        <rect width="542" height="126" rx="8" fill="#0b0307" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="20" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">8-TRACK MASTER TAPE SYNC CATALOG</text>
-        <g transform="translate(16, 32)">
-          <text x="0" y="16" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">01. Space Cruiser</text>
-          <text x="160" y="16" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">3:42 · 124 BPM · D Minor</text>
-          <rect x="360" y="2" width="136" height="18" rx="3" fill="rgba(244, 63, 94, 0.2)"/>
-          <text x="370" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#fda4af">100% DIRECT SYNC ✓</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">8-TRACK MASTER TAPE SYNC CATALOG</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#ffe4e6"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#e11d48">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Space Cruiser (3:42)</text>
+          <text x="210" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">124 BPM · D Minor · Driving groove</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="466" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">SYNC READY</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#ffe4e6"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#e11d48">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Mint Green Funk (4:18)</text>
+          <text x="210" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">108 BPM · G Major · Analog slap</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="466" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">SYNC READY</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#ffe4e6"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#e11d48">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Pacific Sunset (5:02)</text>
+          <text x="210" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">96 BPM · E Minor · Atmospheric</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="466" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">SYNC READY</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">DIRECT SYNC &amp; PUBLISHING ARCHITECTURE</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[ANALOG]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Live tracked to 2-inch tape with vintage Neve/API console preamps</text>
         </g>
         <g transform="translate(16, 62)">
-          <text x="0" y="16" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">02. Mint Green Funk</text>
-          <text x="160" y="16" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">4:18 · 108 BPM · G Major</text>
-          <rect x="360" y="2" width="136" height="18" rx="3" fill="rgba(244, 63, 94, 0.2)"/>
-          <text x="370" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#fda4af">MASTER &amp; PUB OWNED</text>
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[OWNERSHIP]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">100% master and sync ownership with zero publisher middleman lock-in</text>
         </g>
-        <g transform="translate(16, 92)">
-          <text x="0" y="16" font-family="Courier, monospace" font-size="11" font-weight="bold" fill="#ffffff">03. Pacific Sunset</text>
-          <text x="160" y="16" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">5:02 · 96 BPM · E Minor</text>
-          <rect x="360" y="2" width="136" height="18" rx="3" fill="rgba(16, 185, 129, 0.2)"/>
-          <text x="375" y="15" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="bold" fill="#34d399">FILM/TV CUE READY</text>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[SUPERVISOR]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">High-resolution WAV masters, instrumental stems &amp; score charts</text>
         </g>
-      </g>
-      <g transform="translate(0, 260)">
-        <rect width="542" height="102" rx="8" fill="#050204" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">ANALOG TAPE MACHINE CALIBRATION</text>
-        <text x="16" y="46" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[TAPE MACHINE] Studer A800 2-Inch 24-Track · 30 IPS speed</text>
-        <text x="16" y="68" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[FORMULATION] ATR Magnetics Master Tape · +9 dB operating level</text>
-        <text x="16" y="90" font-family="Courier, monospace" font-size="11" fill="#fda4af">[OWNERSHIP] Zero major-label middleman lock-in · 100% direct deal terms</text>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[CATALOG]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#be123c">Direct sync streaming and supervisor licensing at johnwalls.rocks</text>
+        </g>
       </g>
     </g>`
   },
@@ -1093,87 +1401,113 @@ const posters = [
   // 14: Sean Halls Online Brand Card
   {
     slug: "seanhalls-online",
-    accent: "#38bdf8",
-    accentLight: "#7dd3fc",
-    glow0: "#0c1e30",
-    glow45: "#06101c",
-    glow100: "#03080e",
+    accent: "#0284c7",
+    accentLight: "#38bdf8",
+    accentDark: "#0369a1",
     tag: "[ SEAN HALLS // BOUTIQUE DEV SHOP · SEANHALLS.ONLINE ]",
     tagWidth: 460,
     title: "Pay Per Outcome.",
-    subtitle: "High-Impact Web Surfaces · Client Portals · Delivery Systems",
-    lede1: "Boutique online dev shop where you pay per verified milestone outcome,",
-    lede2: "not per billable hour. Engineered to ship with Apple Silicon compute.",
-    chip1Title: "MILESTONE-BASED VERIFICATION",
-    chip1Text: "Zero hourly lock-in · Every release backed by live proof & tests",
-    chip2Title: "APPLE SILICON UNIFIED COMPUTE",
-    chip2Text: "Local high-efficiency builds · Deterministic CI/CD deployments",
+    subtitle: "Boutique Dev Shop · Fixed Scope Sprints · Staging Acceptance",
+    lede1: "Outcome-driven engineering for ambitious brands and teams. Zero timesheets,",
+    lede2: "no hourly billing games. You work directly with the builder and pay only",
+    lede3: "when milestones are verified on staging.",
+    chip1Title: "PAY PER OUTCOME GUARANTEE",
+    chip1Text: "Fixed-price milestone sprints · $0 released until verified on staging",
+    chip2Title: "DIRECT BUILDER RELATIONSHIP",
+    chip2Text: "Direct commits from senior engineer · Clean Git repo ownership & zero lock-in",
     windowTitle: "SEANHALLS // OUTCOME_DELIVERY_CONSOLE",
-    statusPillText: "DELIVERY 100%",
+    statusPillText: "VERIFIED OUTCOMES",
+    statusPillX: 436,
+    statusPillWidth: 162,
     badge1: "Pay Per Outcome",
-    b1Width: 165,
-    badge2: "Zero Hourly Lock-in",
-    b2Width: 175,
-    badge3: "High-Impact Craft",
+    b1Width: 145,
+    badge2: "Direct Commits",
+    b2Width: 135,
+    badge3: "Staging Acceptance",
     b3Width: 165,
     domain: "SEANHALLS.ONLINE",
-    domainPillX: 890,
-    domainPillWidth: 242,
+    domainPillWidth: 205,
     innerWorkspaceSvg: `
-    <g transform="translate(18, 50)">
+    <g transform="translate(16, 50)">
       <g>
-        <rect width="542" height="52" rx="8" fill="#081826" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1"/>
-        <circle cx="28" cy="26" r="10" fill="#38bdf8"/>
-        <text x="24" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">✓</text>
-        <text x="44" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#7dd3fc">SPEC</text>
-        <line x1="82" y1="26" x2="126" y2="26" stroke="#38bdf8" stroke-width="2"/>
-        <circle cx="140" cy="26" r="10" fill="#38bdf8"/>
-        <text x="136" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">✓</text>
-        <text x="156" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#7dd3fc">BUILD</text>
-        <line x1="202" y1="26" x2="246" y2="26" stroke="#38bdf8" stroke-width="2"/>
-        <circle cx="260" cy="26" r="10" fill="#38bdf8"/>
-        <text x="256" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">✓</text>
-        <text x="276" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#7dd3fc">VERIFY</text>
-        <line x1="332" y1="26" x2="376" y2="26" stroke="#38bdf8" stroke-width="2"/>
-        <circle cx="390" cy="26" r="11" fill="rgba(56, 189, 248, 0.3)" stroke="#7dd3fc" stroke-width="2"/>
-        <text x="386" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">✓</text>
-        <text x="408" y="30" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff">DEPLOY 200</text>
-      </g>
-      <g transform="translate(0, 64)">
-        <rect width="542" height="166" rx="8" fill="#040e16" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="18" y="24" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="bold" fill="#7dd3fc">ACTIVE ECOSYSTEM DEPLOYMENT DOSSIER</text>
-        <g transform="translate(18, 42)">
-          <text x="0" y="14" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff">13 PRODUCTION PROPERTIES DEPLOYED &amp; VERIFIED</text>
-          <text x="0" y="36" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Healthcare Ops · E-Commerce · Architectural Editorial · Audio DSP</text>
-          <text x="0" y="58" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#94a3b8">Continuous Integration &amp; Automated Apache / PM2 Server Reloads</text>
-          <g transform="translate(0, 74)">
-            <rect width="506" height="6" rx="3" fill="rgba(255,255,255,0.08)"/>
-            <rect width="506" height="6" rx="3" fill="#38bdf8"/>
-            <text x="0" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">PORTFOLIO HEALTH: 100%</text>
-            <text x="360" y="22" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#7dd3fc">ALL OUTCOMES VERIFIED ✓</text>
+        <rect width="580" height="96" rx="8" fill="#f0f9ff" stroke="rgba(2, 132, 199, 0.25)" stroke-width="1"/>
+        <g transform="translate(16, 16)">
+          <rect width="180" height="22" rx="4" fill="#bae6fd"/>
+          <text x="10" y="15" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#0369a1">LOCKED SPRINT MILESTONE</text>
+          <text x="194" y="15" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#0c4a6e">Verifiable Acceptance Criteria</text>
+          <text x="0" y="44" font-family="system-ui, sans-serif" font-size="12" fill="#334155">You only pay when software works in production on live staging</text>
+          <g transform="translate(0, 56)">
+            <circle cx="6" cy="6" r="4" fill="#10b981"/>
+            <text x="16" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#047857">STATUS: 100% DELIVERED &amp; ACCEPTED</text>
+            <text x="270" y="9" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#64748b">HOURLY FLUFF: $0</text>
           </g>
         </g>
       </g>
-      <g transform="translate(0, 242)">
-        <rect width="542" height="120" rx="8" fill="#02080d" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-        <text x="16" y="24" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="bold" fill="#64748b">ENGINEERING RIGOR &amp; ACCOUNTABILITY</text>
-        <text x="16" y="52" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[GUARANTEE] You only pay when milestones are demonstrably delivered</text>
-        <text x="16" y="74" font-family="Courier, monospace" font-size="11" fill="#e2e8f0">[SPEED] High-velocity autonomous workflows with surgical precision</text>
-        <text x="16" y="96" font-family="Courier, monospace" font-size="11" fill="#7dd3fc">[STACK] Modern React, TypeScript, Node.js, C++ JUCE, Next.js</text>
+      <g transform="translate(0, 108)">
+        <rect width="580" height="142" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="24" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">OUTCOME-DRIVEN SPRINT LIFECYCLE</text>
+        <g transform="translate(16, 38)">
+          <circle cx="12" cy="12" r="10" fill="#dbeafe"/>
+          <text x="9" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">1</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Concrete Scoping Spec</text>
+          <text x="215" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Locked scope &amp; fixed milestone price</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="466" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">AGREED ✓</text>
+        </g>
+        <g transform="translate(16, 72)">
+          <circle cx="12" cy="12" r="10" fill="#dbeafe"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">2</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Direct Engineering Sprint</text>
+          <text x="215" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Senior commits, tests &amp; CI automation</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#eff6ff"/>
+          <text x="464" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#2563eb">SHIPPED ✓</text>
+        </g>
+        <g transform="translate(16, 106)">
+          <circle cx="12" cy="12" r="10" fill="#dbeafe"/>
+          <text x="8" y="16" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#0284c7">3</text>
+          <text x="32" y="16" font-family="system-ui, sans-serif" font-size="11.5" font-weight="600" fill="#0f172a">Staging Acceptance</text>
+          <text x="215" y="16" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">You test live build with your own hands</text>
+          <rect x="444" y="2" width="104" height="20" rx="4" fill="#f0fdf4"/>
+          <text x="462" y="16" font-family="'JetBrains Mono', monospace" font-size="9.5" font-weight="bold" fill="#16a34a">VERIFIED ✓</text>
+        </g>
+      </g>
+      <g transform="translate(0, 262)">
+        <rect width="580" height="148" rx="8" fill="#f8fafc" stroke="rgba(15, 23, 42, 0.08)" stroke-width="1"/>
+        <text x="16" y="22" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" fill="#64748b">ENGINEERING RIGOR &amp; ACCOUNTABILITY</text>
+        <g transform="translate(16, 38)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[CONTRACT]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Fixed milestone pricing with zero timesheets and zero hourly risk</text>
+        </g>
+        <g transform="translate(16, 62)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[ACCESS]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Direct access to the senior builder writing the Git commits</text>
+        </g>
+        <g transform="translate(16, 86)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[OWNERSHIP]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#334155">Clean Git repositories and full code ownership with zero lock-in</text>
+        </g>
+        <g transform="translate(16, 110)">
+          <text x="0" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#0f172a">[STACK]</text>
+          <text x="96" y="14" font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#0369a1">Modern React, Node.js, C++ JUCE, Angular, Next.js &amp; Cloud</text>
+        </g>
       </g>
     </g>`
   }
 ];
 
-console.log(`Generating ${posters.length} custom dark-mode UI posters with calibrated layout...`);
+console.log(`Generating ${posters.length} custom light-mode case-study posters via Chromium...`);
+
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 2 });
 
 for (const poster of posters) {
-  const svg = buildPosterSvg(poster);
+  const svg = buildLightPosterSvg(poster);
   const tmpSvg = `/tmp/${poster.slug}.svg`;
   const tmpPng = `/tmp/${poster.slug}.png`;
   
   writeFileSync(tmpSvg, svg, "utf8");
-  execSync(`magick "${tmpSvg}" "${tmpPng}"`);
+  await page.setContent(`<style>html,body{margin:0;padding:0;overflow:hidden;background:#f8fafc;}</style>` + svg);
+  await page.screenshot({ path: tmpPng });
   console.log(`✓ Rendered ${poster.slug} (${tmpPng})`);
 
   const dests = [];
@@ -1212,8 +1546,9 @@ for (const poster of posters) {
 
   for (const dest of dests) {
     copyFileSync(tmpPng, dest);
-    console.log(`   -> Copied to ${dest}`);
   }
 }
 
-console.log("\nAll 14 calibrated posters rendered and distributed successfully!");
+await browser.close();
+
+console.log("\nAll 14 light-mode case-study posters rendered and distributed successfully!");
