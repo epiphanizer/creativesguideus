@@ -1,7 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-const rootDir = process.cwd();
+const scriptDir = path.dirname(new URL(import.meta.url).pathname);
+const rootDir = path.resolve(scriptDir, "..");
 const sourcePath = path.join(rootDir, "data", "work", "module.json");
 const targetRoot = process.env.SEANHALLS_ONLINE_DIR ?? path.resolve(rootDir, "..", "seanhalls_online");
 const targetSrcDir = path.join(targetRoot, "src", "data");
