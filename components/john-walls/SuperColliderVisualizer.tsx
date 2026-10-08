@@ -27,6 +27,8 @@ interface SuperColliderVisualizerProps {
   trackTitle?: string;
   initialPreset?: VisualizerPreset;
   onPresetChange?: (preset: VisualizerPreset) => void;
+  stageMode?: boolean;
+  height?: string;
 }
 
 const STORAGE_KEY = "jw_stacked_vis_state";
@@ -50,6 +52,8 @@ export function SuperColliderVisualizer({
   trackTitle = "Live Session",
   initialPreset,
   onPresetChange,
+  stageMode = false,
+  height,
 }: SuperColliderVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -516,12 +520,12 @@ export function SuperColliderVisualizer({
       style={{
         position: "relative",
         width: "100%",
-        height: isFullscreen ? "100vh" : "420px",
+        height: height || (isFullscreen ? "100vh" : stageMode ? "100%" : "420px"),
         background: "#080a0e",
-        borderRadius: isFullscreen ? "0" : "14px",
+        borderRadius: isFullscreen || stageMode ? "0" : "14px",
         overflow: "hidden",
-        border: "1px solid rgba(224, 185, 116, 0.3)",
-        boxShadow: "0 16px 38px rgba(0, 0, 0, 0.65)",
+        border: stageMode ? "none" : "1px solid rgba(224, 185, 116, 0.3)",
+        boxShadow: stageMode ? "none" : "0 16px 38px rgba(0, 0, 0, 0.65)",
         display: "flex",
         flexDirection: "column",
       }}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import CalligraphicSignatureTitle from "@/components/brand/CalligraphicSignatureTitle";
 import SubtleCalligraphyAtmosphere from "@/components/home/SubtleCalligraphyAtmosphere";
 import { SuperColliderVisualizer, VisualizerPreset } from "./SuperColliderVisualizer";
@@ -31,14 +31,103 @@ function mapPreset(p?: string): VisualizerPreset {
   return "lissajous";
 }
 
+/**
+ * Ambient background harmonic canvas that pulses gently with audio playback
+ */
+function AmbientHarmonicCanvas({ isPlaying }: { isPlaying: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = canvas.parentElement?.clientWidth || window.innerWidth;
+      height = canvas.height = canvas.parentElement?.clientHeight || window.innerHeight;
+    };
+    window.addEventListener("resize", handleResize);
+
+    let phase = 0;
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      const centerX = width * 0.5;
+      const centerY = height * 0.45;
+      const baseRadius = Math.min(width, height) * 0.28;
+      const energy = isPlaying ? 1.0 : 0.25;
+
+      ctx.save();
+      ctx.lineWidth = 1.0;
+      ctx.strokeStyle = isPlaying ? "rgba(224, 185, 116, 0.08)" : "rgba(224, 185, 116, 0.03)";
+
+      for (let r = 0; r < 4; r++) {
+        const rad = baseRadius * (0.6 + r * 0.28) + Math.sin(phase * 0.001 + r) * 12 * energy;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, Math.max(10, rad), 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Delicate Lissajous harmonic figure in center
+      ctx.beginPath();
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = isPlaying ? "rgba(224, 185, 116, 0.12)" : "rgba(224, 185, 116, 0.04)";
+      const lissajousPoints = 120;
+      for (let i = 0; i <= lissajousPoints; i++) {
+        const t = (i / lissajousPoints) * Math.PI * 2;
+        const x = centerX + Math.sin(3 * t + phase * 0.0008) * baseRadius * 0.5 * energy;
+        const y = centerY + Math.cos(2 * t + phase * 0.0006) * baseRadius * 0.35 * energy;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.restore();
+
+      phase += isPlaying ? 16 : 4;
+      animRef.current = requestAnimationFrame(render);
+    };
+
+    animRef.current = requestAnimationFrame(render);
+
+    return () => {
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isPlaying]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+        zIndex: 0,
+      }}
+    />
+  );
+}
+
 export function JohnWallsStudioView() {
   const [tracks, setTracks] = useState<PublishedTrack[]>([]);
   const [activeTrackIndex, setActiveTrackIndex] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const [volume, setVolume] = useState<number>(0.9);
   const [currentPreset, setCurrentPreset] = useState<VisualizerPreset>("lissajous");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isStageModalOpen, setIsStageModalOpen] = useState<boolean>(false);
+  const [isDawDrawerOpen, setIsDawDrawerOpen] = useState<boolean>(false);
   const [copiedInstallCmd, setCopiedInstallCmd] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -73,11 +162,15 @@ export function JohnWallsStudioView() {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      audioRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => {});
     }
   };
 
-  const handleTrackChange = (index: number) => {
+  const handleTrackChange = (index: number, shouldPlay = true) => {
+    if (index < 0 || index >= tracks.length) return;
     setActiveTrackIndex(index);
     const selected = tracks[index];
     if (selected?.visualizerPreset) {
@@ -86,8 +179,11 @@ export function JohnWallsStudioView() {
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
       setCurrentTime(0);
-      if (isPlaying) {
-        audioRef.current.play().catch(() => {});
+      if (shouldPlay || isPlaying) {
+        audioRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch(() => {});
       }
     }
   };
@@ -100,102 +196,187 @@ export function JohnWallsStudioView() {
     }
   };
 
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = Number(e.target.value);
+    setVolume(val);
+    if (audioRef.current) {
+      audioRef.current.volume = val;
+    }
+  };
+
+  // Keyboard Escape listener to close stage modal
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setIsStageModalOpen(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
   const formatTime = (secs: number) => {
+    if (!Number.isFinite(secs) || secs < 0) return "0:00";
     const mins = Math.floor(secs / 60);
     const s = Math.floor(secs % 60);
     return `${mins}:${s < 10 ? "0" : ""}${s}`;
   };
 
   return (
-    <div className="jw-domain-view jw-studio-view">
+    <div className="jw-domain-view jw-studio-view" style={{ minHeight: "100vh", position: "relative" }}>
       {/* Background Atmosphere: Archival parchment and subtle gold glow */}
       <div className="jw-atmosphere-container">
         <SubtleCalligraphyAtmosphere />
+        <AmbientHarmonicCanvas isPlaying={isPlaying} />
       </div>
 
-      <div className="jw-domain-shell">
-        {/* Navigation Bar (Light Mode) */}
+      <div className="jw-domain-shell" style={{ position: "relative", zIndex: 1, paddingBottom: "7rem" }}>
+        {/* Navigation Bar (Minimal Editorial) */}
         <nav className="jw-domain-nav" aria-label="johnwalls.studio">
           <div className="jw-domain-nav__brand">
             <span className="jw-domain-nav__dot jw-domain-nav__dot--gold" />
-            <span className="jw-domain-nav__label">JOHN WALLS</span>
+            <span className="jw-domain-nav__label" style={{ letterSpacing: "0.14em", fontWeight: 700 }}>
+              JOHN WALLS
+            </span>
           </div>
           <div className="jw-domain-nav__links">
             <span className="jw-domain-pill jw-domain-pill--active">johnwalls.studio</span>
-            <a
-              href="#free-vst"
+            <button
+              type="button"
+              onClick={() => setIsStageModalOpen(true)}
               className="jw-domain-pill"
               style={{
                 color: "#b45309",
-                borderColor: "rgba(224, 185, 116, 0.5)",
-                background: "rgba(224, 185, 116, 0.15)",
-                textDecoration: "none",
-                fontWeight: 600,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.35rem",
-              }}
-            >
-              <span>↓</span> FREE VST3 / AU
-            </a>
-            <a
-              href="https://github.com/epiphanizer/johnwalls.studio"
-              target="_blank"
-              rel="noreferrer"
-              className="jw-domain-pill"
-              style={{
-                color: "#1e293b",
-                borderColor: "rgba(30, 41, 59, 0.3)",
-                background: "rgba(30, 41, 59, 0.06)",
-                textDecoration: "none",
-                fontWeight: 500,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.35rem",
-              }}
-            >
-              <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" style={{ verticalAlign: "middle" }}>
-                <path fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-              </svg>
-              GITHUB ↗
-            </a>
-            <a
-              href="/app"
-              className="jw-domain-pill"
-              style={{
-                color: "#1e3a8a",
-                borderColor: "rgba(30, 58, 138, 0.4)",
-                background: "rgba(59, 130, 246, 0.12)",
-                textDecoration: "none",
+                borderColor: "rgba(224, 185, 116, 0.6)",
+                background: "rgba(224, 185, 116, 0.18)",
+                cursor: "pointer",
                 fontWeight: 600,
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "0.4rem",
               }}
             >
-              <span>⚡</span> LAUNCH STUDIO APP
-            </a>
-            <span
+              <span style={{ fontSize: "10px", color: isPlaying ? "#10b981" : "#b45309" }}>●</span> ENTER LISTENING ROOM
+            </button>
+            <a
+              href="/app"
               className="jw-domain-pill"
               style={{
-                color: "#0d9488",
-                borderColor: "rgba(13, 148, 136, 0.3)",
+                color: "#1e3a8a",
+                borderColor: "rgba(30, 58, 138, 0.4)",
+                background: "rgba(59, 130, 246, 0.10)",
+                textDecoration: "none",
+                fontWeight: 600,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.35rem",
+              }}
+            >
+              <span>⚡</span> LAUNCH STUDIO APP
+            </a>
+            <button
+              type="button"
+              onClick={() => setIsDawDrawerOpen((v) => !v)}
+              className="jw-domain-pill"
+              style={{
+                cursor: "pointer",
+                background: "transparent",
+                border: "1px solid rgba(0, 0, 0, 0.12)",
+                color: "#475569",
+              }}
+            >
+              FREE VST3 / AU ↓
+            </button>
+            <a
+              href="https://github.com/epiphanizer/johnwalls.studio"
+              target="_blank"
+              rel="noreferrer"
+              className="jw-domain-pill"
+              style={{
+                color: "#475569",
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.35rem",
+              }}
+            >
+              GITHUB ↗
+            </a>
+          </div>
+        </nav>
+
+        {/* Hero Section (Light Mode Calligraphy Ink Title) */}
+        <header className="jw-domain-hero jw-domain-hero--centered" style={{ marginBottom: "2rem", paddingTop: "1.5rem" }}>
+          <CalligraphicSignatureTitle
+            domain="johnwalls.studio"
+            eyebrow="THE CREATIVE EPICENTER · DIRECT ABLETON SOUND LAB & ARCHIVE"
+            badgeText="DIRECT DAW STREAMING · ACTIVE"
+            kicker="Direct-to-listener sound architecture, master tape archives, and real-time generative audio engines."
+          />
+
+          <div style={{ display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap", marginTop: "1.5rem" }}>
+            <button
+              type="button"
+              onClick={() => {
+                if (!isPlaying) togglePlay();
+                setIsStageModalOpen(true);
+              }}
+              style={{
+                padding: "0.75rem 1.6rem",
+                borderRadius: "30px",
+                background: "#0f172a",
+                color: "#e0b974",
+                border: "1px solid rgba(224, 185, 116, 0.4)",
+                fontWeight: 600,
+                fontSize: "0.95rem",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.6rem",
+                boxShadow: "0 6px 20px rgba(0, 0, 0, 0.18)",
+                transition: "all 0.2s ease",
+              }}
+            >
+              <span>▶</span> ENTER LISTENING ROOM STAGE
+            </button>
+            <button
+              type="button"
+              onClick={togglePlay}
+              style={{
+                padding: "0.75rem 1.4rem",
+                borderRadius: "30px",
+                background: "rgba(255, 255, 255, 0.8)",
+                color: "#1e293b",
+                border: "1px solid rgba(0, 0, 0, 0.15)",
+                fontWeight: 600,
+                fontSize: "0.95rem",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
+              }}
+            >
+              <span>{isPlaying ? "❚❚ PAUSE STREAM" : "▶ PLAY STREAM"}</span>
+            </button>
+            <span
+              style={{
+                padding: "0.75rem 1.2rem",
+                borderRadius: "30px",
                 background: "rgba(13, 148, 136, 0.08)",
+                color: "#0d9488",
+                border: "1px solid rgba(13, 148, 136, 0.3)",
+                fontSize: "0.88rem",
+                fontFamily: "ui-monospace, monospace",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
               }}
             >
               ● ABLETON DISPATCH LIVE
             </span>
           </div>
-        </nav>
-
-        {/* Hero Section (Light Mode Calligraphy Ink Title) */}
-        <header className="jw-domain-hero jw-domain-hero--centered" style={{ marginBottom: "2rem" }}>
-          <CalligraphicSignatureTitle
-            domain="johnwalls.studio"
-            eyebrow="THE CREATIVE EPICENTER · DIRECT ABLETON SOUND LAB & ARCHIVE"
-            badgeText="DIRECT DAW STREAMING · ACTIVE"
-            kicker="Live takes and generative sound architecture shipped direct from Ableton Live into the studio sound stream, accompanied by real-time reactive SuperCollider visualizers."
-          />
         </header>
 
         {/* Hidden Audio Element */}
@@ -216,564 +397,29 @@ export function JohnWallsStudioView() {
             onEnded={() => {
               setIsPlaying(false);
               if (tracks.length > 1) {
-                handleTrackChange((activeTrackIndex + 1) % tracks.length);
+                handleTrackChange((activeTrackIndex + 1) % tracks.length, true);
               }
             }}
             crossOrigin="anonymous"
           />
         )}
 
-        {/* SuperCollider Visualizer (Sleek Dark Mode Console) */}
-        <section style={{ marginBottom: "1.5rem" }}>
-          <SuperColliderVisualizer
-            audioElement={audioRef.current}
-            isPlaying={isPlaying}
-            bpm={activeTrack ? activeTrack.bpm : 120}
-            trackTitle={activeTrack ? activeTrack.title : "Standby Scope"}
-            initialPreset={currentPreset}
-            onPresetChange={setCurrentPreset}
-          />
-        </section>
-
-        {/* Audio Player Deck (Dark Mode Hardware Console) */}
-        {activeTrack ? (
-          <section
-            style={{
-              background: "#0c0f14",
-              border: "1px solid rgba(224, 185, 116, 0.35)",
-              borderRadius: "14px",
-              padding: "1.5rem",
-              marginBottom: "3rem",
-              boxShadow: "0 14px 36px rgba(0, 0, 0, 0.22)",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem", marginBottom: "1rem" }}>
-              <div>
-                <span
-                  style={{
-                    display: "inline-block",
-                    fontSize: "11px",
-                    fontFamily: "ui-monospace, monospace",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "#e0b974",
-                    fontWeight: 600,
-                    marginBottom: "4px",
-                  }}
-                >
-                  NOW PLAYING · {activeTrack.dawSource || "Album Master"}
-                </span>
-                <h2 style={{ fontSize: "1.5rem", fontWeight: 700, margin: "0 0 6px 0", color: "#f8fafc" }}>
-                  {activeTrack.title}
-                </h2>
-                {activeTrack.description ? (
-                  <p style={{ margin: 0, fontSize: "0.9rem", color: "#94a3b8", lineHeight: 1.5 }}>
-                    {activeTrack.description}
-                  </p>
-                ) : null}
-              </div>
-
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                {activeTrack.bpm > 0 && (
-                  <span style={{ padding: "4px 10px", background: "rgba(224, 185, 116, 0.15)", border: "1px solid rgba(224, 185, 116, 0.3)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#e0b974" }}>
-                    BPM {activeTrack.bpm}
-                  </span>
-                )}
-                {activeTrack.barLength > 0 && (
-                  <span style={{ padding: "4px 10px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#cbd5e1" }}>
-                    {activeTrack.barLength} BARS
-                  </span>
-                )}
-                {activeTrack.keySignature && (
-                  <span style={{ padding: "4px 10px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "6px", fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#cbd5e1" }}>
-                    KEY {activeTrack.keySignature}
-                  </span>
-                )}
-                <a
-                  href={activeTrack.audioUrl}
-                  download={activeTrack.fileName || "take.wav"}
-                  className="cg-btn"
-                  style={{
-                    padding: "4px 12px",
-                    fontSize: "12px",
-                    background: "rgba(224, 185, 116, 0.12)",
-                    border: "1px solid rgba(224, 185, 116, 0.4)",
-                    color: "#e0b974",
-                    borderRadius: "6px",
-                    textDecoration: "none",
-                    display: "inline-flex",
-                    alignItems: "center",
-                  }}
-                >
-                  Download WAV ↗
-                </a>
-              </div>
-            </div>
-
-            {/* Playback Controls & Progress Bar */}
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginTop: "1.2rem" }}>
-              <button
-                type="button"
-                onClick={togglePlay}
-                style={{
-                  width: "48px",
-                  height: "48px",
-                  borderRadius: "50%",
-                  background: isPlaying ? "#f8fafc" : "#e0b974",
-                  color: "#0a0d12",
-                  border: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  fontSize: "18px",
-                  fontWeight: 700,
-                  boxShadow: "0 4px 16px rgba(224, 185, 116, 0.4)",
-                  transition: "all 0.2s ease",
-                }}
-                aria-label={isPlaying ? "Pause" : "Play"}
-              >
-                {isPlaying ? "❚❚" : "▶"}
-              </button>
-
-              <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "12px", minWidth: "42px", color: "#94a3b8" }}>
-                {formatTime(currentTime)}
-              </span>
-
-              <input
-                type="range"
-                min={0}
-                max={duration || activeTrack.durationSeconds || 100}
-                step={0.1}
-                value={currentTime}
-                onChange={handleSeek}
-                style={{
-                  flex: 1,
-                  accentColor: "#e0b974",
-                  cursor: "pointer",
-                }}
-              />
-
-              <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "12px", minWidth: "42px", color: "#94a3b8" }}>
-                {formatTime(duration || activeTrack.durationSeconds || 0)}
-              </span>
-            </div>
-          </section>
-        ) : (
-          <section
-            style={{
-              background: "#0c0f14",
-              border: "1px dashed rgba(224, 185, 116, 0.35)",
-              borderRadius: "14px",
-              padding: "2rem 1.5rem",
-              marginBottom: "3rem",
-              textAlign: "center",
-              boxShadow: "0 14px 36px rgba(0, 0, 0, 0.22)",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                fontSize: "11px",
-                fontFamily: "ui-monospace, monospace",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "#e0b974",
-                fontWeight: 600,
-                marginBottom: "8px",
-              }}
-            >
-              STUDIO STREAM // STANDBY
-            </span>
-            <h2 style={{ fontSize: "1.25rem", fontWeight: 700, margin: "0 0 8px 0", color: "#f8fafc" }}>
-              Awaiting Live Dispatch from Ableton Live
-            </h2>
-            <p style={{ margin: "0 auto", maxWidth: "540px", fontSize: "0.9rem", color: "#94a3b8", lineHeight: 1.6 }}>
-              Arm the <code>johnwalls.studio</code> plugin in Ableton Live, click <strong>[DISPATCH]</strong> in the top menu, record a take, and ship it direct to this stream.
-            </p>
-          </section>
-        )}
-
-        {/* Free VST3 & Audio Unit Plugin & Nightly Build Station */}
-        <section
-          id="free-vst"
-          style={{
-            background: "#0c0f14",
-            border: "1px solid rgba(224, 185, 116, 0.35)",
-            borderRadius: "14px",
-            padding: "2rem 1.75rem",
-            marginBottom: "3.5rem",
-            boxShadow: "0 16px 40px rgba(0, 0, 0, 0.28)",
-            color: "#f8fafc",
-          }}
-        >
-          {/* Header Row */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              flexWrap: "wrap",
-              gap: "1.25rem",
-              marginBottom: "1.5rem",
-            }}
-          >
+        {/* Minimalist Sound Stream Gallery */}
+        <section style={{ maxWidth: "860px", margin: "0 auto 3rem auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "1.2rem", padding: "0 0.5rem" }}>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
-                <span
-                  style={{
-                    display: "inline-block",
-                    fontSize: "11px",
-                    fontFamily: "ui-monospace, monospace",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    color: "#e0b974",
-                    fontWeight: 600,
-                  }}
-                >
-                  FREE & OPEN SOURCE · VST3 / AUDIO UNIT PLUGIN
-                </span>
-                <span
-                  style={{
-                    fontSize: "10px",
-                    fontFamily: "ui-monospace, monospace",
-                    background: "rgba(34, 197, 94, 0.15)",
-                    border: "1px solid rgba(34, 197, 94, 0.35)",
-                    color: "#4ade80",
-                    padding: "2px 6px",
-                    borderRadius: "4px",
-                    fontWeight: 600,
-                  }}
-                >
-                  ● v1.0.0 READY
-                </span>
-              </div>
-              <h2
-                style={{
-                  fontSize: "1.65rem",
-                  fontWeight: 700,
-                  margin: "0 0 8px 0",
-                  color: "#f8fafc",
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                Download the johnwalls.studio Plugin
+              <h2 style={{ fontSize: "1.35rem", fontWeight: 700, margin: 0, color: "#0f172a", letterSpacing: "-0.01em" }}>
+                STUDIO SOUND STREAM
               </h2>
-              <p
-                style={{
-                  margin: 0,
-                  maxWidth: "680px",
-                  fontSize: "0.92rem",
-                  color: "#94a3b8",
-                  lineHeight: 1.6,
-                }}
-              >
-                Generative sound synthesis, direct Ableton Live audio streaming, reactive SuperCollider
-                visualizer telemetry, and live take dispatch straight into the archive. Universal macOS 64-bit
-                binary for Ableton Live 12, Logic Pro 11, Bitwig, and Reaper.
+              <p style={{ margin: "4px 0 0 0", fontSize: "0.85rem", color: "#64748b" }}>
+                Unedited live takes, master tape stems, and generative sound architecture ({tracks.length} takes).
               </p>
             </div>
-
-            {/* Nightly CI Status Link & Badge */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "8px",
-                background: "rgba(255, 255, 255, 0.04)",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                borderRadius: "8px",
-                padding: "0.75rem 1rem",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "10px",
-                  fontFamily: "ui-monospace, monospace",
-                  color: "#94a3b8",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                }}
-              >
-                AUTOMATED NIGHTLY CI
-              </div>
-              <a
-                href="https://github.com/epiphanizer/johnwalls.studio/actions/workflows/nightly.yml"
-                target="_blank"
-                rel="noreferrer"
-                title="View GitHub Actions Nightly CI Build History"
-                style={{ display: "inline-flex", textDecoration: "none" }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://github.com/epiphanizer/johnwalls.studio/workflows/Nightly%20VST%20Build%20&%20Release/badge.svg"
-                  alt="Nightly VST Build Status"
-                  style={{ height: "20px", borderRadius: "3px" }}
-                />
-              </a>
-            </div>
-          </div>
-
-          {/* Spec Badges Grid */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: "0.75rem",
-              marginBottom: "1.75rem",
-            }}
-          >
-            <div
-              style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                border: "1px solid rgba(255, 255, 255, 0.07)",
-                borderRadius: "8px",
-                padding: "0.65rem 0.85rem",
-              }}
-            >
-              <div style={{ fontSize: "10px", fontFamily: "ui-monospace, monospace", color: "#e0b974", marginBottom: "3px" }}>
-                ARCHITECTURE
-              </div>
-              <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#e2e8f0" }}>
-                Apple Silicon (M1–M4) + Intel
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                border: "1px solid rgba(255, 255, 255, 0.07)",
-                borderRadius: "8px",
-                padding: "0.65rem 0.85rem",
-              }}
-            >
-              <div style={{ fontSize: "10px", fontFamily: "ui-monospace, monospace", color: "#e0b974", marginBottom: "3px" }}>
-                INCLUDED FORMATS
-              </div>
-              <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#e2e8f0" }}>
-                VST3 (12.7 MB) + AU (12.4 MB)
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                border: "1px solid rgba(255, 255, 255, 0.07)",
-                borderRadius: "8px",
-                padding: "0.65rem 0.85rem",
-              }}
-            >
-              <div style={{ fontSize: "10px", fontFamily: "ui-monospace, monospace", color: "#e0b974", marginBottom: "3px" }}>
-                DAW COMPATIBILITY
-              </div>
-              <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#e2e8f0" }}>
-                Ableton Live 12, Logic, Bitwig, Reaper
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                border: "1px solid rgba(255, 255, 255, 0.07)",
-                borderRadius: "8px",
-                padding: "0.65rem 0.85rem",
-              }}
-            >
-              <div style={{ fontSize: "10px", fontFamily: "ui-monospace, monospace", color: "#e0b974", marginBottom: "3px" }}>
-                LICENSE & SOURCE
-              </div>
-              <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#e2e8f0" }}>
-                100% Free · GitHub Open-Source
-              </div>
-            </div>
-          </div>
-
-          {/* Action Buttons Row */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexWrap: "wrap",
-              gap: "1rem",
-              marginBottom: "1.75rem",
-            }}
-          >
-            <a
-              href="/downloads/johnwalls-studio-macos.zip"
-              download="johnwalls-studio-macos.zip"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.6rem",
-                padding: "0.85rem 1.6rem",
-                background: "linear-gradient(135deg, #e0b974 0%, #b88b32 100%)",
-                color: "#0f172a",
-                fontWeight: 700,
-                fontSize: "0.95rem",
-                borderRadius: "9px",
-                textDecoration: "none",
-                boxShadow: "0 4px 18px rgba(224, 185, 116, 0.35)",
-                transition: "transform 0.15s ease, box-shadow 0.15s ease",
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              <span>Download VST3 & AU Bundle (.zip · 9.0 MB)</span>
-            </a>
-
-            <a
-              href="https://github.com/epiphanizer/johnwalls.studio"
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.55rem",
-                padding: "0.85rem 1.4rem",
-                background: "rgba(255, 255, 255, 0.06)",
-                border: "1px solid rgba(255, 255, 255, 0.18)",
-                color: "#f8fafc",
-                fontWeight: 600,
-                fontSize: "0.92rem",
-                borderRadius: "9px",
-                textDecoration: "none",
-                transition: "background 0.15s ease",
-              }}
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-              </svg>
-              <span>GitHub Repository & Nightly Releases ↗</span>
-            </a>
-
-            <a
-              href="https://github.com/epiphanizer/johnwalls.studio/releases/tag/nightly"
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.4rem",
-                padding: "0.85rem 1.1rem",
-                background: "transparent",
-                border: "1px dashed rgba(224, 185, 116, 0.4)",
-                color: "#e0b974",
-                fontWeight: 600,
-                fontSize: "0.88rem",
-                borderRadius: "9px",
-                textDecoration: "none",
-              }}
-            >
-              <span>⚡</span> Nightly CI Pre-Releases
-            </a>
-          </div>
-
-          {/* 1-Click Terminal Installer Console */}
-          <div
-            style={{
-              background: "#05070a",
-              border: "1px solid rgba(224, 185, 116, 0.22)",
-              borderRadius: "10px",
-              padding: "1rem 1.25rem",
-              fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "0.75rem",
-                paddingBottom: "0.5rem",
-                borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <span style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#ef4444", display: "inline-block" }} />
-                <span style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#f59e0b", display: "inline-block" }} />
-                <span style={{ width: "9px", height: "9px", borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
-                <span style={{ fontSize: "11px", color: "#64748b", marginLeft: "6px" }}>
-                  terminal — 1-click install (macOS)
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  const cmd = "unzip -q ~/Downloads/johnwalls-studio-macos.zip -d ~/Downloads/johnwalls-studio && cd ~/Downloads/johnwalls-studio && chmod +x install.sh && ./install.sh";
-                  navigator.clipboard.writeText(cmd);
-                  setCopiedInstallCmd(true);
-                  setTimeout(() => setCopiedInstallCmd(false), 2200);
-                }}
-                style={{
-                  background: copiedInstallCmd ? "rgba(34, 197, 94, 0.2)" : "rgba(255, 255, 255, 0.08)",
-                  border: copiedInstallCmd ? "1px solid rgba(34, 197, 94, 0.4)" : "1px solid rgba(255, 255, 255, 0.15)",
-                  color: copiedInstallCmd ? "#4ade80" : "#cbd5e1",
-                  borderRadius: "5px",
-                  padding: "4px 8px",
-                  fontSize: "11px",
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
-              >
-                {copiedInstallCmd ? (
-                  <>✓ COPIED</>
-                ) : (
-                  <>📋 COPY COMMAND</>
-                )}
-              </button>
-            </div>
-
-            <div
-              style={{
-                fontSize: "12px",
-                color: "#e2e8f0",
-                lineHeight: 1.6,
-                overflowX: "auto",
-                whiteSpace: "pre-wrap",
-                wordBreak: "break-all",
-              }}
-            >
-              <span style={{ color: "#64748b" }}># Unzip and run the automated installer:</span>
-              <br />
-              <span style={{ color: "#e0b974" }}>unzip -q</span> ~/Downloads/johnwalls-studio-macos.zip <span style={{ color: "#e0b974" }}>-d</span> ~/Downloads/johnwalls-studio <span style={{ color: "#38bdf8" }}>&&</span> <span style={{ color: "#e0b974" }}>cd</span> ~/Downloads/johnwalls-studio <span style={{ color: "#38bdf8" }}>&&</span> <span style={{ color: "#e0b974" }}>chmod +x</span> install.sh <span style={{ color: "#38bdf8" }}>&&</span> ./install.sh
-            </div>
-
-            <div
-              style={{
-                marginTop: "0.85rem",
-                paddingTop: "0.65rem",
-                borderTop: "1px solid rgba(255, 255, 255, 0.05)",
-                fontSize: "11px",
-                color: "#94a3b8",
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                gap: "0.5rem",
-              }}
-            >
-              <div>✓ Installs to <code>~/Library/Audio/Plug-Ins/VST3/</code> & <code>.../Components/</code></div>
-              <div>✓ Removes macOS Gatekeeper quarantine flags automatically</div>
-              <div>✓ Open Ableton Live / Logic Pro / Bitwig / Reaper and rescan plugins</div>
-            </div>
-          </div>
-        </section>
-
-        {/* Sound Archive: Published Album & Ableton Takes List (Light Mode on Parchment) */}
-        <section style={{ marginBottom: "4rem" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem" }}>
-            <h3 style={{ fontSize: "1.25rem", fontWeight: 700, margin: 0, color: "#0f172a" }}>
-              STUDIO SOUND ARCHIVE ({tracks.length})
-            </h3>
             <button
               type="button"
               onClick={loadTracks}
               style={{
-                background: "rgba(255, 255, 255, 0.65)",
+                background: "rgba(255, 255, 255, 0.7)",
                 border: "1px solid rgba(0, 0, 0, 0.12)",
                 padding: "4px 10px",
                 borderRadius: "6px",
@@ -788,76 +434,128 @@ export function JohnWallsStudioView() {
           </div>
 
           {isLoading ? (
-            <div style={{ textAlign: "center", padding: "2rem", color: "#94a3b8" }}>
-              Loading studio sound archive...
+            <div style={{ textAlign: "center", padding: "3rem", color: "#94a3b8" }}>
+              Loading master stream archives...
             </div>
           ) : tracks.length === 0 ? (
             <div style={{ textAlign: "center", padding: "3rem", background: "rgba(255, 255, 255, 0.6)", borderRadius: "12px", color: "#64748b" }}>
-              No tracks published yet. Record a take in Ableton Live and hit <strong>"Ship to johnwalls.studio"</strong> in the plugin!
+              No tracks published yet. Record a take in Ableton Live and hit <strong>"Ship to johnwalls.studio"</strong>!
             </div>
           ) : (
-            <div style={{ display: "grid", gap: "0.75rem" }}>
+            <div style={{ display: "grid", gap: "0.6rem" }}>
               {tracks.map((track, idx) => {
                 const isSelected = idx === activeTrackIndex;
+                const isCurrentPlaying = isSelected && isPlaying;
                 return (
                   <div
                     key={track.id}
-                    onClick={() => handleTrackChange(idx)}
                     style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
-                      padding: "1rem 1.25rem",
-                      borderRadius: "10px",
-                      background: isSelected ? "rgba(224, 185, 116, 0.18)" : "rgba(255, 255, 255, 0.75)",
-                      border: isSelected ? "1px solid #e0b974" : "1px solid rgba(0, 0, 0, 0.08)",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      boxShadow: isSelected ? "0 4px 12px rgba(224, 185, 116, 0.2)" : "0 2px 6px rgba(0, 0, 0, 0.02)",
+                      padding: "0.9rem 1.25rem",
+                      borderRadius: "12px",
+                      background: isSelected ? "rgba(224, 185, 116, 0.15)" : "rgba(255, 255, 255, 0.75)",
+                      border: isSelected ? "1px solid rgba(224, 185, 116, 0.6)" : "1px solid rgba(0, 0, 0, 0.06)",
+                      backdropFilter: "blur(8px)",
+                      transition: "all 0.18s ease",
+                      boxShadow: isSelected ? "0 4px 14px rgba(224, 185, 116, 0.18)" : "0 2px 6px rgba(0, 0, 0, 0.02)",
                     }}
                   >
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                      <span
+                    <div style={{ display: "flex", alignItems: "center", gap: "1rem", flex: 1, minWidth: 0 }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (isSelected) {
+                            togglePlay();
+                          } else {
+                            handleTrackChange(idx, true);
+                          }
+                        }}
                         style={{
-                          width: "32px",
-                          height: "32px",
+                          width: "36px",
+                          height: "36px",
                           borderRadius: "50%",
-                          background: isSelected && isPlaying ? "#0f172a" : isSelected ? "rgba(224, 185, 116, 0.3)" : "rgba(0, 0, 0, 0.06)",
-                          color: isSelected && isPlaying ? "#e0b974" : isSelected ? "#0f172a" : "#475569",
+                          background: isCurrentPlaying ? "#0f172a" : isSelected ? "rgba(224, 185, 116, 0.4)" : "rgba(15, 23, 42, 0.06)",
+                          color: isCurrentPlaying ? "#e0b974" : "#0f172a",
+                          border: "none",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          fontSize: "12px",
+                          fontSize: isCurrentPlaying ? "12px" : "11px",
                           fontWeight: 700,
+                          cursor: "pointer",
+                          flexShrink: 0,
+                          transition: "all 0.15s ease",
                         }}
+                        aria-label={isCurrentPlaying ? "Pause" : "Play"}
                       >
-                        {isSelected && isPlaying ? "❚❚" : idx + 1}
-                      </span>
-                      <div>
-                        <div style={{ fontWeight: 600, color: "#0f172a", fontSize: "0.95rem" }}>
-                          {track.title}
-                        </div>
-                        <div style={{ fontSize: "0.8rem", color: "#64748b", display: "flex", gap: "12px", marginTop: "2px" }}>
-                          <span>{track.artist}</span>
-                          <span>•</span>
-                          <span>{track.dawSource || "Ableton Live"}</span>
-                          {track.alsProject && (
-                            <>
-                              <span>•</span>
-                              <span>Project: {track.alsProject}</span>
-                            </>
+                        {isCurrentPlaying ? "❚❚" : "▶"}
+                      </button>
+
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                          <span style={{ fontWeight: 600, color: "#0f172a", fontSize: "0.95rem" }}>
+                            {String(track.trackNumber || idx + 1).padStart(2, "0")}. {track.title}
+                          </span>
+                          {track.keySignature && (
+                            <span style={{ fontSize: "10px", padding: "1px 6px", borderRadius: "4px", background: "rgba(0, 0, 0, 0.05)", color: "#64748b", fontFamily: "ui-monospace, monospace" }}>
+                              {track.keySignature}
+                            </span>
+                          )}
+                          {track.bpm > 0 && (
+                            <span style={{ fontSize: "10px", padding: "1px 6px", borderRadius: "4px", background: "rgba(224, 185, 116, 0.2)", color: "#b45309", fontFamily: "ui-monospace, monospace" }}>
+                              {track.bpm} BPM
+                            </span>
                           )}
                         </div>
+                        <p style={{ margin: "3px 0 0 0", fontSize: "0.82rem", color: "#64748b", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {track.description || track.artist}
+                        </p>
                       </div>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                      <span style={{ fontSize: "11px", fontFamily: "ui-monospace, monospace", color: "#b45309", background: "rgba(224, 185, 116, 0.22)", padding: "2px 8px", borderRadius: "4px" }}>
-                        {track.bpm} BPM
-                      </span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0, marginLeft: "1rem" }}>
                       <span style={{ fontSize: "12px", fontFamily: "ui-monospace, monospace", color: "#64748b" }}>
                         {formatTime(track.durationSeconds || 0)}
                       </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleTrackChange(idx, true);
+                          setIsStageModalOpen(true);
+                        }}
+                        style={{
+                          padding: "4px 9px",
+                          borderRadius: "6px",
+                          background: "rgba(15, 23, 42, 0.06)",
+                          border: "1px solid rgba(15, 23, 42, 0.12)",
+                          color: "#1e293b",
+                          fontSize: "11px",
+                          fontFamily: "ui-monospace, monospace",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                        }}
+                        title="Open interactive SuperCollider visualizer stage"
+                      >
+                        STAGE ↗
+                      </button>
+                      <a
+                        href={track.audioUrl}
+                        download={track.fileName || "take.wav"}
+                        style={{
+                          padding: "4px 8px",
+                          borderRadius: "6px",
+                          background: "transparent",
+                          border: "1px solid rgba(0, 0, 0, 0.08)",
+                          color: "#64748b",
+                          fontSize: "11px",
+                          textDecoration: "none",
+                        }}
+                        title="Download WAV master"
+                      >
+                        WAV ↓
+                      </a>
                     </div>
                   </div>
                 );
@@ -866,37 +564,409 @@ export function JohnWallsStudioView() {
           )}
         </section>
 
-        {/* Minimal Footer (Light Mode) */}
-        <footer className="jw-domain-footer jw-domain-footer--minimal">
+        {/* Collapsible Ableton Live DAW & VST Station */}
+        <section style={{ maxWidth: "860px", margin: "0 auto 3rem auto" }}>
+          <div
+            style={{
+              background: "rgba(255, 255, 255, 0.6)",
+              border: "1px solid rgba(0, 0, 0, 0.08)",
+              borderRadius: "12px",
+              overflow: "hidden",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setIsDawDrawerOpen((v) => !v)}
+              style={{
+                width: "100%",
+                padding: "1rem 1.25rem",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                textAlign: "left",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ fontSize: "11px", fontFamily: "ui-monospace, monospace", textTransform: "uppercase", letterSpacing: "0.08em", color: "#b45309", fontWeight: 600 }}>
+                  ABLETON LIVE DAW & SOFTWARE CRAFT
+                </span>
+                <span style={{ fontSize: "10px", background: "rgba(34, 197, 94, 0.15)", color: "#16a34a", padding: "1px 6px", borderRadius: "4px", fontWeight: 600 }}>
+                  ● VST3/AU v1.0.0
+                </span>
+              </div>
+              <span style={{ fontSize: "12px", color: "#64748b", fontFamily: "ui-monospace, monospace" }}>
+                {isDawDrawerOpen ? "COLLAPSE ↑" : "VIEW VST3 / CLI CRAFT ↓"}
+              </span>
+            </button>
+
+            {isDawDrawerOpen && (
+              <div style={{ padding: "0 1.25rem 1.5rem 1.25rem", borderTop: "1px solid rgba(0, 0, 0, 0.06)", color: "#334155" }}>
+                <p style={{ fontSize: "0.9rem", lineHeight: 1.6, color: "#475569", margin: "1rem 0" }}>
+                  The <code>johnwalls.studio</code> VST3/Audio Unit plugin features zero-latency analog amp emulation,
+                  a transparent -0.3 dBFS soft limiter, reactive MIDI rhythm analysis, and direct take streaming into this archive.
+                </p>
+
+                {/* 1-Click Terminal Command */}
+                <div style={{ background: "#080a0e", color: "#f8fafc", padding: "1rem", borderRadius: "8px", fontFamily: "ui-monospace, monospace", fontSize: "12px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+                    <span style={{ color: "#94a3b8" }}># 1-Click Terminal Installer (macOS Universal):</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const cmd = "unzip -q ~/Downloads/johnwalls-studio-macos.zip -d ~/Downloads/johnwalls-studio && cd ~/Downloads/johnwalls-studio && chmod +x install.sh && ./install.sh";
+                        navigator.clipboard.writeText(cmd);
+                        setCopiedInstallCmd(true);
+                        setTimeout(() => setCopiedInstallCmd(false), 2000);
+                      }}
+                      style={{
+                        background: copiedInstallCmd ? "rgba(34, 197, 94, 0.3)" : "rgba(255, 255, 255, 0.1)",
+                        border: "1px solid rgba(255, 255, 255, 0.2)",
+                        color: copiedInstallCmd ? "#4ade80" : "#cbd5e1",
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                        fontSize: "11px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {copiedInstallCmd ? "✓ COPIED" : "📋 COPY COMMAND"}
+                    </button>
+                  </div>
+                  <code style={{ color: "#e0b974" }}>
+                    unzip -q ~/Downloads/johnwalls-studio-macos.zip -d ~/Downloads/johnwalls-studio &amp;&amp; cd ~/Downloads/johnwalls-studio &amp;&amp; chmod +x install.sh &amp;&amp; ./install.sh
+                  </code>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "0.75rem", marginTop: "1rem", fontSize: "0.82rem", color: "#64748b" }}>
+                  <div>✓ Installs to <code>~/Library/Audio/Plug-Ins/VST3/</code></div>
+                  <div>✓ Installs to <code>~/Library/Audio/Plug-Ins/Components/</code></div>
+                  <div>✓ Ableton Live 12, Logic Pro 11, Reaper &amp; Bitwig</div>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Minimal Footer */}
+        <footer className="jw-domain-footer jw-domain-footer--minimal" style={{ textAlign: "center", fontSize: "0.85rem", color: "#64748b" }}>
           <p>
-            © {new Date().getFullYear()} John Walls ·{" "}
-            <a
-              href="https://github.com/epiphanizer/johnwalls.studio"
-              target="_blank"
-              rel="noreferrer"
-              className="jw-footer-link"
-            >
-              GitHub Source & Nightly CI ↗
+            © {new Date().getFullYear()} John Walls · The Creative Epicenter ·{" "}
+            <a href="https://github.com/epiphanizer/johnwalls.studio" target="_blank" rel="noreferrer" style={{ color: "#64748b" }}>
+              GitHub Source ↗
             </a>
             {" · "}
-            <a
-              href="#free-vst"
-              className="jw-footer-link"
-            >
-              Free VST3/AU Plugin
-            </a>
-            {" · "}
-            <a
-              href="https://creativesguide.us"
-              target="_blank"
-              rel="noreferrer"
-              className="jw-footer-link"
-            >
+            <a href="https://creativesguide.us" target="_blank" rel="noreferrer" style={{ color: "#64748b" }}>
               creativesguide.us ↗
             </a>
           </p>
         </footer>
       </div>
+
+      {/* ── Persistent Docked Listening Room Bar ─────────────────────────────── */}
+      {activeTrack && (
+        <aside
+          role="region"
+          aria-label="Studio Sound Stream Player"
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: "rgba(12, 15, 20, 0.94)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            borderTop: "1px solid rgba(224, 185, 116, 0.35)",
+            padding: "0.75rem 1.5rem",
+            zIndex: 100,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1.5rem",
+            color: "#f8fafc",
+            boxShadow: "0 -8px 30px rgba(0, 0, 0, 0.4)",
+          }}
+        >
+          {/* Left: Active Track Meta */}
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", minWidth: "220px", maxWidth: "320px" }}>
+            <button
+              type="button"
+              onClick={togglePlay}
+              style={{
+                width: "42px",
+                height: "42px",
+                borderRadius: "50%",
+                background: isPlaying ? "#f8fafc" : "#e0b974",
+                color: "#0a0d12",
+                border: "none",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "16px",
+                fontWeight: 700,
+                cursor: "pointer",
+                boxShadow: "0 2px 10px rgba(224, 185, 116, 0.4)",
+                flexShrink: 0,
+              }}
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? "❚❚" : "▶"}
+            </button>
+
+            <div style={{ minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: isPlaying ? "#22c55e" : "#64748b" }} />
+                <span style={{ fontSize: "10px", fontFamily: "ui-monospace, monospace", textTransform: "uppercase", letterSpacing: "0.08em", color: "#e0b974" }}>
+                  {activeTrack.dawSource || "Sound Lab"}
+                </span>
+              </div>
+              <div style={{ fontWeight: 600, fontSize: "0.95rem", color: "#f8fafc", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {activeTrack.title}
+              </div>
+              <div style={{ fontSize: "0.78rem", color: "#94a3b8" }}>
+                {activeTrack.artist}
+              </div>
+            </div>
+          </div>
+
+          {/* Center: Transport Scrub & Time */}
+          <div style={{ flex: 1, maxWidth: "600px", display: "flex", alignItems: "center", gap: "0.85rem" }}>
+            <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "11px", color: "#94a3b8", minWidth: "36px" }}>
+              {formatTime(currentTime)}
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={duration || activeTrack.durationSeconds || 100}
+              step={0.1}
+              value={currentTime}
+              onChange={handleSeek}
+              style={{
+                flex: 1,
+                accentColor: "#e0b974",
+                cursor: "pointer",
+                height: "4px",
+              }}
+              aria-label="Seek track"
+            />
+            <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "11px", color: "#94a3b8", minWidth: "36px" }}>
+              {formatTime(duration || activeTrack.durationSeconds || 0)}
+            </span>
+          </div>
+
+          {/* Right: Stage Launcher & Volume */}
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span style={{ fontSize: "12px", color: "#94a3b8" }}>🔊</span>
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.02}
+                value={volume}
+                onChange={handleVolumeChange}
+                style={{ width: "65px", accentColor: "#e0b974", cursor: "pointer", height: "3px" }}
+                aria-label="Volume"
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsStageModalOpen(true)}
+              style={{
+                padding: "6px 14px",
+                borderRadius: "20px",
+                background: "linear-gradient(135deg, rgba(224, 185, 116, 0.25), rgba(224, 185, 116, 0.1))",
+                border: "1px solid rgba(224, 185, 116, 0.5)",
+                color: "#e0b974",
+                fontWeight: 600,
+                fontSize: "0.82rem",
+                fontFamily: "ui-monospace, monospace",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                transition: "all 0.15s ease",
+              }}
+            >
+              <span>STAGE</span> ↗
+            </button>
+          </div>
+        </aside>
+      )}
+
+      {/* ── Full-Screen Atmospheric Listening Room Stage Modal ──────────────── */}
+      {isStageModalOpen && activeTrack && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="John Walls Listening Room Stage"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 200,
+            background: "#080a0e",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
+        >
+          {/* Top Stage Bar */}
+          <div
+            style={{
+              padding: "1rem 1.75rem",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              background: "rgba(8, 10, 14, 0.85)",
+              backdropFilter: "blur(12px)",
+              borderBottom: "1px solid rgba(224, 185, 116, 0.2)",
+              zIndex: 30,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e" }} />
+              <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "11px", letterSpacing: "0.12em", textTransform: "uppercase", color: "#e0b974", fontWeight: 700 }}>
+                JOHN WALLS · LISTENING ROOM STAGE
+              </span>
+              <span style={{ color: "#64748b" }}>•</span>
+              <span style={{ color: "#cbd5e1", fontSize: "0.88rem", fontWeight: 600 }}>
+                {activeTrack.title}
+              </span>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <button
+                type="button"
+                onClick={() => setIsStageModalOpen(false)}
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: "20px",
+                  background: "rgba(255, 255, 255, 0.08)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  color: "#cbd5e1",
+                  fontSize: "12px",
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+              >
+                ✕ CLOSE TO DOCK [ESC]
+              </button>
+            </div>
+          </div>
+
+          {/* Central Visualizer Backdrop Stage */}
+          <div style={{ position: "relative", flex: 1, width: "100%", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            <SuperColliderVisualizer
+              audioElement={audioRef.current}
+              isPlaying={isPlaying}
+              bpm={activeTrack.bpm || 120}
+              trackTitle={activeTrack.title}
+              initialPreset={currentPreset}
+              onPresetChange={setCurrentPreset}
+              stageMode={true}
+              height="100%"
+            />
+
+            {/* Stage Foreground Glass Info Panel */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "1rem",
+                left: "1.5rem",
+                right: "1.5rem",
+                background: "rgba(8, 10, 14, 0.85)",
+                backdropFilter: "blur(18px)",
+                border: "1px solid rgba(224, 185, 116, 0.25)",
+                borderRadius: "14px",
+                padding: "1.25rem 1.5rem",
+                color: "#f8fafc",
+                zIndex: 20,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "1rem" }}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                    <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "11px", color: "#e0b974", fontWeight: 600 }}>
+                      TAKE {String(activeTrack.trackNumber || activeTrackIndex + 1).padStart(2, "0")} · {activeTrack.dawSource}
+                    </span>
+                    {activeTrack.keySignature && (
+                      <span style={{ fontSize: "11px", padding: "1px 6px", background: "rgba(255, 255, 255, 0.1)", borderRadius: "4px", color: "#94a3b8", fontFamily: "ui-monospace, monospace" }}>
+                        KEY {activeTrack.keySignature}
+                      </span>
+                    )}
+                    {activeTrack.bpm > 0 && (
+                      <span style={{ fontSize: "11px", padding: "1px 6px", background: "rgba(224, 185, 116, 0.15)", borderRadius: "4px", color: "#e0b974", fontFamily: "ui-monospace, monospace" }}>
+                        {activeTrack.bpm} BPM
+                      </span>
+                    )}
+                  </div>
+                  <h3 style={{ fontSize: "1.35rem", fontWeight: 700, margin: "0 0 4px 0", color: "#f8fafc" }}>
+                    {activeTrack.title}
+                  </h3>
+                  <p style={{ margin: 0, fontSize: "0.85rem", color: "#94a3b8", maxWidth: "600px", lineHeight: 1.5 }}>
+                    {activeTrack.description}
+                  </p>
+                </div>
+
+                {/* Track change & WAV download */}
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <button
+                    type="button"
+                    onClick={() => handleTrackChange((activeTrackIndex - 1 + tracks.length) % tracks.length, true)}
+                    style={{ padding: "6px 12px", background: "rgba(255, 255, 255, 0.08)", border: "1px solid rgba(255, 255, 255, 0.15)", color: "#cbd5e1", borderRadius: "6px", cursor: "pointer" }}
+                  >
+                    ⏮ PREV
+                  </button>
+                  <button
+                    type="button"
+                    onClick={togglePlay}
+                    style={{ padding: "6px 16px", background: isPlaying ? "#f8fafc" : "#e0b974", border: "none", color: "#080a0e", fontWeight: 700, borderRadius: "6px", cursor: "pointer" }}
+                  >
+                    {isPlaying ? "❚❚ PAUSE" : "▶ PLAY"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleTrackChange((activeTrackIndex + 1) % tracks.length, true)}
+                    style={{ padding: "6px 12px", background: "rgba(255, 255, 255, 0.08)", border: "1px solid rgba(255, 255, 255, 0.15)", color: "#cbd5e1", borderRadius: "6px", cursor: "pointer" }}
+                  >
+                    NEXT ⏭
+                  </button>
+                  <a
+                    href={activeTrack.audioUrl}
+                    download={activeTrack.fileName || "take.wav"}
+                    style={{ padding: "6px 12px", background: "rgba(224, 185, 116, 0.15)", border: "1px solid rgba(224, 185, 116, 0.4)", color: "#e0b974", borderRadius: "6px", textDecoration: "none", fontSize: "12px", display: "inline-flex", alignItems: "center" }}
+                  >
+                    WAV ↓
+                  </a>
+                </div>
+              </div>
+
+              {/* Progress Slider */}
+              <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginTop: "1rem" }}>
+                <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "11px", color: "#94a3b8", minWidth: "36px" }}>
+                  {formatTime(currentTime)}
+                </span>
+                <input
+                  type="range"
+                  min={0}
+                  max={duration || activeTrack.durationSeconds || 100}
+                  step={0.1}
+                  value={currentTime}
+                  onChange={handleSeek}
+                  style={{ flex: 1, accentColor: "#e0b974", cursor: "pointer" }}
+                />
+                <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "11px", color: "#94a3b8", minWidth: "36px" }}>
+                  {formatTime(duration || activeTrack.durationSeconds || 0)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
