@@ -198,5 +198,30 @@
     },
     "tags": ["Volume 1", "Album Master", "Walls & Devine", "Album Finale", "Vocal Harmonies"],
     "publishedAt": "2026-09-01T00:01:00.000Z"
+  },
+  {
+    "id": "jwt_vol1_09_the_genuine_thing",
+    "trackNumber": 9,
+    "title": "The Genuine Thing",
+    "artist": "Walls & Devine",
+    "description": "The Listening Room communion track: funk P-bass pocket, live guitar scratches, cosmic harmonium delays, and spoken-word testimony crafted directly for the listener. Dedicated to Marianne Moore's genuine thing, brotherhood, and raw shared humanity.",
+    "audioUrl": "/walls-devine/releases/volume1/9.%20The%20Genuine%20Thing.wav",
+    "fileName": "9. The Genuine Thing.wav",
+    "fileSizeBytes": 58601780,
+    "bpm": 92,
+    "durationSeconds": 203.48,
+    "barLength": 78,
+    "keySignature": "D Major",
+    "dawSource": "Ableton Live 12 Master",
+    "alsProject": "Walls_Devine_Vol1_Master",
+    "visualizerPreset": "supercollider-lissajous",
+    "visualizerConfig": {
+      "layers": { "lissajous": true, "waterfall": true, "sumi": true, "particles": true, "waveform": true },
+      "effects": { "kaleidoscope": true, "kaleidoscopeSegments": 8, "feedbackEcho": true, "feedbackDecay": 0.92, "chromaticAberration": true, "chromaticOffset": 8 },
+      "colorTheme": "gold-amber",
+      "sensitivity": 1.3
+    },
+    "tags": ["Volume 1", "Album Master", "Walls & Devine", "The Genuine Thing", "Listening Room", "P-Bass"],
+    "publishedAt": "2026-10-09T00:00:00.000Z"
   }
 ]
